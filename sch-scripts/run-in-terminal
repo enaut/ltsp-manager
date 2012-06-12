@@ -1,0 +1,46 @@
+#!/bin/sh
+# Copyright (C) 2012 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+usage() {
+    cat <<EOF
+Χρήση: $0 [εντολή]
+
+Εάν εκτελεστεί σε γραφικό περιβάλλον χωρίς ανοιχτό τερματικό (π.χ. με Alt+F2),
+ανοίγει έναν x-terminal-emulator και τρέχει μέσα του την εντολή, αλλιώς
+την τρέχει στο παρόν τερματικό. Στο τέλος εμφανίζει μήνυμα επιτυχίας ή μη.
+EOF
+}
+
+pause() {
+    read -p "Πατήστε [Enter] για να κλείσετε το παρόν παράθυρο." junk
+}
+
+# First check if we need to spawn an x-terminal-emulator.
+if [ "$SPAWNED_TERM" != true ] && [ ! -t 0 ] &&
+    xprop -root somevar >/dev/null 2>&1
+then
+    SPAWNED_TERM=true exec x-terminal-emulator -T "${1##*/}" -e "$0" "$@"
+fi
+
+set -e
+#. /usr/share/sch-scripts/common.sh
+. /home/alkisg/Documents/Linux/Sources/sch-scripts/trunk/sch-scripts/common.sh
+
+if [ $# -eq 0 ]; then
+    usage >&2
+    pause
+    exit 1
+fi
+
+# If we didn't spawn a terminal, just exec the command
+test "$SPAWNED_TERM" != true && exec "$@"
+
+if "$@"; then
+    echo_bold "
+Η εντολή ${1##*/} ολοκληρώθηκε με επιτυχία."
+else
+    echo_bold "
+Η εντολή ${1##*/} απέτυχε με κωδικό σφάλματος $?."
+fi
+pause

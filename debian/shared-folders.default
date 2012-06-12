@@ -1,0 +1,29 @@
+# Completely disable shared folders.
+#DISABLE_SHARED_FOLDERS="true"
+
+# If set, a script that runs when users log in will restrict access to
+# Desktop,  Documents, Download, Music, Pictures, Templates and Video
+# directories to just the user and the members of the teachers group, i.e.
+#   chmod user:teachers $dirs; chmod 750 $dirs
+RESTRICT_DIRS="true"
+
+# Members of the teachers group have read-only access to the restricted user
+# directories (see RESTRICT_DIRS above), and publish a read-only ~/Public/group
+# folder for each group they're members of.
+TEACHERS="teachers"
+
+# A read-write directory will be created for each group listed in $SHARE_GROUPS
+# under this directory. They'll be owned by the user with UID=1000.
+# If you're using LTSP fat clients, this should be accessible by them,
+# using e.g. LOCALAPPS_EXTRA_MOUNTS="/home/Shared".
+SHARE_DIR="/home/Shared"
+
+# List of groups for which shared folders will be created.
+# Add the class groups right next after teachers.
+SHARE_GROUPS="teachers"
+
+# This word is added to the shared folder shortcuts created in
+# /home/user/Public/group - <here>.
+# It defaults to `gettext -d xdg-user-dirs 'share'` in order for it to be
+# internationalized.
+#SHARE_DESCRIPTION="share"

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Classroom administration
+Name[el]=Διαχείριση ΣΕΠΕΗΥ
+Comment=sch-scripts: a collection of scripts for classroom administration
+Comment[el]=sch-scripts: μια συλλογή από βοηθήματα για τη διαχείριση εργαστηρίου υπολογιστών
+TryExec=/usr/sbin/sch-scripts
+Exec=gksu /usr/sbin/sch-scripts
+Icon=sch-scripts
+Terminal=false
+Type=Application
+Categories=Settings;System;
+X-KDE-SubstituteUID=true

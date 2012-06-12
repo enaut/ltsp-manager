@@ -1,0 +1,35 @@
+Source: sch-scripts
+Section: admin
+Priority: extra
+Maintainer: Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>
+Build-Depends: debhelper (>= 7.3.0)
+Standards-Version: 3.9.3
+Vcs-Bzr: http://bazaar.launchpad.net/~ts.sch.gr/sch-scripts/trunk
+Vcs-Browser: http://bazaar.launchpad.net/~ts.sch.gr/sch-scripts/trunk/files
+Homepage: http://ts.sch.gr/wiki/Linux/LTSP
+
+Package: sch-scripts
+Architecture: all
+Depends: librsvg2-common,
+ python (>= 2.6),
+ python-gtk2
+Recommends: apturl,
+ bindfs,
+ dnsmasq,
+ epoptes,
+ ethtool,
+ gnome-session-fallback | kde-workspace-bin | xfce4-utils | lxde-common,
+ iperf,
+ ldm-ubuntu-theme | ldm-edubuntu-theme | ldm-kubuntu-theme | ldm-lubuntu-theme | ldm-xubuntu-theme,
+ ltsp-client (>= 5.4.0),
+ ltsp-server (>= 5.4.0)
+Suggests: ident2,
+ squid,
+ x2goserver
+Description: Διαχείριση ΣΕΠΕΗΥ
+ Παρέχει ένα σύνολο εξαρτήσεων για την αυτοματοποίηση της εγκατάστασης
+ σχολικών εργαστηρίων, και ένα γραφικό περιβάλλον που υποστηρίζει διαχείριση
+ λογαριασμών χρηστών, δημιουργία εικονικού δίσκου LTSP κ.α.
+ .
+ Πολλά από τα συμπεριλαμβανόμενα βοηθήματα προσανατολίζονται σε LTSP
+ εγκαταστάσεις, αλλά το πακέτο είναι χρήσιμο και χωρίς LTSP.

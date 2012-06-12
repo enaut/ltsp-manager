@@ -1,0 +1,4 @@
+sch-scripts             usr/share/
+sch-scripts.svg         usr/share/pixmaps/
+sch-scripts.desktop     usr/share/applications/
+sbin/*                  usr/sbin/

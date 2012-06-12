@@ -1,0 +1,12 @@
+sch-scripts:
+add apt-keys, repo, xapian index
+the script to run ltsp-update-image.
+/usr/share/gym*, dim*, nip*... move to /srv and create symlinks
+modify /etc/ltsp/ltsp-update-image.excludes; μπα
+
+LTSP:
+nbd-server allow: https://bugs.launchpad.net/ubuntu/+source/nbd/+bug/1009393
+ltsp-config <ltsp-tool.conf>
+review services in example lts.conf
+implement "smart move"
+implement ldm_presession_action etc
