@@ -29,13 +29,13 @@ bold() {
 }
 
 log() {
-    echo "$@" >> /var/log/sch-scripts.log
+    logger -t sch-scripts -p syslog.err "$@"
 }
 
 # Outputs a message to stderr and aborts execution
 die() {
     log "$@"
-    bold "ERROR in $(basename "$0"):" >&2
+    bold "ERROR in ${0##*/}:" >&2
     echo "$@" >&2
     pause_exit 1
 }
@@ -182,7 +182,7 @@ install_sch_scripts() {
     if [ "$(id -u)" -ne 0 ]; then
         bold "Για να γίνει προσθήκη αποθετηρίων απαιτούνται δικαιώματα διαχειριστή.
 Θα χρειαστεί να εισάγετε τον κωδικό πρόσβασης του λογαριασμού σας."
-        exec sudo "$0"
+        exec sudo sh "$0"
     fi
 
     release=$(lsb_release -sc)
@@ -201,8 +201,8 @@ install_sch_scripts() {
     bold "Γίνεται εκτέλεση των sch-scripts."
     sch-scripts >/dev/null 2>&1 &
 
-    bold "Γίνεται ενημέρωση του ευρετηρίου πακέτων."
-    if in_path "update-apt-xapian-index"; then
+    if [ -x "/usr/sbin/update-apt-xapian-index" ]; then
+        bold "Γίνεται ενημέρωση του ευρετηρίου πακέτων."
         if ! update-apt-xapian-index; then
             die "Σφάλμα κατά την ενημέρωση του ευρετηρίου πακέτων."
         fi
@@ -224,7 +224,7 @@ then
         -s|--source) title=${2##*/} ;;
         '') title=${0##*/} ;;
     esac
-    SPAWNED_TERM=true exec x-terminal-emulator -T "$title" -e "$0" "$@"
+    SPAWNED_TERM=true exec x-terminal-emulator -T "$title" -e sh "$0" "$@"
 fi
 
 set -e
