@@ -7,6 +7,7 @@
     <property name="window_position">center</property>
     <property name="default_width">600</property>
     <property name="default_height">350</property>
+    <property name="icon">/usr/share/pixmaps/sch-scripts.svg</property>
     <signal name="delete-event" handler="on_main_window_delete_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
