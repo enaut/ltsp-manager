@@ -123,7 +123,6 @@ stop() {
     # Cache /proc/mounts to a variable, otherwise some mounts are skipped
     mounts=$(cat /proc/mounts)
     while read fs point type rest; do
-        echo "point=$point"
         test "$type" = "fuse.bindfs" || continue
         case "$point" in
             "$SHARE_DIR/"*)

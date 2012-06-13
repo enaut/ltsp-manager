@@ -1,5 +1,9 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
+import sys
 from gi.repository import Gtk
 import libuser
 import user_form
@@ -14,7 +18,7 @@ class Gui:
         self.conf = config.parser
         
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('main.glade')
+        self.builder.add_from_file('sch-scripts.glade')
         self.builder.connect_signals(self)
         
         self.main_window = self.builder.get_object('main_window')
@@ -288,7 +292,44 @@ class Gui:
                 self.system.delete_group(group)
             self.repopulate_treeviews()
         
-    
+
+# To export a man page:
+# help2man -L el -s 8 -o sch-scripts.8 -N ./sch-scripts && man ./sch-scripts.8
+def usage():
+    print """Χρήση: sch-scripts [ΕΠΙΛΟΓΕΣ]
+
+Παρέχει ένα σύνολο εξαρτήσεων για την αυτοματοποίηση της εγκατάστασης
+σχολικών εργαστηρίων και ένα γραφικό περιβάλλον που υποστηρίζει διαχείριση
+λογαριασμών χρηστών, δημιουργία εικονικού δίσκου LTSP κ.α.
+
+Πολλά από τα συμπεριλαμβανόμενα βοηθήματα προσανατολίζονται σε LTSP
+εγκαταστάσεις, αλλά το πακέτο είναι χρήσιμο και χωρίς LTSP.
+
+Περισσότερες πληροφορίες: http://ts.sch.gr/wiki/Linux/LTSP.
+
+Επιλογές:
+    -h, --help     Σελίδα βοήθειας της εφαρμογής.
+    -v, --version  Προβολή έκδοσης των sch-scripts.
+
+Αναφορά σφαλμάτων στο https://bugs.launchpad.net/sch-scripts."""
+
+
+def version():
+    print """sch-scripts 12.04
+Copyright (C) 2009-2012 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
+Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/gpl.html>.
+
+Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>."""
+
 if __name__ == '__main__':
+    if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):
+        version()
+        sys.exit(0)
+    elif len(sys.argv) == 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
+        usage()
+        sys.exit(0)
+    elif len(sys.argv) >= 2:
+        usage()
+        sys.exit(1)
     Gui()
     Gtk.main()

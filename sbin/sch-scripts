@@ -1,48 +1,38 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/bin/sh
+# Wrapper to execute sch-scripts as root.
+# Copyright (C) 2012 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-import sys
+run_as_root() {
+    if [ -x /usr/bin/kdesudo ]; then
+        exec kdesudo -- "$@"
+    elif [ -x /usr/bin/gksudo ]; then
+        exec gksudo -- "$@"
+    else
+        if [ -x /usr/bin/sudo ]; then
+            set sudo -- "$@"
+        elif [ -x /bin/su ]; then
+            set su -c "$*"
+        fi
+        if [ -t 0 ]; then
+            exec "$@"
+        elif [ -x run-in-terminal ]; then
+            exec ./run-in-terminal "$@"
+        else
+            echo "Could not find gksudo or kdesudo in order to run: $*" >&2
+            exit 1
+        fi
+    fi
+}
 
-# Εντολή για κατασκευή της σελίδας man:
-# help2man -L el -s 8 -o sch-scripts.8 -N ./sch-scripts && man ./sch-scripts.8
-def usage():
-    print """Χρήση: sch-scripts [ΕΠΙΛΟΓΕΣ]
-
-Παρέχει ένα σύνολο εξαρτήσεων για την αυτοματοποίηση της εγκατάστασης
-σχολικών εργαστηρίων και ένα γραφικό περιβάλλον που υποστηρίζει διαχείριση
-λογαριασμών χρηστών, δημιουργία εικονικού δίσκου LTSP κ.α.
-
-Πολλά από τα συμπεριλαμβανόμενα βοηθήματα προσανατολίζονται σε LTSP
-εγκαταστάσεις, αλλά το πακέτο είναι χρήσιμο και χωρίς LTSP.
-
-Περισσότερες πληροφορίες: http://ts.sch.gr/wiki/Linux/LTSP.
-
-Επιλογές:
-    -h, --help     Σελίδα βοήθειας της εφαρμογής.
-    -v, --version  Προβολή έκδοσης των sch-scripts.
-
-Αναφορά σφαλμάτων στο https://bugs.launchpad.net/sch-scripts."""
-
-
-def version():
-    print """sch-scripts 12.04
-Copyright (C) 2009-2012 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
-Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/gpl.html>.
-
-Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>."""
-
-
-def main():
-    if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):
-        version()
-        sys.exit(0)
-    elif len(sys.argv) == 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
-        usage()
-        sys.exit(0)
-    elif len(sys.argv) >= 2:
-        usage()
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
+if [ -x /usr/share/sch-scripts/sch-scripts.py ]; then
+    cd /usr/share/sch-scripts
+    case "$1" in
+        # help and version need to run without root
+        -h|--help|-v|--verson) ./sch-scripts.py "$@" ;;
+        *) run_as_root ./sch-scripts.py "$@" ;;
+    esac
+else
+    echo "/usr/share/sch-scripts/sch-scripts.py not found" >&2
+    exit 1
+fi
