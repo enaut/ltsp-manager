@@ -12,7 +12,7 @@ class UserForm(object):
         self.system = system
         self.mode = None
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('user_form.glade')
+        self.builder.add_from_file('user_form.ui')
         self.roles = {i : config.parser.get('Roles', i) for i in config.parser.options('Roles')}
         self.refresh = refresh #OMG FIXME
         

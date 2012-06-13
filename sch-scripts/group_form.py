@@ -9,7 +9,7 @@ class GroupForm(object):
         self.system = system
         #self.mode = None
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('group_form.glade')
+        self.builder.add_from_file('group_form.ui')
         
         self.refresh = refresh #OMG FIXME
         

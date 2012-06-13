@@ -14,7 +14,7 @@ import struct, socket
 
 class Ip_Dialog:
     def __init__(self):
-        gladefile = "ip_dialog.glade"
+        gladefile = "ip_dialog.ui"
         self.address = False
         self.name = False
         self.builder = Gtk.Builder()

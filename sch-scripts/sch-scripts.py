@@ -18,7 +18,7 @@ class Gui:
         self.conf = config.parser
         
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('sch-scripts.glade')
+        self.builder.add_from_file('sch-scripts.ui')
         self.builder.connect_signals(self)
         
         self.main_window = self.builder.get_object('main_window')
