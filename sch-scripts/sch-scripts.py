@@ -4,6 +4,7 @@
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 import sys
+import subprocess
 from gi.repository import Gtk
 import libuser
 import user_form
@@ -11,6 +12,7 @@ import group_form
 import dialogs
 import export_dialog
 import config
+import ip_dialog
 
 class Gui:
     def __init__(self):
@@ -291,7 +293,29 @@ class Gui:
             for group in self.get_selected_groups():
                 self.system.delete_group(group)
             self.repopulate_treeviews()
+            
+    def on_set_static_ip_activate(self, widget):
+        ip_dialog.Ip_Dialog()
+    
+    def on_publish_ltsp_activate(self, widget):
+        subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
+    
+    def edit_file(self, filename):
+        subprocess.Popen(['xdg-open', filename])
+        # TODO: Maybe throw an error message if not os.path.isfile(filename)
+    
+    def on_mi_edit_lts_conf_activate(self, widget):
+        self.edit_file('/var/lib/tftpboot/ltsp/i386/lts.conf')
+    
+    def on_mi_edit_pxelinux_cfg_activate(self, widget):
+        self.edit_file('/var/lib/tftpboot/ltsp/i386/pxelinux.cfg/default')
+    
+    def on_mi_edit_shared_folders_activate(self, widget):
+        self.edit_file('/etc/default/shared-folders')
         
+    def on_mi_edit_dnsmasq_conf_activate(self, widget):
+        self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
+    
 
 # To export a man page:
 # help2man -L el -s 8 -o sch-scripts.8 -N ./sch-scripts && man ./sch-scripts.8
