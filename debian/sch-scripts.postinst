@@ -38,7 +38,8 @@ install() {
             -i /etc/NetworkManager/NetworkManager.conf
         # Now we'd normally want to restart network-manager, but we don't want
         # to disconnect the network, so we start dnsmasq with no DNS service
-        # (port=0), and it'll work as a DNS server on the next server reboot.
+        # (port=0), and it'll work as a DNS server on the next server reboot
+        # or when the "Setup a static IP" dialog of sch-scripts is used.
         if grep -qs "^#port=0" /etc/dnsmasq.d/ltsp-server-dnsmasq.conf; then
             sed 's/^#port=0/port=0/' -i /etc/dnsmasq.d/ltsp-server-dnsmasq.conf
             invoke-rc.d dnsmasq restart
