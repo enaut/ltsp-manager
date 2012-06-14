@@ -4,6 +4,7 @@
 from gi.repository import Gtk, Gdk
 import dialogs
 import os
+import re
 import libuser
 import config
 
@@ -14,6 +15,17 @@ class UserForm(object):
         self.builder = Gtk.Builder()
         self.builder.add_from_file('user_form.ui')
         self.roles = {i : config.parser.get('Roles', i) for i in config.parser.options('Roles')}
+        if 'Καθηγητής' in self.roles:
+            # Read the special teachers group
+            try:
+                f = open('/etc/default/shared-folders')
+                teachers = re.findall('^\s*TEACHERS="(.*)"', f.read(), re.M)[0]
+                f.close()
+                if teachers:
+                    self.roles['Καθηγητής'] += ','+teachers
+            except:
+                pass
+        
         self.refresh = refresh #OMG FIXME
         
         self.dialog = self.builder.get_object('dialog')
@@ -90,28 +102,6 @@ class UserForm(object):
     def on_group_toggled(self, widget, path):
         self.groups_store[path][2] = not self.groups_store[path][2]
         self.groups_store[path][5] = not self.groups_store[path][5]
-        
-        # Set a role if available
-        # FIXME
-        active_groups = [r[0].name for r in self.groups_store if r[2]]
-        idx = None
-        n = -1
-        for role, groups in self.roles.iteritems():
-            n += 1
-            groups = groups.split(',')
-            i = 0
-            for g in groups:
-                print g, g in active_groups
-                if g in active_groups:
-                    i += 1
-            if i == len(groups):
-                idx = n
-                print idx
-                break
-        
-        if idx is not None:
-            self.role_combo.set_active(idx)
-            
         
     def on_groups_selection_changed(self, widget):
         self.builder.get_object('set_primary_button').set_sensitive(len(widget.get_selected_rows()[1]) == 1)
@@ -348,6 +338,7 @@ class EditUserDialog(UserForm):
         self.builder.connect_signals(self)
         
         self.builder.get_object('primary_group_grid').set_visible(False)
+        self.builder.get_object('role_box').set_visible(False)
         
         self.username.set_text(user.name)
         self.password.set_text(u'\u03db\xa9\u03df-\u03db\xa9\xaei\u03e1\u03c4\u03db')

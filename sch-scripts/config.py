@@ -9,8 +9,8 @@ gui_defaults = {'show_system_groups' : False,
                 'show_private_groups' : False,
                 'visible_user_columns' : 'all'
                }
-roles_defaults = {'Teacher' : 'teachers,video,someunexistentgroup',
-                  'Student' : 'students'
+roles_defaults = {'Καθηγητής' : 'video',
+                  'Μαθητής' : 'students'
                  }
 
 parser = ConfigParser.SafeConfigParser()
