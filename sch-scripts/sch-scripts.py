@@ -307,6 +307,39 @@ class Gui:
     def on_mi_edit_dnsmasq_conf_activate(self, widget):
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
     
+    def on_mi_about_activate(self, widget):
+        pass
+    
+    def run_as_sudo_user(self, cmd):
+        NotImplemented #TODO
+    
+    def open_link(self, link):
+        subprocess.Popen(["xdg-open", link])
+        #self.run_as_sudo_user('xdg-open ' + link) FIXME: uncomment
+    
+    def on_mi_lts_conf_manpage_activate(self, widget):
+        self.open_link('http://manpages.ubuntu.com/lts.conf')
+
+    def on_mi_forum_activate(self, widget):
+        self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
+
+    def on_mi_irc_activate(self, widget):
+        user = os.getenv("USER")
+        if user is None:
+            user = "sch_scripts_user." # The dot is converted to a random digit
+        self.open_link("http://webchat.freenode.net/?nick=" + user + 
+            "&channels=ubuntu-gr,ltsp&prompt=1")
+
+    def on_mi_ask_question_activate(self, widget):
+        self.open_link('https://answers.launchpad.net/sch-scripts')
+
+    def on_mi_report_bug_activate(self, widget):
+        self.open_link('https://bugs.launchpad.net/sch-scripts')
+
+    def on_mi_home_activate(self, widget):
+        self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
+
+
 
 # To export a man page:
 # help2man -L el -s 8 -o sch-scripts.8 -N ./sch-scripts && man ./sch-scripts.8

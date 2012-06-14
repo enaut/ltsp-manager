@@ -321,12 +321,87 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="menuitem8">
+                      <object class="GtkMenuItem" id="mi_home">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Αναφορά δυσλειτουργίας</property>
+                        <property name="label" translatable="yes">Αρχική</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_home_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_report_bug">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Αναφορά σφάλματος</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_report_bug_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_ask_question">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Υποβολή ερώτησης</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_ask_question_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_irc">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Ζωντανή συνομιλία (IRC)</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_irc_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_forum">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Φόρουμ συζητήσεων</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_forum_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_lts_conf_manpage">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Σελίδα εγχειριδίου του lts.conf</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_lts_conf_manpage_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem3">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_about">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Περί</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_about_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>
