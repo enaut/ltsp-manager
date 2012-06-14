@@ -195,6 +195,9 @@ install_sch_scripts() {
     bold "Γίνεται ενημέρωση των διαθέσιμων πακέτων."
     apt-get -q update || die "Σφάλμα κατά την ενημέρωση των διαθέσιμων πακέτων."
 
+    # Hide the nbd-client debconf dialog
+    echo 'nbd-client	nbd-client/killall	boolean	false' | debconf-set-selections
+
     bold "Γίνεται εγκατάσταση των sch-scripts."
     apt-get --yes install sch-scripts || die "Σφάλμα κατά την εγκατάσταση των sch-scripts."
 
