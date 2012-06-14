@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#-*- coding: utf-8 -*-
 
 from gi.repository import Gtk
 import libuser
@@ -6,7 +7,7 @@ import libuser
 class ExportDialog:
     def __init__(self, system, users):
         self.csv = libuser.CSV()
-        chooser = Gtk.FileChooserDialog(title="Select a filename to export", 
+        chooser = Gtk.FileChooserDialog(title="Επιλέξτε όνομα αρχείου για εξαγωγή", 
                                         action=Gtk.FileChooserAction.SAVE,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))

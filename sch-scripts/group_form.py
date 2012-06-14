@@ -81,7 +81,7 @@ class NewGroupDialog(GroupForm):
         
         self.gid_entry.set_text(str(system.get_free_gid()))
         
-        self.dialog.show_all()
+        self.dialog.show()
     
     def on_apply_clicked(self, widget):
         name = self.groupname.get_text()
@@ -106,7 +106,7 @@ class EditGroupDialog(GroupForm):
             if row[0].name in self.group.members:
                 row[1] = True
             
-        self.dialog.show_all()
+        self.dialog.show()
     
     def on_apply_clicked(self, widget):
         name = self.group.name

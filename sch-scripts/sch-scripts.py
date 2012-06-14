@@ -124,12 +124,12 @@ class Gui:
             delete_mi.set_sensitive(False)
         elif rows == 1:    
             edit_mi.set_sensitive(True)
-            edit_mi.set_label('Edit group...')
-            delete_mi.set_label('Delete group...')
+            edit_mi.set_label('Επεξεργασία ομάδας...')
+            delete_mi.set_label('Διαγραφή ομάδας...')
             delete_mi.set_sensitive(True)
         else:
             edit_mi.set_sensitive(False)
-            delete_mi.set_label('Delete groups...')
+            delete_mi.set_label('Διαγραφή ομάδων...')
             delete_mi.set_sensitive(True)
     
     def on_users_selection_changed(self, selection):
@@ -151,11 +151,11 @@ class Gui:
             
             if rows == 1:    
                 edit_mi.set_sensitive(True)
-                edit_mi.set_label('Edit user...')
-                delete_mi.set_label('Delete user...')
+                edit_mi.set_label('Επεξεργασία χρήστη...')
+                delete_mi.set_label('Διαγραφή χρήστη...')
             else:
                 edit_mi.set_sensitive(False)
-                delete_mi.set_label('Delete users...')
+                delete_mi.set_label('Διαγραφή χρηστών...')
             
     
     def on_users_tv_button_press_event(self, widget, event):
@@ -243,9 +243,9 @@ class Gui:
         users = self.get_selected_users()
         users_n = len(users)
         if users_n == 1:
-            message = "Are you sure you want to delete the user %s?" % users[0].name
+            message = "Θέλετε σίγουρα να διαγράψετε τον χρήστη %s;" % users[0].name
         else:
-            message = "Are you sure you want to delete the following %d users?" % users_n
+            message = "Θέλετε σίγουρα να διαγράψετε τους παρακάτω %d χρήστες;" % users_n
             message += "\n" + ', '.join([user.name for user in users])
         
         response = dialogs.AskDialog(message).showup()
@@ -260,9 +260,9 @@ class Gui:
         users_n = len(users)
         group_names = ', '.join([group.name for group in groups])
         if users_n == 1:
-            message = "Are you sure you want to remove the user %s from the selected groups (%s)?" % (users[0].name, group_names)
+            message = "Θέλετε σίγουρα να αφαιρέσετε τον χρήστη %s από τις επιλεγμένες ομάδες (%s);" % (users[0].name, group_names)
         else:
-            message = "Are you sure you want to remove the following %d users from the selected groups (%s)?" % (users_n, group_names)
+            message = "Θέλετε σίγουρα να αφαιρέσετε τους παρακάτω %d χρήστες από τις επιλεγμένες ομάδες (%s);" % (users_n, group_names)
             message += "\n" + ', '.join([user.name for user in users])
         
         response = dialogs.AskDialog(message).showup()
@@ -281,9 +281,9 @@ class Gui:
         groups = self.get_selected_groups()
         groups_n = len(groups)
         if groups_n == 1:
-            message = "Are you sure you want to delete the group %s?" % groups[0].name
+            message = "Θέλετε σίγουρα να διαγράψετε την ομάδα %s;" % groups[0].name
         else:
-            message = "Are you sure you want to delete the following %d groups?" % groups_n
+            message = "Θέλετε σίγουρα να διαγράψετε τις παρακάτω %d ομάδες;" % groups_n
             message += "\n" + ', '.join([group.name for group in groups])
         
         response = dialogs.AskDialog(message).showup()

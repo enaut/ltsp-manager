@@ -46,7 +46,7 @@
               <object class="GtkLabel" id="description_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Enter the user information</property>
+                <property name="label" translatable="yes">Εισάγετε τις πληροφορίες χρήστη</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -130,7 +130,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Username</property>
+                        <property name="label" translatable="yes">Όνομα χρήστη</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -160,7 +160,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Password</property>
+                        <property name="label" translatable="yes">Κωδικός</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -229,7 +229,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Re-type password</property>
+                        <property name="label" translatable="yes">Επαλήθευση κωδικού</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -257,7 +257,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Home directory</property>
+                        <property name="label" translatable="yes">Αρχικός κατάλογος</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -287,7 +287,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Shell</property>
+                        <property name="label" translatable="yes">Κέλυφος</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -301,7 +301,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Full Name</property>
+                        <property name="label" translatable="yes">Ονοματεπώνυμο</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -315,7 +315,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Office</property>
+                        <property name="label" translatable="yes">Γραφείο</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -329,7 +329,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Office phone</property>
+                        <property name="label" translatable="yes">Τηλ. γραφείου</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -343,7 +343,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Home phone</property>
+                        <property name="label" translatable="yes">Τηλ. οικίας</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -504,7 +504,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Other</property>
+                        <property name="label" translatable="yes">Άλλο</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -599,7 +599,7 @@
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">User information</property>
+                <property name="label" translatable="yes">Πληροφορίες χρήστη</property>
               </object>
               <packing>
                 <property name="tab_fill">False</property>
@@ -623,7 +623,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Primary Group Name</property>
+                        <property name="label" translatable="yes">Όνομα κύριας ομάδας</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -637,7 +637,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Primary Group GID</property>
+                        <property name="label" translatable="yes">GID κύριας ομάδας</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -717,7 +717,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">User Role</property>
+                        <property name="label" translatable="yes">Ρόλος χρήστη</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -766,7 +766,7 @@
                         </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="groups_column">
-                            <property name="title" translatable="yes">Member of the groups:</property>
+                            <property name="title" translatable="yes">Μέλος των ομάδων:</property>
                             <child>
                               <object class="GtkCellRendererToggle" id="cellrenderertoggle1">
                                 <signal name="toggled" handler="on_group_toggled" swapped="no"/>
@@ -800,7 +800,7 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkButton" id="set_primary_button">
-                        <property name="label" translatable="yes">Set as primary</property>
+                        <property name="label" translatable="yes">Ορισμός ως κύριας</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
@@ -832,7 +832,7 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Group options</property>
+                <property name="label" translatable="yes">Επιλογές ομάδων</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -856,7 +856,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Last change</property>
+                        <property name="label" translatable="yes">Τελευταία αλλαγή</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -870,7 +870,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Minimum</property>
+                        <property name="label" translatable="yes">Ελάχιστη διάρκεια</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -884,7 +884,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Maximum</property>
+                        <property name="label" translatable="yes">Μέγιστη διάρκεια</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -898,7 +898,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Warn</property>
+                        <property name="label" translatable="yes">Προειδοποίηση</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -912,7 +912,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Inactive</property>
+                        <property name="label" translatable="yes">Ανενεργός</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -926,7 +926,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Expire</property>
+                        <property name="label" translatable="yes">Λήξη</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -940,7 +940,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Lock password</property>
+                        <property name="label" translatable="yes">Κλείδωμα κωδικού</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -1077,7 +1077,7 @@
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Password options</property>
+                <property name="label" translatable="yes">Επιλογές κωδικού</property>
               </object>
               <packing>
                 <property name="position">2</property>

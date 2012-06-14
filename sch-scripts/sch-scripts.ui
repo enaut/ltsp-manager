@@ -23,7 +23,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_File</property>
+                <property name="label" translatable="yes">_Αρχείο</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
@@ -34,7 +34,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Import from csv...</property>
+                        <property name="label" translatable="yes">Εισαγωγή από csv...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_import_csv_activate" swapped="no"/>
                       </object>
@@ -44,7 +44,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Export to csv...</property>
+                        <property name="label" translatable="yes">Εξαγωγή σε csv...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_export_csv_activate" swapped="no"/>
                       </object>
@@ -58,7 +58,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Users</property>
+                <property name="label" translatable="yes">_Χρήστες</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="users_menu">
@@ -69,7 +69,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">New user...</property>
+                        <property name="label" translatable="yes">Νέος χρήστης...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_new_user_mi_activate" swapped="no"/>
                       </object>
@@ -80,7 +80,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Edit user...</property>
+                        <property name="label" translatable="yes">Επεξεργασία χρήστη...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_edit_user_mi_activate" swapped="no"/>
                       </object>
@@ -91,7 +91,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Delete user...</property>
+                        <property name="label" translatable="yes">Διαγραφή χρήστη...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_delete_user_mi_activate" swapped="no"/>
                       </object>
@@ -102,7 +102,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Remove from selected groups</property>
+                        <property name="label" translatable="yes">Αφαίρεση από τις επιλεγμένες ομάδες</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_remove_user_mi_activate" swapped="no"/>
                       </object>
@@ -116,7 +116,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Groups</property>
+                <property name="label" translatable="yes">_Ομάδες</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="groups_menu">
@@ -127,7 +127,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">New group...</property>
+                        <property name="label" translatable="yes">Νέα ομάδα...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_new_group_mi_activate" swapped="no"/>
                       </object>
@@ -138,7 +138,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Edit group...</property>
+                        <property name="label" translatable="yes">Επεξεργασία ομάδας...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_edit_group_mi_activate" swapped="no"/>
                       </object>
@@ -149,7 +149,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Delete group...</property>
+                        <property name="label" translatable="yes">Διαγραφή ομάδας...</property>
                         <signal name="activate" handler="on_delete_group_mi_activate" swapped="no"/>
                       </object>
                     </child>
@@ -162,7 +162,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_View</property>
+                <property name="label" translatable="yes">_Προβολή</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu4">
@@ -173,7 +173,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Columns</property>
+                        <property name="label" translatable="yes">Στήλες</property>
                         <property name="use_underline">True</property>
                         <child type="submenu">
                           <object class="GtkMenu" id="view_columns_menu">
@@ -188,7 +188,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show system groups</property>
+                        <property name="label" translatable="yes">Εμφάνιση ομάδων συστήματος</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="on_show_system_groups_mi_toggled" swapped="no"/>
                       </object>
@@ -198,7 +198,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Show private groups</property>
+                        <property name="label" translatable="yes">Εμφάνιση προσωπικών ομάδων</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="on_show_private_groups_mi_toggled" swapped="no"/>
                       </object>
@@ -283,7 +283,7 @@
                         <child>
                           <object class="GtkTreeViewColumn" id="gtv_groupname_column">
                             <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Group Name</property>
+                            <property name="title" translatable="yes">Όνομα ομάδας</property>
                             <property name="clickable">True</property>
                             <property name="reorderable">True</property>
                             <property name="sort_column_id">2</property>
@@ -405,7 +405,7 @@
                       <object class="GtkTreeViewColumn" id="utv_username_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Username</property>
+                        <property name="title" translatable="yes">Όνομα χρήστη</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">2</property>
@@ -421,7 +421,7 @@
                       <object class="GtkTreeViewColumn" id="utv_primary_group_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Primary Group</property>
+                        <property name="title" translatable="yes">Κύρια ομάδα</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">3</property>
@@ -437,7 +437,7 @@
                       <object class="GtkTreeViewColumn" id="utv_full_name_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Full Name</property>
+                        <property name="title" translatable="yes">Ονοματεπώνυμο</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">4</property>
@@ -453,7 +453,7 @@
                       <object class="GtkTreeViewColumn" id="utv_office_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Office</property>
+                        <property name="title" translatable="yes">Γραφείο</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">5</property>
@@ -469,7 +469,7 @@
                       <object class="GtkTreeViewColumn" id="utv_office_phone_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Office phone</property>
+                        <property name="title" translatable="yes">Τηλ. γραφείου</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">6</property>
@@ -485,7 +485,7 @@
                       <object class="GtkTreeViewColumn" id="utv_home_phone_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Home phone</property>
+                        <property name="title" translatable="yes">Τηλ. οικίας</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">7</property>
@@ -501,7 +501,7 @@
                       <object class="GtkTreeViewColumn" id="utv_other_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Other</property>
+                        <property name="title" translatable="yes">Άλλο</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">8</property>
@@ -517,7 +517,7 @@
                       <object class="GtkTreeViewColumn" id="utv_directory_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Directory</property>
+                        <property name="title" translatable="yes">Κατάλογος</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">9</property>
@@ -533,7 +533,7 @@
                       <object class="GtkTreeViewColumn" id="utv_shell_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Shell</property>
+                        <property name="title" translatable="yes">Κέλυφος</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">10</property>
@@ -549,7 +549,7 @@
                       <object class="GtkTreeViewColumn" id="utv_last_pass_change_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Last password change</property>
+                        <property name="title" translatable="yes">Τελευταία αλλαγή κωδικού</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">11</property>
@@ -565,7 +565,7 @@
                       <object class="GtkTreeViewColumn" id="utv_minimum_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Minimum</property>
+                        <property name="title" translatable="yes">Ελάχιστη διάρκεια</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">12</property>
@@ -581,7 +581,7 @@
                       <object class="GtkTreeViewColumn" id="utv_maximum_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Maximum</property>
+                        <property name="title" translatable="yes">Μέγιστη διάρκεια</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">13</property>
@@ -597,7 +597,7 @@
                       <object class="GtkTreeViewColumn" id="utv_warn_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Warn</property>
+                        <property name="title" translatable="yes">Προειδοποίηση</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">14</property>
@@ -613,7 +613,7 @@
                       <object class="GtkTreeViewColumn" id="utv_inactive_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Inactive</property>
+                        <property name="title" translatable="yes">Ανενεργός</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">15</property>
@@ -629,7 +629,7 @@
                       <object class="GtkTreeViewColumn" id="utv_expire_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Expire</property>
+                        <property name="title" translatable="yes">Λήξη</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">16</property>

@@ -10,8 +10,6 @@ import uuid
 import struct, socket
 
 
-
-
 class Ip_Dialog:
     def __init__(self):
         gladefile = "ip_dialog.ui"
@@ -39,9 +37,9 @@ class Ip_Dialog:
         add = True
         """Update the name from dialog"""
         self.info["name"] = self.name_entry.get_text()
-        text = "Do you want to continue?"
-        secondary_text = """A new connection with the name "%s" will be created.""" %(self.info["name"])
-        response = self.Dialog(text, "Confirm", "question", secondary_text)
+        text = "Θέλετε να συνεχίσετε;"
+        secondary_text = """Θα δημιουργηθεί μία νέα σύνδεση με όνομα "%s".""" %(self.info["name"])
+        response = self.Dialog(text, "Επιβεβαίωση", "question", secondary_text)
         if response == Gtk.ResponseType.YES:
             bytes = [unhexlify(v) for v in self.info["hwaddress"].split(":")]
             s_wired = dbus.Dictionary({'duplex':'full',
@@ -80,9 +78,9 @@ class Ip_Dialog:
                 connection = dbus.Interface(proxy, "org.freedesktop.NetworkManager.Settings.Connection")
                 connection_settings = connection.GetSettings()
                 if connection_settings["connection"]["id"] == self.info["name"]:
-                    text = "This connection already exists. Would you like to update the already existing connection?"
-                    secondary_text = """If you choose "No" you must change the connection name."""
-                    response = self.Dialog(text, "Conflict", "question", secondary_text)
+                    text = "Αυτή η σύνδεση υπάρχει ήδη. Θα θέλατε να ενημερώσετε τις πληροφορίες της;"
+                    secondary_text = """Αν επιλέξετε "Όχι" θα πρέπει να αλλάξετε το όνομα της σύνδεσης."""
+                    response = self.Dialog(text, "Σύγκρουση", "question", secondary_text)
                     if response == Gtk.ResponseType.YES:
                         connection.Update(con)
                         add = False
@@ -121,9 +119,9 @@ class Ip_Dialog:
                     if item[0].strip() == "State" and not bool_state:
                         bool_state = True
                         if (item[1].strip()).find("disconnected") != -1:
-                            text = "Connection failure"
-                            secondary_text = "You need to be connected in a network. The window will be closed."
-                            self.Dialog(text, "Error", "error", secondary_text)
+                            text = "Αποτυχία σύνδεσης"
+                            secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει."
+                            self.Dialog(text, "Σφάλμα", "error", secondary_text)
                             self.dialog.destroy()
                         else:
                             con_state = True
@@ -133,9 +131,9 @@ class Ip_Dialog:
                             info = ((item[1].replace("-","")).strip()).split(" ",1)
                             device = info[0]
                             if device != "eth0":
-                                text = "Wired connection failure"
-                                secondary_text = "You need to install a wired connection. The window will be closed."
-                                self.Dialog(text, "Error", "error", secondary_text)
+                                text = "Αποτυχία ενσύρματης σύνδεσης"
+                                secondary_text = "Πρέπει να ρυθμίσετε μια ενσύρματη σύνδεση. διάλογος θα κλείσει."
+                                self.Dialog(text, "Σφάλμα", "error", secondary_text)
                                 self.dialog.destroy()
                             else:
                                 con_device = True
@@ -201,9 +199,9 @@ class Ip_Dialog:
                 self.Check_Button()
       
         else:
-            text = "Error during execution 'nm-tool'"
+            text = "Σφάλμα κατά την εκτέλεση του 'nm-tool'"
             secondary_text = p.stderr.read()
-            self.Dialog(text, "Error", "error", secondary_text)
+            self.Dialog(text, "Σφάλμα", "error", secondary_text)
             self.dialog.destroy()
 
 
@@ -236,7 +234,7 @@ class Ip_Dialog:
             else:
                 self.address = False
                 widget.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
-                widget.set_icon_tooltip_text(1, "Invalid IP Address. You have to edit the IP Address of the connection")
+                widget.set_icon_tooltip_text(1, "Μη-έγκυρη διεύθυνση IP. Πρέπει να επεξεργαστείτε τη διεύθυνση IP της σύνδεσης")
                 self.name_entry.set_sensitive(False)
             if self.name_entry.get_text().startswith("eth0,10.160.31."):
                 self.page_title_label.set_label(self.info["device"]+","+new_ip)
@@ -250,7 +248,7 @@ class Ip_Dialog:
             else: 
                 self.name = False          
                 widget.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
-                widget.set_icon_tooltip_text(1, "Invalid Name. You have to edit edit the Name of the connection")
+                widget.set_icon_tooltip_text(1, "Μη-έγκυρο όνομα. Πρέπει να επεξεργαστείτε το όνομα της σύνδεσης")
             self.page_title_label.set_label(widget.get_text())
         self.Check_Button()           
         return True

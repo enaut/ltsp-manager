@@ -5,7 +5,7 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Create Network Connection</property>
+    <property name="title" translatable="yes">Δημιουργία σύνδεσης δικτύου</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
@@ -23,7 +23,7 @@
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="button2">
-                <property name="label" translatable="yes">Cancel</property>
+                <property name="label" translatable="yes">Ακύρωση</property>
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -90,7 +90,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Create Network Connection</property>
+                    <property name="label" translatable="yes">Δημιουργία σύνδεσης δικτύου</property>
                     <attributes>
                       <attribute name="font-desc" value="Sans Bold 13"/>
                     </attributes>
@@ -123,7 +123,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Interface:</property>
+                                <property name="label" translatable="yes">Διεπαφή:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -138,7 +138,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Hardware Address:</property>
+                                <property name="label" translatable="yes">Διεύθυνση υλικού:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -153,7 +153,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Driver:</property>
+                                <property name="label" translatable="yes">Οδηγός:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -168,7 +168,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Speed:</property>
+                                <property name="label" translatable="yes">Ταχύτητα:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -243,7 +243,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">General</property>
+                                <property name="label" translatable="yes">Γενικά</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -261,7 +261,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Name</property>
+                                <property name="label" translatable="yes">Όνομα</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -414,7 +414,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">IP Address:</property>
+                                <property name="label" translatable="yes">Διεύθυνση IP:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -429,7 +429,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Subnet Mask:</property>
+                                <property name="label" translatable="yes">Μάσκα υποδικτύου:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -444,7 +444,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Default Route:</property>
+                                <property name="label" translatable="yes">Προεπιλεγμένη διαδρομή:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -459,7 +459,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Primary DNS:</property>
+                                <property name="label" translatable="yes">Πρωτεύων DNS:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -474,7 +474,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Secondary DNS:</property>
+                                <property name="label" translatable="yes">Δευτερεύων DNS:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -489,7 +489,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Third DNS:</property>
+                                <property name="label" translatable="yes">Τριτεύων DNS:</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -538,7 +538,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="xpad">20</property>
-                                <property name="label" translatable="yes">Ignore</property>
+                                <property name="label" translatable="yes">Αγνόηση</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>

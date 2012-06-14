@@ -23,11 +23,11 @@ LAST_GID=29999
 NAME_REGEX = "^[a-z][-a-z0-9_]*$"
 HOME_PREFIX = "/home"
 
-USER_FIELDS = ['UID', 'Username', 'Primary group', 'Full name', 'Office', 
-'Office phone', 'Home phone', 'Other', 'Directory', 'Shell', 'Groups',
-'Last password change', 'Minimum', 'Maximum', 'Warn', 'Inactive', 'Expire']
+USER_FIELDS = ['UID', 'Όνομα χρήστη', 'Κύρια ομάδα', 'Ονοματεπώνυμο', 'Γραφείο', 
+'Τηλ. γραφείου', 'Τηλ. οικίας', 'Άλλο', 'Κατάλογος', 'Κέλυφος', 'Ομάδες',
+'Τελευταία αλλαγή κωδικού', 'Ελάχιστη διάρκεια', 'Μέγιστη διάρκεια', 'Προειδοποίηση', 'Ανενεργός', 'Λήξη']
 CSV_USER_FIELDS = USER_FIELDS
-CSV_USER_FIELDS.extend(['Encrypted Password', 'Password'])
+CSV_USER_FIELDS.extend(['Κρυπτογραφημένος κωδικός', 'Κωδικός'])
 
 def greek_to_latin(name):
     mappings = {
@@ -109,7 +109,7 @@ class System:
         if res == 0:
             return ""
         else:
-            print "Error executing command:"
+            print "Σφάλμα κατά την εκτέλεση εντολής:"
             print " $ %s" % ' '.join(cmdline)
             print p.stdout.read()
             err = p.stderr.read()
@@ -330,7 +330,7 @@ class System:
 
 class CSV:
     def __init__(self):
-        self.fields_map = {'Username': 'name', 'Last password change': 'lstchg', 'Primary group': 'gid', 'Shell': 'shell', 'UID': 'uid', 'Office': 'office', 'Encrypted Password': 'password', 'Password': 'plainpw', 'Expire': 'expire', 'Maximum': 'max', 'Warn': 'warn', 'Directory': 'directory', 'Minimum': 'min', 'Other': 'other', 'Groups': 'groups', 'Office phone': 'wphone', 'Inactive': 'inact', 'Full name': 'rname', 'Home phone': 'hphone'}
+        self.fields_map = {'Όνομα χρήστη': 'name', 'Τελευταία αλλαγή κωδικού': 'lstchg', 'Κύρια ομάδα': 'gid', 'Κέλυφος': 'shell', 'UID': 'uid', 'Γραφείο': 'office', 'Κρυπτογραφημένος κωδικός': 'password', 'Κωδικός': 'plainpw', 'Λήξη': 'expire', 'Μέγιστη διάρκεια': 'max', 'Προειδοποίηση': 'warn', 'Κατάλογος': 'directory', 'Ελάχιστη διάρκεια': 'min', 'Άλλο': 'other', 'Ομάδες': 'groups', 'Τηλ. γραφείου': 'wphone', 'Ανενεργός': 'inact', 'Ονοματεπώνυμο': 'rname', 'Τηλ. οικίας': 'hphone'}
     
     def parse(self, fname):
         users_dict = csv.DictReader(open(fname))
@@ -372,14 +372,14 @@ class CSV:
         writer.writerow(dict((n,n) for n in CSV_USER_FIELDS))
         for user in users:
             u_dict = dict( (key, user.__dict__[o_key] if user.__dict__[o_key] is not None else '') for key, o_key in self.fields_map.iteritems())
-            u_dict['Password'] = '' # We don't have the plain password
+            u_dict['Κωδικός'] = '' # We don't have the plain password
             
             # Convert the groups value to a proper gname:gid pairs format string
             final_groups = u_dict['Groups']
             for i, gname in enumerate(final_groups):
                 gid = system.groups[gname].gid
                 final_groups[i] = ':'.join((final_groups[i], str(gid)))
-            u_dict['Groups'] = ','.join(final_groups)
+            u_dict['Ομάδες'] = ','.join(final_groups)
             
             writer.writerow(u_dict)
         f.close()
