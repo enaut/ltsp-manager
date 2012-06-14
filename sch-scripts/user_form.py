@@ -5,6 +5,7 @@ from gi.repository import Gtk, Gdk
 import dialogs
 import os
 import re
+import datetime
 import libuser
 import config
 
@@ -43,6 +44,8 @@ class UserForm(object):
         self.gc_other = self.builder.get_object('gcos_other_entry')
         self.groups_tree = self.builder.get_object('groups_treeview')
         self.groups_store = self.builder.get_object('groups_liststore')
+        self.groups_filter = self.builder.get_object('groups_filter')
+        self.groups_sort = self.builder.get_object('groups_sort')
         self.last_change = self.builder.get_object('last_change')
         self.minimum = self.builder.get_object('minimum')
         self.maximum = self.builder.get_object('maximum')
@@ -53,11 +56,15 @@ class UserForm(object):
         self.pgid = self.builder.get_object('pgid_entry')
         self.role_combo = self.builder.get_object('role_combo')
         self.primary_group = None
+        self.show_sys_groups = False
         self.active_from_role = []
+        
+        self.groups_filter.set_visible_func(lambda model, itr, x: self.show_sys_groups or model[itr][0].is_user_group())
+        self.groups_sort.set_sort_column_id(1, Gtk.SortType.ASCENDING)
         
         # Fill the groups treeview
         for group, group_obj in system.groups.iteritems():
-            self.groups_store.append([group_obj, group, False, True, 400, False])
+            self.groups_store.append([group_obj, group, False, True, 400, False, group_obj.gid])
             
         # Fill the shells combobox
         for shell in system.get_valid_shells():
@@ -66,6 +73,14 @@ class UserForm(object):
         # Fill the roles combobox
         for role, groups in self.roles.iteritems():
             self.role_combo.append_text(role)
+    
+    def on_show_sys_groups_toggled(self, widget):
+        self.show_sys_groups = not self.show_sys_groups
+        self.groups_filter.refilter()
+        if self.show_sys_groups:
+            self.groups_sort.set_sort_column_id(6, Gtk.SortType.ASCENDING)
+        else:
+            self.groups_sort.set_sort_column_id(1, Gtk.SortType.ASCENDING)
     
     def on_role_combo_changed(self, widget):
         role = widget.get_active_text()
@@ -100,8 +115,12 @@ class UserForm(object):
         self.set_apply_sensitivity()
     
     def on_group_toggled(self, widget, path):
-        self.groups_store[path][2] = not self.groups_store[path][2]
-        self.groups_store[path][5] = not self.groups_store[path][5]
+        print path
+        path = self.groups_sort.convert_path_to_child_path(path)
+        path = self.groups_filter.convert_path_to_child_path(path)
+        print path
+        self.groups_model[path][2] = not self.groups_model[path][2]
+        self.groups_model[path][5] = not self.groups_model[path][5]
         
     def on_groups_selection_changed(self, widget):
         self.builder.get_object('set_primary_button').set_sensitive(len(widget.get_selected_rows()[1]) == 1)
@@ -299,6 +318,8 @@ class NewUserDialog(UserForm):
         self.uid_entry.set_text(str(self.system.get_free_uid()))
         self.pgid.set_text(str(self.system.get_free_gid()))
         self.shells_entry.set_text('/bin/bash')
+        epoch = datetime.datetime.utcfromtimestamp(0)
+        self.last_change.set_value((datetime.datetime.today() - epoch).days)
         
         self.dialog.show()
     
