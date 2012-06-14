@@ -8,6 +8,9 @@
     <property name="title" translatable="yes">Δημιουργία σύνδεσης δικτύου</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="default_width">300</property>
+    <property name="default_height">200</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon">sch-scripts.png</property>
     <property name="type_hint">dialog</property>

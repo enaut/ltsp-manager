@@ -13,8 +13,6 @@ import struct, socket
 class Ip_Dialog:
     def __init__(self):
         gladefile = "ip_dialog.ui"
-        self.address = False
-        self.name = False
         self.builder = Gtk.Builder()
         self.builder.add_from_file(gladefile)
         dic = {"on_dialog_destroy":self.Exit,
@@ -22,7 +20,10 @@ class Ip_Dialog:
                "on_cancel":self.Cancel}
         self.builder.connect_signals(dic)
         self.dialog = self.builder.get_object("dialog1")
-        self.Run_NM_Tools(["nm-tool"])
+        self.address = False
+        self.name = False
+        self.info = {}
+        self.Collect_Info()
 
     def Exit(self, widget, event):
         """
@@ -47,16 +48,16 @@ class Ip_Dialog:
             s_con = dbus.Dictionary({'type':'802-3-ethernet',
                         'uuid':str(uuid.uuid4()),
                         'id':self.info["name"]}) 
-            address = str(struct.unpack('L',socket.inet_aton(self.info["address"]))[0]) + 'L'
+            address = self.Dotted_Quad_String_To_Int32(self.info["address"])
             prefix = self.info["prefix"] + 'L'
-            gateway = str(struct.unpack('L',socket.inet_aton(self.info["gateway"]))[0]) + 'L'
+            gateway = self.Dotted_Quad_String_To_Int32(self.info["gateway"])
             addr = dbus.Array([dbus.UInt32(address),
                         dbus.UInt32(prefix),
                         dbus.UInt32(gateway)],
                         signature=dbus.Signature('u')) 
-            primary_dns = str(struct.unpack('L',socket.inet_aton("127.0.0.1"))[0]) + 'L'
-            secondary_dns = str(struct.unpack('L',socket.inet_aton("194.63.238.4"))[0]) + 'L'
-            third_dns = str(struct.unpack('L',socket.inet_aton("8.8.8.8"))[0]) + 'L'            
+            primary_dns = self.Dotted_Quad_String_To_Int32("127.0.0.1")
+            secondary_dns = self.Dotted_Quad_String_To_Int32("194.63.238.4")
+            third_dns = self.Dotted_Quad_String_To_Int32("8.8.8.8")            
             dns = dbus.Array([dbus.UInt32(primary_dns),
                        dbus.UInt32(secondary_dns),
                        dbus.UInt32(third_dns)],
@@ -88,6 +89,10 @@ class Ip_Dialog:
                         return False
             if add:
                 settings.AddConnection(con)
+
+
+            subprocess.Popen(['service', 'network-manager', 'restart']) 
+            subprocess.Popen(['ltsp-config', 'dnsmasq', '--overwrite'])
             self.dialog.destroy()
         else:
             return False
@@ -100,107 +105,105 @@ class Ip_Dialog:
         """
         self.dialog.destroy()
 
-    def Run_NM_Tools(self, cmdline):
+    def Collect_Info(self):
         """
         Collect connection informations
         """
-        self.info = {}
-        bool_state = False
-        con_state = False
-        con_device = False        
-        cmdline = [str(s) for s in cmdline]
-        p = subprocess.Popen(cmdline, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        res = p.wait()
-        if res == 0:
-            response = p.stdout.read().split("\n")
-            for item in response:
-                if item != "":
-                    item = item.split(":")
-                    if item[0].strip() == "State" and not bool_state:
-                        bool_state = True
-                        if (item[1].strip()).find("disconnected") != -1:
-                            text = "Αποτυχία σύνδεσης"
-                            secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει."
-                            self.Dialog(text, "Σφάλμα", "error", secondary_text)
-                            self.dialog.destroy()
-                        else:
-                            con_state = True
+        bus = dbus.SystemBus()
+        try:
+            proxy = bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+        except:
+            text = "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου"
+            secondary_text = "Ο διάλογος θα κλείσει."
+            self.Dialog(text, "Σφάλμα", "error", secondary_text)
+            self.dialog.destroy()
+        prop = proxy.GetAll("org.freedesktop.NetworkManager")
+        
+        if prop["NetworkingEnabled"] == 1:
+            if len(prop["ActiveConnections"]) == 1:
+                proxy = bus.get_object("org.freedesktop.NetworkManager", prop["ActiveConnections"][0])
+                connection_prop = proxy.GetAll("org.freedesktop.NetworkManager.Connection.Active")
 
-                    if con_state:
-                        if item[0].find("Device") != -1:
-                            info = ((item[1].replace("-","")).strip()).split(" ",1)
-                            device = info[0]
-                            if device != "eth0":
-                                text = "Αποτυχία ενσύρματης σύνδεσης"
-                                secondary_text = "Πρέπει να ρυθμίσετε μια ενσύρματη σύνδεση. διάλογος θα κλείσει."
-                                self.Dialog(text, "Σφάλμα", "error", secondary_text)
-                                self.dialog.destroy()
-                            else:
-                                con_device = True
-                                device_entry = self.builder.get_object("entry1")
-                                device_entry.set_text("Ethernet ("+device+")") 
-                                self.info["device"] = device
+                proxy = bus.get_object("org.freedesktop.NetworkManager", connection_prop["Devices"][0])
+                device_prop = proxy.GetAll("org.freedesktop.NetworkManager.Device")
 
-            if con_state and con_device: 
-                for item in response:
-                    if item != "":
-                        item = item.split(":")
-                        if item[0].strip() == "HW Address":
-                            hwaddress = (":".join(item[1:len(item)])).strip()
-                            hwaddress_entry = self.builder.get_object("entry2")
-                            hwaddress_entry.set_text(hwaddress)
-                            self.info["hwaddress"] = hwaddress
-                        elif item[0].strip() == "Driver":
-                            driver = item[1].strip()
-                            driver_entry = self.builder.get_object("entry3")
-                            driver_entry.set_text(driver)
-                            self.info["driver"] = driver
-                        elif item[0].strip() == "Speed":
-                            speed = item[1].strip()
-                            speed_entry = self.builder.get_object("entry4")
-                            speed_entry.set_text(speed)
-                            self.info["speed"] = speed
-                        elif item[0].strip() == "Address":
-                            address = "10.160.31.10"
-                            address_entry = self.builder.get_object("entry6")
-                            address_entry.set_text(address)
-                            address_entry.connect("focus-in-event", self.Region)
-                            address_entry.connect("changed", self.Changed, "address")
-                            self.info["address"] = address  
-                            self.address = True   
-                        elif item[0].strip() == "Prefix":
-                            reg = "\((.+)\)"
-                            prefix = item[1].strip() 
-                            subnet_mask = (re.search(reg, prefix)).group(1)
-                            prefix = re.sub(reg,"", prefix)
-                            prefix_entry = self.builder.get_object("entry8")
-                            prefix_entry.set_text(subnet_mask)
-                            self.info["prefix"] = prefix.strip()
-                        elif item[0].strip() == "Gateway":
-                            gateway = item[1].strip()
-                            gateway_entry = self.builder.get_object("entry9")
-                            gateway_entry.set_text(gateway)
-                            self.info["gateway"] = gateway
-                self.page_title_label = self.builder.get_object("label2")
-                self.page_title_label.set_label(device+","+address)
-                self.name_entry = self.builder.get_object("entry5")
-                self.name_entry.set_text(device+","+address)
-                self.name_entry.connect("focus-in-event", self.Region)
-                self.name_entry.connect("changed", self.Changed, "name")  
-                self.info["name"] = device+","+address
-                self.name = True
-                self.Auto_Suggest()
-                dns_entry_1 = self.builder.get_object("entry10")
-                dns_entry_1.set_text("127.0.0.1")
-                dns_entry_2 = self.builder.get_object("entry11")
-                dns_entry_2.set_text("194.63.238.4")
-                dns_entry_3 = self.builder.get_object("entry12")
-                dns_entry_3.set_text("8.8.8.8")
-                self.Check_Button()
-      
+                
+                if device_prop["DeviceType"] == 1:
+                    proxy = bus.get_object("org.freedesktop.NetworkManager", connection_prop["Devices"][0])
+                    wired_prop = proxy.GetAll("org.freedesktop.NetworkManager.Device.Wired")
+                  
+                    interface = device_prop["Interface"]
+                    interface_entry = self.builder.get_object("entry1")
+                    interface_entry.set_text("Ethernet ("+interface+")") 
+                    self.info["interface"] = interface
+                    
+                    driver = device_prop["Driver"]
+                    driver_entry = self.builder.get_object("entry3")
+                    driver_entry.set_text(driver)
+                    self.info["driver"] = driver 
+
+                    hwaddress = wired_prop["HwAddress"]
+                    hwaddress_entry = self.builder.get_object("entry2")
+                    hwaddress_entry.set_text(hwaddress)
+                    self.info["hwaddress"] = hwaddress
+
+                    speed = str(wired_prop["Speed"])
+                    speed_entry = self.builder.get_object("entry4")
+                    speed_entry.set_text(speed)
+                    self.info["speed"] = speed
+
+                    
+                    proxy = bus.get_object("org.freedesktop.NetworkManager", device_prop["Ip4Config"])
+                    address_prop = proxy.GetAll("org.freedesktop.NetworkManager.IP4Config") 
+                    
+                    gateway = self.Int32_To_Dotted_Quad_String(address_prop["Addresses"][0][2])
+                    gateway_entry = self.builder.get_object("entry9")
+                    gateway_entry.set_text(gateway)
+                    self.info["gateway"] = gateway
+
+                    address = "10.160.31.10"
+                    address_entry = self.builder.get_object("entry6")
+                    address_entry.set_text(address)
+                    address_entry.connect("focus-in-event", self.Region)
+                    address_entry.connect("changed", self.Changed, "address")
+                    self.info["address"] = address  
+                    self.address = True 
+                    
+                    subnet = self.Bits_To_Subnet_Mask(address_prop["Addresses"][0][1])
+                    subnet_entry = self.builder.get_object("entry8")
+                    subnet_entry.set_text(subnet) 
+                    self.info["prefix"] = str(address_prop["Addresses"][0][1])
+                    
+
+                    self.page_title_label = self.builder.get_object("label2")
+                    self.page_title_label.set_label(interface+","+address)
+                    
+                    self.name_entry = self.builder.get_object("entry5")
+                    self.name_entry.set_text(interface+","+address)
+                    self.name_entry.connect("focus-in-event", self.Region)
+                    self.name_entry.connect("changed", self.Changed, "name")  
+                    self.info["name"] = interface+","+address
+                    self.name = True
+                    self.Auto_Suggest()
+
+                    dns_entry_1 = self.builder.get_object("entry10")
+                    dns_entry_1.set_text("127.0.0.1")
+                
+                    dns_entry_2 = self.builder.get_object("entry11")
+                    dns_entry_2.set_text("194.63.238.4")
+
+                    dns_entry_3 = self.builder.get_object("entry12")
+                    dns_entry_3.set_text("8.8.8.8")
+                    self.Check_Button()
+            else:
+                text = "Αποτυχία σύνδεσης"
+                secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει." 
+                self.Dialog(text, "Σφάλμα", "error", secondary_text)
+                self.dialog.destroy()
+                 
         else:
-            text = "Σφάλμα κατά την εκτέλεση του 'nm-tool'"
-            secondary_text = p.stderr.read()
+            text = "Αποτυχία δικτύου"
+            secondary_text = "Η δικτύωση θα πρέπει να είναι ενεργοποιημένη. Ο διάλογος θα κλείσει."
             self.Dialog(text, "Σφάλμα", "error", secondary_text)
             self.dialog.destroy()
 
@@ -227,7 +230,7 @@ class Ip_Dialog:
             if re.match(reg, new_ip):
                 self.address = True
                 self.info["address"] = new_ip
-                self.info["name"] = self.info["device"]+","+widget.get_text()
+                self.info["name"] = self.info["interface"]+","+widget.get_text()
                 self.Auto_Suggest()
                 widget.set_icon_from_stock(1, None)
                 self.name_entry.set_sensitive(True)  
@@ -237,8 +240,8 @@ class Ip_Dialog:
                 widget.set_icon_tooltip_text(1, "Μη-έγκυρη διεύθυνση IP. Πρέπει να επεξεργαστείτε τη διεύθυνση IP της σύνδεσης")
                 self.name_entry.set_sensitive(False)
             if self.name_entry.get_text().startswith("eth0,10.160.31."):
-                self.page_title_label.set_label(self.info["device"]+","+new_ip)
-                self.name_entry.set_text(self.info["device"]+","+new_ip)
+                self.page_title_label.set_label(self.info["interface"]+","+new_ip)
+                self.name_entry.set_text(self.info["interface"]+","+new_ip)
         elif mode == "name":
             new_name = widget.get_text()
             if len(new_name)!=0 and new_name[0]!=" ":
@@ -259,10 +262,10 @@ class Ip_Dialog:
         Define message dialogs
         """
         if kind == "error":
-            dialog = Gtk.MessageDialog(self.builder.get_object("dialog1"), Gtk.DialogFlags.MODAL,
+            dialog = Gtk.MessageDialog(self.dialog, Gtk.DialogFlags.MODAL,
                                        Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, text)
         elif kind == "question":
-            dialog = Gtk.MessageDialog(self.builder.get_object("dialog1"), Gtk.DialogFlags.MODAL,
+            dialog = Gtk.MessageDialog(self.dialog, Gtk.DialogFlags.MODAL,
                                        Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text)
         dialog.set_property("secondary-text", secondary_text)    
         dialog.set_title(title)
@@ -293,6 +296,31 @@ class Ip_Dialog:
         completion.set_text_column(0)
         self.name_entry.set_completion(completion)
         return True
+
+    def Dotted_Quad_String_To_Int32(self, address):
+        """
+        Convert ip to int32
+        """
+        return struct.unpack("L",socket.inet_aton(address))[0]
+
+    def Int32_To_Dotted_Quad_String(self, num):
+        """
+        Convert int32 to ip     
+        """
+        return socket.inet_ntoa(struct.pack("L",num))
+
+    def Bits_To_Subnet_Mask(self, bits):
+        """
+        Convert bits to subnet mask
+        """
+        try:
+            bits=int(bits)
+            if bits<=0 or bits>32:
+                raise Exception
+        except:
+            return "255.255.255.255"
+        num = ((1L<<bits)-1L)<<(32L-bits)
+        return socket.inet_ntoa(struct.pack("!L",num))
 
 
 if __name__ == "__main__":
