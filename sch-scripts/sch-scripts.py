@@ -35,10 +35,8 @@ class Gui:
         
         self.show_private_groups = False
         self.show_system_groups = False
-        self.connect_treeviews = False
         self.builder.get_object('show_private_groups_mi').set_active(self.conf.getboolean('GUI', 'show_private_groups'))
         self.builder.get_object('show_system_groups_mi').set_active(self.conf.getboolean('GUI', 'show_system_groups'))
-        self.builder.get_object('connect_treeviews_mi').set_active(self.conf.getboolean('GUI', 'connect_treeviews'))
         
         self.users_filter.set_visible_func(self.set_user_visibility)
         self.groups_filter.set_visible_func(self.set_group_visibility)
@@ -92,8 +90,6 @@ class Gui:
                 users_selection.select_iter(users_iters[uname])
     
     def set_user_visibility(self, model, rowiter, options):
-        if not self.connect_treeviews:
-            return True
         user = model[rowiter][0]
         selected = self.get_selected_groups()
         # FIXME: The list comprehension here costs
@@ -201,7 +197,6 @@ class Gui:
     def on_main_window_delete_event(self, widget, event):
         self.conf.set('GUI', 'show_private_groups', str(self.show_private_groups))
         self.conf.set('GUI', 'show_system_groups', str(self.show_system_groups))
-        self.conf.set('GUI', 'connect_treeviews', str(self.connect_treeviews))
         visible_cols = [col.get_title() for col in self.users_tree.get_columns() if col.get_visible()]
         self.conf.set('GUI', 'visible_user_columns', ','.join(visible_cols))
         config.save()
@@ -218,10 +213,6 @@ class Gui:
     def on_show_private_groups_mi_toggled(self, widget):
         self.show_private_groups = not self.show_private_groups
         self.groups_filter.refilter()
-        
-    def on_connect_treeviews_mi_toggled(self, widget):
-        self.connect_treeviews = not self.connect_treeviews
-        self.users_filter.refilter()
     
     def get_selected_users(self):
         selection = self.users_tree.get_selection()

@@ -7,7 +7,6 @@ settings_f = os.path.join(path, 'settings')
 
 gui_defaults = {'show_system_groups' : False,
                 'show_private_groups' : False,
-                'connect_treeviews' : True,
                 'visible_user_columns' : 'all'
                }
 roles_defaults = {'Teacher' : 'teachers,video,someunexistentgroup',

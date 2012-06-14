@@ -201,16 +201,6 @@
                         <signal name="toggled" handler="on_show_private_groups_mi_toggled" swapped="no"/>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkCheckMenuItem" id="connect_treeviews_mi">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Connect treeviews</property>
-                        <property name="use_underline">True</property>
-                        <signal name="toggled" handler="on_connect_treeviews_mi_toggled" swapped="no"/>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
