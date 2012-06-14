@@ -9,8 +9,11 @@ gui_defaults = {'show_system_groups' : False,
                 'show_private_groups' : False,
                 'visible_user_columns' : 'all'
                }
-roles_defaults = {'Καθηγητής' : 'video',
-                  'Μαθητής' : 'students'
+roles_defaults = {
+                  'Καθηγητής' : 'adm,sambashare,plugdev,vboxusers,cdrom,epoptes,$$teachers',
+                  'Διαχειριστής' : 'adm,sudo,sambashare,plugdev,vboxusers,cdrom,lpadmin,epoptes,$$teachers,dip',
+                  'Μαθητής' : 'sambashare,vboxusers',
+                  'Προσωπικό' : 'adm,sambashare,plugdev,vboxusers,cdrom'
                  }
 
 parser = ConfigParser.SafeConfigParser()
