@@ -64,11 +64,9 @@ install() {
             addgroup "$TEACHERS"
             if administrator=$(getent passwd 1000 | cut -d : -f 1); then
                 gpasswd -a "$administrator" "$TEACHERS"
+                gpasswd -a "$administrator" epoptes
             fi
         fi
-    fi
-    if [ "$DISABLE_SHARED_FOLDERS" != true ]; then
-        invoke-rc.d shared-folders start
     fi
 }
 
