@@ -4,7 +4,9 @@
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 run_as_root() {
-    if [ -x /usr/bin/kdesudo ]; then
+    if [ "$(id -u)" = 0 ]; then
+        exec "$@"
+    elif [ -x /usr/bin/kdesudo ]; then
         exec kdesudo -- "$@"
     elif [ -x /usr/bin/gksudo ]; then
         exec gksudo -- "$@"
@@ -25,14 +27,41 @@ run_as_root() {
     fi
 }
 
-if [ -x /usr/share/sch-scripts/sch-scripts.py ]; then
-    cd /usr/share/sch-scripts
-    case "$1" in
-        # help and version need to run without root
-        -h|--help|-v|--verson) ./sch-scripts.py "$@" ;;
-        *) run_as_root ./sch-scripts.py "$@" ;;
-    esac
-else
+# /usr/sbin/sch-scripts is usually run from a user account without sudo.
+# That then launches `sudo sch-scripts.py`, so the python script doesn't have
+# access to the user's environment, which is needed e.g. to open the help
+# menu URLs in the user's browser.
+# kdesudo doesn't preserve the environment, so they need to be passed in some
+# other way.
+# This doesn't work either: env | gksudo -- sh -c 'cat - > /tmp/env'.
+# So we create in /tmp a shell script that contains all the environment and
+# we pass it to sch-scripts.py with `-e /tmp/file`.
+create_runas_script() {
+    local script
+
+    script=$(mktemp)
+    cat > "$script" <<EOF
+#!/bin/sh
+# Helper script that contains the user environment in order for sch-scripts
+# to be able to launch processes as the user that launched it.
+
+if [ "\$(id -u)" = 0 ]; then
+    exec sudo -u "#$(id -u)" /bin/sh "\$0" "\$@"
+fi
+$(export -p)
+exec "\$@"
+EOF
+    echo "$script"
+}
+
+if [ ! -x /usr/share/sch-scripts/sch-scripts.py ]; then
     echo "/usr/share/sch-scripts/sch-scripts.py not found" >&2
     exit 1
 fi
+
+cd /usr/share/sch-scripts
+case "$1" in
+    # help and version need to run without root
+    -h|--help|-v|--verson) ./sch-scripts.py "$@" ;;
+    *) run_as_root ./sch-scripts.py -e "$(create_runas_script)" "$@" ;;
+esac

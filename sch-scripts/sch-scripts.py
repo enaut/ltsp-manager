@@ -314,11 +314,13 @@ class Gui:
         pass
     
     def run_as_sudo_user(self, cmd):
-        NotImplemented #TODO
+        if runas_user_script == None:
+            sys.stderr.write("Please use /sbin/sch-scripts, not sch-scripts.py\n")
+        else:
+            subprocess.Popen(['/bin/sh', runas_user_script] + cmd)
     
     def open_link(self, link):
-        subprocess.Popen(["xdg-open", link])
-        #self.run_as_sudo_user('xdg-open ' + link) FIXME: uncomment
+        self.run_as_sudo_user(['xdg-open', link])
     
     def on_mi_lts_conf_manpage_activate(self, widget):
         self.open_link('http://manpages.ubuntu.com/lts.conf')
@@ -373,14 +375,20 @@ Copyright (C) 2009-2012 Άλκης Γεωργόπουλος <alkisg@gmail.com>, 
 Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>."""
 
 if __name__ == '__main__':
+    runas_user_script=None
     if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):
         version()
         sys.exit(0)
     elif len(sys.argv) == 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
         usage()
         sys.exit(0)
+    elif len(sys.argv) == 3 and (sys.argv[1] == '-e'):
+        runas_user_script=sys.argv[2]
     elif len(sys.argv) >= 2:
         usage()
         sys.exit(1)
     Gui()
     Gtk.main()
+# TODO: put these in on_mainwin_destroy
+#    if runas_user_script != None:
+#        os.unlink(runas_user_script)
