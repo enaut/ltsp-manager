@@ -163,7 +163,7 @@ IBG/AJ9rr/f+ulpVCgR5bk1UH9uMDidtwA==
 #deb-src http://ppa.launchpad.net/$repo/ubuntu $release main"
     fi
     if [ -z "$filename" ]; then
-        filename="$(echo "$repo" | tr '/' '-')-$release.list"
+        filename="$(echo "$repo" | tr './' '-')-$release.list"
     fi
     filename="/etc/apt/sources.list.d/$filename"
 
@@ -189,6 +189,8 @@ install_sch_scripts() {
     if [ "$release" != "precise" ]; then
         die "Τα sch-scripts μπορούν να εγκατασταθούν μόνο σε Ubuntu 12.04 (Precise)."
     fi
+    # Remove the old repository filenames that contain "." instead of "_".
+    rm -f /etc/apt/sources.list.d/ts.sch.gr*.list
     add_repository "ts.sch.gr"
     add_repository "ts.sch.gr/repo"
 
