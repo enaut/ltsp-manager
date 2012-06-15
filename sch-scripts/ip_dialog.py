@@ -93,6 +93,9 @@ class Ip_Dialog:
 
             subprocess.Popen(['service', 'network-manager', 'restart']) 
             subprocess.Popen(['ltsp-config', 'dnsmasq', '--overwrite'])
+            text = "Η νέα σύνδεση με όνομα %s δημιουργήθηκε" %(self.info["name"])
+            secondary_text = "Θα διακοπεί προσωρινά η σύνδεση δικτύου."
+            self.Dialog(text, "Ειδοποίηση", "info", secondary_text)
             self.dialog.destroy()
         else:
             return False
@@ -263,7 +266,10 @@ class Ip_Dialog:
         """
         if kind == "error":
             dialog = Gtk.MessageDialog(self.dialog, Gtk.DialogFlags.MODAL,
-                                       Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, text)
+                                       Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, text)
+        elif kind == "info":
+            dialog = Gtk.MessageDialog(self.dialog, Gtk.DialogFlags.MODAL,
+                                       Gtk.MessageType.INFO, Gtk.ButtonsType.OK, text)
         elif kind == "question":
             dialog = Gtk.MessageDialog(self.dialog, Gtk.DialogFlags.MODAL,
                                        Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, text)

@@ -19,41 +19,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkMenuItem" id="file">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Αρχείο</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu3">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="menuitem3">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εισαγωγή από csv...</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_import_csv_activate" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="menuitem6">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εξαγωγή σε csv...</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_export_csv_activate" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
               <object class="GtkMenuItem" id="server">
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
@@ -257,6 +222,43 @@
                         <property name="label" translatable="yes">Αφαίρεση από τις επιλεγμένες ομάδες</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_remove_user_mi_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem4">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="new_users_mi">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Μαζική δημιουργία χρηστών...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_new_users_mi_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem3">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Εισαγωγή από csv...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_import_csv_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem6">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Εξαγωγή σε csv...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_export_csv_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>

@@ -264,6 +264,9 @@ class Gui:
                 self.system.remove_user_from_groups(user, groups)
             self.repopulate_treeviews()
     
+    def on_new_users_mi_activate(self, widget):
+        create_users.Create_Users_Dialog()
+    
     def on_new_group_mi_activate(self, widget):
         group_form.NewGroupDialog(self.system, self.repopulate_treeviews)
     
