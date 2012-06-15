@@ -101,6 +101,9 @@ start() {
     local group share_users user
 
     ensure_dir "$SHARE_DIR" "$ADM_UID" "$ADM_GID" 711 || return 1
+    # Create a symlink to help fat clients access newer versions of
+    # /etc/default/shared-folders through the SSHFS mount.
+    ln -sf /etc/default/shared-folders "$SHARE_DIR/.shared-folders" || return 1
     ensure_dir "$SHARE_DIR/.symlinks" "$ADM_UID" "$TEACHERS" 731 || return 1
     find "$SHARE_DIR/.symlinks/" -mindepth 1 ! -type l -delete || return 1
     share_users=","
