@@ -116,10 +116,10 @@ class UserForm(object):
         self.set_apply_sensitivity()
     
     def on_group_toggled(self, widget, path):
-        print path
-        path = self.groups_sort.convert_path_to_child_path(path)
-        path = self.groups_filter.convert_path_to_child_path(path)
-        print path
+        
+        #path = self.groups_sort.convert_path_to_child_path(path)
+        #path = self.groups_filter.convert_path_to_child_path(path)
+        
         self.groups_model[path][2] = not self.groups_model[path][2]
         self.groups_model[path][5] = not self.groups_model[path][5]
         
