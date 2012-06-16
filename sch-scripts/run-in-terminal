@@ -163,7 +163,7 @@ IBG/AJ9rr/f+ulpVCgR5bk1UH9uMDidtwA==
 #deb-src http://ppa.launchpad.net/$repo/ubuntu $release main"
     fi
     if [ -z "$filename" ]; then
-        filename="$(echo "$repo" | tr './' '-')-$release.list"
+        filename="$(echo "$repo" | tr './' '_-')-$release.list"
     fi
     filename="/etc/apt/sources.list.d/$filename"
 
