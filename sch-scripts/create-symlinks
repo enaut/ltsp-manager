@@ -84,7 +84,7 @@ create_symlinks() {
     ln_sf "$XDG_PUBLICSHARE_DIR" "$XDG_DESKTOP_DIR/${XDG_PUBLICSHARE_DIR##*/}"
     teachers=" $(getent group "$TEACHERS" | cut -d : -f 4 | tr ',' ' ') "
     my_groups=$(groups)
-    case "$my_groups" in
+    case " $my_groups " in
         *" $TEACHERS "*) is_teacher=true ;;
     esac
     for group in $my_groups; do
