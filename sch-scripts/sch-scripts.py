@@ -13,6 +13,7 @@ import dialogs
 import export_dialog
 import config
 import ip_dialog
+import os
 
 class Gui:
     def __init__(self):
@@ -292,6 +293,8 @@ class Gui:
         ip_dialog.Ip_Dialog()
     
     def on_publish_ltsp_activate(self, widget):
+        # Manually set IPAPPEND=3 until the update-kernel.conf mess is cleared up
+        os.environ['IPAPPEND']='3'
         subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
     
     def edit_file(self, filename):

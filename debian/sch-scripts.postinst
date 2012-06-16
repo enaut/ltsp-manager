@@ -68,6 +68,12 @@ install() {
             fi
         fi
     fi
+
+    # TODO: remove after a few weeks
+    # Delete our old configuration file, newer LTSP versions will ship it.
+    if grep -qs '# Η οδηγία IPAPPEND=3' /etc/ltsp/update-kernels.conf; then
+        rm -f /etc/ltsp/update-kernels.conf
+    fi
 }
 
 case "$1" in
