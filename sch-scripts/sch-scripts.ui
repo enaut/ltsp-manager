@@ -149,6 +149,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Πληροφορίες LTSP</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_ltsp_info_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -199,6 +200,23 @@
                         <property name="label" translatable="yes">Εμφάνιση προσωπικών ομάδων</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="on_show_private_groups_mi_toggled" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem5">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_refresh">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Ανανέωση</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_refresh_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>

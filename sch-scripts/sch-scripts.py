@@ -217,6 +217,9 @@ class Gui:
         self.show_private_groups = not self.show_private_groups
         self.groups_filter.refilter()
     
+    def on_mi_refresh_activate(self, widget):
+        self.repopulate_treeviews()
+    
     def get_selected_users(self):
         selection = self.users_tree.get_selection()
         paths = selection.get_selected_rows()[1]
@@ -298,6 +301,9 @@ class Gui:
         # Manually set IPAPPEND=3 until the update-kernel.conf mess is cleared up
         os.environ['IPAPPEND']='3'
         subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
+    
+    def on_mi_ltsp_info_activate(self, widget):
+        pass #TODO: TextView
     
     def edit_file(self, filename):
         subprocess.Popen(['xdg-open', filename])
