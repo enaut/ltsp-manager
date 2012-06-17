@@ -1,52 +1,48 @@
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
-#
-#       Copyright (C) 2010 Fotis Tsamis <ftsamis@gmail.com>
-#
-#       This program is free software; you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation; either version 3 of the License, or
-#       (at your option) any later version.
-#       
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
-#       
-#       You should have received a copy of the GNU General Public License
-#       along with this program; if not, write to the Free Software
-#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#       MA 02110-1301, USA.
+# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-import gtk
-import pygtk
-pygtk.require('2.0')
-from schscripts.lib_users import *
+from gi.repository import Gtk
+import libuser
+import config
 
-class Create_Users_Dialog:
-    def __init__(self):
-        self.glade = gtk.Builder()
+
+class NewUsersDialog:
+    def __init__(self, system, refresh):
+        self.system = system
+        self.refresh = refresh
+        self.glade = Gtk.Builder()
         self.glade.add_from_file('create_users.ui')
         self.glade.connect_signals(self)
         self.dialog = self.glade.get_object('create_users_dialog')
         self.user_tree = self.glade.get_object('user_treeview')
         # uname, name, pass respectively
-        self.user_store = gtk.ListStore(str, str, str)
+        self.user_store = Gtk.ListStore(str, str, str)
 
         self.user_tree.set_model(self.user_store)
 
         # Create the columns for self.user_tree
         names = ['Όνομα χρήστη', 'Πραγματικό όνομα', 'Κωδικός πρόσβασης']
         for i in range(3):
-            column = gtk.TreeViewColumn(names[i], gtk.CellRendererText(),
+            column = Gtk.TreeViewColumn(names[i], Gtk.CellRendererText(),
                                         text=i)
             column.set_resizable(True)
             column.set_reorderable(True)
             column.set_sort_column_id(i)
             self.user_tree.append_column(column)
 
-        self.user_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.user_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.glade.get_object('computers_number_spin').set_value(12)
+        self.roles = {i : config.parser.get('Roles', i) for i in config.parser.options('Roles')}
+        
+        text = "{c}"
+        
+        text = " ".join(self.roles['Μαθητής'].split(","))
+        self.groups_tmpl = self.glade.get_object('groups_template_entry').set_text("{c} "+text)
+
+        
         self.dialog.show()
 
     def on_template_changed(self, widget=None):
@@ -66,15 +62,15 @@ class Create_Users_Dialog:
         # Check the validity of characters in the classes entry
         classes_validity_image = self.glade.get_object('classes_validity_image')
         if not (classes_str.replace(' ', '') + 'foo').isalnum():
-            classes_validity_image.set_from_stock(gtk.STOCK_DIALOG_ERROR, 
-                                        gtk.ICON_SIZE_SMALL_TOOLBAR)
+            classes_validity_image.set_from_stock(Gtk.STOCK_DIALOG_ERROR, 
+                                        Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(False)
             return
         else:
             if self.classes == []:
                 self.classes = ['']
-            classes_validity_image.set_from_stock(gtk.STOCK_OK, 
-                                            gtk.ICON_SIZE_SMALL_TOOLBAR)
+            classes_validity_image.set_from_stock(Gtk.STOCK_OK, 
+                                            Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(True)
         
         # Check the validity of characters in the username entry
@@ -88,13 +84,13 @@ class Create_Users_Dialog:
           (not '{c}' in self.username_tmpl or (not '{0i}' in self.username_tmpl and \
           not '{i}' in self.username_tmpl))):
 
-            username_validity_image.set_from_stock(gtk.STOCK_DIALOG_ERROR, 
-                                        gtk.ICON_SIZE_SMALL_TOOLBAR)
+            username_validity_image.set_from_stock(Gtk.STOCK_DIALOG_ERROR, 
+                                        Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(False)
             return
         else:
-            username_validity_image.set_from_stock(gtk.STOCK_OK, 
-                                            gtk.ICON_SIZE_SMALL_TOOLBAR)
+            username_validity_image.set_from_stock(Gtk.STOCK_OK, 
+                                            Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(True)
         self.user_store.clear()
 
@@ -126,20 +122,24 @@ class Create_Users_Dialog:
         total_groups = len(self.classes)
         users_created = 0
         groups_created = 0
-        while gtk.events_pending():
-            gtk.main_iteration(False)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
 
         # Create groups for all the listed classes
+        print self.classes
         if self.classes != ['']:
             for classn in self.classes:
-                while gtk.events_pending():
-                    gtk.main_iteration(False)
-                cmd_error = add_group(classn)
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
+                print classn
+                gid = self.system.get_free_gid()
+                cmd_error = self.system.add_group(libuser.Group(classn, gid, {}))
+                print cmd_error
                 progressbar.set_text('Δημιουργία ομάδας %d από %d' 
                     % (groups_created+1, total_groups))
-                if cmd_error != "":
+                if False and cmd_error != "":
                     self.glade.get_object('error_label').set_text(
-                        cmd_error.strip())
+                        cmd_error)
                     self.glade.get_object('error_hbox').show() 
                     button_close.set_sensitive(True)
                     return
@@ -150,22 +150,23 @@ class Create_Users_Dialog:
         cmd_error = str()
         for classn in self.classes:
             for compn in range(1, self.computers+1):
-                while gtk.events_pending():
-                    gtk.main_iteration(False)
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
                 progressbar.set_text('Δημιουργία χρήστη %d από %d...' 
                     %(users_created+1, total_users))
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                                 str(compn)).replace('{0i}', '%02d'%compn)
-                u=User(name=ev(self.username_tmpl), rname=ev(self.name_tmpl),
-                    plainpw=ev(self.password_tmpl), groups=ev(self.groups_tmpl).
-                    split())
-                cmd_error += add_user(u)
+                u=libuser.User(name=ev(self.username_tmpl), uid=str(self.system.get_free_uid()),
+                    gid=gid, rname=ev(self.name_tmpl), directory=("/home/"+ev(self.username_tmpl)),
+                    plainpw=ev(self.password_tmpl), groups=ev(self.groups_tmpl).split())
+                print u.name, u.rname, u.plainpw, u.directory, u.groups
+                self.system.add_user(u)
                 users_created += 1
                 progressbar.set_fraction(
                     float(users_created) / float(total_users))
 
-        if cmd_error != "":
+        if False and cmd_error != "":
             self.glade.get_object('error_label').set_text(cmd_error.
                 strip())
             self.glade.get_object('error_hbox').show()

@@ -7,14 +7,11 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Δημιουργία σύνδεσης δικτύου</property>
     <property name="resizable">False</property>
-    <property name="modal">True</property>
-    <property name="window_position">center</property>
     <property name="default_width">300</property>
     <property name="default_height">200</property>
     <property name="destroy_with_parent">True</property>
-    <property name="icon">sch-scripts.png</property>
+    <property name="icon">/usr/share/pixmaps/sch-scripts.svg</property>
     <property name="type_hint">dialog</property>
-    <signal name="delete-event" handler="on_dialog_destroy" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -32,7 +29,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
-                <signal name="clicked" handler="on_cancel" swapped="no"/>
+                <signal name="clicked" handler="Cancel" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -49,7 +46,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
-                <signal name="clicked" handler="on_ok" swapped="no"/>
+                <signal name="clicked" handler="Ok" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

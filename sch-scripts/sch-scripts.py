@@ -13,6 +13,8 @@ import dialogs
 import export_dialog
 import config
 import ip_dialog
+import about_dialog
+import create_users
 import os
 
 class Gui:
@@ -266,7 +268,7 @@ class Gui:
             self.repopulate_treeviews()
     
     def on_new_users_mi_activate(self, widget):
-        create_users.Create_Users_Dialog()
+        create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
     
     def on_new_group_mi_activate(self, widget):
         group_form.NewGroupDialog(self.system, self.repopulate_treeviews)
@@ -314,7 +316,7 @@ class Gui:
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
     
     def on_mi_about_activate(self, widget):
-        pass
+        about_dialog.AboutDialog()
     
     def run_as_sudo_user(self, cmd):
         if runas_user_script == None:

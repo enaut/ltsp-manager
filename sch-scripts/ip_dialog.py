@@ -15,21 +15,14 @@ class Ip_Dialog:
         gladefile = "ip_dialog.ui"
         self.builder = Gtk.Builder()
         self.builder.add_from_file(gladefile)
-        dic = {"on_dialog_destroy":self.Exit,
-               "on_ok":self.Ok,
-               "on_cancel":self.Cancel}
-        self.builder.connect_signals(dic)
+        self.builder.connect_signals(self)
         self.dialog = self.builder.get_object("dialog1")
         self.address = False
         self.name = False
         self.info = {}
         self.Collect_Info()
+        self.dialog.show()
 
-    def Exit(self, widget, event):
-        """
-        Otherwise we can user widget.destroy()
-        """
-        self.dialog.destroy()
 
     def Ok(self, widget):
         """
@@ -103,8 +96,7 @@ class Ip_Dialog:
 
     def Cancel(self, widget):
         """
-        Otherwise we can use widget.get_parent() three times to find dialog object
-        and then parent.destroy()
+        Close the dialog
         """
         self.dialog.destroy()
 
@@ -198,6 +190,11 @@ class Ip_Dialog:
                     dns_entry_3 = self.builder.get_object("entry12")
                     dns_entry_3.set_text("8.8.8.8")
                     self.Check_Button()
+                else:
+                    text = "Αποτυχία ενσύρματης σύνδεσης"
+                    secondary_text = "Πρέπει να εγκαταστήσετε ενσύρματη σύνδεση. Ο διάλογος θα κλείσει."
+                    self.Dialog(text, "Σφάλμα", "error", secondary_text)
+                    self.dialog.destroy()
             else:
                 text = "Αποτυχία σύνδεσης"
                 secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει." 
@@ -327,8 +324,3 @@ class Ip_Dialog:
             return "255.255.255.255"
         num = ((1L<<bits)-1L)<<(32L-bits)
         return socket.inet_ntoa(struct.pack("!L",num))
-
-
-if __name__ == "__main__":
-    interface = Ip_Dialog()
-    Gtk.main()
