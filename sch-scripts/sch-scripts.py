@@ -325,7 +325,7 @@ class Gui:
         about_dialog.AboutDialog()
     
     def run_as_sudo_user(self, cmd):
-        if runas_user_script == None:
+        if runas_user_script is None:
             sys.stderr.write("Please use /sbin/sch-scripts, not sch-scripts.py\n")
         else:
             subprocess.Popen(['/bin/sh', runas_user_script] + cmd)
@@ -343,7 +343,7 @@ class Gui:
         self.open_link('http://goo.gl/maps/nOoQ')
 
     def on_mi_irc_activate(self, widget):
-        user = os.getenv("USER")
+        user = os.getenv("SUDO_USER")
         if user is None:
             user = "sch_scripts_user." # The dot is converted to a random digit
         self.open_link("http://webchat.freenode.net/?nick=" + user + 
