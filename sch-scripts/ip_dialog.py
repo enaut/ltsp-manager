@@ -83,9 +83,8 @@ class Ip_Dialog:
             if add:
                 settings.AddConnection(con)
 
-
-            subprocess.Popen(['service', 'network-manager', 'restart']) 
-            subprocess.Popen(['ltsp-config', 'dnsmasq', '--overwrite'])
+            subprocess.Popen(['sh', '-c',
+                'service network-manager restart && ltsp-config dnsmasq --overwrite'])
             text = "Η νέα σύνδεση με όνομα %s δημιουργήθηκε" %(self.info["name"])
             secondary_text = "Θα διακοπεί προσωρινά η σύνδεση δικτύου."
             self.Dialog(text, "Ειδοποίηση", "info", secondary_text)
