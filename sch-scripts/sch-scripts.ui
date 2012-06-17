@@ -406,6 +406,16 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkMenuItem" id="mi_map">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Χάρτης ΣΕΠΕΗΥ με LTSP</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_map_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>

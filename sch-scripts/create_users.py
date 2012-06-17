@@ -12,37 +12,27 @@ class NewUsersDialog:
     def __init__(self, system, refresh):
         self.system = system
         self.refresh = refresh
+        
         self.glade = Gtk.Builder()
         self.glade.add_from_file('create_users.ui')
         self.glade.connect_signals(self)
         self.dialog = self.glade.get_object('create_users_dialog')
         self.user_tree = self.glade.get_object('user_treeview')
-        # uname, name, pass respectively
-        self.user_store = Gtk.ListStore(str, str, str)
+        self.user_store = self.glade.get_object('user_liststore')
 
-        self.user_tree.set_model(self.user_store)
-
-        # Create the columns for self.user_tree
-        names = ['Όνομα χρήστη', 'Πραγματικό όνομα', 'Κωδικός πρόσβασης']
-        for i in range(3):
-            column = Gtk.TreeViewColumn(names[i], Gtk.CellRendererText(),
-                                        text=i)
-            column.set_resizable(True)
-            column.set_reorderable(True)
-            column.set_sort_column_id(i)
-            self.user_tree.append_column(column)
-
-        self.user_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        self.glade.get_object('computers_number_spin').set_value(12)
         self.roles = {i : config.parser.get('Roles', i) for i in config.parser.options('Roles')}
-        
-        text = "{c}"
-        
-        text = " ".join(self.roles['Μαθητής'].split(","))
-        self.groups_tmpl = self.glade.get_object('groups_template_entry').set_text("{c} "+text)
+        self.groups = []
+
 
         
+        self.glade.get_object('computers_number_spin').set_value(12)
+        groups_store = []
+        for group, group_obj in system.groups.iteritems():
+            groups_store.append(group)
+        for group in self.roles['Μαθητής'].split(","):
+            if group in groups_store:
+                self.groups.append(group)   
+        self.glade.get_object('groups_template_entry').set_text("{c} "+" ".join(self.groups))
         self.dialog.show()
 
     def on_template_changed(self, widget=None):
@@ -100,8 +90,8 @@ class NewUsersDialog:
                     break
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                     str(compn)).replace('{0i}', '%02d' %compn)
-                self.user_store.append([ev(self.username_tmpl), 
-                    ev(self.name_tmpl), ev(self.password_tmpl)])
+                self.user_store.append([ev(self.username_tmpl), ev(self.name_tmpl),
+                    '/home/'+ev(self.username_tmpl),ev(self.password_tmpl)])
 
         users_number = self.computers * len(self.classes)
         self.glade.get_object('users_number_label').set_text(
@@ -126,20 +116,17 @@ class NewUsersDialog:
             Gtk.main_iteration()
 
         # Create groups for all the listed classes
-        print self.classes
         if self.classes != ['']:
             for classn in self.classes:
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                print classn
-                gid = self.system.get_free_gid()
-                cmd_error = self.system.add_group(libuser.Group(classn, gid, {}))
-                print cmd_error
+                cmd_error = self.system.add_group(libuser.Group(classn,
+                            self.system.get_free_gid(), {}))
                 progressbar.set_text('Δημιουργία ομάδας %d από %d' 
                     % (groups_created+1, total_groups))
+                #FIXME PHANTOMAS: DEN EPISTREFEI TIPOTA I ADD_GROUP
                 if False and cmd_error != "":
-                    self.glade.get_object('error_label').set_text(
-                        cmd_error)
+                    self.glade.get_object('error_label').set_text(cmd_error)
                     self.glade.get_object('error_hbox').show() 
                     button_close.set_sensitive(True)
                     return
@@ -157,18 +144,18 @@ class NewUsersDialog:
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                                 str(compn)).replace('{0i}', '%02d'%compn)
-                u=libuser.User(name=ev(self.username_tmpl), uid=str(self.system.get_free_uid()),
-                    gid=gid, rname=ev(self.name_tmpl), directory=("/home/"+ev(self.username_tmpl)),
-                    plainpw=ev(self.password_tmpl), groups=ev(self.groups_tmpl).split())
-                print u.name, u.rname, u.plainpw, u.directory, u.groups
+                u=libuser.User(name=ev(self.username_tmpl), uid=self.system.get_free_uid(),
+                    gid=self.system.get_free_gid(), rname=ev(self.name_tmpl),
+                    directory=('/home/'+ev(self.username_tmpl)), plainpw=ev(self.password_tmpl),
+                    groups=ev(self.groups_tmpl).split())
                 self.system.add_user(u)
                 users_created += 1
                 progressbar.set_fraction(
                     float(users_created) / float(total_users))
 
+        #FIXME PHANTOMAS: KAI EDW DEN EPISTREFEI TIPOTA I ADD USERS
         if False and cmd_error != "":
-            self.glade.get_object('error_label').set_text(cmd_error.
-                strip())
+            self.glade.get_object('error_label').set_text(cmd_error.strip())
             self.glade.get_object('error_hbox').show()
             button_close.set_sensitive(True)
             return
@@ -176,6 +163,7 @@ class NewUsersDialog:
         # Display a success message and make the Close button sensitive
         self.glade.get_object('success_hbox').show()
         button_close.set_sensitive(True)
+        self.refresh()
 
     def on_progress_button_close_clicked(self, widget):
         self.dialog.destroy()
@@ -185,7 +173,6 @@ class NewUsersDialog:
 
     def on_button_help_clicked(self, widget):
         dialog = self.glade.get_object('help_dialog')
-        dialog.set_transient_for(self.dialog)
         dialog.run()
         dialog.hide()
 

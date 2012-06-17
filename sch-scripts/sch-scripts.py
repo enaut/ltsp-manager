@@ -339,6 +339,9 @@ class Gui:
     def on_mi_forum_activate(self, widget):
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
 
+    def on_mi_map_activate(self, widget):
+        self.open_link('http://goo.gl/maps/nOoQ')
+
     def on_mi_irc_activate(self, widget):
         user = os.getenv("USER")
         if user is None:
