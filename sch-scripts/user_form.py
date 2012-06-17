@@ -116,12 +116,12 @@ class UserForm(object):
         self.set_apply_sensitivity()
     
     def on_group_toggled(self, widget, path):
+        path = self.groups_sort[path].path
+        path = self.groups_sort.convert_path_to_child_path(path)
+        path = self.groups_filter.convert_path_to_child_path(path)
         
-        #path = self.groups_sort.convert_path_to_child_path(path)
-        #path = self.groups_filter.convert_path_to_child_path(path)
-        
-        self.groups_model[path][2] = not self.groups_model[path][2]
-        self.groups_model[path][5] = not self.groups_model[path][5]
+        self.groups_store[path][2] = not self.groups_store[path][2]
+        self.groups_store[path][5] = not self.groups_store[path][5]
         
     def on_groups_selection_changed(self, widget):
         self.builder.get_object('set_primary_button').set_sensitive(len(widget.get_selected_rows()[1]) == 1)
@@ -132,7 +132,10 @@ class UserForm(object):
         # such as context menu actions which would work with multiple selection
         model, paths = self.groups_tree.get_selection().get_selected_rows()
         
-        row = model[paths[0]]
+        path = self.groups_sort[paths[0]].path
+        path = self.groups_sort.convert_path_to_child_path(path)
+        path = self.groups_filter.convert_path_to_child_path(path)
+        row = self.groups_store[path]
         
         # Mark the group as primary
         self.set_group_primary(row)
@@ -349,6 +352,8 @@ class NewUserDialog(UserForm):
             self.system.add_group(libuser.Group(self.pgroup.get_text(), user.gid, {}))
         
         self.system.add_user(user)
+        if self.builder.get_object('locked_account_check').get_active():
+            self.system.lock_user(user)
         self.refresh()
         self.dialog.destroy()
     
