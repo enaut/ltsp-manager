@@ -11,7 +11,6 @@ class AboutDialog:
     def __init__(self):
         self.builder = Gtk.Builder()
         self.builder.add_from_file("about_dialog.ui")
-        self.builder.connect_signals(self)
         self.dialog = self.builder.get_object("aboutdialog1")
         self.dialog.set_title("Περί Διαχείριση ΣΕΠΕΗΥ")
         self.dialog.run()

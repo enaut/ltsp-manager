@@ -23,6 +23,7 @@
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
         <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="aboutdialog-action_area1">
             <property name="can_focus">False</property>

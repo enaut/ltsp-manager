@@ -4,6 +4,7 @@
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 from gi.repository import Gtk
+import datetime
 import libuser
 import config
 
@@ -22,15 +23,15 @@ class NewUsersDialog:
 
         self.roles = {i : config.parser.get('Roles', i) for i in config.parser.options('Roles')}
         self.groups = []
+        self.all_groups = []
 
 
         
         self.glade.get_object('computers_number_spin').set_value(12)
-        groups_store = []
         for group, group_obj in system.groups.iteritems():
-            groups_store.append(group)
+            self.all_groups.append(group)
         for group in self.roles['Μαθητής'].split(","):
-            if group in groups_store:
+            if group in self.all_groups:
                 self.groups.append(group)   
         self.glade.get_object('groups_template_entry').set_text("{c} "+" ".join(self.groups))
         self.dialog.show()
@@ -120,11 +121,11 @@ class NewUsersDialog:
             for classn in self.classes:
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                cmd_error = self.system.add_group(libuser.Group(classn,
-                            self.system.get_free_gid(), {}))
+                tmp_gid = self.system.get_free_gid()
+                cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
                 progressbar.set_text('Δημιουργία ομάδας %d από %d' 
                     % (groups_created+1, total_groups))
-                #FIXME PHANTOMAS: DEN EPISTREFEI TIPOTA I ADD_GROUP
+                #TODO expect returned value from add_group
                 if False and cmd_error != "":
                     self.glade.get_object('error_label').set_text(cmd_error)
                     self.glade.get_object('error_hbox').show() 
@@ -132,6 +133,7 @@ class NewUsersDialog:
                     return
                 progressbar.set_fraction(
                     float(groups_created) / float(total_groups))
+                
 
         # And finally, create the users
         cmd_error = str()
@@ -144,16 +146,21 @@ class NewUsersDialog:
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                                 str(compn)).replace('{0i}', '%02d'%compn)
-                u=libuser.User(name=ev(self.username_tmpl), uid=self.system.get_free_uid(),
-                    gid=self.system.get_free_gid(), rname=ev(self.name_tmpl),
-                    directory=('/home/'+ev(self.username_tmpl)), plainpw=ev(self.password_tmpl),
-                    groups=ev(self.groups_tmpl).split())
+                epoch = datetime.datetime.utcfromtimestamp(0)
+                tmp_uid = self.system.get_free_uid()
+                u=libuser.User(name=ev(self.username_tmpl), uid=tmp_uid,
+                    gid=tmp_gid, rname=ev(self.name_tmpl),
+                    directory=('/home/'+ev(self.username_tmpl)),
+                    lstchg = (datetime.datetime.today() - epoch).days,
+                    groups=ev(self.groups_tmpl).split(),
+                    plainpw=ev(self.password_tmpl))
                 self.system.add_user(u)
+                self.system.load()
                 users_created += 1
                 progressbar.set_fraction(
                     float(users_created) / float(total_users))
 
-        #FIXME PHANTOMAS: KAI EDW DEN EPISTREFEI TIPOTA I ADD USERS
+        #TODO expect returned value from add_user
         if False and cmd_error != "":
             self.glade.get_object('error_label').set_text(cmd_error.strip())
             self.glade.get_object('error_hbox').show()
@@ -161,7 +168,7 @@ class NewUsersDialog:
             return
 
         # Display a success message and make the Close button sensitive
-        self.glade.get_object('success_hbox').show()
+        #TODO self.glade.get_object('success_hbox').show()
         button_close.set_sensitive(True)
         self.refresh()
 
