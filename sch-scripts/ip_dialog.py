@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 from gi.repository import Gtk, Gdk
 from binascii import unhexlify
@@ -21,7 +23,6 @@ class Ip_Dialog:
         self.name = False
         self.info = {}
         self.Collect_Info()
-        self.dialog.show()
 
 
     def Ok(self, widget):
@@ -86,7 +87,7 @@ class Ip_Dialog:
             subprocess.Popen(['sh', '-c',
                 'service network-manager restart && ltsp-config dnsmasq --overwrite'])
             text = "Η νέα σύνδεση με όνομα %s δημιουργήθηκε" %(self.info["name"])
-            secondary_text = "Θα διακοπεί προσωρινά η σύνδεση δικτύου."
+            secondary_text = "Θα γίνει επανεκκίνηση της υπηρεσίας Διαχείρισης Δικτύου και επαναδημιουργία των ρυθμίσεων του dnsmasq. Η σύνδεση θα διακοπεί για λίγα δευτερόλεπτα."
             self.Dialog(text, "Ειδοποίηση", "info", secondary_text)
             self.dialog.destroy()
         else:
@@ -110,7 +111,6 @@ class Ip_Dialog:
             text = "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου"
             secondary_text = "Ο διάλογος θα κλείσει."
             self.Dialog(text, "Σφάλμα", "error", secondary_text)
-            self.dialog.destroy()
         prop = proxy.GetAll("org.freedesktop.NetworkManager")
         
         if prop["NetworkingEnabled"] == 1:
@@ -189,22 +189,22 @@ class Ip_Dialog:
                     dns_entry_3 = self.builder.get_object("entry12")
                     dns_entry_3.set_text("8.8.8.8")
                     self.Check_Button()
+                    self.dialog.show()
                 else:
                     text = "Αποτυχία ενσύρματης σύνδεσης"
                     secondary_text = "Πρέπει να εγκαταστήσετε ενσύρματη σύνδεση. Ο διάλογος θα κλείσει."
                     self.Dialog(text, "Σφάλμα", "error", secondary_text)
-                    self.dialog.destroy()
+
             else:
                 text = "Αποτυχία σύνδεσης"
-                secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει." 
+                secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει."
                 self.Dialog(text, "Σφάλμα", "error", secondary_text)
-                self.dialog.destroy()
-                 
+ 
         else:
             text = "Αποτυχία δικτύου"
             secondary_text = "Η δικτύωση θα πρέπει να είναι ενεργοποιημένη. Ο διάλογος θα κλείσει."
             self.Dialog(text, "Σφάλμα", "error", secondary_text)
-            self.dialog.destroy()
+            
 
 
     def Region(self, widget, event):
