@@ -333,9 +333,9 @@ class CSV:
         for user in users:
             u_dict = dict( (key, user.__dict__[o_key] if user.__dict__[o_key] is not None else '') for key, o_key in self.fields_map.iteritems())
             u_dict['Κωδικός'] = '' # We don't have the plain password
-            
+            u_dict['Ομάδες'] = list(u_dict['Ομάδες'])
             # Convert the groups value to a proper gname:gid pairs format string
-            final_groups = u_dict['Groups']
+            final_groups = u_dict['Ομάδες']
             for i, gname in enumerate(final_groups):
                 gid = system.groups[gname].gid
                 final_groups[i] = ':'.join((final_groups[i], str(gid)))
