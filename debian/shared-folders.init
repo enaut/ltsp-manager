@@ -93,6 +93,13 @@ initialize() {
     else
         return 1
     fi
+    # In order for fat clients to access the SHARE_GROUPS list without having
+    # to run ltsp-update-image all the time, it is kept in the following file:
+    if [ -f "$SHARE_DIR/.shared-folders" ]; then
+        . "$SHARE_DIR/.shared-folders" || return 1
+    else
+        return 1
+    fi
     ADM_UID=${ADM_UID:-1000}
     ADM_GID=$(getent passwd "$ADM_UID" | cut -d : -f 4) || return 1
 }
@@ -101,9 +108,6 @@ start() {
     local group share_users user
 
     ensure_dir "$SHARE_DIR" "$ADM_UID" "$ADM_GID" 711 || return 1
-    # Create a symlink to help fat clients access newer versions of
-    # /etc/default/shared-folders through the SSHFS mount.
-    ln -sf /etc/default/shared-folders "$SHARE_DIR/.shared-folders" || return 1
     ensure_dir "$SHARE_DIR/.symlinks" "$ADM_UID" "$TEACHERS" 731 || return 1
     find "$SHARE_DIR/.symlinks/" -mindepth 1 ! -type l -delete || return 1
     share_users=","

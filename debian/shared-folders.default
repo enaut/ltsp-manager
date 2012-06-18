@@ -19,7 +19,10 @@ TEACHERS="teachers"
 SHARE_DIR="/home/Shared"
 
 # List of groups for which shared folders will be created.
-# Add the class groups right next after teachers.
+# Note: in order to minimize changes to the /etc/default/shared-folders
+# conffile, and in order for the SHARE_GROUPS list to be accessible to fat
+# clients without running ltsp-update-image all the time, the list in
+# /home/Shared/.shared-folders supercedes this one, so don't modify it here.
 SHARE_GROUPS="teachers"
 
 # This word is added to the shared folder shortcuts created in

@@ -78,25 +78,29 @@ class GroupForm(object):
         self.dialog.destroy()
         
     def add_group_share(self, group):
-        fname = '/etc/default/shared-folders'
+        # TODO: get the correct filename from /etc/default/shared-folders.
+        fname = '/home/Shared/.shared-folders'
         
         if os.path.isfile(fname):
             f = open(fname)
             txt = f.read()
             f.close()
-            reg = r'^\s*SHARE_GROUPS="(.*)"'
-            if re.search(reg, txt, flags=re.M):
-                txt = re.sub(reg, r'SHARE_GROUPS="\1,%s"' % group.name, txt, flags=re.M)
-            else:
-                txt += '\nSHARE_GROUPS="%s"\n' % group.name
-            f = open(fname, 'w')
-            f.write(txt)
-            f.close()
         else:
-            print "Αδυναμία διαχείρισης κοινόχρηστων φακέλων. Δεν υπάρχει το αρχείο %s." % fname
+            txt="""# Λίστα ομάδων με ενεργοποιημένους τους κοινόχρηστους φακέλους:
+SHARE_GROUPS="teachers"
+"""
+        reg = r'^\s*SHARE_GROUPS="(.*)"'
+        if re.search(reg, txt, flags=re.M):
+            txt = re.sub(reg, r'SHARE_GROUPS="\1,%s"' % group.name, txt, flags=re.M)
+        else:
+            txt += '\nSHARE_GROUPS="%s"\n' % group.name
+        f = open(fname, 'w')
+        f.write(txt)
+        f.close()
     
     def remove_group_share(self, group):
-        fname = '/etc/default/shared-folders'
+        # TODO: get the correct filename from /etc/default/shared-folders.
+        fname = '/home/Shared/.shared-folders'
         
         if os.path.isfile(fname):
             f = open(fname)
@@ -117,7 +121,8 @@ class GroupForm(object):
             print "Αδυναμία διαχείρισης κοινόχρηστων φακέλων. Δεν υπάρχει το αρχείο %s." % fname
             
     def group_has_share(self, group):
-        fname = '/etc/default/shared-folders'
+        # TODO: get the correct filename from /etc/default/shared-folders.
+        fname = '/home/Shared/.shared-folders'
         if os.path.isfile(fname):
             f = open(fname)
             txt = f.read()

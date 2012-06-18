@@ -124,8 +124,8 @@ if [ $# -ne 0 ]; then
 fi
 
 . /etc/default/shared-folders
-# For fat clients, try to get a newer version of /etc/default/shared-folders
-# by using the LOCALAPPS_EXTRA_MOUNT mount to read it from the server.
+# For fat clients, try to get a newer version of SHARE_GROUPS by using
+# the LOCALAPPS_EXTRA_MOUNT mount.
 . "$SHARE_DIR/.shared-folders" 2>/dev/null || true
 get_xdg_dirs
 create_symlinks
