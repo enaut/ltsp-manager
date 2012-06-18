@@ -109,6 +109,7 @@
                     <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="orientation">vertical</property>
+                    <property name="spacing">12</property>
                     <child>
                       <object class="GtkGrid" id="grid1">
                         <property name="visible">True</property>
@@ -246,6 +247,42 @@
                         <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="shared_folders_check">
+                        <property name="label" translatable="yes">Δημιουργία κοινόχρηστων καταλόγων για αυτήν την ομάδα</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="xalign">0</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="warning">
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Προσοχή, εάν οι μαθητές έχουν ανοιχτά αρχεία στον κοινόχρηστο φάκελο, 
+δεν θα μπορέσουν να τα αποθηκεύσουν εφόσον απενεργοποιήσετε 
+την κοινή χρήση.</property>
+                        <attributes>
+                          <attribute name="style" value="italic"/>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="scale" value="1"/>
+                          <attribute name="foreground" value="#ffff00000000"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
