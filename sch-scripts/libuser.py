@@ -8,6 +8,7 @@ import subprocess
 import re
 import crypt
 import random
+import common
 
 FIRST_SYSTEM_UID=0
 LAST_SYSTEM_UID=999
@@ -29,26 +30,6 @@ USER_FIELDS = ['UID', 'Όνομα χρήστη', 'Κύρια ομάδα', 'Ον�
 CSV_USER_FIELDS = USER_FIELDS
 CSV_USER_FIELDS.extend(['Κρυπτογραφημένος κωδικός', 'Κωδικός'])
 
-def greek_to_latin(name):
-    mappings = {
-    u'α' : 'a', u'ά' : 'a', u'β' : 'b', u'γ' : 'g', u'δ' : 'd',	u'ε' : 'e',
-    u'έ' : 'e',	u'ζ' : 'z', u'η' : 'i', u'ή' : 'i', u'θ' :'th', u'ι' : 'i',
-    u'ί' : 'i', u'ϊ' : 'i', u'ΐ' : 'i', u'κ' : 'k', u'λ' : 'l', u'μ' : 'm',
-    u'ν' : 'n', u'ξ' : 'x', u'ο' : 'o', u'ό' : 'o', u'π' : 'p', u'ρ' : 'r', 
-    u'σ' : 's', u'ς' : 's', u'τ' : 't', u'υ' : 'i', u'ύ' : 'i', u'ϋ' : 'i', 
-    u'ΰ' : 'i', u'φ' : 'f', u'χ' :'ch', u'ψ' :'ps', u'ω' : 'o', u'ώ' : 'o'}
-
-    name = name.lower()
-    reg1 = u'(α|ε)(υ|ύ)(β|γ|δ|ζ|λ|μ|ν|ρ|α|ά|ε|έ|η|ή|ι|ϊ|ί|ΐ|ο|ό|υ|ϋ|ύ|ΰ|ω|ώ)'
-    reg2 = u'(α|ε)(υ|ύ)(θ|κ|ξ|π|σ|τ|φ|χ|ψ)'
-    reg3 = u'(ου|ού)'
-
-    name = re.sub(reg1, u'\\1v\\3', name)
-    name = re.sub(reg2, u'\\1f\\3', name)
-    name = re.sub(reg3, u'ou', name)
-
-    return ''.join([mappings[letter] if letter in mappings else letter for letter in name]).encode("utf-8")
-
 class User:
     def __init__(self, name=None, uid=None, gid=None, rname="", office="", wphone="",
                  hphone="", other="", directory=None, shell="/bin/bash", groups=None, lstchg=None,
@@ -61,7 +42,7 @@ class User:
         expire, password, plainpw
         
         if not self.name and self.rname:
-            self.name = greek_to_latin(rname)
+            self.name = common.greek_to_latin(rname)
         
         if self.groups is None:
             self.groups = []
@@ -97,40 +78,19 @@ class System:
         self.groups = {}     
         self.load()
     
-    def run_command(self, cmd):
-        # Runs a command and returns either an empty string, on successful
-        # completion, or the whole stdout and stderr of the command, on error.
-
-        # Popen doesn't like integers like uid or gid in the command line.
-        cmdline = [str(s) for s in cmd]
-
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        res = p.wait()
-        if res == 0:
-            return ""
-        else:
-            print "Σφάλμα κατά την εκτέλεση εντολής:"
-            print " $ %s" % ' '.join(cmdline)
-            print p.stdout.read()
-            err = p.stderr.read()
-            print err
-            if err == '':
-                err = "\n"
-            return err
-    
     # Group operations
     def add_group(self, group):
-        self.run_command(['groupadd', '-g', str(group.gid), group.name])
+        common.run_command(['groupadd', '-g', str(group.gid), group.name])
         for user in group.members.values():
-            self.run_command(['usermod', '-a', '-G', group.name, user.name])
+            common.run_command(['usermod', '-a', '-G', group.name, user.name])
     
     def edit_group(self, groupname, group):
-        self.run_command(['groupmod', '-g', str(group.gid), '-n', group.name, groupname])
+        common.run_command(['groupmod', '-g', str(group.gid), '-n', group.name, groupname])
         for user in group.members.values():
-            self.run_command(['usermod', '-a', '-G', group.name, user.name])
+            common.run_command(['usermod', '-a', '-G', group.name, user.name])
     
     def delete_group(self, group):
-        self.run_command(['groupdel', group.name])
+        common.run_command(['groupdel', group.name])
         
     # User operations
     def add_user(self, user, create_home=True):
@@ -139,7 +99,7 @@ class System:
             cmd.extend(['-m', '-d', user.directory])
         cmd.extend(['-g', str(user.gid)])
         cmd.append(user.name)
-        self.run_command(cmd)
+        common.run_command(cmd)
         self.update_user(user.name, user)
         
     def _strcnv(self, t):
@@ -160,7 +120,7 @@ class System:
         
         # Execute usermod
         cmd = self._strcnv(cmd)
-        self.run_command(cmd)
+        common.run_command(cmd)
         self.user_set_gecos(user)
         self.user_set_pass_options(user)
     
@@ -174,7 +134,7 @@ class System:
         cmd.append(user.name)
         #Execute chfn
         cmd = self._strcnv(cmd)
-        self.run_command(cmd)
+        common.run_command(cmd)
     
     def user_set_pass_options(self, user):
         cmd = ['chage']
@@ -187,26 +147,26 @@ class System:
         cmd.append(user.name)
         # Execute chage
         cmd = self._strcnv(cmd)
-        self.run_command(cmd)
+        common.run_command(cmd)
     
     def delete_user(self, user):
-        self.run_command(['userdel', user.name])
+        common.run_command(['userdel', user.name])
     
     def add_user_to_groups(self, user, groups):
         groups = [gr.name for gr in groups]
-        self.run_command(['usermod', '-a', '-G', groups, user.name])
+        common.run_command(['usermod', '-a', '-G', groups, user.name])
     
     def remove_user_from_groups(self, user, groups):
         groups = [gr.name for gr in groups]
         new_groups = [group for group in user.groups if group not in groups]
         new_groups_str = ','.join(new_groups)
-        self.run_command(['usermod', '-G', new_groups_str, user.name])
+        common.run_command(['usermod', '-G', new_groups_str, user.name])
     
     def lock_user(self, user):
-        self.run_command(['usermod', '-L', user.name])
+        common.run_command(['usermod', '-L', user.name])
     
     def unlock_user(self, user):
-        self.run_command(['usermod', '-U', user.name])
+        common.run_command(['usermod', '-U', user.name])
         
     def user_is_locked(self, user):
         return user.password is None or user.password[0] in "!*"

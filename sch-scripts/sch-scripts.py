@@ -7,6 +7,7 @@ import sys
 import subprocess
 from gi.repository import Gtk
 import libuser
+import libshare
 import user_form
 import group_form
 import dialogs
@@ -341,6 +342,7 @@ class Gui:
         response = dialogs.AskDialog(message).showup()
         if response == Gtk.ResponseType.YES:
             for group in self.get_selected_groups():
+                libshare.sf_remove(group.name)
                 self.system.delete_group(group)
             self.repopulate_treeviews()
 

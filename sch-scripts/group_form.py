@@ -6,6 +6,7 @@ import os
 import subprocess
 from gi.repository import Gtk, Gdk
 import libuser
+import libshare
 
 class GroupForm(object):
     def __init__(self, system, refresh):
@@ -76,63 +77,6 @@ class GroupForm(object):
     
     def on_cancel_clicked(self, widget):
         self.dialog.destroy()
-        
-    def add_group_share(self, group):
-        # TODO: get the correct filename from /etc/default/shared-folders.
-        fname = '/home/Shared/.shared-folders'
-        
-        if os.path.isfile(fname):
-            f = open(fname)
-            txt = f.read()
-            f.close()
-        else:
-            txt="""# Λίστα ομάδων με ενεργοποιημένους τους κοινόχρηστους φακέλους:
-SHARE_GROUPS="teachers"
-"""
-        reg = r'^\s*SHARE_GROUPS="(.*)"'
-        if re.search(reg, txt, flags=re.M):
-            txt = re.sub(reg, r'SHARE_GROUPS="\1,%s"' % group.name, txt, flags=re.M)
-        else:
-            txt += '\nSHARE_GROUPS="%s"\n' % group.name
-        f = open(fname, 'w')
-        f.write(txt)
-        f.close()
-    
-    def remove_group_share(self, group):
-        # TODO: get the correct filename from /etc/default/shared-folders.
-        fname = '/home/Shared/.shared-folders'
-        
-        if os.path.isfile(fname):
-            f = open(fname)
-            txt = f.read()
-            f.close()
-            reg = r'^\s*SHARE_GROUPS="(.*)"'
-            res = re.findall(r'^\s*SHARE_GROUPS="(.*)"', txt, flags=re.M)
-            print res
-            if len(res) != 0:
-                res = res[-1].split(',')
-                del res[res.index(group.name)]
-                res = ','.join(res)
-                txt = re.sub(reg, r'SHARE_GROUPS="%s"' % res, txt, flags=re.M)
-                f = open(fname, 'w')
-                f.write(txt)
-                f.close()
-        else:
-            print "Αδυναμία διαχείρισης κοινόχρηστων φακέλων. Δεν υπάρχει το αρχείο %s." % fname
-            
-    def group_has_share(self, group):
-        # TODO: get the correct filename from /etc/default/shared-folders.
-        fname = '/home/Shared/.shared-folders'
-        if os.path.isfile(fname):
-            f = open(fname)
-            txt = f.read()
-            f.close()
-            res = re.findall(r'^\s*SHARE_GROUPS="(.*)"', txt, flags=re.M)
-            print res
-            if len(res) != 0:
-                return group.name in res[-1].split(',')
-        return False
-            
     
 class NewGroupDialog(GroupForm):
     def __init__(self, system, refresh):
@@ -151,8 +95,7 @@ class NewGroupDialog(GroupForm):
         g = libuser.Group(name, gid, members)
         self.system.add_group(g)
         if self.has_shared.get_active():
-            self.add_group_share(g)
-            subprocess.Popen(['service', 'shared-folders', 'restart'])
+            libshare.sf_add(g.name)
         self.refresh()
         self.dialog.destroy()
 
@@ -171,8 +114,8 @@ class EditGroupDialog(GroupForm):
             if row[0].name in self.group.members:
                 row[1] = True
         
-        # See if the group has shared folders enabled
-        if self.group_has_share(group):
+        # See if the group has shared folders enabled and active
+        if group.name in libshare.sf_list_active():
             self.has_shared.set_active(True)
             self.shared_state = True
         else:
@@ -189,23 +132,32 @@ class EditGroupDialog(GroupForm):
             self.builder.get_object('warning').hide()
     
     def on_apply_clicked(self, widget):
-        name = self.group.name
-        gid = self.group.gid
+        old_name = self.group.name
+        old_gid = self.group.gid
+        old_members = self.group.members
         self.group.name = self.groupname.get_text()
         self.group.gid = int(self.gid_entry.get_text())
-        old_members = self.group.members
         self.group.members = {u[0].name : u[0] for u in self.users_store if u[1]}
-        self.system.edit_group(name, self.group)
+        
+        self.system.edit_group(old_name, self.group)
+        
+        # Remove the group from users that are no more members of this group
         for user in old_members.values():
             if user not in self.group.members.values():
                 self.system.remove_user_from_groups(user, [self.group])
+        # Shared folders were not active and now they are
         if not self.shared_state and self.has_shared.get_active():
-            self.add_group_share(self.group)
+            libshare.sf_add(self.group.name)
+        # Shared folders were active but now they are not
         elif self.shared_state and not self.has_shared.get_active():
-            self.remove_group_share(self.group)
+            libshare.sf_remove(self.group.name)
             
         # Restart the shared folders service
-        if gid != self.group.gid or name != self.group.name:
-            subprocess.Popen(['service', 'shared-folders', 'restart'])
+        if old_gid != self.group.gid:
+            libshare.sf_restart(self.group.name)
+        # Inform the shared folders service that the group name has been changed
+        elif old_name != self.group.name:
+            libshare.sf_move(old_name, self.group.name)
+            
         self.refresh()
         self.dialog.destroy()
