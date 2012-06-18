@@ -214,7 +214,10 @@ class Gui:
 
     def on_groups_treeview_row_activated(self, widget, path, column):
         group_form.EditGroupDialog(self.system, widget.get_model()[path][0], self.repopulate_treeviews)
-
+    
+    def on_select_all_groups_clicked(self, widget):
+        self.groups_tree.get_selection().select_all()
+    
     def on_main_window_delete_event(self, widget, event):
         self.conf.set('GUI', 'show_private_groups', str(self.show_private_groups))
         self.conf.set('GUI', 'show_system_groups', str(self.show_system_groups))
