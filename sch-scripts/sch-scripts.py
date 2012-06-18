@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 import sys
@@ -21,11 +21,11 @@ class Gui:
     def __init__(self):
         self.system = libuser.System()
         self.conf = config.parser
-        
+
         self.builder = Gtk.Builder()
         self.builder.add_from_file('sch-scripts.ui')
         self.builder.connect_signals(self)
-        
+
         self.main_window = self.builder.get_object('main_window')
         self.users_tree = self.builder.get_object('users_treeview')
         self.groups_tree = self.builder.get_object('groups_treeview')
@@ -35,19 +35,19 @@ class Gui:
         self.groups_filter = self.builder.get_object('groups_filter')
         self.users_model = self.builder.get_object('users_store')
         self.groups_model = self.builder.get_object('groups_store')
-        
+
         self.show_private_groups = False
         self.show_system_groups = False
-        self.builder.get_object('show_private_groups_mi').set_active(self.conf.getboolean('GUI', 'show_private_groups'))
-        self.builder.get_object('show_system_groups_mi').set_active(self.conf.getboolean('GUI', 'show_system_groups'))
-        
+        self.builder.get_object('mi_show_private_groups').set_active(self.conf.getboolean('GUI', 'show_private_groups'))
+        self.builder.get_object('mi_show_system_groups').set_active(self.conf.getboolean('GUI', 'show_system_groups'))
+
         self.users_filter.set_visible_func(self.set_user_visibility)
         self.groups_filter.set_visible_func(self.set_group_visibility)
-        
+
         # Fill the View -> Columns menu with all the columns of the treeview
-        view_columns_menu = self.builder.get_object('view_columns_menu')
+        mn_view_columns = self.builder.get_object('mn_view_columns')
         users_columns = self.users_tree.get_columns()
-        
+
         visible = self.conf.get('GUI', 'visible_user_columns')
         if visible == 'all':
             visible = [c.get_title() for c in users_columns]
@@ -56,32 +56,61 @@ class Gui:
         for column in users_columns:
             title = column.get_title()
             menuitem = Gtk.CheckMenuItem(title)
-            menuitem.connect('toggled', self.on_view_column_toggled, column)
+            menuitem.connect('toggled', self.on_mi_view_column_toggled, column)
             menuitem.set_active(title in visible)
-            view_columns_menu.append(menuitem)
+            mn_view_columns.append(menuitem)
         self.populate_treeviews()
         self.main_window.show_all()
-    
+
+## General helper functions
+
+    def edit_file(self, filename):
+        subprocess.Popen(['xdg-open', filename])
+        # TODO: Maybe throw an error message if not os.path.isfile(filename)
+
+    def run_as_sudo_user(self, cmd):
+        if runas_user_script is None:
+            sys.stderr.write("Please use /sbin/sch-scripts, not sch-scripts.py\n")
+        else:
+            subprocess.Popen(['/bin/sh', runas_user_script] + cmd)
+
+    def open_link(self, link):
+        self.run_as_sudo_user(['xdg-open', link])
+
+    def get_selected_users(self):
+        selection = self.users_tree.get_selection()
+        paths = selection.get_selected_rows()[1]
+        selected = [self.users_sort[path][0] for path in paths]
+        return selected
+
+    def get_selected_groups(self):
+        selection = self.groups_tree.get_selection()
+        paths = selection.get_selected_rows()[1]
+        selected = [self.groups_sort[path][0] for path in paths]
+        return selected
+
+## Groups and users treeviews
+
     def populate_treeviews(self):
         """Fill the users and groups treeviews from the system"""
         for user in self.system.users.values():
             self.users_model.append([user, user.uid, user.name, user.primary_group, user.rname, user.office, user.wphone, user.hphone, user.other, user.directory, user.shell, user.lstchg, user.min, user.max, user.warn, user.inact, user.expire])
         for group in self.system.groups.values():
             self.groups_model.append([group, group.gid, group.name])
-    
+
     def repopulate_treeviews(self):
         # Preserve the selected groups and users
         groups_selection = self.groups_tree.get_selection()
         users_selection = self.users_tree.get_selection()
         selected_groups = [i.name for i in self.get_selected_groups()]
         selected_users = [i.name for i in self.get_selected_users()]
-        
+
         # Clear and refill the treeviews
         self.users_model.clear()
         self.groups_model.clear()
         self.system.reload()
         self.populate_treeviews()
-        
+
         # Reselect the previously selected groups and users, if possible
         groups_iters = dict((row[0].name, row.iter) for row in self.groups_sort)
         for gname in selected_groups:
@@ -91,79 +120,67 @@ class Gui:
         for uname in selected_users:
             if uname in users_iters:
                 users_selection.select_iter(users_iters[uname])
-    
+
     def set_user_visibility(self, model, rowiter, options):
         user = model[rowiter][0]
         selected = self.get_selected_groups()
         # FIXME: The list comprehension here costs
         return (len(selected) == 0 and (self.show_system_groups or not user.is_system_user())) \
                 or user in [u for g in selected for u in g.members.values()]
-    
+
     def set_group_visibility(self, model, rowiter, options):
         group = model[rowiter][0]
         return (self.show_private_groups or not group.is_private()) and (self.show_system_groups or group.is_user_group())
-    
-    def on_import_csv_activate(self, widget):
-        pass
-    
-    def on_export_csv_activate(self, widget):
-        users = self.get_selected_users()
-        if len(users) == 0:
-            if self.show_system_groups:
-                users = self.system.users.values()
-            else:
-                users = [u for u in self.system.users.values() if not u.is_system_user()]
-        export_dialog.ExportDialog(self.system, users)
-    
+
     def on_groups_selection_changed(self, selection):
         self.users_filter.refilter()
-        edit_mi = self.builder.get_object('edit_group_mi')
-        delete_mi = self.builder.get_object('delete_group_mi')
+        mi_edit_group = self.builder.get_object('mi_edit_group')
+        mi_delete_group = self.builder.get_object('mi_delete_group')
         rows = selection.count_selected_rows()
         if rows == 0:
-            edit_mi.set_sensitive(False)
-            delete_mi.set_sensitive(False)
-        elif rows == 1:    
-            edit_mi.set_sensitive(True)
-            edit_mi.set_label('Επεξεργασία ομάδας...')
-            delete_mi.set_label('Διαγραφή ομάδας...')
-            delete_mi.set_sensitive(True)
+            mi_edit_group.set_sensitive(False)
+            mi_delete_group.set_sensitive(False)
+        elif rows == 1:
+            mi_edit_group.set_sensitive(True)
+            mi_edit_group.set_label('Επεξεργασία ομάδας...')
+            mi_delete_group.set_label('Διαγραφή ομάδας...')
+            mi_delete_group.set_sensitive(True)
         else:
-            edit_mi.set_sensitive(False)
-            delete_mi.set_label('Διαγραφή ομάδων...')
-            delete_mi.set_sensitive(True)
-    
+            mi_edit_group.set_sensitive(False)
+            mi_delete_group.set_label('Διαγραφή ομάδων...')
+            mi_delete_group.set_sensitive(True)
+
     def on_users_selection_changed(self, selection):
-        edit_mi = self.builder.get_object('edit_user_mi')
-        delete_mi = self.builder.get_object('delete_user_mi')
-        remove_mi = self.builder.get_object('remove_user_mi')
+        mi_edit_user = self.builder.get_object('mi_edit_user')
+        mi_delete_user = self.builder.get_object('mi_delete_user')
+        mi_remove_user = self.builder.get_object('mi_remove_user')
         rows = selection.count_selected_rows()
         if rows == 0:
-            edit_mi.set_sensitive(False)
-            delete_mi.set_sensitive(False)
-            remove_mi.set_sensitive(False)
+            mi_edit_user.set_sensitive(False)
+            mi_delete_user.set_sensitive(False)
+            mi_remove_user.set_sensitive(False)
         else:
             if self.groups_tree.get_selection().count_selected_rows() > 0:
-                remove_mi.set_sensitive(True)
+                mi_remove_user.set_sensitive(True)
             else:
-                remove_mi.set_sensitive(False)
+                mi_remove_user.set_sensitive(False)
 
-            delete_mi.set_sensitive(True)
-            
-            if rows == 1:    
-                edit_mi.set_sensitive(True)
-                edit_mi.set_label('Επεξεργασία χρήστη...')
-                delete_mi.set_label('Διαγραφή χρήστη...')
+            mi_delete_user.set_sensitive(True)
+
+            if rows == 1:
+                mi_edit_user.set_sensitive(True)
+                mi_edit_user.set_label('Επεξεργασία χρήστη...')
+                mi_delete_user.set_label('Διαγραφή χρήστη...')
             else:
-                edit_mi.set_sensitive(False)
-                delete_mi.set_label('Διαγραφή χρηστών...')
-            
-    
+                mi_edit_user.set_sensitive(False)
+                mi_delete_user.set_label('Διαγραφή χρηστών...')
+
+
     def on_users_tv_button_press_event(self, widget, event):
         clicked = widget.get_path_at_pos(int(event.x), int(event.y))
-        
+
         if event.button == 3:
-            menu = self.builder.get_object('users_menu').popup(None, None, None, None, event.button, event.time)
+            menu = self.builder.get_object('mn_users').popup(None, None, None, None, event.button, event.time)
             selection = widget.get_selection()
             selected = selection.get_selected_rows()[1]
             if clicked:
@@ -174,12 +191,12 @@ class Gui:
             else:
                 selection.unselect_all()
             return True
-    
+
     def on_groups_tv_button_press_event(self, widget, event):
         clicked = widget.get_path_at_pos(int(event.x), int(event.y))
-        
+
         if event.button == 3:
-            menu = self.builder.get_object('groups_menu').popup(None, None, None, None, event.button, event.time)
+            menu = self.builder.get_object('mn_groups').popup(None, None, None, None, event.button, event.time)
             selection = widget.get_selection()
             selected = selection.get_selected_rows()[1]
             if clicked:
@@ -190,13 +207,13 @@ class Gui:
             else:
                 selection.unselect_all()
             return True
-    
+
     def on_users_treeview_row_activated(self, widget, path, column):
         user_form.EditUserDialog(self.system, widget.get_model()[path][0], self.repopulate_treeviews)
-    
+
     def on_groups_treeview_row_activated(self, widget, path, column):
         group_form.EditGroupDialog(self.system, widget.get_model()[path][0], self.repopulate_treeviews)
-    
+
     def on_main_window_delete_event(self, widget, event):
         self.conf.set('GUI', 'show_private_groups', str(self.show_private_groups))
         self.conf.set('GUI', 'show_system_groups', str(self.show_system_groups))
@@ -204,41 +221,75 @@ class Gui:
         self.conf.set('GUI', 'visible_user_columns', ','.join(visible_cols))
         config.save()
         exit()
-    
-    def on_view_column_toggled(self, checkmenuitem, treeviewcolumn):
+
+## File menu
+
+    def on_mi_signup_activate(self, widget):
+        pass
+
+    def on_mi_new_users_activate(self, widget):
+        create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
+
+    def on_mi_import_csv_activate(self, widget):
+        pass
+
+    def on_mi_export_csv_activate(self, widget):
+        users = self.get_selected_users()
+        if len(users) == 0:
+            if self.show_system_groups:
+                users = self.system.users.values()
+            else:
+                users = [u for u in self.system.users.values() if not u.is_system_user()]
+        export_dialog.ExportDialog(self.system, users)
+
+## Server menu
+
+    def on_mi_set_static_ip_activate(self, widget):
+        ip_dialog.Ip_Dialog()
+
+    def on_mi_ltsp_update_image_activate(self, widget):
+        # Manually set IPAPPEND=3 until the update-kernel.conf mess is cleared up
+        os.environ['IPAPPEND']='3'
+        subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
+
+    def on_mi_edit_lts_conf_activate(self, widget):
+        self.edit_file('/var/lib/tftpboot/ltsp/i386/lts.conf')
+
+    def on_mi_edit_pxelinux_cfg_activate(self, widget):
+        self.edit_file('/var/lib/tftpboot/ltsp/i386/pxelinux.cfg/default')
+
+    def on_mi_edit_shared_folders_activate(self, widget):
+        self.edit_file('/etc/default/shared-folders')
+
+    def on_mi_edit_dnsmasq_conf_activate(self, widget):
+        self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
+
+## View menu
+
+    def on_mi_view_column_toggled(self, checkmenuitem, treeviewcolumn):
         treeviewcolumn.set_property('visible', checkmenuitem.get_active())
-    
-    def on_show_system_groups_mi_toggled(self, widget):
+
+    def on_mi_show_system_groups_toggled(self, widget):
         self.show_system_groups = not self.show_system_groups
         self.groups_filter.refilter()
         self.users_filter.refilter()
-    
-    def on_show_private_groups_mi_toggled(self, widget):
+
+    def on_mi_show_private_groups_toggled(self, widget):
         self.show_private_groups = not self.show_private_groups
         self.groups_filter.refilter()
-    
+
     def on_mi_refresh_activate(self, widget):
         self.repopulate_treeviews()
-    
-    def get_selected_users(self):
-        selection = self.users_tree.get_selection()
-        paths = selection.get_selected_rows()[1]
-        selected = [self.users_sort[path][0] for path in paths]
-        return selected
-        
-    def get_selected_groups(self):
-        selection = self.groups_tree.get_selection()
-        paths = selection.get_selected_rows()[1]
-        selected = [self.groups_sort[path][0] for path in paths]
-        return selected
-    
-    def on_new_user_mi_activate(self, widget):
+
+## Users menu
+
+    def on_mi_new_user_activate(self, widget):
         user_form.NewUserDialog(self.system, self.repopulate_treeviews)
-    
-    def on_edit_user_mi_activate(self, widget):
+
+    def on_mi_edit_user_activate(self, widget):
         user_form.EditUserDialog(self.system, self.get_selected_users()[0], self.repopulate_treeviews)
-    
-    def on_delete_user_mi_activate(self, widget):
+
+    def on_mi_delete_user_activate(self, widget):
         users = self.get_selected_users()
         users_n = len(users)
         if users_n == 1:
@@ -246,14 +297,14 @@ class Gui:
         else:
             message = "Θέλετε σίγουρα να διαγράψετε τους παρακάτω %d χρήστες;" % users_n
             message += "\n" + ', '.join([user.name for user in users])
-        
+
         response = dialogs.AskDialog(message).showup()
         if response == Gtk.ResponseType.YES:
             for user in self.get_selected_users():
                 self.system.delete_user(user)
             self.repopulate_treeviews()
-    
-    def on_remove_user_mi_activate(self, widget):
+
+    def on_mi_remove_user_activate(self, widget):
         users = self.get_selected_users()
         groups = self.get_selected_groups()
         users_n = len(users)
@@ -263,23 +314,22 @@ class Gui:
         else:
             message = "Θέλετε σίγουρα να αφαιρέσετε τους παρακάτω %d χρήστες από τις επιλεγμένες ομάδες (%s);" % (users_n, group_names)
             message += "\n" + ', '.join([user.name for user in users])
-        
+
         response = dialogs.AskDialog(message).showup()
         if response == Gtk.ResponseType.YES:
             for user in self.get_selected_users():
                 self.system.remove_user_from_groups(user, groups)
             self.repopulate_treeviews()
-    
-    def on_new_users_mi_activate(self, widget):
-        create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
-    
-    def on_new_group_mi_activate(self, widget):
+
+## Groups menu
+
+    def on_mi_new_group_activate(self, widget):
         group_form.NewGroupDialog(self.system, self.repopulate_treeviews)
-    
-    def on_edit_group_mi_activate(self, widget):
+
+    def on_mi_edit_group_activate(self, widget):
         group_form.EditGroupDialog(self.system, self.get_selected_groups()[0], self.repopulate_treeviews)
-    
-    def on_delete_group_mi_activate(self, widget):
+
+    def on_mi_delete_group_activate(self, widget):
         groups = self.get_selected_groups()
         groups_n = len(groups)
         if groups_n == 1:
@@ -287,54 +337,30 @@ class Gui:
         else:
             message = "Θέλετε σίγουρα να διαγράψετε τις παρακάτω %d ομάδες;" % groups_n
             message += "\n" + ', '.join([group.name for group in groups])
-        
+
         response = dialogs.AskDialog(message).showup()
         if response == Gtk.ResponseType.YES:
             for group in self.get_selected_groups():
                 self.system.delete_group(group)
             self.repopulate_treeviews()
-            
-    def on_set_static_ip_activate(self, widget):
-        ip_dialog.Ip_Dialog()
-    
-    def on_publish_ltsp_activate(self, widget):
-        # Manually set IPAPPEND=3 until the update-kernel.conf mess is cleared up
-        os.environ['IPAPPEND']='3'
-        subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
-    
-    def on_mi_ltsp_info_activate(self, widget):
-        pass #TODO: TextView
-    
-    def edit_file(self, filename):
-        subprocess.Popen(['xdg-open', filename])
-        # TODO: Maybe throw an error message if not os.path.isfile(filename)
-    
-    def on_mi_edit_lts_conf_activate(self, widget):
-        self.edit_file('/var/lib/tftpboot/ltsp/i386/lts.conf')
-    
-    def on_mi_edit_pxelinux_cfg_activate(self, widget):
-        self.edit_file('/var/lib/tftpboot/ltsp/i386/pxelinux.cfg/default')
-    
-    def on_mi_edit_shared_folders_activate(self, widget):
-        self.edit_file('/etc/default/shared-folders')
-        
-    def on_mi_edit_dnsmasq_conf_activate(self, widget):
-        self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
-    
-    def on_mi_about_activate(self, widget):
-        about_dialog.AboutDialog()
-    
-    def run_as_sudo_user(self, cmd):
-        if runas_user_script is None:
-            sys.stderr.write("Please use /sbin/sch-scripts, not sch-scripts.py\n")
-        else:
-            subprocess.Popen(['/bin/sh', runas_user_script] + cmd)
-    
-    def open_link(self, link):
-        self.run_as_sudo_user(['xdg-open', link])
-    
-    def on_mi_lts_conf_manpage_activate(self, widget):
-        self.open_link('http://manpages.ubuntu.com/lts.conf')
+
+## Help menu
+
+    def on_mi_home_activate(self, widget):
+        self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
+
+    def on_mi_report_bug_activate(self, widget):
+        self.open_link('https://bugs.launchpad.net/sch-scripts')
+
+    def on_mi_ask_question_activate(self, widget):
+        self.open_link('https://answers.launchpad.net/sch-scripts')
+
+    def on_mi_irc_activate(self, widget):
+        user = os.getenv("SUDO_USER")
+        if user is None:
+            user = "sch_scripts_user." # The dot is converted to a random digit
+        self.open_link("http://webchat.freenode.net/?nick=" + user +
+            "&channels=ubuntu-gr,ltsp&prompt=1")
 
     def on_mi_forum_activate(self, widget):
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
@@ -342,22 +368,14 @@ class Gui:
     def on_mi_map_activate(self, widget):
         self.open_link('http://goo.gl/maps/nOoQ')
 
-    def on_mi_irc_activate(self, widget):
-        user = os.getenv("SUDO_USER")
-        if user is None:
-            user = "sch_scripts_user." # The dot is converted to a random digit
-        self.open_link("http://webchat.freenode.net/?nick=" + user + 
-            "&channels=ubuntu-gr,ltsp&prompt=1")
+    def on_mi_lts_conf_manpage_activate(self, widget):
+        self.open_link('http://manpages.ubuntu.com/lts.conf')
 
-    def on_mi_ask_question_activate(self, widget):
-        self.open_link('https://answers.launchpad.net/sch-scripts')
+    def on_mi_ltsp_info_activate(self, widget):
+        subprocess.Popen(['./run-in-terminal', 'ltsp-info', '-v'])
 
-    def on_mi_report_bug_activate(self, widget):
-        self.open_link('https://bugs.launchpad.net/sch-scripts')
-
-    def on_mi_home_activate(self, widget):
-        self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
-
+    def on_mi_about_activate(self, widget):
+        about_dialog.AboutDialog()
 
 
 # To export a man page:

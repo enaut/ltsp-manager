@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkTreeModelSort" id="groups_sort">
-    <property name="model">groups_filter</property>
-  </object>
-  <object class="GtkListStore" id="groups_store">
-    <columns>
-      <!-- column-name instance -->
-      <column type="PyObject"/>
-      <!-- column-name GID -->
-      <column type="guint"/>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkTreeModelFilter" id="groups_filter">
-    <property name="child_model">groups_store</property>
-  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Διαχείριση ΣΕΠΕΗΥ</property>
@@ -219,7 +203,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Εμφάνιση ομάδων συστήματος</property>
                         <property name="use_underline">True</property>
-                        <signal name="toggled" handler="on_show_system_groups_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_mi_show_system_groups_toggled" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -229,7 +213,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Εμφάνιση προσωπικών ομάδων</property>
                         <property name="use_underline">True</property>
-                        <signal name="toggled" handler="on_show_private_groups_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_mi_show_private_groups_toggled" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -483,17 +467,6 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolbar" id="toolbar1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -970,6 +943,22 @@
       <!-- column-name Expire -->
       <column type="gint"/>
     </columns>
+  </object>
+  <object class="GtkListStore" id="groups_store">
+    <columns>
+      <!-- column-name instance -->
+      <column type="PyObject"/>
+      <!-- column-name GID -->
+      <column type="guint"/>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeModelFilter" id="groups_filter">
+    <property name="child_model">groups_store</property>
+  </object>
+  <object class="GtkTreeModelSort" id="groups_sort">
+    <property name="model">groups_filter</property>
   </object>
   <object class="GtkTreeModelFilter" id="users_filter">
     <property name="child_model">users_store</property>
