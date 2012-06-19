@@ -12,185 +12,38 @@
 ### END INIT INFO
 
 set -e
-# Unfortunately `set -e` doesn't work well. If a function is called from an if,
-# e.g. `if start...`, then inside the start() function, the global `set -e`
-# has no effect, it doesn't return 1 on command failures.
-# So `|| return 1` is frequently used inside functions.
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/shared-folders
 DESC="Shared folders service"
 
-ensure_dir() {
-    local dir owner group mode u g
-    dir=$1
-    owner=$2
-    group=$3
-    mode=$4
-
-    # Support both user/group IDs and names.
-    case "$owner" in
-        *[!0-9]*) u="U" ;;
-        *) u="u" ;;
-    esac
-    case "$group" in
-        *[!0-9]*) g="G" ;;
-        *) g="g" ;;
-    esac
-
-    if [ ! -d "$dir" ] ||
-        [ "$(stat -c "%$u %$g %a" "$dir")" != "$owner $group $mode" ]
-    then
-        mkdir -p "$dir" || return 1
-        chown "$owner:$group" "$dir" || return 1
-        chmod "$mode" "$dir" || return 1
-    fi
-}
-
-restrict_dirs() {
-    local user home var value
-    user=$1
-
-    home=$(getent passwd "$user" | cut -d : -f 6)
-    test -f "$home/.config/user-dirs.dirs" || return 0
-    while IFS="=" read -r var value; do
-        case "$var" in
-            XDG_DESKTOP_DIR|XDG_DOCUMENTS_DIR|XDG_DOWNLOAD_DIR|XDG_MUSIC_DIR|XDG_PICTURES_DIR|XDG_TEMPLATES_DIR|XDG_VIDEOS_DIR) ;;
-            *) continue
-        esac
-        value=${value#'"$HOME/'}
-        value=${value%'"'}
-        value=${value%'/'}
-        test -n "$value" || continue
-        value="$home/$value"
-        # Don't operate on symlinks
-        test -h "$value" && continue
-        test -d "$value" || continue
-        chgrp "$TEACHERS" "$value"
-        chmod 750 "$value"
-    done < "$home/.config/user-dirs.dirs"
-}
-
-# It reads the desired owner and permissions from the dir itself.
-bindfs_mount() {
-    local dir uid gid
-    dir=$1
-
-    test -d "$dir" || return 1
-    read uid gid perm<<EOF
-$(stat -c "%u %g %a" "$dir")
-EOF
-    if ! grep -qs "^bindfs $dir fuse.bindfs" /proc/mounts; then
-        bindfs -u "$uid" "--create-for-user=$uid" \
-            -g "$gid" "--create-for-group=$gid" \
-            -p "$perm,af-x" --chown-deny --chgrp-deny --chmod-deny "$dir" "$dir"
-    fi
-}
-
-initialize() {
-    if [ -f /etc/default/shared-folders ]; then
-        . /etc/default/shared-folders || return 1
-    else
-        return 1
-    fi
-    # In order for fat clients to access the SHARE_GROUPS list without having
-    # to run ltsp-update-image all the time, it is kept in the following file:
-    if [ -f "$SHARE_DIR/.shared-folders" ]; then
-        . "$SHARE_DIR/.shared-folders" || return 1
-    else
-        return 1
-    fi
-    ADM_UID=${ADM_UID:-1000}
-    ADM_GID=$(getent passwd "$ADM_UID" | cut -d : -f 4) || return 1
-}
-
-start() {
-    local group share_users user
-
-    ensure_dir "$SHARE_DIR" "$ADM_UID" "$ADM_GID" 711 || return 1
-    ensure_dir "$SHARE_DIR/.symlinks" "$ADM_UID" "$TEACHERS" 731 || return 1
-    find "$SHARE_DIR/.symlinks/" -mindepth 1 ! -type l -delete || return 1
-    share_users=","
-    for group in $SHARE_GROUPS; do
-        ensure_dir "$SHARE_DIR/$group" "$ADM_UID" "$group" 770 || return 1
-        bindfs_mount "$SHARE_DIR/$group" || return 1
-        share_users="$share_users$(getent group "$group" | cut -d : -f 4),"
-    done
-    if [ "$RESTRICT_DIRS" = true ]; then
-        share_users=$(echo "$share_users" | tr ',' '\n' | sort -u)
-        for user in $share_users; do
-            restrict_dirs "$user"
-        done
-    fi
-}
-
-stop() {
-    local mounts fs point type rest
-
-    # Cache /proc/mounts to a variable, otherwise some mounts are skipped
-    mounts=$(cat /proc/mounts)
-    while read fs point type rest; do
-        test "$type" = "fuse.bindfs" || continue
-        case "$point" in
-            "$SHARE_DIR/"*)
-                if ! umount "$point"; then
-                    echo "Could not unmount $point, forcing unmount..." >&2
-                    umount -l "$point"
-                fi
-            ;;
-        esac
-    done <<EOF
-$mounts
-EOF
-}
-
-status() {
-    local fs point type rest
-
-    while read fs point type rest; do
-        test "$type" = "fuse.bindfs" || continue
-        case "$point" in
-            "$SHARE_DIR/"*)
-                return 0
-            ;;
-        esac
-    done < /proc/mounts
-    return 1
-}
-
 . /lib/lsb/init-functions
-initialize
+
+run_shared_folders() {
+    local - msg param
+    set +e
+    msg=$1
+    param=$2
+
+    log_daemon_msg "$msg"
+    shared-folders -q "$param"
+    ret="$?"
+    log_end_msg "$?"
+    echo "$ret"
+}
 
 case "$1" in
     start)
-        log_daemon_msg "Mounting shared folders"
-        if start; then
-            log_end_msg $?
-        else
-            log_end_msg $?
-            exit 1
-        fi
+        exit $(run_shared_folders "Mounting shared folders" mount)
         ;;
     stop)
-        log_daemon_msg "Unmounting shared folders"
-        if stop; then
-            log_end_msg $?
-        else
-            log_end_msg $?
-            exit 1
-        fi
+        exit $(run_shared_folders "Unmounting shared folders" unmount)
         ;;
     restart|force-reload)
-        log_daemon_msg "Remounting shared folders"
-        if stop "removed" && start; then
-            log_end_msg $?
-        else
-            log_end_msg $?
-            exit 1
-        fi
+        exit $(run_shared_folders "Remounting shared folders" remount)
         ;;
     status)
-        if status; then
+        if [ -n "$(shared-folders list-mounted)" ]; then
             log_daemon_msg "(running)"
         else
             log_daemon_msg "(not running)"
