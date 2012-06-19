@@ -5,18 +5,12 @@
 
 import os
 import shlex
+import stat
 import sys
 import subprocess
 import libuser
 
 # TODO: update group_form to match the implemented SharedFolders() interface.
-# TODO: we also need a "start" mechanism, to be used on boot.
-# See the "start" function of the previous version of the
-# debian/shared-folders.init shell script. ensure_dir to make sure that
-# /home/Shared and /home/Shared/.symlinks exist and have appropriate
-# permissions etc.
-# I'll make a wrapper /usr/sbin/shared-folders shell script that calls
-# shared_folders.py with the appropriate parameters.
 # And for after the workshop, we need a "restrict_dirs" function that
 # chrgrp's the user dirs to "teachers".
 
@@ -30,11 +24,22 @@ class SharedFolders():
         self.load_config()
 
     def add(self, groups):
-        """Add the specified groups to share_groups, and remount them."""
+        """Add the specified groups to share_groups, and mount them."""
         groups=self.valid(groups)
         self.share_groups=list(set(self.share_groups + groups))
-        self.remount(groups)
+        self.mount(groups)
         self.save_config()
+
+    def ensure_dir(self, dir, mode, uid=-1, gid=-1):
+        """Ensures that dir exists with the specified mode, uid and gid."""
+        if not os.path.isdir(dir):
+            os.mkdir(dir)
+        s=os.stat(dir)
+        m=stat.S_IMODE(s.st_mode)
+        if m != mode:
+            os.chmod(dir, mode)
+        if (uid != -1 and uid != s.st_uid) or (gid != -1 and gid != s.st_gid):
+            os.chown(dir, uid, gid)
 
     def list_mounted(self, groups=None):
         """Return which of the specified groups are mounted."""
@@ -58,7 +63,8 @@ class SharedFolders():
             "TEACHERS":"teachers",
             "SHARE_DIR":"/home/Shared",
             "SHARE_GROUPS":"teachers",
-            "ADM_UID":"1000"}
+            "ADM_UID":"1000",
+            "ADM_GID":"1000"}
         contents=shlex.split(open("/etc/default/shared-folders").read(), True)
         self.config.update(dict(v.split("=") for v in contents))
         self.config["SHARE_DIR/"]=os.path.join(self.config["SHARE_DIR"], "")
@@ -67,6 +73,39 @@ class SharedFolders():
             contents=shlex.split(open(self.config['SHARE_CONF']).read(), True)
             self.config.update(dict(v.split("=") for v in contents))
         self.share_groups=self.config["SHARE_GROUPS"].split(" ")
+
+    def mount(self, groups=None):
+        """Mount or remount the folders for the specified groups."""
+        groups=self.valid(groups)
+        # Remove from groups the ones that don't need to be (re)mounted.
+        # Unmount the ones that need remounting, without removing them.
+        for mount in self.parse_mounts():
+            group=mount["group"]
+            if group not in groups:
+                continue
+            if self.system.groups[group].gid == mount["gid"]:
+                groups.delete(group)
+            else:
+                self.unmount(group)
+        # Then mount what's left.
+        # This might actually be the first time to mount anything,
+        # so ensure that all the dirs/symlinks are there.
+        adm_uid=int(self.config["ADM_UID"])
+        self.ensure_dir(self.config["SHARE_DIR"], 0711,
+            adm_uid, int(self.config["ADM_GID"]))
+        self.ensure_dir(self.config["SHARE_DIR/"] + ".symlinks", 0731,
+            adm_uid, self.system.groups[self.config["TEACHERS"]].gid)
+        for group in groups:
+            dir=self.config["SHARE_DIR/"] + group
+            group_gid=self.system.groups[group].gid
+            self.ensure_dir(dir, 0770, adm_uid, group_gid)
+            subprocess.call(["bindfs",
+                "-u", str(adm_uid),
+                "--create-for-user=%s" % adm_uid,
+                "-g", str(group_gid),
+                "--create-for-group=%s" % group_gid,
+                "-p", "770,af-x", "--chown-deny", "--chgrp-deny",
+                "--chmod-deny", dir, dir])
 
     def rename(self, src, dst):
         """Rename folder src to group dst.
@@ -80,7 +119,7 @@ class SharedFolders():
         self.share_groups=list((set(self.share_groups) - set([src]))
             | set([dst]))
         if mounted is not None:
-            self.remount(dst)
+            self.mount(dst)
         self.save_config()
 
     def parse_mounts(self):
@@ -105,41 +144,11 @@ class SharedFolders():
 
     def remove(self, groups=None):
         """Un-share specified folders and remove them from share_groups."""
-        if groups is None:
+        if groups is None or groups == []:
             groups=self.share_groups
         self.unmount(groups)
         self.share_groups=list(set(self.share_groups)-set(groups))
         self.save_config()
-
-    def remount(self, groups=None):
-        """Mount or remount the folders for the specified groups."""
-        groups=self.valid(groups)
-        # Remove from groups the ones that don't need to be (re)mounted.
-        # Unmount the ones that need remounting, without removing them.
-        for mount in self.parse_mounts():
-            group=mount["group"]
-            if group not in groups:
-                continue
-            if self.system.groups[group].gid == mount["gid"]:
-                groups.delete(group)
-            else:
-                self.unmount(group)
-        # Then mount what's left.
-        for group in groups:
-            dir=self.config["SHARE_DIR/"] + group
-            if not os.path.isdir(dir):
-                os.mkdir(dir)
-            os.chmod(dir, 0770)
-            os.chown(dir, int(self.config["ADM_UID"]),
-                self.system.groups[self.config["TEACHERS"]].gid)
-            subprocess.call(["bindfs",
-                "-u", self.config["ADM_UID"],
-                "--create-for-user=%s" % self.config["ADM_UID"],
-                "-g", str(self.system.groups[group].gid),
-                "--create-for-group=%s" % self.system.groups[group].gid,
-                "-p", "770,af-x", "--chown-deny", "--chgrp-deny",
-                "--chmod-deny", dir, dir])
-
 
     def save_config(self):
         """Save share_groups to /home/Shared/.shared-folders."""
@@ -151,7 +160,7 @@ SHARE_GROUPS="%s"
 
     def unmount(self, groups=None):
         """Return the folders that were actually unmounted."""
-        if groups is None:
+        if groups is None or groups == []:
             groups=self.share_groups
         ret=[]
         for mount in self.parse_mounts():
@@ -160,20 +169,20 @@ SHARE_GROUPS="%s"
                 continue
             ret.append(group)
             point=mount["point"]
-            if subprocess.call(["unmount", point]):
+            if subprocess.call(["umount", point]) == 0:
                 continue
             sys.stderr.write("Cannot unmount %s, forcing unmount..." % point)
-            subprocess.call(["unmount", "-l", point])
+            subprocess.call(["umount", "-l", point])
         return ret
 
     def valid(self, groups=None):
         """Return which of the specified groups are defined in /etc/group."""
-        if groups is None:
+        if groups is None or groups == []:
             groups=self.share_groups
         return list(set(self.system.groups) & set(groups))
 
 def usage():
-    return """Χρήση: $0 [ΕΝΤΟΛΕΣ]
+    return """Χρήση: shared-folders [ΕΝΤΟΛΕΣ]
 
 Διαχειρίζεται κοινόχρηστους φακέλους για συγκεκριμένες ομάδες χρηστών,
 με τη βοήθεια του bindfs.
@@ -188,6 +197,10 @@ def usage():
     list-shared <ομάδες>
         Εμφανίζει ποιες από τις καθορισμένες ομάδες έχουν ενεργοποιημένους
         τους κοινόχρηστους φακέλους.
+    mount <ομάδες>
+        Επαναπροσαρτεί τους κοινόχρηστους φακέλους για όσες από τις
+        καθορισμένες ομάδες έχει αλλάξει το όνομα ή το GID, και για όσες
+        δεν ήταν προσαρτημένοι οι φάκελοί τους.
     rename <παλιά ομάδα> <νέα ομάδα>
         Αλλάζει το όνομα ενός φακέλου από την παλιά του ομάδα στη νέα,
         η οποία πρέπει είναι υπαρκτή. Εάν ο φάκελος ήταν προσαρτημένος,
@@ -196,12 +209,6 @@ def usage():
         Αποπροσαρτεί και αφαιρεί τη δυνατότητα κοινόχρηστων φακέλων από
         τις καθορισμένες ομάδες. Οι φάκελοι δεν διαγράφονται από το
         σύστημα αρχείων.
-    remount <ομάδες>
-        Επαναπροσαρτεί τους κοινόχρηστους φακέλους για όσες από τις
-        καθορισμένες ομάδες έχει αλλάξει το όνομα ή το GID, και για όσες
-        δεν ήταν προσαρτημένοι οι φάκελοί τους.
-    mount <ομάδες>
-        Προσαρτεί τους κοινόχρηστους φακέλους των καθορισμένων ομάδων.
     unmount <ομάδες>
         Αποπροσαρτεί τους κοινόχρηστους φακέλους των καθορισμένων ομάδων.
 
@@ -214,16 +221,29 @@ if __name__ == '__main__':
       and (sys.argv[1] == '-h' or sys.argv[1] == '--help')):
         print usage()
         sys.exit(0)
-
-# TODO: make it runnable from the console, process args etc.
-    sf=SharedFolders(libuser.System())
-    print sf.parse_mounts()
-    print sf.list_shared(["alkisg", "a2", "a3"])
-    print sf.list_mounted(["alkisg", "teachers"])
-"""
-    elif len(sys.argv) == 3 and (sys.argv[1] == '-e'):
-        runas_user_script=sys.argv[2]
-    elif len(sys.argv) >= 2:
-        usage()
+    sf=SharedFolders()
+    cmd=sys.argv[1]
+    groups=sys.argv[2:]
+    if cmd == "add":
+        if len(sys.argv) < 3:
+            sys.stderr.write(usage() + "\n")
+            sys.exit(1)
+        sf.add(groups)
+    elif cmd == "list-mounted":
+        print ' '.join(sf.list_mounted(groups))
+    elif cmd == "list-shared":
+        print ' '.join(sf.list_shared(groups))
+    elif cmd == "mount":
+        sf.mount(groups)
+    elif cmd == "rename":
+        if len(sys.argv) != 4:
+            sys.stderr.write(usage() + "\n")
+            sys.exit(1)
+        sf.rename(groups[0], groups[1])
+    elif cmd == "remove":
+        sf.remove(groups)
+    elif cmd == "unmount":
+        sf.unmount(groups)
+    else:
+        sys.stderr.write(usage() + "\n")
         sys.exit(1)
-"""
