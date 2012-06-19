@@ -74,6 +74,8 @@ install() {
     if grep -qs '# Η οδηγία IPAPPEND=3' /etc/ltsp/update-kernels.conf; then
         rm -f /etc/ltsp/update-kernels.conf
     fi
+    # Manually run update-kernels until it's moved to ltsp-client-core.postinst
+    /usr/share/ltsp/update-kernels
 }
 
 case "$1" in

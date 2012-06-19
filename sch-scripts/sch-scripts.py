@@ -252,8 +252,6 @@ class Gui:
         ip_dialog.Ip_Dialog()
 
     def on_mi_ltsp_update_image_activate(self, widget):
-        # Manually set IPAPPEND=3 until the update-kernel.conf mess is cleared up
-        os.environ['IPAPPEND']='3'
         subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
