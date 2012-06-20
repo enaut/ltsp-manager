@@ -155,7 +155,8 @@ class Ip_Dialog:
                     gateway_entry.set_text(gateway)
                     self.info["gateway"] = gateway
 
-                    address = "10.160.31.10"
+                    self.address_sub = ".".join(self.Int32_To_Dotted_Quad_String(address_prop["Addresses"][0][0]).split(".")[0:3])+"."
+                    address = self.address_sub+"10"
                     address_entry = self.builder.get_object("entry6")
                     address_entry.set_text(address)
                     address_entry.connect("focus-in-event", self.Region)
@@ -222,10 +223,10 @@ class Ip_Dialog:
         if mode == "address":
             reg = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$"
             new_ip = widget.get_text()
-            if new_ip[0:10] != "10.160.31.":
-                widget.set_text("10.160.31.")
+            if new_ip[0:len(".".join(new_ip.split(".")[0:3]))+1] != self.address_sub:
+                widget.set_text(self.address_sub)
                 widget.set_position(-1)
-                new_ip = "10.160.31."
+                new_ip = self.address_sub
             if re.match(reg, new_ip):
                 self.address = True
                 self.info["address"] = new_ip
@@ -238,7 +239,7 @@ class Ip_Dialog:
                 widget.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
                 widget.set_icon_tooltip_text(1, "Μη-έγκυρη διεύθυνση IP. Πρέπει να επεξεργαστείτε τη διεύθυνση IP της σύνδεσης")
                 self.name_entry.set_sensitive(False)
-            if self.name_entry.get_text().startswith("eth0,10.160.31."):
+            if self.name_entry.get_text().startswith("eth0,%s" %self.address_sub):
                 self.page_title_label.set_label(self.info["interface"]+","+new_ip)
                 self.name_entry.set_text(self.info["interface"]+","+new_ip)
         elif mode == "name":
