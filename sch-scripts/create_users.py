@@ -148,12 +148,13 @@ class NewUsersDialog:
                                 str(compn)).replace('{0i}', '%02d'%compn)
                 epoch = datetime.datetime.utcfromtimestamp(0)
                 tmp_uid = self.system.get_free_uid()
+                tmp_password=ev(self.password_tmpl)
                 u=libuser.User(name=ev(self.username_tmpl), uid=tmp_uid,
                     gid=tmp_gid, rname=ev(self.name_tmpl),
                     directory=('/home/'+ev(self.username_tmpl)),
                     lstchg = (datetime.datetime.today() - epoch).days,
                     groups=ev(self.groups_tmpl).split(),
-                    plainpw=ev(self.password_tmpl))
+                    password=self.system.encrypt(tmp_password))
                 self.system.add_user(u)
                 self.system.load()
                 users_created += 1
