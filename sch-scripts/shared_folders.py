@@ -87,7 +87,7 @@ class SharedFolders():
             if group not in groups:
                 continue
             if self.system.groups[group].gid == mount["gid"]:
-                groups.delete(group)
+                groups.remove(group)
             else:
                 self.unmount(group)
         # Then mount what's left.

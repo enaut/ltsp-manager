@@ -56,7 +56,7 @@ set_dir_attributes() {
 }
 
 ln_sf() {
-    local src dst
+    local dst src
     dst=$1
     src=$2
 
@@ -96,10 +96,11 @@ create_symlinks() {
         belongs_in_a_shared_group=true
         ln_sf "$SHARE_DIR/$group" "$XDG_PUBLICSHARE_DIR/$group - $SHARE_DESCRIPTION"
         if [ "$is_teacher" = true ]; then
+            # Don't create a folder for the teachers group.
+            test "$group" = "$TEACHERS" && continue
             mkdir -p "$XDG_PUBLICSHARE_DIR/$group"
             chgrp "$group" "$XDG_PUBLICSHARE_DIR/$group"
             chmod 750 "$XDG_PUBLICSHARE_DIR/$group"
-            ln_sf "$SHARE_DIR/.symlinks/$group - $USER" "$XDG_PUBLICSHARE_DIR/$group"
         else
             # Create a symlink to each teacher that belongs in this group.
             group_members=" $(getent group "$group" | cut -d : -f 4 | tr ',' ' ') "
@@ -126,7 +127,9 @@ fi
 . /etc/default/shared-folders
 # For fat clients, try to get a newer version of SHARE_GROUPS by using
 # the LOCALAPPS_EXTRA_MOUNT mount.
-. "$SHARE_DIR/.shared-folders" 2>/dev/null || true
+if [ -f "$SHARE_DIR/.shared-folders" ]; then
+    . "$SHARE_DIR/.shared-folders" 2>/dev/null || true
+fi
 get_xdg_dirs
 create_symlinks
 if [ "$belongs_in_a_shared_group" = true ] && [ "$is_teacher" = true ]; then
