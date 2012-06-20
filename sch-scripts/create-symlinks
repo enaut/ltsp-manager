@@ -101,13 +101,16 @@ create_symlinks() {
             mkdir -p "$XDG_PUBLICSHARE_DIR/$group"
             chgrp "$group" "$XDG_PUBLICSHARE_DIR/$group"
             chmod 750 "$XDG_PUBLICSHARE_DIR/$group"
+            ln_sf "$XDG_PUBLICSHARE_DIR/$group" "$SHARE_DIR/.symlinks/$group - $USER"
         else
             # Create a symlink to each teacher that belongs in this group.
             group_members=" $(getent group "$group" | cut -d : -f 4 | tr ',' ' ') "
             for teacher in $teachers; do
                 case "$group_members" in
                     *" $teacher "*)
-                        ln_sf "$SHARE_DIR/.symlinks/$group - $teacher" "$XDG_PUBLICSHARE_DIR/$group - $SHARE_DESCRIPTION"
+                        teacher_name=$(getent passwd "$teacher" | cut -d ':' -f 5 | cut -d ',' -f 1)
+                        teacher_name=${teacher_name:-$teacher}
+                        ln_sf "$SHARE_DIR/.symlinks/$group - $teacher" "$XDG_PUBLICSHARE_DIR/$group - $teacher_name"
                         ;;
                 esac
             done
@@ -134,6 +137,4 @@ get_xdg_dirs
 create_symlinks
 if [ "$belongs_in_a_shared_group" = true ] && [ "$is_teacher" = true ]; then
     set_dir_attributes
-else
-    echo "User $USER doesn't belong to any shared group, no action taken."
 fi
