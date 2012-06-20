@@ -121,18 +121,21 @@ class NewUsersDialog:
             for classn in self.classes:
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                tmp_gid = self.system.get_free_gid()
-                cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
-                progressbar.set_text('Δημιουργία ομάδας %d από %d' 
-                    % (groups_created+1, total_groups))
-                #TODO expect returned value from add_group
-                if False and cmd_error != "":
-                    self.glade.get_object('error_label').set_text(cmd_error)
-                    self.glade.get_object('error_hbox').show() 
-                    button_close.set_sensitive(True)
-                    return
-                progressbar.set_fraction(
-                    float(groups_created) / float(total_groups))
+                if classn not in self.all_groups:
+                    tmp_gid = self.system.get_free_gid()
+                    cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
+                    progressbar.set_text('Δημιουργία ομάδας %d από %d' 
+                        % (groups_created+1, total_groups))
+                    #TODO expect returned value from add_group
+                    if False and cmd_error != "":
+                        self.glade.get_object('error_label').set_text(cmd_error)
+                        self.glade.get_object('error_hbox').show() 
+                        button_close.set_sensitive(True)
+                        return
+                    progressbar.set_fraction(
+                        float(groups_created) / float(total_groups))
+                else:
+                    tmp_gid=self.system.groups[classn].gid
                 
 
         # And finally, create the users

@@ -33,7 +33,7 @@ class Ip_Dialog:
         """Update the name from dialog"""
         self.info["name"] = self.name_entry.get_text()
         text = "Θέλετε να συνεχίσετε;"
-        secondary_text = """Θα δημιουργηθεί μία νέα σύνδεση με όνομα "%s".""" %(self.info["name"])
+        secondary_text = """Θα δημιουργηθεί μια νέα σύνδεση με όνομα "%s", θα γίνει επανεκκίνηση της υπηρεσίας Διαχείρισης Δικτύου και επαναδημιουργία των ρυθμίσεων του dnsmasq. Η σύνδεση θα διακοπεί για λίγα δευτερόλεπτα.""" %(self.info["name"])
         response = self.Dialog(text, "Επιβεβαίωση", "question", secondary_text)
         if response == Gtk.ResponseType.YES:
             bytes = [unhexlify(v) for v in self.info["hwaddress"].split(":")]
@@ -87,7 +87,7 @@ class Ip_Dialog:
             subprocess.Popen(['sh', '-c',
                 'service network-manager restart && ltsp-config dnsmasq --overwrite'])
             text = "Η νέα σύνδεση με όνομα %s δημιουργήθηκε" %(self.info["name"])
-            secondary_text = "Θα γίνει επανεκκίνηση της υπηρεσίας Διαχείρισης Δικτύου και επαναδημιουργία των ρυθμίσεων του dnsmasq. Η σύνδεση θα διακοπεί για λίγα δευτερόλεπτα."
+            secondary_text = "Ο διάλογος θα κλείσει."
             self.Dialog(text, "Ειδοποίηση", "info", secondary_text)
             self.dialog.destroy()
         else:
