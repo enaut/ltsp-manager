@@ -10,8 +10,9 @@ import sys
 import subprocess
 import libuser
 
-# TODO: update group_form to match the implemented SharedFolders() interface.
-# And for after the workshop, we need a "restrict_dirs" function that
+# TODO: after the workshop, let's move the shared_folders ui into its own
+# dialog, and only disable editing groups that have shares in group_form.py
+# Unrelated, we might also want a "restrict_dirs" function that
 # chrgrp's the user dirs to "teachers".
 
 class SharedFolders():
@@ -26,7 +27,7 @@ class SharedFolders():
     def add(self, groups):
         """Add the specified groups to share_groups, and mount them."""
         groups=self.valid(groups)
-        self.share_groups=list(set(self.share_groups + groups))
+        self.system.share_groups=list(set(self.system.share_groups + groups))
         self.mount(groups)
         self.save_config()
 
@@ -52,7 +53,8 @@ class SharedFolders():
 
     def list_shared(self, groups=None):
         """Return which of the specified groups are shared."""
-        return self.valid(list(set(self.share_groups) & set(groups)))
+        groups=self.valid(groups)
+        return self.valid(list(set(self.system.share_groups) & set(groups)))
 
     def load_config(self):
         """Read the shell configuration files."""
@@ -72,7 +74,8 @@ class SharedFolders():
         if os.path.isfile(self.config['SHARE_CONF']):
             contents=shlex.split(open(self.config['SHARE_CONF']).read(), True)
             self.config.update(dict(v.split("=") for v in contents))
-        self.share_groups=self.config["SHARE_GROUPS"].split(" ")
+        self.system.teachers=self.config["TEACHERS"]
+        self.system.share_groups=self.config["SHARE_GROUPS"].split(" ")
 
     def mount(self, groups=None):
         """Mount or remount the folders for the specified groups."""
@@ -116,8 +119,8 @@ class SharedFolders():
         mounted=self.unmount(src)
         # TODO: check if dst exists etc
         os.rename(src, dst)
-        self.share_groups=list((set(self.share_groups) - set([src]))
-            | set([dst]))
+        self.system.share_groups=list(
+            (set(self.system.share_groups) - set([src])) | set([dst]))
         if mounted is not None:
             self.mount(dst)
         self.save_config()
@@ -134,7 +137,7 @@ class SharedFolders():
             mount['point']=items[1]
             mount['group']=mount['point'].partition(
                 self.config["SHARE_DIR/"])[2]
-            if mount['group'] not in self.share_groups:
+            if mount['group'] not in self.system.share_groups:
                 continue
             stat=os.stat(mount['point'])
             mount['uid']=stat.st_uid
@@ -145,9 +148,10 @@ class SharedFolders():
     def remove(self, groups=None):
         """Un-share specified folders and remove them from share_groups."""
         if groups is None or groups == []:
-            groups=self.share_groups
+            groups=self.system.share_groups
         self.unmount(groups)
-        self.share_groups=list(set(self.share_groups)-set(groups))
+        self.system.share_groups=list(
+            set(self.system.share_groups) - set(groups))
         self.save_config()
 
     def save_config(self):
@@ -155,13 +159,13 @@ class SharedFolders():
         f=open(self.config["SHARE_CONF"], "w")
         f.write("""# List of groups for which shared folders will be created.
 SHARE_GROUPS="%s"
-""" % ' '.join(self.share_groups))
+""" % ' '.join(self.system.share_groups))
         f.close()
 
     def unmount(self, groups=None):
         """Return the folders that were actually unmounted."""
         if groups is None or groups == []:
-            groups=self.share_groups
+            groups=self.system.share_groups
         ret=[]
         for mount in self.parse_mounts():
             group=mount["group"]
@@ -178,7 +182,7 @@ SHARE_GROUPS="%s"
     def valid(self, groups=None):
         """Return which of the specified groups are defined in /etc/group."""
         if groups is None or groups == []:
-            groups=self.share_groups
+            groups=self.system.share_groups
         return list(set(self.system.groups) & set(groups))
 
 def usage():

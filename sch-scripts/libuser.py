@@ -77,6 +77,9 @@ class System:
         self.users = {}
         self.groups = {}     
         self.load()
+        # These might be updated from shared_folders, if they're used
+        self.teachers='teachers'
+        self.share_groups=[self.teachers]
     
     # Group operations
     def add_group(self, group):

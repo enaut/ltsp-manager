@@ -16,17 +16,7 @@ class UserForm(object):
         self.builder = Gtk.Builder()
         self.builder.add_from_file('user_form.ui')
         
-        # Read the special teachers group
-        try:
-            f = open('/etc/default/shared-folders')
-            teachers = re.findall('^\s*TEACHERS="(.*)"', f.read(), re.M)[0]
-            f.close()
-            if teachers == '':
-                teachers = '$$teachers'
-        except:
-            teachers = '$$teachers'
-        
-        self.roles = {i : config.parser.get('Roles', i).replace('$$teachers', teachers) for i in config.parser.options('Roles')}
+        self.roles = {i : config.parser.get('Roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('Roles')}
         
         self.refresh = refresh #OMG FIXME
         

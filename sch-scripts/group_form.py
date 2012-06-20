@@ -6,11 +6,12 @@ import os
 import subprocess
 from gi.repository import Gtk, Gdk
 import libuser
-import libshare
+import shared_folders
 
 class GroupForm(object):
-    def __init__(self, system, refresh):
+    def __init__(self, system, sf, refresh):
         self.system = system
+        self.sf = sf
         #self.mode = None
         self.builder = Gtk.Builder()
         self.builder.add_from_file('group_form.ui')
@@ -79,9 +80,9 @@ class GroupForm(object):
         self.dialog.destroy()
     
 class NewGroupDialog(GroupForm):
-    def __init__(self, system, refresh):
+    def __init__(self, system, sf, refresh):
         self.mode = 'new'
-        super(NewGroupDialog, self).__init__(system, refresh)
+        super(NewGroupDialog, self).__init__(system, sf, refresh)
         self.builder.connect_signals(self)
         
         self.gid_entry.set_text(str(system.get_free_gid()))
@@ -95,15 +96,15 @@ class NewGroupDialog(GroupForm):
         g = libuser.Group(name, gid, members)
         self.system.add_group(g)
         if self.has_shared.get_active():
-            libshare.sf_add(g.name)
+            self.sf.add([g.name])
         self.refresh()
         self.dialog.destroy()
 
 class EditGroupDialog(GroupForm):
-    def __init__(self, system, group, refresh):
+    def __init__(self, system, sf, group, refresh):
         self.mode = 'edit'
         self.group = group
-        super(EditGroupDialog, self).__init__(system, refresh)
+        super(EditGroupDialog, self).__init__(system, sf, refresh)
         self.builder.connect_signals(self)
         
         self.groupname.set_text(group.name)
@@ -114,8 +115,8 @@ class EditGroupDialog(GroupForm):
             if row[0].name in self.group.members:
                 row[1] = True
         
-        # See if the group has shared folders enabled and active
-        if group.name in libshare.sf_list_active():
+        # See if the group has shared folders enabled
+        if group.name in self.sf.list_shared():
             self.has_shared.set_active(True)
             self.shared_state = True
         else:
@@ -145,19 +146,19 @@ class EditGroupDialog(GroupForm):
         for user in old_members.values():
             if user not in self.group.members.values():
                 self.system.remove_user_from_groups(user, [self.group])
-        # Shared folders were not active and now they are
-        if not self.shared_state and self.has_shared.get_active():
-            libshare.sf_add(self.group.name)
-        # Shared folders were active but now they are not
-        elif self.shared_state and not self.has_shared.get_active():
-            libshare.sf_remove(self.group.name)
-            
-        # Restart the shared folders service
-        if old_gid != self.group.gid:
-            libshare.sf_restart(self.group.name)
-        # Inform the shared folders service that the group name has been changed
-        elif old_name != self.group.name:
-            libshare.sf_move(old_name, self.group.name)
-            
+        if self.shared_state and not self.has_shared.get_active():
+            # Shared folders were active but now they are not
+            self.sf.remove([self.group.name])
+        elif self.has_shared.get_active():
+            if not self.shared_state:
+                # Shared folders were not active and now they are
+                self.sf.add([self.group.name])
+            else:
+                # Share folders were and are active, check for name/gid changes
+                if old_name != self.group.name:
+                    self.sf.rename(old_name, self.group.name)
+                elif old_gid != self.group.gid:
+                    self.sf.mount([self.group.name])
+
         self.refresh()
         self.dialog.destroy()

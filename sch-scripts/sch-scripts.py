@@ -7,7 +7,6 @@ import sys
 import subprocess
 from gi.repository import Gtk
 import libuser
-import libshare
 import user_form
 import group_form
 import dialogs
@@ -16,11 +15,13 @@ import config
 import ip_dialog
 import about_dialog
 import create_users
+import shared_folders
 import os
 
 class Gui:
     def __init__(self):
         self.system = libuser.System()
+        self.sf=shared_folders.SharedFolders(self.system)
         self.conf = config.parser
 
         self.builder = Gtk.Builder()
@@ -213,7 +214,7 @@ class Gui:
         user_form.EditUserDialog(self.system, widget.get_model()[path][0], self.repopulate_treeviews)
 
     def on_groups_treeview_row_activated(self, widget, path, column):
-        group_form.EditGroupDialog(self.system, widget.get_model()[path][0], self.repopulate_treeviews)
+        group_form.EditGroupDialog(self.system, self.sf, widget.get_model()[path][0], self.repopulate_treeviews)
     
     def on_select_all_groups_clicked(self, widget):
         self.groups_tree.get_selection().select_all()
@@ -326,10 +327,10 @@ class Gui:
 ## Groups menu
 
     def on_mi_new_group_activate(self, widget):
-        group_form.NewGroupDialog(self.system, self.repopulate_treeviews)
+        group_form.NewGroupDialog(self.system, self.sf, self.repopulate_treeviews)
 
     def on_mi_edit_group_activate(self, widget):
-        group_form.EditGroupDialog(self.system, self.get_selected_groups()[0], self.repopulate_treeviews)
+        group_form.EditGroupDialog(self.system, self.sf, self.get_selected_groups()[0], self.repopulate_treeviews)
 
     def on_mi_delete_group_activate(self, widget):
         groups = self.get_selected_groups()
@@ -342,8 +343,8 @@ class Gui:
 
         response = dialogs.AskDialog(message).showup()
         if response == Gtk.ResponseType.YES:
-            for group in self.get_selected_groups():
-                libshare.sf_remove(group.name)
+            self.sf.remove(groups)
+            for group in groups:
                 self.system.delete_group(group)
             self.repopulate_treeviews()
 
