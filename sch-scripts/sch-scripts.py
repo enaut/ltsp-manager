@@ -1,10 +1,11 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 # Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 import sys
 import subprocess
+import os
 from gi.repository import Gtk
 import libuser
 import user_form
@@ -16,7 +17,6 @@ import ip_dialog
 import about_dialog
 import create_users
 import shared_folders
-import os
 
 class Gui:
     def __init__(self):
@@ -230,7 +230,7 @@ class Gui:
 ## File menu
 
     def on_mi_signup_activate(self, widget):
-        pass
+        pass        
 
     def on_mi_new_users_activate(self, widget):
         create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
@@ -358,7 +358,10 @@ class Gui:
 
     def on_mi_ask_question_activate(self, widget):
         self.open_link('https://answers.launchpad.net/sch-scripts')
-
+    
+    def on_helpdesk_ticket_activate(self, widget):
+        self.open_link('http://helpdesk.sch.gr/ticketnew_user.php?category_id=5017')
+    
     def on_mi_irc_activate(self, widget):
         user = os.getenv("SUDO_USER")
         if user is None:

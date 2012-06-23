@@ -33,7 +33,6 @@
                       <object class="GtkMenuItem" id="mi_signup">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
-                        <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Ανοίγει μία φόρμα η οποία δέχεται αιτήσεις ανοίγματος λογαριασμών από τους χρήστες</property>
                         <property name="label" translatable="yes">Ενεργοποίηση εγγραφών χρηστών...</property>
@@ -381,6 +380,16 @@
                         <property name="label" translatable="yes">Υποβολή ερώτησης</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_ask_question_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem1">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Υποβολή αιτήματος στο helpdesk</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_helpdesk_ticket_activate" swapped="no"/>
                       </object>
                     </child>
                     <child>
