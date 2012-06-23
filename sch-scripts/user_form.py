@@ -10,7 +10,7 @@ import libuser
 import config
 
 class UserForm(object):
-    def __init__(self, system, refresh):
+    def __init__(self, system, refresh=None):
         self.system = system
         self.mode = None
         self.builder = Gtk.Builder()
@@ -358,8 +358,8 @@ class EditUserDialog(UserForm):
         self.builder.get_object('role_box').set_visible(False)
         
         self.username.set_text(user.name)
-        self.password.set_text(u'\u03db\xa9\u03df-\u03db\xa9\xaei\u03e1\u03c4\u03db')
-        self.password_repeat.set_text(u'\u03db\xa9\u03df-\u03db\xa9\xaei\u03e1\u03c4\u03db')
+        self.password.set_text('\n'*8)
+        self.password_repeat.set_text('\n'*8)
         self.uid_entry.set_text(str(user.uid))
         self.homedir.set_text(user.directory)
         self.shells_entry.set_text(user.shell)
@@ -405,7 +405,7 @@ class EditUserDialog(UserForm):
         self.user.warn = int(self.warn.get_value())
         self.user.inact = int(self.inactive.get_value())
         self.user.expire = int(self.expire.get_value())
-        if self.user.password == u'\u03db\xa9\u03df-\u03db\xa9\xaei\u03e1\u03c4\u03db':
+        if not '\n' in self.password.get_text():
             self.user.password = self.system.encrypt(self.password.get_text())
         
         self.user.groups = [g[1] for g in self.groups_store if g[2]]
