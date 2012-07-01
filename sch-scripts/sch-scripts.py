@@ -7,6 +7,7 @@ import sys
 import subprocess
 import os
 from gi.repository import Gtk
+import version
 import libuser
 import user_form
 import group_form
@@ -415,17 +416,17 @@ def usage():
 Αναφορά σφαλμάτων στο https://bugs.launchpad.net/sch-scripts."""
 
 
-def version():
-    print """sch-scripts 12.04
+def print_version():
+    print """sch-scripts %s
 Copyright (C) 2009-2012 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
 Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/gpl.html>.
 
-Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>."""
+Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.""" % version.__version__
 
 if __name__ == '__main__':
     runas_user_script=None
     if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):
-        version()
+        print_version()
         sys.exit(0)
     elif len(sys.argv) == 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
         usage()

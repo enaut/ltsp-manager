@@ -62,6 +62,6 @@ fi
 cd /usr/share/sch-scripts
 case "$1" in
     # help and version need to run without root
-    -h|--help|-v|--verson) ./sch-scripts.py "$@" ;;
+    -h|--help|-v|--version) ./sch-scripts.py "$@" ;;
     *) run_as_root ./sch-scripts.py -e "$(create_runas_script)" "$@" ;;
 esac

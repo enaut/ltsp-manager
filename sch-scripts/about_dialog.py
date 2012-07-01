@@ -5,14 +5,14 @@
 
 
 from gi.repository import Gtk
-
+import version
 
 class AboutDialog:
     def __init__(self):
         self.builder = Gtk.Builder()
         self.builder.add_from_file("about_dialog.ui")
         self.dialog = self.builder.get_object("aboutdialog1")
-        self.dialog.set_title("Περί Διαχείριση ΣΕΠΕΗΥ")
+        self.dialog.set_version(version.__version__)
         self.dialog.run()
         self.dialog.destroy()
         

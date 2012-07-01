@@ -1,7 +1,13 @@
 #!/usr/bin/make -f
 
+DEBVERS := $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
+
 %:
 	dh $@
+
+override_dh_install:
+	dh_install
+	echo "__version__='$(DEBVERS)'" > "$(CURDIR)/debian/sch-scripts/usr/share/sch-scripts/version.py"
 
 override_dh_installinit:
 	dh_installinit --name=shared-folders
