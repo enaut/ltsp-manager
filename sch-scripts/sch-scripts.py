@@ -267,6 +267,15 @@ class Gui:
     def on_mi_edit_dnsmasq_conf_activate(self, widget):
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
 
+    def on_mi_purge_kernels_activate(self, widget):
+        subprocess.Popen(['./run-in-terminal', './purge-kernels'])
+
+    def on_mi_apt_get_clean_activate(self, widget):
+        subprocess.Popen(['./run-in-terminal', 'apt-get', 'clean'])
+
+    def on_mi_apt_get_purge_activate(self, widget):
+        subprocess.Popen(['./run-in-terminal', 'apt-get', 'purge', '--auto-remove'])
+
 ## View menu
 
     def on_mi_view_column_toggled(self, checkmenuitem, treeviewcolumn):
@@ -373,7 +382,7 @@ class Gui:
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
 
     def on_mi_map_activate(self, widget):
-        self.open_link('http://goo.gl/maps/nOoQ')
+        self.open_link('http://ts.sch.gr/wiki/Linux/LTSP/Προχωρημένα/Χάρτης')
 
     def on_mi_lts_conf_manpage_activate(self, widget):
         self.open_link('http://manpages.ubuntu.com/lts.conf')

@@ -109,7 +109,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Δημοσιεύει ένα αντίγραφο του δίσκου του εξυπηρετητή στο δίκτυο</property>
-                        <property name="label" translatable="yes">Δημοσίευση εικονικού δίσκου...</property>
+                        <property name="label" translatable="yes">Δημοσίευση εικονικού δίσκου</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_ltsp_update_image_activate" swapped="no"/>
                       </object>
@@ -159,6 +159,53 @@
                                 <property name="label" translatable="yes">Επεξεργασία ρυθμίσεων PXELinux</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_edit_pxelinux_cfg_activate" swapped="no"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_maintenance">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Συντήρηση</property>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="mn_maintenance">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_purge_kernels">
+                                <property name="use_action_appearance">False</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Αφαιρεί τους παλιότερους kernels για εξοικονόμηση χώρου στο δίσκο</property>
+                                <property name="label" translatable="yes">Αφαίρεση παλιών πυρήνων...</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mi_purge_kernels_activate" swapped="no"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_apt_get_clean">
+                                <property name="use_action_appearance">False</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Αφαιρεί τα αρχεία εγκατάστασης .deb των πακέτων που έχετε ήδη εγκαταστήσει</property>
+                                <property name="label" translatable="yes">Καθαρισμός μνήμης πακέτων</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mi_apt_get_clean_activate" swapped="no"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_apt_get_purge">
+                                <property name="use_action_appearance">False</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Αφαιρεί τα εγκατεστημένα βοηθητικά πακέτα που δεν χρειάζονται πια</property>
+                                <property name="label" translatable="yes">Διαγραφή ορφανών πακέτων...</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mi_apt_get_purge_activate" swapped="no"/>
                               </object>
                             </child>
                           </object>
