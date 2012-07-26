@@ -18,6 +18,7 @@ import ip_dialog
 import about_dialog
 import create_users
 import shared_folders
+import ltsp_info
 
 class Gui:
     def __init__(self):
@@ -389,7 +390,7 @@ class Gui:
         self.open_link('http://manpages.ubuntu.com/lts.conf')
 
     def on_mi_ltsp_info_activate(self, widget):
-        subprocess.Popen(['./run-in-terminal', 'ltsp-info', '-v'])
+        ltsp_info.LtspInfo()
 
     def on_mi_about_activate(self, widget):
         about_dialog.AboutDialog()
