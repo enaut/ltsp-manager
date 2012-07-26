@@ -114,7 +114,7 @@ class Ip_Dialog:
         prop = proxy.GetAll("org.freedesktop.NetworkManager")
         
         if prop["NetworkingEnabled"] == 1:
-            if len(prop["ActiveConnections"]) == 1:
+            if len(prop["ActiveConnections"]) >= 1:
                 proxy = bus.get_object("org.freedesktop.NetworkManager", prop["ActiveConnections"][0])
                 connection_prop = proxy.GetAll("org.freedesktop.NetworkManager.Connection.Active")
 
@@ -239,7 +239,7 @@ class Ip_Dialog:
                 widget.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
                 widget.set_icon_tooltip_text(1, "Μη-έγκυρη διεύθυνση IP. Πρέπει να επεξεργαστείτε τη διεύθυνση IP της σύνδεσης")
                 self.name_entry.set_sensitive(False)
-            if self.name_entry.get_text().startswith("eth0,%s" %self.address_sub):
+            if self.name_entry.get_text().startswith("%s,%s" %(self.info["interface"], self.address_sub)):
                 self.page_title_label.set_label(self.info["interface"]+","+new_ip)
                 self.name_entry.set_text(self.info["interface"]+","+new_ip)
         elif mode == "name":
