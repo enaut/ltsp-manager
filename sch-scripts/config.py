@@ -7,7 +7,9 @@ settings_f = os.path.join(path, 'settings')
 
 gui_defaults = {'show_system_groups' : False,
                 'show_private_groups' : False,
-                'visible_user_columns' : 'all'
+                'visible_user_columns' : 'all',
+                'requests_checked_roles' : '',
+                'requests_checked_groups' : ''
                }
 roles_defaults = {
                   'Καθηγητής' : 'adm,sambashare,plugdev,vboxusers,cdrom,epoptes,$$teachers',

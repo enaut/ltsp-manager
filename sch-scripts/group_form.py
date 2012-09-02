@@ -38,7 +38,7 @@ class GroupForm(object):
         
     def on_name_entry_changed(self, widget):
         groupname = widget.get_text()
-        valid_name = self.system.is_valid_name(groupname)
+        valid_name = self.system.name_is_valid(groupname)
         free_name = groupname not in self.system.groups
         if self.mode == 'edit':
             free_name = free_name or groupname == self.group.name

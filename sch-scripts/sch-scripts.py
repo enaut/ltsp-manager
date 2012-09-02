@@ -1,28 +1,32 @@
-#!/usr/bin/python
+#!/usr/bin/python -B
 #-*- coding: utf-8 -*-
 # Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-import sys
 import subprocess
+import sys
 import os
 from gi.repository import Gtk
+
 import version
 import libuser
 import user_form
 import group_form
 import dialogs
+#import import_dialog
 import export_dialog
 import config
+import common
 import ip_dialog
 import about_dialog
 import create_users
 import shared_folders
 import ltsp_info
+#import parsers
 
 class Gui:
     def __init__(self):
-        self.system = libuser.System()
+        self.system = libuser.system
         self.sf=shared_folders.SharedFolders(self.system)
         self.conf = config.parser
 
@@ -232,13 +236,28 @@ class Gui:
 ## File menu
 
     def on_mi_signup_activate(self, widget):
-        pass        
+        subprocess.Popen(['./signup_server.py'])
 
     def on_mi_new_users_activate(self, widget):
         create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
 
     def on_mi_import_csv_activate(self, widget):
-        pass
+        b = Gtk.Builder()
+        b.add_from_file('import_dialog.ui') #FIXME
+        dialog = b.get_object('filechooser')
+    
+        response = dialog.run()
+        if response == 1:
+            infile = dialog.get_filename()
+            new_users = parsers.CSV().parse(infile)
+            if len(new_users.users) == 0:
+                text = "Το αρχείο '%s' δεν περιέχει δεδομένα." % infile
+                dialogs.ErrorDialog(text, "Σφάλμα").showup()
+                return False
+            dialog.hide()
+            import_dialog.ImportDialog(new_users)
+        else:
+            dialog.hide()
 
     def on_mi_export_csv_activate(self, widget):
         users = self.get_selected_users()

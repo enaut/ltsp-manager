@@ -3,7 +3,6 @@ import pwd
 import spwd
 import grp
 import operator
-import csv
 import subprocess
 import re
 import crypt
@@ -24,11 +23,15 @@ LAST_GID=29999
 NAME_REGEX = "^[a-z][-a-z0-9_]*$"
 HOME_PREFIX = "/home"
 
-USER_FIELDS = ['UID', 'Όνομα χρήστη', 'Κύρια ομάδα', 'Ονοματεπώνυμο', 'Γραφείο', 
+USER_FIELDS = ['Όνομα χρήστη', 'UID', 'Κύρια ομάδα', 'Ονοματεπώνυμο', 'Γραφείο', 
 'Τηλ. γραφείου', 'Τηλ. οικίας', 'Άλλο', 'Κατάλογος', 'Κέλυφος', 'Ομάδες',
 'Τελευταία αλλαγή κωδικού', 'Ελάχιστη διάρκεια', 'Μέγιστη διάρκεια', 'Προειδοποίηση', 'Ανενεργός', 'Λήξη']
-CSV_USER_FIELDS = USER_FIELDS
+
+['Username', 'UID', 'GID', 'Primary Group Name', 'Real name', 'Office', 'Office phone', 'Home phone', 'Other', 'Directory', 'Shell', 'Groups', 'Last password change', 'Minimum days', 'Maximum days', 'Warn', 'Inactive', 'Expiration', 'Encrypted password', 'Password']
+CSV_USER_FIELDS = USER_FIELDS[:]
+CSV_USER_FIELDS.insert(3, 'Όνομα κύριας ομάδας')
 CSV_USER_FIELDS.extend(['Κρυπτογραφημένος κωδικός', 'Κωδικός'])
+
 
 class User:
     def __init__(self, name=None, uid=None, gid=None, rname="", office="", wphone="",
@@ -48,12 +51,29 @@ class User:
             self.groups = []
             
         if self.gid is not None:
-            self.primary_group = grp.getgrgid(self.gid).gr_name
+            try:
+                self.primary_group = grp.getgrgid(self.gid).gr_name
+            except:
+                self.primary_group = ''
         else:
             self.primary_group = None
+    
+    def __str__(self):
+        return str(self.__dict__)
             
     def is_system_user(self):
         return not (self.uid >= FIRST_UID and self.uid <= LAST_UID)
+        
+    def get_ids_from_home(self, base='/home'):
+        """Returns the owner's UID and GID of the /home/<username>
+        if this exists or None.
+        """
+        path = os.path.join(base, self.name)
+        if os.isdir(path):
+            stat = os.stat(path)
+            return [stat.st_uid, stat.st_gid]
+        return None
+
 
 class Group:
     def __init__(self, name=None, gid=None, members=None, password=""):
@@ -70,18 +90,94 @@ class Group:
         # A UPG has the same name as the user for which it was created
         # and that user is the only member of the UPG.
         return self.is_user_group() and self.name in self.members and len(self.members) == 1
-    
 
-class System:
+
+class Set(object):
+    """A set of User and Group objects."""
+    def __init__(self, users=None, groups=None):
+        self.users = {} if users is None else users
+        self.groups = {} if groups is None else groups
+    
+    def add_user(self, user):
+        """Adds a new User object in the Set."""
+        if user.name in self.users:
+            raise ValueError("User '%s' exists" % user.name)
+        self.users[user.name] = user
+    
+    def remove_user(self, user):
+        """Removes a User object from the Set."""
+        pass #FIXME
+    
+    def add_group(self, group):
+        """Adds a new Group object in the Set."""
+        if group.name in self.groups:
+            raise ValueError("Group '%s' exists" % group.name)
+        self.groups[group.name] = group
+        
+        for user_obj in group.members.values():
+            pass #FIXME
+    
+    def remove_group(self, group):
+        """Removes a Group object from the Set.
+        
+        This will also remove the group from the User objects and remove from
+        the Set all the Users which have this group as primary.
+        """
+        for user_obj in self.users.values():
+            if group.name in user_obj.groups:
+                if len(user_obj.groups) == 1:
+                    del self.users[user_obj.name]
+                else:
+                    user_obj.groups.remove(group.name)
+        del self.groups[group.name]
+    
+    def uid_is_free(self, uid):
+        return uid not in [user.uid for user in self.users.values()]
+    
+    def gid_is_free(self, gid):
+        return gid not in [group.gid for group in self.groups.values()]
+        
+    def get_free_uid(self, start=FIRST_UID, end=LAST_UID, reverse=False, ignore=None, exclude=None):
+        used_uids = [user.uid for user in self.users.values()]
+        if exclude is not None:
+            used_uids.extend(exclude)
+        xr = xrange(start, end+1)
+        if reverse:
+            xr = reversed(xr)
+        
+        uid = None
+        
+        for i in xr:
+            if i == ignore or i not in used_uids:
+                uid = i
+                break
+        return uid
+    
+    def get_free_gid(self, start=FIRST_UID, end=LAST_UID, reverse=False, ignore=None, exclude=None):
+        used_gids = [group.gid for group in self.groups.values()]
+        if exclude is not None:
+            used_gids.extend(exclude)
+        xr = xrange(start, end+1)
+        if reverse:
+            xr = reversed(xr)
+        
+        gid = None
+        
+        for i in xr:
+            if i == ignore or i not in used_gids:
+                gid = i
+                break
+        return gid
+
+
+class System(Set):
     def __init__(self):
-        self.users = {}
-        self.groups = {}     
+        super(System, self).__init__()
         self.load()
         # These might be updated from shared_folders, if they're used
         self.teachers='teachers'
         self.share_groups=[self.teachers]
     
-    # Group operations
     def add_group(self, group):
         common.run_command(['groupadd', '-g', str(group.gid), group.name])
         for user in group.members.values():
@@ -94,8 +190,7 @@ class System:
     
     def delete_group(self, group):
         common.run_command(['groupdel', group.name])
-        
-    # User operations
+    
     def add_user(self, user, create_home=True):
         cmd = ["useradd"]
         if create_home:
@@ -246,41 +341,15 @@ class System:
         
         return free_uids
     
-    def get_free_uid(self, start=FIRST_UID, end=LAST_UID, reverse=False, ignore=None):
-        used_uids = [user.uid for user in self.users.values()]
-        
-        xr = xrange(start, end+1)
-        if reverse:
-            xr = reversed(xr)
-        
-        uid = None
-        
-        for i in xr:
-            if i == ignore or i not in used_uids:
-                uid = i
-                break
-        return uid
-    
-    def get_free_gid(self, start=FIRST_UID, end=LAST_UID, reverse=False, ignore=None):
-        used_gids = [group.gid for group in self.groups.values()]
-        
-        xr = xrange(start, end+1)
-        if reverse:
-            xr = reversed(xr)
-        
-        gid = None
-        
-        for i in xr:
-            if i == ignore or i not in used_gids:
-                gid = i
-                break
-        return gid
-    
-    def is_valid_name(self, name):
+    def name_is_valid(self, name):
         return re.match(NAME_REGEX, name)
     
-    def is_valid_gecos(self, string):
-        return ':' not in string
+    def gecos_is_valid(self, field):
+        '''This is for checking gecos *fields*, not entire gecos strings'''
+        return ':' not in field and ',' not in field
+        
+    def shell_is_valid(self, shell):
+        return shell in self.get_valid_shells()
         
     def encrypt(self, plainpw):
         """
@@ -290,67 +359,10 @@ class System:
         salt=''.join([ random.choice(alphabet) for i in range(8) ])
 
         return crypt.crypt(plainpw, "$6$%s$" % salt)
-
-class CSV:
-    def __init__(self):
-        self.fields_map = {'Όνομα χρήστη': 'name', 'Τελευταία αλλαγή κωδικού': 'lstchg', 'Κύρια ομάδα': 'gid', 'Κέλυφος': 'shell', 'UID': 'uid', 'Γραφείο': 'office', 'Κρυπτογραφημένος κωδικός': 'password', 'Κωδικός': 'plainpw', 'Λήξη': 'expire', 'Μέγιστη διάρκεια': 'max', 'Προειδοποίηση': 'warn', 'Κατάλογος': 'directory', 'Ελάχιστη διάρκεια': 'min', 'Άλλο': 'other', 'Ομάδες': 'groups', 'Τηλ. γραφείου': 'wphone', 'Ανενεργός': 'inact', 'Ονοματεπώνυμο': 'rname', 'Τηλ. οικίας': 'hphone'}
     
-    def parse(self, fname):
-        users_dict = csv.DictReader(open(fname))
-        users = {}
-        groups = {}
-        for user_d in users_dict:
-            user = User()
-            
-            for key, value in user_d.iteritems():
-                try:
-                    user.__dict__[self.fields_map[key]] = value
-                except:
-                    pass
-            
-            if user.name:
-                users[user.name] = user
-                for g in user.groups.split(','):
-                    try:
-                        gname, gid = g.split(':')
-                    except:
-                        gname = g
-                        gid = None
-                    user.groups.append(gname)
-                    
-                    # Create Group instances from memberships
-                    if gname not in groups:
-                        groups[gname] = Group(gname, gid)
-                    groups[gname].members.append(user)
-                        
-                if user.groups == '':
-                    user.groups = None
-        
-        return (users, groups)
-            
-
-    def write(self, fname, system, users):
-        f = open(fname, 'w')
-        writer = csv.DictWriter(f, fieldnames=CSV_USER_FIELDS)
-        writer.writerow(dict((n,n) for n in CSV_USER_FIELDS))
-        for user in users:
-            u_dict = dict( (key, user.__dict__[o_key] if user.__dict__[o_key] is not None else '') for key, o_key in self.fields_map.iteritems())
-            u_dict['Κωδικός'] = '' # We don't have the plain password
-            u_dict['Ομάδες'] = list(u_dict['Ομάδες'])
-            # Convert the groups value to a proper gname:gid pairs format string
-            final_groups = u_dict['Ομάδες']
-            for i, gname in enumerate(final_groups):
-                gid = system.groups[gname].gid
-                final_groups[i] = ':'.join((final_groups[i], str(gid)))
-            u_dict['Ομάδες'] = ','.join(final_groups)
-            
-            writer.writerow(u_dict)
-        f.close()
-    
-    
+system = System()
 
 if __name__ == '__main__':
-    system = System()
     print "System users:", ', '.join(system.users)
     print "\nSystem groups:", ', '.join(system.groups)
     

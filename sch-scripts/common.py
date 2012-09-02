@@ -1,6 +1,8 @@
 #-*- coding: utf-8 -*-
 
 import subprocess
+import datetime
+import re
 
 def run_command(cmd):
     # Runs a command and returns either True, on successful
@@ -24,6 +26,11 @@ def run_command(cmd):
         return (False, err)
 
 def greek_to_latin(name):
+    # TODO: Follow the rules of ELOT 743:
+    # http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf
+    if not isinstance(name, unicode):
+        name = name.decode('utf-8')
+
     mappings = {
     u'α' : 'a', u'ά' : 'a', u'β' : 'b', u'γ' : 'g', u'δ' : 'd',	u'ε' : 'e',
     u'έ' : 'e',	u'ζ' : 'z', u'η' : 'i', u'ή' : 'i', u'θ' :'th', u'ι' : 'i',
@@ -42,3 +49,11 @@ def greek_to_latin(name):
     name = re.sub(reg3, u'ou', name)
 
     return ''.join([mappings[letter] if letter in mappings else letter for letter in name]).encode("utf-8")
+    
+def days_since_epoch():
+    epoch = datetime.datetime.utcfromtimestamp(0)
+    return (datetime.datetime.today() - epoch).days
+
+def date():
+    return datetime.date.today()
+

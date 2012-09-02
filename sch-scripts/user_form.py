@@ -5,7 +5,7 @@ from gi.repository import Gtk, Gdk
 import dialogs
 import os
 import re
-import datetime
+import common
 import libuser
 import config
 
@@ -17,6 +17,7 @@ class UserForm(object):
         self.builder.add_from_file('user_form.ui')
         
         self.roles = {i : config.parser.get('Roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('Roles')}
+        self.selected_role = None
         
         self.refresh = refresh #OMG FIXME
         
@@ -75,6 +76,7 @@ class UserForm(object):
     
     def on_role_combo_changed(self, widget):
         role = widget.get_active_text()
+        self.selected_role = role
         for row in self.active_from_role:
             row[2] = False
         self.active_from_role = []   
@@ -152,27 +154,27 @@ class UserForm(object):
         self.primary_group = row
     
     def on_gcos_other_entry_changed(self, widget):
-        icon = self.get_icon(self.system.is_valid_gecos(widget.get_text()))
+        icon = self.get_icon(self.system.gecos_is_valid(widget.get_text()))
         self.builder.get_object('other_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
     def on_gcos_home_phone_entry_changed(self, widget):
-        icon = self.get_icon(self.system.is_valid_gecos(widget.get_text()))
+        icon = self.get_icon(self.system.gecos_is_valid(widget.get_text()))
         self.builder.get_object('home_phone_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
     def on_gcos_office_phone_entry_changed(self, widget):
-        icon = self.get_icon(self.system.is_valid_gecos(widget.get_text()))
+        icon = self.get_icon(self.system.gecos_is_valid(widget.get_text()))
         self.builder.get_object('office_phone_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
     def on_gcos_office_entry_changed(self, widget):
-        icon = self.get_icon(self.system.is_valid_gecos(widget.get_text()))
+        icon = self.get_icon(self.system.gecos_is_valid(widget.get_text()))
         self.builder.get_object('office_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
     def on_gcos_name_entry_changed(self, widget):
-        icon = self.get_icon(self.system.is_valid_gecos(widget.get_text()))
+        icon = self.get_icon(self.system.gecos_is_valid(widget.get_text()))
         self.builder.get_object('full_name_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
@@ -191,7 +193,7 @@ class UserForm(object):
 
     def on_username_entry_changed(self, widget):
         username = self.username.get_text()
-        valid_name = self.system.is_valid_name(username)
+        valid_name = self.system.name_is_valid(username)
         free_name = username not in self.system.users
         if self.mode == 'edit':
             free_name = free_name or username == self.user.name
@@ -233,7 +235,7 @@ class UserForm(object):
     def on_pgroup_entry_changed(self, widget):
         pgname = self.pgroup.get_text()
         exists = pgname in self.system.groups
-        icon = self.get_icon(self.system.is_valid_name(pgname))
+        icon = self.get_icon(self.system.name_is_valid(pgname))
         self.builder.get_object('pgroup_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         if exists:
             for row in self.groups_store:
@@ -278,7 +280,7 @@ class UserForm(object):
             self.unset_primary()
             username = self.username.get_text()
             if self.pgroup.get_text() in self.system.groups:
-                if self.system.is_valid_name(username) and username not in self.system.groups:
+                if self.system.name_is_valid(username) and username not in self.system.groups:
                     self.pgroup.set_text(username)
                 else:
                     self.pgroup.set_text('')
@@ -312,8 +314,7 @@ class NewUserDialog(UserForm):
         self.uid_entry.set_text(str(self.system.get_free_uid()))
         self.pgid.set_text(str(self.system.get_free_gid()))
         self.shells_entry.set_text('/bin/bash')
-        epoch = datetime.datetime.utcfromtimestamp(0)
-        self.last_change.set_value((datetime.datetime.today() - epoch).days)
+        self.last_change.set_value(common.days_since_epoch())
         
         self.dialog.show()
     
@@ -338,8 +339,9 @@ class NewUserDialog(UserForm):
         
         user.groups = [g[0].name for g in self.groups_store if g[2]]
         user.gid = int(self.pgid.get_text())
+        user.primary_group = self.pgroup.get_text()
         if self.system.gid_is_free(user.gid):
-            self.system.add_group(libuser.Group(self.pgroup.get_text(), user.gid, {}))
+            self.system.add_group(libuser.Group(user.primary_group, user.gid, {}))
         
         self.system.add_user(user)
         if self.builder.get_object('locked_account_check').get_active():
@@ -368,15 +370,15 @@ class EditUserDialog(UserForm):
         self.gc_office_phone.set_text(user.wphone)
         self.gc_home_phone.set_text(user.hphone)
         self.gc_other.set_text(user.other)
-        self.last_change.set_value(self.user.lstchg)
-        self.minimum.set_value(self.user.min)
-        self.maximum.set_value(self.user.max)
-        self.warn.set_value(self.user.warn)
-        self.inactive.set_value(self.user.inact)
-        self.expire.set_value(self.user.expire)
-        self.builder.get_object('locked_account_check').set_active(self.system.user_is_locked(self.user))
+        self.last_change.set_value(user.lstchg)
+        self.minimum.set_value(user.min)
+        self.maximum.set_value(user.max)
+        self.warn.set_value(user.warn)
+        self.inactive.set_value(user.inact)
+        self.expire.set_value(user.expire)
+        self.builder.get_object('locked_account_check').set_active(self.system.user_is_locked(user))
         
-        self.pgroup.set_text(self.user.primary_group)
+        self.pgroup.set_text(user.primary_group)
         # Activate the groups in which the user belongs and mark the primary
         for row in self.groups_store:
             if user.name in row[0].members:
@@ -409,10 +411,92 @@ class EditUserDialog(UserForm):
             self.user.password = self.system.encrypt(self.password.get_text())
         
         self.user.groups = [g[1] for g in self.groups_store if g[2]]
-        self.user.gid = self.primary_group[0].gid
+        self.user.gid = int(self.pgid.get_text())
+        self.user.primary_group = self.pgroup.get_text()
+        if self.system.gid_is_free(self.user.gid):
+            self.system.add_group(libuser.Group(self.user.primary_group, self.user.gid, {}))
         
         self.system.update_user(username, self.user)
         if self.builder.get_object('locked_account_check').get_active():
             self.system.lock_user(self.user)
         self.refresh()
         self.dialog.destroy()
+        
+class ReviewUserDialog(UserForm):
+    def __init__(self, system, user, role='', callback=None):
+        super(ReviewUserDialog, self).__init__(system)
+        self.callback = callback
+        self.mode = 'new'
+        self.user = user
+        self.selected_role = role
+        self.builder.connect_signals(self)
+        
+        self.username.set_text(user.name)
+        if user.password not in ['!','*', ''] or user.plainpw:
+            self.password.set_text('\n'*8)
+            self.password_repeat.set_text('\n'*8)
+        self.uid_entry.set_text(str(user.uid))
+        self.homedir.set_text(user.directory)
+        self.shells_entry.set_text(user.shell)
+        self.gc_name.set_text(user.rname)
+        self.gc_office.set_text(user.office)
+        self.gc_office_phone.set_text(user.wphone)
+        self.gc_home_phone.set_text(user.hphone)
+        self.gc_other.set_text(user.other)
+        self.last_change.set_value(user.lstchg)
+        self.minimum.set_value(user.min)
+        self.maximum.set_value(user.max)
+        self.warn.set_value(user.warn)
+        self.inactive.set_value(user.inact)
+        self.expire.set_value(user.expire)
+        self.builder.get_object('locked_account_check').set_active(user.password[0] == '!')
+        
+        self.pgroup.set_text(user.primary_group)
+        self.pgid.set_text(str(user.gid))
+        # Activate the groups in which the user belongs and mark the primary
+        for row in self.groups_store:
+            for gr in user.groups:
+                if gr == row[0].name:
+                    row[2] = True
+                    row[5] = True
+            if row[1] == user.primary_group:
+                self.primary_group = row
+                self.set_group_primary(row)
+        
+        if role:
+            for r in self.role_combo.get_model():
+                if r[0] == role:
+                    self.role_combo.set_active_iter(r.iter)
+                    break
+        
+        self.dialog.show()
+        
+    def on_apply_clicked(self, widget):
+        self.user.name = self.username.get_text()
+        self.user.rname = self.gc_name.get_text()
+        self.user.uid = int(self.uid_entry.get_text())
+        self.user.office = self.gc_office.get_text()
+        self.user.wphone = self.gc_office_phone.get_text()
+        self.user.hphone = self.gc_home_phone.get_text()
+        self.user.other = self.gc_other.get_text()
+        self.user.directory = self.homedir.get_text()
+        self.user.shell = self.shells_entry.get_text()
+        self.user.lstchg = int(self.last_change.get_value())
+        self.user.min = int(self.minimum.get_value())
+        self.user.max = int(self.maximum.get_value())
+        self.user.warn = int(self.warn.get_value())
+        self.user.inact = int(self.inactive.get_value())
+        self.user.expire = int(self.expire.get_value())
+        if not '\n' in self.password.get_text():
+            self.user.password = self.system.encrypt(self.password.get_text())
+        
+        self.user.groups = [g[1] for g in self.groups_store if g[2]]
+        self.user.gid = int(self.pgid.get_text())
+        self.user.primary_group = self.pgroup.get_text()
+        
+        if self.builder.get_object('locked_account_check').get_active():
+            if self.user.password[0] != '!':
+                self.user.password = '!'+self.user.password
+        self.dialog.destroy()
+        if self.callback:
+            self.callback(self.selected_role)
