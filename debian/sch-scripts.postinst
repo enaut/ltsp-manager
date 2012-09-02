@@ -53,9 +53,14 @@ install() {
     fi
 
     # Set gnome-session-fallback as the default session.
-#    if [ -f /usr/share/xsessions/gnome-fallback.desktop ]; then
-#        /usr/lib/lightdm/lightdm-set-defaults -s gnome-fallback
-#    fi
+    if [ -f /usr/share/xsessions/gnome-fallback.desktop ]; then
+        /usr/lib/lightdm/lightdm-set-defaults -s gnome-fallback
+        # Also workaround the keyboard layout problem for administrator
+        if [ -n "$SUDO_USER" ]; then
+            rm -f "/home/$SUDO_USER/.dmrc"
+            rm -f "/var/lib/AccountsService/users/$SUDO_USER"
+        fi
+    fi
 
     # Add group "teachers"
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
