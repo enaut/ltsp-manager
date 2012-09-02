@@ -22,7 +22,7 @@ import about_dialog
 import create_users
 import shared_folders
 import ltsp_info
-#import parsers
+import parsers
 
 class Gui:
     def __init__(self):
