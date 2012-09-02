@@ -88,7 +88,7 @@ class Registrations(LineReceiver):
                     role = data_l[3]
                 groups = []
                 if self.groups:
-                    groups = data_l[4].split(',')
+                    groups = data_l[4].split(',') if data_l[4] else []
                 
                 # Create a new request
                 applicant = Applicant(self.ip, self.id_hostname)
@@ -269,7 +269,15 @@ class UI:
                 self.system.add_user(user)
             # FIXME: sch-scripts trees won't update, I guess this will be solved
             # properly only by using a callbacks system
-        reactor.stop()
+            self.requests_list.clear()
+    
+    def on_close_button_clicked(self, widget):    
+        if len(self.requests_list):
+            r=dialogs.AskDialog("Θέλετε σίγουρα να τερματίσετε την εφαρμογή αιτήσεων; Όλες οι εκκρεμείς αιτήσεις θα χαθούν.", "Επιβεβαίωση").showup()
+            if r == Gtk.ResponseType.YES:
+                reactor.stop()
+        else:
+            reactor.stop()
     
     def on_window_delete_event(self, widget, event):
         reactor.stop()
