@@ -593,6 +593,7 @@
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Πρόοδος δημιουργίας χρηστών</property>
+    <property name="modal">True</property>
     <property name="default_width">460</property>
     <property name="default_height">70</property>
     <property name="destroy_with_parent">True</property>
