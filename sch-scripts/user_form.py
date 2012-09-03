@@ -51,10 +51,11 @@ class UserForm(object):
         self.show_sys_groups = False
         self.active_from_role = []
         
-        self.groups_filter.set_visible_func(lambda model, itr, x: self.show_sys_groups or model[itr][0].is_user_group())
+        self.groups_filter.set_visible_func(self.groups_visible_func)
         self.groups_sort.set_sort_column_id(1, Gtk.SortType.ASCENDING)
         
         # Fill the groups treeview
+        # object, name, active, activatable, font weight, actually active, gid
         for group, group_obj in system.groups.iteritems():
             self.groups_store.append([group_obj, group, False, True, 400, False, group_obj.gid])
             
@@ -65,6 +66,12 @@ class UserForm(object):
         # Fill the roles combobox
         for role, groups in self.roles.iteritems():
             self.role_combo.append_text(role)
+    
+    def groups_visible_func(self, model, itr, x):
+        primary_group = not model[itr][3] or self.username.get_text() in model[itr][0].members
+        show_user_group = self.show_sys_groups or model[itr][0].is_user_group()
+        show_private_group = config.parser.getboolean('GUI', 'show_private_groups') or not model[itr][0].is_private()
+        return (show_user_group and show_private_group) or primary_group
     
     def on_show_sys_groups_toggled(self, widget):
         self.show_sys_groups = not self.show_sys_groups
