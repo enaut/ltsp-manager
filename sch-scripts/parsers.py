@@ -77,3 +77,69 @@ class CSV:
             writer.writerow(u_dict)
         f.close()
 
+
+class passwd():
+    # passwd format: username:password (or x):UID:GID:gecos:home:shell
+    # shadow format: username:password (or */!):last change:min:max:warn:inact:expire:reserved
+    # group format: group_name:password (or x):GID:user_list
+    # gshadow format: Not Implemented
+    def __init__(self):
+        pass
+    
+    def parse(self, pwd, spwd=None, grp=None):
+        new_set = libuser.Set()
+        
+        with open(pwd) as f:
+            reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+            for row in reader:
+                u = libuser.User()
+                u.name = row[0]
+                u.password = row[1]
+                u.uid = int(row[2])
+                u.gid = int(row[3])
+                gecos = row[4].split(',', 4)
+                gecos += [''] * (5 - len(gecos)) # Pad with empty strings so we have exactly 5 items
+                u.rname, u.office, u.wphone, u.hphone, u.other = gecos
+                u.directory = row[5]
+                u.shell = row[6]
+                new_set.add_user(u)
+        
+        if spwd:
+            with open(spwd) as f:
+                reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+                for row in reader:
+                    name = row[0]
+                    u = new_set.users[name] # The user must exist in passwd
+                    u.password = row[1]
+                    nums = ['lstchg', 'min', 'max', 'warn', 'inact', 'expire']
+                    for i, att in enumerate(nums, 2):
+                        try:
+                            u.__dict__[att] = int(row[i])
+                        except:
+                            pass
+        
+        if grp:
+            with open(grp) as f:
+                reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
+                gids_map = {} # This is only used to set the primary_group User attribute
+                for row in reader:
+                    g = libuser.Group()
+                    g.name = row[0]
+                    g.gid = int(row[2])
+                    members = row[3].split(',')
+                    if members == ['']:
+                        members = []
+                    g.members = {}
+                    for name in members:
+                        g.members[name] = new_set.users[name]
+                        new_set.users[name].groups.append(g.name)
+                    
+                    new_set.add_group(g)
+                    gids_map[g.gid] = g.name
+                
+                for u in new_set.users.values():
+                    u.primary_group = gids_map[u.gid]
+                    u.groups.append(u.primary_group)
+        
+        return new_set
+        

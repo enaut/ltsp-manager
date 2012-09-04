@@ -92,10 +92,12 @@ class Group:
         return self.is_user_group() and self.name in self.members and len(self.members) == 1
 
 
+# TODO: Change implementation, don't use dicts since they have to be updated
+#       when the user/group_object.name changes. python sets would be good.
 class Set(object):
     """A set of User and Group objects."""
     def __init__(self, users=None, groups=None):
-        self.users = {} if users is None else users
+        self.users = {} if users is None else users 
         self.groups = {} if groups is None else groups
     
     def add_user(self, user):
@@ -105,17 +107,37 @@ class Set(object):
         self.users[user.name] = user
     
     def remove_user(self, user):
-        """Removes a User object from the Set."""
-        pass #FIXME
+        """Removes a User object from the Set.
+        
+        This will also remove the user from the Group objects and remove from
+        the Set all the Groups which had only this user as member.
+        """
+        for group_obj in self.groups.values():
+            if group_obj.name in user.groups:
+                if len(group_obj.members) == 1:
+                    del self.groups[group_obj.name]
+                else:
+                    del group_obj.members[user.name]
+        del self.users[user.name]
     
     def add_group(self, group):
-        """Adds a new Group object in the Set."""
+        """Adds a new Group object in the Set.
+        
+        This will also:
+        - Add the User objects which are members of this group to the Set.users
+          in case they are not there already.
+        - Update the User objects which are members of this group to include it
+          in their User.groups lists.
+        """
         if group.name in self.groups:
             raise ValueError("Group '%s' exists" % group.name)
         self.groups[group.name] = group
         
         for user_obj in group.members.values():
-            pass #FIXME
+            if user_obj.name not in self.users:
+                self.add_user(user_obj)
+            if group.name not in user_obj.groups:
+                user_obj.groups.append(group.name)
     
     def remove_group(self, group):
         """Removes a Group object from the Set.
@@ -282,7 +304,10 @@ class System(Set):
                 s = sn[p.pw_name]
             else:
                 s = spwd.struct_spwd([None]*9)
-            rname, office, wphone, hphone, other = (p.pw_gecos + ",,,,").split(",")[:5]
+            
+            gecos = p.pw_gecos.split(',', 4)
+            gecos += [''] * (5 - len(gecos)) # Pad with empty strings so we have exactly 5 items
+            rname, office, wphone, hphone, other = gecos
             u = User(p.pw_name, p.pw_uid, p.pw_gid, rname, office, wphone, hphone,
                 other, p.pw_dir, p.pw_shell, [grp.getgrgid(p.pw_gid).gr_name], s.sp_lstchg, s.sp_min, s.sp_max, s.sp_warn, 
                 s.sp_inact, s.sp_expire, s.sp_pwd)
