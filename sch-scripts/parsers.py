@@ -28,6 +28,9 @@ class CSV:
                     user.__dict__[attr] = int(user.__dict__[attr])
                 except ValueError:
                     user.__dict__[attr] = None
+            # If plainpw is set, override and update password
+            if user.plainpw:
+                user.password = libuser.encrypt(user.plainpw)
             
             if user.name:
                 users[user.name] = user
@@ -139,7 +142,9 @@ class passwd():
                 
                 for u in new_set.users.values():
                     u.primary_group = gids_map[u.gid]
-                    u.groups.append(u.primary_group)
+                    if u.primary_group in u.groups:
+                        u.groups.remove(u.primary_group)
+                    #u.groups.append(u.primary_group)
         
         return new_set
         

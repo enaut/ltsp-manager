@@ -110,14 +110,15 @@ class Set(object):
         """Removes a User object from the Set.
         
         This will also remove the user from the Group objects and remove from
-        the Set all the Groups which had only this user as member.
+        the Set the private Group of this user, if he had one.
         """
-        for group_obj in self.groups.values():
-            if group_obj.name in user.groups:
-                if len(group_obj.members) == 1:
-                    del self.groups[group_obj.name]
+        for group in user.groups:
+            if group in self.groups:
+                g = self.groups[group]
+                if g.is_private() and g.name == user.name:
+                    del self.groups[g.name]
                 else:
-                    del group_obj.members[user.name]
+                    del g.members[user.name]
         del self.users[user.name]
     
     def add_group(self, group):
@@ -203,7 +204,10 @@ class System(Set):
     def add_group(self, group):
         common.run_command(['groupadd', '-g', str(group.gid), group.name])
         for user in group.members.values():
-            common.run_command(['usermod', '-a', '-G', group.name, user.name])
+            if user in self.users.values():
+                common.run_command(['usermod', '-a', '-G', group.name, user.name])
+            else:
+                self.add_user(user)
     
     def edit_group(self, groupname, group):
         common.run_command(['groupmod', '-g', str(group.gid), '-n', group.name, groupname])
@@ -273,7 +277,7 @@ class System(Set):
         common.run_command(['userdel', user.name])
     
     def add_user_to_groups(self, user, groups):
-        groups = [gr.name for gr in groups]
+        groups = ','.join([gr.name for gr in groups])
         common.run_command(['usermod', '-a', '-G', groups, user.name])
     
     def remove_user_from_groups(self, user, groups):

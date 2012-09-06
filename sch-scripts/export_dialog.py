@@ -18,10 +18,10 @@ class ExportDialog:
         chooser.set_do_overwrite_confirmation(True)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
-        filename = 'users-export_%s.csv' % common.date()
+        filename = 'users_%s_%s.csv' % (os.uname()[1], common.date())
         i = 1
         while os.path.isfile(os.path.join(homepath, filename)):
-            filename = 'users-export_%s_%d.csv' % (common.date(), i)
+            filename = 'users_%s_%s.%d.csv' % (os.uname()[1], common.date(), i)
             i += 1
         chooser.set_current_name(filename)
         resp = chooser.run()

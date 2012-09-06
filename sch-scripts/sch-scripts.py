@@ -13,7 +13,7 @@ import libuser
 import user_form
 import group_form
 import dialogs
-#import import_dialog
+import import_dialog
 import export_dialog
 import config
 import common
@@ -240,25 +240,58 @@ class Gui:
 
     def on_mi_new_users_activate(self, widget):
         create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
-
-    def on_mi_import_csv_activate(self, widget):
-        b = Gtk.Builder()
-        b.add_from_file('import_dialog.ui') #FIXME
-        dialog = b.get_object('filechooser')
     
-        response = dialog.run()
-        if response == 1:
-            infile = dialog.get_filename()
-            new_users = parsers.CSV().parse(infile)
+    def on_mi_import_passwd_activate(self, widget):
+        chooser = Gtk.FileChooserDialog(title="Επιλέξτε το αρχείο passwd προς εισαγωγή", 
+                                        action=Gtk.FileChooserAction.OPEN,
+                                        buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                                 Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        
+        chooser.set_default_response(Gtk.ResponseType.OK)
+        homepath = os.path.expanduser('~')
+        chooser.set_current_folder(homepath)
+        resp = chooser.run()
+        if resp == Gtk.ResponseType.OK:
+            passwd = chooser.get_filename()
+            path = os.path.dirname(passwd)
+            shadow = os.path.join(path, 'shadow')
+            group = os.path.join(path, 'group')
+            if not os.path.isfile(shadow):
+                shadow = None
+            if not os.path.isfile(group):
+                group = None
+            new_users = parsers.passwd().parse(passwd, shadow, group)
             if len(new_users.users) == 0:
-                text = "Το αρχείο '%s' δεν περιέχει δεδομένα." % infile
+                text = "Το αρχείο '%s' δεν περιέχει δεδομένα." % passwd
                 dialogs.ErrorDialog(text, "Σφάλμα").showup()
                 return False
-            dialog.hide()
+            chooser.destroy()
             import_dialog.ImportDialog(new_users)
         else:
-            dialog.hide()
-
+            chooser.destroy()
+    
+    def on_mi_import_csv_activate(self, widget):
+        chooser = Gtk.FileChooserDialog(title="Επιλέξτε το αρχείο CSV προς εισαγωγή", 
+                                        action=Gtk.FileChooserAction.OPEN,
+                                        buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                                 Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        
+        chooser.set_default_response(Gtk.ResponseType.OK)
+        homepath = os.path.expanduser('~')
+        chooser.set_current_folder(homepath)
+        resp = chooser.run()
+        if resp == Gtk.ResponseType.OK:
+            fname = chooser.get_filename()
+            new_users = parsers.CSV().parse(fname)
+            if len(new_users.users) == 0:
+                text = "Το αρχείο '%s' δεν περιέχει δεδομένα." % fname
+                dialogs.ErrorDialog(text, "Σφάλμα").showup()
+                return False
+            chooser.destroy()
+            import_dialog.ImportDialog(new_users)
+        else:
+            chooser.destroy()
+    
     def on_mi_export_csv_activate(self, widget):
         users = self.get_selected_users()
         if len(users) == 0:
@@ -300,7 +333,7 @@ class Gui:
 ## View menu
 
     def on_mi_view_column_toggled(self, checkmenuitem, treeviewcolumn):
-        treeviewcolumn.set_property('visible', checkmenuitem.get_active())
+        treeviewcolumn.set_visible(checkmenuitem.get_active())
 
     def on_mi_show_system_groups_toggled(self, widget):
         self.show_system_groups = not self.show_system_groups
