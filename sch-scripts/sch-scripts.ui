@@ -309,6 +309,52 @@
               </object>
             </child>
             <child>
+              <object class="GtkMenuItem" id="mi_groups">
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_Ομάδες</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="mn_groups">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_new_group">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Νέα ομάδα...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_new_group_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_edit_group">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Επεξεργασία ομάδας...</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_mi_edit_group_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="mi_delete_group">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Διαγραφή ομάδας...</property>
+                        <signal name="activate" handler="on_mi_delete_group_activate" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
               <object class="GtkMenuItem" id="mi_users">
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
@@ -360,52 +406,6 @@
                         <property name="label" translatable="yes">Αφαίρεση από τις επιλεγμένες ομάδες</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_remove_user_activate" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="mi_groups">
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Ομάδες</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="mn_groups">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkMenuItem" id="mi_new_group">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Νέα ομάδα...</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_mi_new_group_activate" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="mi_edit_group">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Επεξεργασία ομάδας...</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_mi_edit_group_activate" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="mi_delete_group">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Διαγραφή ομάδας...</property>
-                        <signal name="activate" handler="on_mi_delete_group_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -624,14 +624,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkButton" id="select_all_groups">
-                        <property name="label" translatable="yes">Επιλογή όλων</property>
+                      <object class="GtkButton" id="unselect_all_groups">
+                        <property name="label" translatable="yes">Αποεπιλογή όλων</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_action_appearance">False</property>
-                        <signal name="clicked" handler="on_select_all_groups_clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_unselect_all_groups_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
