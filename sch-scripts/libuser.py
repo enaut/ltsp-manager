@@ -46,7 +46,7 @@ class User:
         expire, password, plainpw
         
         if not self.name and self.rname:
-            self.name = iso843.transliterate(rname)
+            self.name = iso843.transcript(rname)
         
         if self.groups is None:
             self.groups = []

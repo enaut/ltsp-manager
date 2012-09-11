@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
-
+# Copyright (C) 2012 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 # http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf
 # Transliterate and transcript made according iso843
 
@@ -26,6 +27,8 @@ _re_reg3 = u'β|γ|δ|ζ|λ|μ|ν|ρ|α|ά|ε|έ|η|ή|ι|ί|ϊ|ΐ|ο|ό|υ|ύ|�
 _re_reg4 = u'θ|κ|ξ|π|σ|τ|φ|χ|ψ'
 _re_reg5 = u'α|ά|ε|έ|ο|ό'
 _re_reg6 = u'υ|ύ|ϋ|ΰ'
+_re_reg7 = u'ο'
+_re_reg8 = u'ύ|υ'
 
 _reg1 = '('+_re_reg1.lower()+'|'+_re_reg1.upper()+')('+_re_reg2.lower()+'|'+_re_reg2.upper()+')('+_re_reg3.lower()+'|'+_re_reg3.upper()+')'
 
@@ -38,10 +41,12 @@ _reg4 = '^PS|^TH|^CH'
 _reg5 = u'(γ|Γ)(γ|ξ|χ|Γ|Ξ|Χ)'
 
 _reg6 = '('+_re_reg5.lower()+'|'+_re_reg5.upper()+')('+_re_reg6.lower()+'|'+_re_reg6.upper()+')'
+
+_reg7 = '('+_re_reg7.lower()+'|'+_re_reg7.upper()+')('+_re_reg8.lower()+'|'+_re_reg8.upper()+')'
         
         
 
-def transliterate(string, accents=True):
+def transcript(string, accents=True):
     if not isinstance(string, unicode):
         string = string.decode('utf-8')
     
@@ -49,6 +54,7 @@ def transliterate(string, accents=True):
     string = re.sub(_reg2, replace_f, string)
     string = re.sub(_reg3, replace_b, string)
     string = re.sub(_reg5, replace_g, string)
+    string = re.sub(_reg7, replace_ou, string)
 
     letters = []
     for letter in string:
@@ -73,7 +79,7 @@ def transliterate(string, accents=True):
     
        
 
-def transcript(string, accents=True):
+def transliterate(string, accents=True):
     if not isinstance(string, unicode):
         string = string.decode('utf-8')
 
@@ -119,10 +125,10 @@ def replace_v(m):
             response = response.replace(m.group(1), u'Ή')
         
     if m.group(2).islower():
-        response = response.replace(m.group(2),u'v')
+        response = response.replace(m.group(2),'v')
         return response
     else:
-        response = response.replace(m.group(2),u'V')
+        response = response.replace(m.group(2),'V')
         return response
 
 def replace_f(m):
@@ -142,28 +148,43 @@ def replace_f(m):
             response = response.replace(m.group(1), u'Ή')
     
     if m.group(2).islower():
-        response = response.replace(m.group(2),u'f')
+        response = response.replace(m.group(2),'f')
         return response
     else:
-        response = response.replace(m.group(2),u'F')
+        response = response.replace(m.group(2),'F')
         return response
 
 def replace_b(m):
     if m.group(0)[0].islower():
-        return u'b'
+        return 'b'
     else:
-        return u'B'
+        return 'B'
 
 
 def replace_g(m):
-    if m.group(0) in _mapping_compine_letters:
+    if m.group(0).islower():
         return _mapping_compine_letters[m.group(0)]
-
+    elif m.group(0).isupper():
+        return _mapping_compine_letters[m.group(0).lower()].upper()
+    else:
+        if m.group(0)[0].isupper() and m.group(0)[1].islower():
+            response = _mapping_compine_letters[m.group(0).lower()]
+            return response.replace(response[0], response[0].upper())
+        elif m.group(0)[0].islower() and m.group(0)[1].isupper():
+            response = _mapping_compine_letters[m.group(0).lower()]
+            return response.replace(response[1], response[1].upper())     
+             
+             
 def replace_ou(m):
     response = m.group(0)   
-    if m.group(0)[1].islower():
-        response = response.replace(m.group(0)[1],u'u')
-        return response
+    if m.group(0)[1].islower(): 
+        if m.group(0)[1] == u'ύ':
+            response = response.replace(m.group(0)[1], u'ú')
+            return response
+        else:
+            response = response.replace(m.group(0)[1], 'u')
+            return response
+    
     else:
         response = response.replace(m.group(0)[1],u'U')
         return response
