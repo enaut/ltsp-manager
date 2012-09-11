@@ -8,6 +8,7 @@ import re
 import crypt
 import random
 import common
+import iso843
 
 FIRST_SYSTEM_UID=0
 LAST_SYSTEM_UID=999
@@ -45,7 +46,7 @@ class User:
         expire, password, plainpw
         
         if not self.name and self.rname:
-            self.name = common.greek_to_latin(rname)
+            self.name = iso843.transliterate(rname)
         
         if self.groups is None:
             self.groups = []

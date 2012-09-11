@@ -8,7 +8,7 @@ import crypt
 import random
 from gi.repository import Gtk
 
-import common
+import iso843
 
 class Connection:
     def __init__(self, host, port):
@@ -139,7 +139,7 @@ class UserForm(object):
         return ''.join(c for c in s if c.isalpha())
 
     def get_suggestions(self, name):
-        name = common.greek_to_latin(name)
+        name = iso843.transliterate(name)
         tokens = []
         for tok in name.split():
             t = self.to_alpha(tok).lower()
