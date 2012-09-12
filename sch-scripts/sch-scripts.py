@@ -430,7 +430,7 @@ class Gui:
         if user is None:
             user = "sch_scripts_user." # The dot is converted to a random digit
         self.open_link("http://webchat.freenode.net/?nick=" + user +
-            "&channels=ubuntu-gr,ltsp&prompt=1")
+            "&channels=ubuntu-gr,ts.sch.gr&prompt=1")
 
     def on_mi_forum_activate(self, widget):
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
