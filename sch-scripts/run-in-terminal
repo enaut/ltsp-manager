@@ -118,7 +118,7 @@ NPBKU1xbjWICQVXVB3ZEkIi2Y6tHzVx5hX1GqiRxVfZXo4N/
 
         "ts.sch.gr-repo"|"ts.sch.gr/repo")
             repo="ts.sch.gr/repo"
-            lines="deb http://ts.sch.gr/repo stable main"
+            lines="deb http://ts.sch.gr/repo stable main non-free"
             # Key id: 9849BE20
             key='-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.9 (GNU/Linux)
