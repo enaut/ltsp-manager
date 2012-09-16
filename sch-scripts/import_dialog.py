@@ -46,7 +46,7 @@ class ImportDialog:
         
         # Remove the system users from the set
         for u in self.set.users.values():
-            if u.is_system_user():
+            if u.uid and u.is_system_user():
                 self.set.remove_user(u)
         
         gladefile = "import_dialog.ui"
