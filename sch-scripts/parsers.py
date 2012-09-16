@@ -30,7 +30,7 @@ class CSV:
                     user.__dict__[attr] = None
             # If plainpw is set, override and update password
             if user.plainpw:
-                user.password = libuser.encrypt(user.plainpw)
+                user.password = libuser.system.encrypt(user.plainpw)
             
             if user.name:
                 users[user.name] = user
