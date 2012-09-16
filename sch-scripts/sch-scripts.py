@@ -17,7 +17,6 @@ import import_dialog
 import export_dialog
 import config
 import common
-import ip_dialog
 import about_dialog
 import create_users
 import shared_folders
@@ -304,7 +303,7 @@ class Gui:
 ## Server menu
 
     def on_mi_set_static_ip_activate(self, widget):
-        ip_dialog.Ip_Dialog()
+        subprocess.Popen(['./ip_dialog.py'])
 
     def on_mi_ltsp_update_image_activate(self, widget):
         subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])

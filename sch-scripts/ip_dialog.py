@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# Copyright (C) 2012 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# Copyright (C) 2012 Yannis Siahos <Siahos@cti.gr>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 from gi.repository import Gtk, Gdk
 from binascii import unhexlify
+from dbus.mainloop.glib import DBusGMainLoop
 import re
 import subprocess
-import dbus
+import dbus, sys
 import uuid
 import struct, socket
 
@@ -22,8 +24,24 @@ class Ip_Dialog:
         self.address = False
         self.name = False
         self.info = {}
-        self.Collect_Info()
-
+        self.liststore = Gtk.ListStore(str)
+        
+        """Set glib as mainloop"""        
+        DBusGMainLoop(set_as_default=True)
+        
+        """Connect to dbus and NetworkManager"""        
+        self.bus = dbus.SystemBus()
+        try:
+            self.proxy = self.bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+            self.nm_interface = dbus.Interface(self.proxy, "org.freedesktop.NetworkManager")         
+            self.signal = self.nm_interface.connect_to_signal("PropertiesChanged", self.NetworkChanged)
+            self.Collect_Info(True)
+        except dbus.exceptions.DBusException:
+            text = "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου"
+            secondary_text = "Ο διάλογος θα κλείσει."
+            self.Dialog(text, "Σφάλμα", "error", secondary_text)
+            sys.exit()
+            
 
     def Ok(self, widget):
         """
@@ -84,146 +102,173 @@ class Ip_Dialog:
             if add:
                 settings.AddConnection(con)
 
+            #Wrong logic but it works
             subprocess.Popen(['sh', '-c',
-                'service network-manager restart && ltsp-config dnsmasq --overwrite'])
+                'ltsp-config dnsmasq --overwrite && service network-manager restart'])
+
+            
             text = "Η νέα σύνδεση με όνομα %s δημιουργήθηκε" %(self.info["name"])
             secondary_text = "Ο διάλογος θα κλείσει."
             self.Dialog(text, "Ειδοποίηση", "info", secondary_text)
-            self.dialog.destroy()
+            self.Quit()
         else:
             return False
         
 
-    def Cancel(self, widget):
+    def Quit(self, widget=None, event=None):
         """
         Close the dialog
         """
+        self.signal.remove()
         self.dialog.destroy()
-
-    def Collect_Info(self):
-        """
-        Collect connection informations
-        """
-        bus = dbus.SystemBus()
-        try:
-            proxy = bus.get_object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
-        except:
-            text = "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου"
-            secondary_text = "Ο διάλογος θα κλείσει."
-            self.Dialog(text, "Σφάλμα", "error", secondary_text)
-        prop = proxy.GetAll("org.freedesktop.NetworkManager")
+        Gtk.main_quit()
         
-        if prop["NetworkingEnabled"] == 1:
-            if len(prop["ActiveConnections"]) >= 1:
-                for counter,activeconnection in enumerate(prop["ActiveConnections"]):
-                    proxy = bus.get_object("org.freedesktop.NetworkManager", activeconnection)
-                    connection_prop = proxy.GetAll("org.freedesktop.NetworkManager.Connection.Active")
 
-                    proxy = bus.get_object("org.freedesktop.NetworkManager", connection_prop["Devices"][0])
-                    device_prop = proxy.GetAll("org.freedesktop.NetworkManager.Device")
+    def Collect_Info(self, main_loop):
+        """
+        Collect devices
+        """
+        properties = self.proxy.GetAll("org.freedesktop.NetworkManager")
+        if properties["NetworkingEnabled"] == 1:
+            devices = self.nm_interface.GetDevices()
 
-                
-                    if device_prop["DeviceType"] == 1:
-                        proxy = bus.get_object("org.freedesktop.NetworkManager", device_prop["Ip4Config"])
+            for device in devices:
+                device_proxy = self.bus.get_object("org.freedesktop.NetworkManager", device)
+                device_properties = device_proxy.GetAll("org.freedesktop.NetworkManager.Device")
+
+                if device_properties["DeviceType"] == 1 and device_properties["ActiveConnection"] != "/":
+                    if main_loop:
+                        address_proxy = self.bus.get_object("org.freedesktop.NetworkManager", device_properties["Ip4Config"])
                         try:
-                            address_prop = proxy.GetAll("org.freedesktop.NetworkManager.IP4Config") 
+                            address_properties = address_proxy.GetAll("org.freedesktop.NetworkManager.IP4Config") 
                         except dbus.exceptions.DBusException:
-                            if counter == len(prop["ActiveConnections"])-1:
-                                text = "Αποτυχία σύνδεσης"
-                                secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει."
-                                self.Dialog(text, "Σφάλμα", "error", secondary_text)
-                                break
-                            else:
-                                continue
-                        
-                        proxy = bus.get_object("org.freedesktop.NetworkManager", connection_prop["Devices"][0])
-                        wired_prop = proxy.GetAll("org.freedesktop.NetworkManager.Device.Wired")
-                      
-                        interface = device_prop["Interface"]
-                        interface_entry = self.builder.get_object("entry1")
-                        interface_entry.set_text("Ethernet ("+interface+")") 
-                        self.info["interface"] = interface
-                        
-                        driver = device_prop["Driver"]
-                        driver_entry = self.builder.get_object("entry3")
-                        driver_entry.set_text(driver)
-                        self.info["driver"] = driver 
+                            continue
+                    listitem = "Ethernet (" + str(device_properties["Interface"]) + ")"
+                    self.liststore.append([listitem])
 
-                        hwaddress = wired_prop["HwAddress"]
-                        hwaddress_entry = self.builder.get_object("entry2")
-                        hwaddress_entry.set_text(hwaddress)
-                        self.info["hwaddress"] = hwaddress
-
-                        speed = str(wired_prop["Speed"])
-                        speed_entry = self.builder.get_object("entry4")
-                        speed_entry.set_text(speed)
-                        self.info["speed"] = speed
-                        
-                        gateway = self.Int32_To_Dotted_Quad_String(address_prop["Addresses"][0][2])
-                        gateway_entry = self.builder.get_object("entry9")
-                        gateway_entry.set_text(gateway)
-                        self.info["gateway"] = gateway
-
-                        self.address_sub = ".".join(self.Int32_To_Dotted_Quad_String(address_prop["Addresses"][0][0]).split(".")[0:3])+"."
-                        address = self.address_sub+"10"
-                        address_entry = self.builder.get_object("entry6")
-                        address_entry.set_text(address)
-                        address_entry.connect("focus-in-event", self.Region)
-                        address_entry.connect("changed", self.Changed, "address")
-                        self.info["address"] = address  
-                        self.address = True 
-                        
-                        subnet = self.Bits_To_Subnet_Mask(address_prop["Addresses"][0][1])
-                        subnet_entry = self.builder.get_object("entry8")
-                        subnet_entry.set_text(subnet) 
-                        self.info["prefix"] = str(address_prop["Addresses"][0][1])
-                        
-
-                        self.page_title_label = self.builder.get_object("label2")
-                        self.page_title_label.set_label(interface+","+address)
-                        
-                        self.name_entry = self.builder.get_object("entry5")
-                        self.name_entry.set_text(interface+","+address)
-                        self.name_entry.connect("focus-in-event", self.Region)
-                        self.name_entry.connect("changed", self.Changed, "name")  
-                        self.info["name"] = interface+","+address
-                        self.name = True
-                        self.Auto_Suggest()
-
-                        dns_entry_1 = self.builder.get_object("entry10")
-                        dns_entry_1.set_text("127.0.0.1")
-                    
-                        dns_entry_2 = self.builder.get_object("entry11")
-                        dns_entry_2.set_text("194.63.238.4")
-
-                        dns_entry_3 = self.builder.get_object("entry12")
-                        dns_entry_3.set_text("8.8.8.8")
-                        self.Check_Button()
-                        self.dialog.show()
-                    else:
-                        text = "Αποτυχία ενσύρματης σύνδεσης"
-                        secondary_text = "Πρέπει να εγκαταστήσετε ενσύρματη σύνδεση. Ο διάλογος θα κλείσει."
-                        self.Dialog(text, "Σφάλμα", "error", secondary_text)
-                        break
-
+            if len(self.liststore) != 0:
+                interface_entry = self.builder.get_object("entry1")
+                interface_entry.connect("changed", self.ComboChanged)
+                interface_entry.set_model(self.liststore)
+                interface_entry.set_active(0)
+                self.dialog.show()
+                
             else:
                 text = "Αποτυχία σύνδεσης"
                 secondary_text = "Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει."
                 self.Dialog(text, "Σφάλμα", "error", secondary_text)
- 
+                if main_loop:
+                    self.signal.remove()
+                    sys.exit()
+                else:
+                    self.Quit()
+
         else:
             text = "Αποτυχία δικτύου"
             secondary_text = "Η δικτύωση θα πρέπει να είναι ενεργοποιημένη. Ο διάλογος θα κλείσει."
             self.Dialog(text, "Σφάλμα", "error", secondary_text)
+            if main_loop:
+                self.signal.remove()
+                sys.exit()
+            else:
+                self.Quit()   
+ 
+        
+    def NetworkChanged(self, event):
+        """
+        Handle NetworkManager changes
+        """
+        self.liststore.clear()
+        self.Collect_Info(False)
+
             
-
-
     def Region(self, widget, event):
         """
         Select all text in an entry
         """
         widget.select_region(0,-1)
         return True
+
+    
+    def ComboChanged(self, widget):
+        """
+        Handle the changes on fields Interface
+        """
+        """This command is needed when we close/open connections, because for a while we clear tha listore
+        and event handled because change the text to none"""
+        if widget.get_active_text() is None:
+            return False
+
+        #TODO:Find another way to strip interface
+        interface = widget.get_active_text().replace("Ethernet (", "")
+        interface = interface.replace(")", "")
+        interface = interface.strip()
+        device = self.nm_interface.GetDeviceByIpIface(interface)
+        self.info["interface"] = interface
+        
+        device_proxy = self.bus.get_object("org.freedesktop.NetworkManager", device)
+        device_properties = device_proxy.GetAll("org.freedesktop.NetworkManager.Device")        
+        device_wired_properties = device_proxy.GetAll("org.freedesktop.NetworkManager.Device.Wired")
+        
+
+        address_proxy = self.bus.get_object("org.freedesktop.NetworkManager", device_properties["Ip4Config"])
+        address_properties = address_proxy.GetAll("org.freedesktop.NetworkManager.IP4Config")
+      
+        driver = device_properties["Driver"]
+        driver_entry = self.builder.get_object("entry3")
+        driver_entry.set_text(driver)
+        self.info["driver"] = driver 
+
+        hwaddress = device_wired_properties["HwAddress"]
+        hwaddress_entry = self.builder.get_object("entry2")
+        hwaddress_entry.set_text(hwaddress)
+        self.info["hwaddress"] = hwaddress
+
+        speed = str(device_wired_properties["Speed"])
+        speed_entry = self.builder.get_object("entry4")
+        speed_entry.set_text(speed)
+        self.info["speed"] = speed
+        
+        gateway = self.Int32_To_Dotted_Quad_String(address_properties["Addresses"][0][2])
+        gateway_entry = self.builder.get_object("entry9")
+        gateway_entry.set_text(gateway)
+        self.info["gateway"] = gateway
+
+        self.address_sub = ".".join(self.Int32_To_Dotted_Quad_String(address_properties["Addresses"][0][0]).split(".")[0:3])+"."
+        address = self.address_sub+"10"
+        address_entry = self.builder.get_object("entry6")
+        address_entry.set_text(address)
+        address_entry.connect("focus-in-event", self.Region)
+        address_entry.connect("changed", self.Changed, "address")
+        self.info["address"] = address  
+        self.address = True 
+        
+        subnet = self.Bits_To_Subnet_Mask(address_properties["Addresses"][0][1])
+        subnet_entry = self.builder.get_object("entry8")
+        subnet_entry.set_text(subnet) 
+        self.info["prefix"] = str(address_properties["Addresses"][0][1])
+        
+
+        self.page_title_label = self.builder.get_object("label2")
+        self.page_title_label.set_label(interface+","+address)
+        
+        self.name_entry = self.builder.get_object("entry5")
+        self.name_entry.set_text(interface+","+address)
+        self.name_entry.connect("focus-in-event", self.Region)
+        self.name_entry.connect("changed", self.Changed, "name")  
+        self.info["name"] = interface+","+address
+        self.name = True
+        self.Auto_Suggest()
+
+        dns_entry_1 = self.builder.get_object("entry10")
+        dns_entry_1.set_text("127.0.0.1")
+    
+        dns_entry_2 = self.builder.get_object("entry11")
+        dns_entry_2.set_text("194.63.238.4")
+
+        dns_entry_3 = self.builder.get_object("entry12")
+        dns_entry_3.set_text("8.8.8.8")
+        self.Check_Button()           
 
 
     def Changed(self, widget, mode):
@@ -298,6 +343,7 @@ class Ip_Dialog:
             button.set_sensitive(False)
         return True
 
+
     def Auto_Suggest(self):
         """
         Make the auto suggest
@@ -310,17 +356,20 @@ class Ip_Dialog:
         self.name_entry.set_completion(completion)
         return True
 
+
     def Dotted_Quad_String_To_Int32(self, address):
         """
         Convert ip to int32
         """
         return struct.unpack("L",socket.inet_aton(address))[0]
 
+
     def Int32_To_Dotted_Quad_String(self, num):
         """
         Convert int32 to ip     
         """
         return socket.inet_ntoa(struct.pack("L",num))
+
 
     def Bits_To_Subnet_Mask(self, bits):
         """
@@ -334,3 +383,9 @@ class Ip_Dialog:
             return "255.255.255.255"
         num = ((1L<<bits)-1L)<<(32L-bits)
         return socket.inet_ntoa(struct.pack("!L",num))
+
+
+
+if __name__ == '__main__':
+    ip_dialog = Ip_Dialog()
+    Gtk.main()

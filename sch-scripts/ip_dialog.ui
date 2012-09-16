@@ -6,11 +6,13 @@
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Δημιουργία σύνδεσης δικτύου</property>
     <property name="resizable">False</property>
+    <property name="window_position">center</property>
     <property name="default_width">300</property>
     <property name="default_height">200</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
+    <signal name="delete-event" handler="Quit" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -28,7 +30,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
-                <signal name="clicked" handler="Cancel" swapped="no"/>
+                <signal name="clicked" handler="Quit" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -177,21 +179,6 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry1">
-                                <property name="visible">True</property>
-                                <property name="sensitive">False</property>
-                                <property name="can_focus">True</property>
-                                <property name="editable">False</property>
-                                <property name="invisible_char">•</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">2</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkEntry" id="entry2">
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
@@ -285,6 +272,20 @@
                             </child>
                             <child>
                               <placeholder/>
+                            </child>
+                            <child>
+                              <object class="GtkComboBoxText" id="entry1">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="entry_text_column">0</property>
+                                <property name="id_column">1</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">2</property>
+                                <property name="width">1</property>
+                                <property name="height">1</property>
+                              </packing>
                             </child>
                           </object>
                           <packing>
@@ -575,7 +576,7 @@
               </object>
               <packing>
                 <property name="resize">True</property>
-                <property name="shrink">True</property>
+                <property name="shrink">False</property>
               </packing>
             </child>
           </object>
