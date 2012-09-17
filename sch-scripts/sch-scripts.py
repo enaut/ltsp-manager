@@ -1,4 +1,4 @@
-#!/usr/bin/python -B
+#!/usr/bin/python
 #-*- coding: utf-8 -*-
 # Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
@@ -265,7 +265,7 @@ class Gui:
                 dialogs.ErrorDialog(text, "Σφάλμα").showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users)
+            import_dialog.ImportDialog(new_users, self.repopulate_treeviews)
         else:
             chooser.destroy()
     
@@ -287,7 +287,7 @@ class Gui:
                 dialogs.ErrorDialog(text, "Σφάλμα").showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users)
+            import_dialog.ImportDialog(new_users, self.repopulate_treeviews)
         else:
             chooser.destroy()
     

@@ -41,12 +41,12 @@ import user_form
 
 # NOTE: User.plainpw overrides the User.password if it's set
 class ImportDialog:
-    def __init__(self, new_set):
+    def __init__(self, new_set, refresh_cb=None):
         self.set = new_set
-        
+        self.refresh_cb = refresh_cb
         # Remove the system users from the set
         for u in self.set.users.values():
-            if u.uid and u.is_system_user():
+            if u.uid is not None and u.is_system_user():
                 self.set.remove_user(u)
         
         gladefile = "import_dialog.ui"
@@ -518,6 +518,8 @@ class ImportDialog:
             for gr in new_groups.values():
                 for u in gr.members.values():
                     libuser.system.add_user_to_groups(u, [gr])
+            if self.refresh_cb is not None: #XXX: EVIL
+                self.refresh_cb()
             
         else:
             return False
