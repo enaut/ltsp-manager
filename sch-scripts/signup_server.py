@@ -79,20 +79,21 @@ class Registrations(LineReceiver):
             self.sendLine(','.join(self.groups))
         elif cmd == "SEND_DATA":
             try:
-                data_l = data.split('\t')
-                realname = data_l[0]
-                username = data_l[1]
-                password = data_l[2]
+                data = data.split('\t')
+                realname = data[0]
+                username = data[1]
+                password = data[2]
                 role = None
                 if self.roles:
-                    role = data_l[3]
+                    role = data[3]
                 groups = []
                 if self.groups:
-                    groups = data_l[4].split(',') if data_l[4] else []
+                    groups = data[4].split(',') if data[4] else []
                 
                 # Create a new request
                 applicant = Applicant(self.ip, self.id_hostname)
                 user = libuser.User(username, rname=realname, password=password, groups=groups)
+                #print user # DEBUGGING
                 req = Request(time.localtime(), applicant, user, role)
                 self.gui.add_request(req)
                 
@@ -203,7 +204,7 @@ class UI:
         else:
             groups = []
         for gr in groups:
-            if gr and gr not in request.user.groups:
+            if gr and gr not in request.user.groups and gr in libuser.system.groups:
                 request.user.groups.append(gr)
         self.builder.get_object('apply_button').set_sensitive(True)
     
@@ -267,8 +268,8 @@ class UI:
                 if user.primary_group not in self.system.groups:
                     self.system.add_group(libuser.Group(user.primary_group, user.gid, {}))
                 self.system.add_user(user)
-            # FIXME: sch-scripts trees won't update, I guess this will be solved
-            # properly only by using a callbacks system
+                libuser.system.reload()
+            # FIXME: sch-scripts trees won't update
             self.requests_list.clear()
     
     def on_close_button_clicked(self, widget):    
