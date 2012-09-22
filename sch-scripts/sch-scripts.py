@@ -72,7 +72,7 @@ class Gui:
 ## General helper functions
 
     def edit_file(self, filename):
-        subprocess.Popen(['xdg-open', filename])
+        subprocess.Popen(['xdg-open', filename], stdin=open(os.devnull))
         # TODO: Maybe throw an error message if not os.path.isfile(filename)
 
     def run_as_sudo_user(self, cmd):
