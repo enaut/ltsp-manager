@@ -9,6 +9,7 @@ class AskDialog(Gtk.MessageDialog):
                                           buttons = Gtk.ButtonsType.YES_NO,
                                           message_format = message)
         self.set_title(title)
+        self.set_default_response(Gtk.ResponseType.NO)
     
     def showup(self):
         response = self.run()

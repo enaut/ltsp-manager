@@ -274,8 +274,12 @@ class System(Set):
         cmd = self._strcnv(cmd)
         common.run_command(cmd)
     
-    def delete_user(self, user):
-        common.run_command(['userdel', user.name])
+    def delete_user(self, user, remove_home=False):
+        cmd = ['userdel']
+        if remove_home:
+            cmd.append('-r')
+        cmd.append(user.name)
+        common.run_command(cmd)
     
     def add_user_to_groups(self, user, groups):
         groups = ','.join([gr.name for gr in groups])

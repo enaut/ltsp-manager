@@ -359,14 +359,26 @@ class Gui:
         users_n = len(users)
         if users_n == 1:
             message = "Θέλετε σίγουρα να διαγράψετε τον χρήστη %s;" % users[0].name
+            homes_message = "Να διαγραφεί και ο αρχικός κατάλογος του παραπάνω χρήστη."
+            homes_warn = "ΠΡΟΣΟΧΗ: Αν ενεργοποιήσετε αυτήν την επιλογή θα διαγραφεί ο αρχικός κατάλογος του χρήστη, καθώς και όλα τα αρχεία που αυτός περιέχει, αλλά και ο αντίστοιχος κατάλογος e-mail στο /var/mail (εάν υπάρχει)."
         else:
             message = "Θέλετε σίγουρα να διαγράψετε τους παρακάτω %d χρήστες;" % users_n
             message += "\n" + ', '.join([user.name for user in users])
-
-        response = dialogs.AskDialog(message).showup()
+            homes_message = "Να διαγραφούν και οι αρχικοί κατάλογοι των παραπάνω χρηστών."
+            homes_warn = "ΠΡΟΣΟΧΗ: Αν ενεργοποιήσετε αυτήν την επιλογή θα διαγραφούν οι αρχικοί κατάλογοι όλων των παραπάνω χρηστών, καθώς και όλα τα αρχεία που αυτοί περιέχουν, αλλά και οι αντίστοιχοι κατάλογοι e-mail στο /var/mail (εάν υπάρχουν)."
+        homes_warn += "\n\nΗ ενέργεια αυτή είναι μη-αναστρέψιμη."
+        
+        dlg = dialogs.AskDialog(message)
+        vbox = dlg.get_message_area()
+        rm_homes_check = Gtk.CheckButton(homes_message)
+        rm_homes_check.get_child().set_tooltip_text(homes_warn) 
+        rm_homes_check.show()
+        vbox.pack_start(rm_homes_check, False, False, 12)
+        response = dlg.showup()
         if response == Gtk.ResponseType.YES:
+            rm_homes = rm_homes_check.get_active()
             for user in self.get_selected_users():
-                self.system.delete_user(user)
+                self.system.delete_user(user, rm_homes)
             self.repopulate_treeviews()
 
     def on_mi_remove_user_activate(self, widget):
