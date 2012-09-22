@@ -194,8 +194,11 @@ class Ip_Dialog:
         """
         Handle the changes on fields Interface
         """
-        """This command is needed when we close/open connections, because for a while we clear tha listore
-        and event handled because change the text to none"""
+
+        """
+        This is needed in open/close connections because 
+        callback function called by none text in combotext
+        """
         if widget.get_active_text() is None:
             return False
 
@@ -282,7 +285,7 @@ class Ip_Dialog:
                 widget.set_text(self.address_sub)
                 widget.set_position(-1)
                 new_ip = self.address_sub
-            if re.match(reg, new_ip):
+            if re.match(reg, new_ip) and new_ip != self.info["gateway"]:
                 self.address = True
                 self.info["address"] = new_ip
                 self.info["name"] = self.info["interface"]+","+widget.get_text()
