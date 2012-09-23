@@ -139,7 +139,7 @@ class UserForm(object):
         return ''.join(c for c in s if c.isalpha())
 
     def get_suggestions(self, name):
-        name = iso843.transcript(name)
+        name = iso843.strip_accents(iso843.transcript(name).decode('utf-8'))
         tokens = []
         for tok in name.split():
             t = self.to_alpha(tok).lower()
