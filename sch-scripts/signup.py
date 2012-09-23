@@ -138,8 +138,7 @@ class UserForm(object):
     def to_alpha(self, s):
         return ''.join(c for c in s if c.isalpha())
 
-    def get_suggestions(self, name):
-        name = iso843.strip_accents(iso843.transcript(name).decode('utf-8'))
+    def get_suggestions(self, name):       
         tokens = []
         for tok in name.split():
             t = self.to_alpha(tok).lower()
@@ -149,12 +148,12 @@ class UserForm(object):
             return []
         sug = []
         _append = lambda x: sug.append(x) if x not in sug else False # FIXME? heh
-        _append(tokens[0] + ''.join(tok[0] for tok in tokens[1:]))
-        _append(''.join(tok[0] for tok in tokens[:-1]) + tokens[-1])
-        _append(''.join(tok[0] for tok in tokens[1:]) + tokens[0])
-        _append(tokens[-1] + ''.join(tok[0] for tok in tokens[:-1]))
-        _append(tokens[-1])
-        _append(tokens[0])
+        _append(iso843.strip_accents(iso843.transcript(tokens[0] + ''.join(tok[0] for tok in tokens[1:])).decode('utf-8')))
+        _append(iso843.strip_accents(iso843.transcript(''.join(tok[0] for tok in tokens[:-1]) + tokens[-1]).decode('utf-8')))
+        _append(iso843.strip_accents(iso843.transcript(''.join(tok[0] for tok in tokens[1:]) + tokens[0]).decode('utf-8')))
+        _append(iso843.strip_accents(iso843.transcript(tokens[-1] + ''.join(tok[0] for tok in tokens[:-1])).decode('utf-8')))
+        _append(iso843.strip_accents(iso843.transcript(tokens[-1]).decode('utf-8')))
+        _append(iso843.strip_accents(iso843.transcript(tokens[0]).decode('utf-8')))
         
         return sug
     
