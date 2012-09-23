@@ -52,6 +52,9 @@ install() {
         sed -i -e 's/#MaxStartups 10:30:60/MaxStartups 20:30:60/' /etc/ssh/sshd_config
     fi
 
+    # Specify that the BIOS clock is not set to UTC, to match Windows.
+    sed 's/^UTC=yes/UTC=no/' -i /etc/default/rcS
+
     # Set gnome-session-fallback as the default session.
     if [ -f /usr/share/xsessions/gnome-fallback.desktop ]; then
         /usr/lib/lightdm/lightdm-set-defaults -s gnome-fallback
