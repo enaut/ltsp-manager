@@ -61,7 +61,12 @@ ln_sf() {
     src=$2
 
     if [ -e "$src" ]; then
-        if [ -h "$src" ]; then
+        if [ "$(stat -c %m "$SHARE_DIR/.shared-folders")" = "$SHARE_DIR" ]; then
+            # Fat clients use SSH_FOLLOW_SYMLINKS=True so [ -h ] doesn't work.
+            # But symlink deletion doesn't work either, so just assume the link
+            # is correct. `mv` semi-works, but it's not worth it.
+            return 0
+        elif [ -h "$src" ]; then
             rm "$src"
         else
             mv "$src" "$(mktemp -u "$src.moved-by-sch-scripts.XXXX")"
@@ -101,7 +106,8 @@ create_symlinks() {
             mkdir -p "$XDG_PUBLICSHARE_DIR/$group"
             chgrp "$group" "$XDG_PUBLICSHARE_DIR/$group"
             chmod 750 "$XDG_PUBLICSHARE_DIR/$group"
-            ln_sf "$XDG_PUBLICSHARE_DIR/$group" "$SHARE_DIR/.symlinks/$group - $USER"
+            # SSHFS reports errors when creating symlinks and follow_symlinks=true
+            ln_sf "$XDG_PUBLICSHARE_DIR/$group" "$SHARE_DIR/.symlinks/$group - $USER" 2>/dev/null || true
         else
             # Create a symlink to each teacher that belongs in this group.
             group_members=" $(getent group "$group" | cut -d : -f 4 | tr ',' ' ') "
