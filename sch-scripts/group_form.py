@@ -113,9 +113,9 @@ class NewGroupDialog(GroupForm):
         members = {u[0].name : u[0] for u in self.users_store if u[1]}
         g = libuser.Group(name, gid, members)
         self.system.add_group(g)
+        self.refresh()
         if self.has_shared.get_active():
             self.sf.add([g.name])
-        self.refresh()
         self.dialog.destroy()
 
 class EditGroupDialog(GroupForm):
