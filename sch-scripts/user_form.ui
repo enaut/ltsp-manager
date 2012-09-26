@@ -820,7 +820,7 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="checkbutton1">
-                        <property name="label" translatable="yes">Show system groups</property>
+                        <property name="label" translatable="yes">Εμφάνιση ομάδων συστήματος</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -1120,9 +1120,9 @@
   </object>
   <object class="GtkListStore" id="groups_liststore">
     <columns>
-      <!-- column-name Group -->
+      <!-- column-name Object -->
       <column type="PyObject"/>
-      <!-- column-name Group1 -->
+      <!-- column-name Name -->
       <column type="gchararray"/>
       <!-- column-name Active -->
       <column type="gboolean"/>

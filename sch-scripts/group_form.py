@@ -23,10 +23,16 @@ class GroupForm(object):
         self.gid_entry = self.builder.get_object('gid_entry')
         self.users_tree = self.builder.get_object('users_treeview')
         self.users_store = self.builder.get_object('users_liststore')
+        self.users_filter = self.builder.get_object('users_filter')
+        self.users_sort = self.builder.get_object('users_sort')
         self.sys_group_check = self.builder.get_object('sys_group_check')
         self.gname_valid_icon = self.builder.get_object('groupname_valid')
         self.gid_valid_icon = self.builder.get_object('gid_valid')
         self.has_shared = self.builder.get_object('shared_folders_check')
+        self.show_sys_users = False
+        
+        self.users_filter.set_visible_func(self.users_visible_func)
+        self.users_sort.set_sort_column_id(2, Gtk.SortType.ASCENDING)
         
         # Fill the users (member selection) treeview
         for user, user_obj in system.users.iteritems():
@@ -35,7 +41,15 @@ class GroupForm(object):
             else:
                 activatable = True
             self.users_store.append([user_obj, False, user, activatable])
-        
+    
+    def on_show_sys_users_toggled(self, widget):
+        self.show_sys_users = not self.show_sys_users
+        self.users_filter.refilter()
+    
+    def users_visible_func(self, model, itr, x):
+        system_user = model[itr][0].is_system_user()
+        return self.show_sys_users or not system_user
+    
     def on_name_entry_changed(self, widget):
         groupname = widget.get_text()
         valid_name = self.system.name_is_valid(groupname)
@@ -67,6 +81,10 @@ class GroupForm(object):
         self.set_apply_sensitivity()
     
     def on_user_toggled(self, widget, path):
+        path = self.users_sort[path].path
+        path = self.users_sort.convert_path_to_child_path(path)
+        path = self.users_filter.convert_path_to_child_path(path)
+        
         self.users_store[path][1] = not self.users_store[path][1]
     
     def set_apply_sensitivity(self):
@@ -127,10 +145,11 @@ class EditGroupDialog(GroupForm):
         self.dialog.show()
     
     def on_has_shared_check_toggled(self, widget):
+        warn_label = self.builder.get_object('warning')
         if not self.has_shared.get_active() and self.shared_state:
-            self.builder.get_object('warning').show()
+            warn_label.show()
         else:
-            self.builder.get_object('warning').hide()
+            warn_label.hide()
     
     def on_apply_clicked(self, widget):
         old_name = self.group.name
