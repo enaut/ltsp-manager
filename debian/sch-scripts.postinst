@@ -78,10 +78,11 @@ install() {
     fi
 
     # TODO: remove after a few weeks
-    # Delete our old configuration file, newer LTSP versions will ship it.
-    if grep -qs '# Η οδηγία IPAPPEND=3' /etc/ltsp/update-kernels.conf; then
-        rm -f /etc/ltsp/update-kernels.conf
+    # Work around the broken Live CDs shipped at 2012-10-01
+    if [ ! -e /etc/resolv.conf ] && [ -e /run/resolvconf/resolv.conf ]; then
+        ln -s ../run/resolvconf/resolv.conf /etc/resolv.conf
     fi
+
     # Manually run update-kernels until it's moved to ltsp-client-core.postinst
     /usr/share/ltsp/update-kernels
 }
