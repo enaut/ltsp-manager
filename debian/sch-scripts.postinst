@@ -79,7 +79,7 @@ install() {
 
     # TODO: remove after a few weeks
     # Work around the broken Live CDs shipped at 2012-10-01
-    if [ ! -e /etc/resolv.conf ] && [ -e /run/resolvconf/resolv.conf ]; then
+    if [ ! -e /etc/resolv.conf ]; then
         ln -s ../run/resolvconf/resolv.conf /etc/resolv.conf
     fi
 
