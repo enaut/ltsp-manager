@@ -312,9 +312,10 @@ class UserForm(object):
         self.dialog.destroy()
          
 class NewUserDialog(UserForm):
-    def __init__(self, system, refresh):
+    def __init__(self, system, sf, refresh):
         super(NewUserDialog, self).__init__(system, refresh)
         self.mode = 'new'
+        self.sf = sf
         self.builder.connect_signals(self)
         
         # Set some defaults
@@ -323,6 +324,8 @@ class NewUserDialog(UserForm):
         self.shells_entry.set_text('/bin/bash')
         self.last_change.set_value(common.days_since_epoch())
         
+        self.shared_dirs_checkbox = self.builder.get_object('shared_directories_checkbox')
+        self.shared_dirs_checkbox.show()
         self.dialog.show()
     
     def on_apply_clicked(self, widget):
@@ -354,6 +357,13 @@ class NewUserDialog(UserForm):
         if self.builder.get_object('locked_account_check').get_active():
             self.system.lock_user(user)
         self.refresh()
+        if self.shared_dirs_checkbox.get_active():
+            shared = self.sf.list_shared()
+            for group in self.system.users[user.name].groups:
+                gr_obj = self.system.groups[group]
+                if (gr_obj.is_user_group() and not gr_obj.is_private() and 
+                    group not in shared):
+                    self.sf.add([group])
         self.dialog.destroy()
     
 class EditUserDialog(UserForm):

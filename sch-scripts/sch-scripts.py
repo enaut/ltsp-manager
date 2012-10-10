@@ -349,7 +349,7 @@ class Gui:
 ## Users menu
 
     def on_mi_new_user_activate(self, widget):
-        user_form.NewUserDialog(self.system, self.repopulate_treeviews)
+        user_form.NewUserDialog(self.system, self.sf, self.repopulate_treeviews)
 
     def on_mi_edit_user_activate(self, widget):
         user_form.EditUserDialog(self.system, self.get_selected_users()[0], self.repopulate_treeviews)
