@@ -1,6 +1,10 @@
 [org.gnome.desktop.screensaver]
 lock-enabled = false
 
+[org.gnome.gedit.preferences.encodings]
+auto-detected = ['UTF-8','WINDOWS-1253','CURRENT','ISO-8859-15','UTF-16']
+shown-in-menu = ['WINDOWS-1253','ISO-8859-15']
+
 [org.gnome.settings-daemon.peripherals.keyboard]
 remember-numlock-state = false
 
