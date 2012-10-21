@@ -1,5 +1,8 @@
 [org.gnome.desktop.screensaver]
 lock-enabled = false
 
+[org.gnome.settings-daemon.peripherals.keyboard]
+remember-numlock-state = false
+
 [org.gnome.settings-daemon.plugins.print-notifications]
 active = false
