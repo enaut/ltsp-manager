@@ -1,3 +1,14 @@
+sch-scripts (12.04.7) precise; urgency=low
+
+  * Επανεκκίνηση του network manager κατά την εγκατάσταση των sch-scripts.
+  * Μετακίνηση των κουμπιών των παραθύρων στα δεξιά.
+  * Χρήση εξελληνισμένων ρυθμίσεων για totem, gedit κλπ.
+  * Αποφυγή χρήσης CPU 100% και αναβοσβήματος του numlock (LP: ##969359).
+  * Αποτροπή άπειρου loop κατά το άνοιγμα των συνδέσμων του μενού Βοήθεια,
+    όταν τα sch-scripts εκτελούνταν με sudo.
+
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Mon, 22 Oct 2012 17:41:52 +0300
+
 sch-scripts (12.04.6) precise; urgency=low
 
   * Διόρθωση προβλήματος DNS των fat clients στα Live CDs.
