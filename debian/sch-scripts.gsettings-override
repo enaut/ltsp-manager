@@ -10,3 +10,7 @@ remember-numlock-state = false
 
 [org.gnome.settings-daemon.plugins.print-notifications]
 active = false
+
+[org.gnome.totem]
+autoload-subtitles = true
+subtitle-encoding = 'WINDOWS-1253'
