@@ -84,7 +84,14 @@ install() {
     fi
 
     # Manually run update-kernels until it's moved to ltsp-client-core.postinst
-    /usr/share/ltsp/update-kernels
+    if [ ! -d /boot/pxelinux.cfg ]; then
+        /usr/share/ltsp/update-kernels
+    fi
+
+    # Call update-gconf-defaults without depending on it with ${misc:depends}
+    if which update-gconf-defaults >/dev/null 2>&1; then
+        update-gconf-defaults 
+    fi
 }
 
 case "$1" in
