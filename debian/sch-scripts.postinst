@@ -27,6 +27,13 @@ install() {
         ltsp-config lts.conf
     fi
 
+    # TODO: remove after a few weeks
+    # Work around the broken Live CDs shipped at 2012-10-01
+    if [ ! -e /etc/resolv.conf ]; then
+        ln -s ../run/resolvconf/resolv.conf /etc/resolv.conf
+        service resolvconf restart
+    fi
+
     # Remove the local resolver (LP: #959037), we want a real DNS server.
     if grep -qs "^dns=dnsmasq" /etc/NetworkManager/NetworkManager.conf; then
         sed 's/^dns=dnsmasq/# Commented by sch-scripts: dns=dnsmasq/' \
@@ -70,12 +77,6 @@ install() {
                 gpasswd -a "$administrator" epoptes
             fi
         fi
-    fi
-
-    # TODO: remove after a few weeks
-    # Work around the broken Live CDs shipped at 2012-10-01
-    if [ ! -e /etc/resolv.conf ]; then
-        ln -s ../run/resolvconf/resolv.conf /etc/resolv.conf
     fi
 
     # Manually run update-kernels until it's moved to ltsp-client-core.postinst
