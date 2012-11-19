@@ -238,7 +238,7 @@ class Gui:
         subprocess.Popen(['./signup_server.py'])
 
     def on_mi_new_users_activate(self, widget):
-        create_users.NewUsersDialog(self.system, self.repopulate_treeviews)
+        create_users.NewUsersDialog(self.system, self.sf, self.repopulate_treeviews)
     
     def on_mi_import_passwd_activate(self, widget):
         chooser = Gtk.FileChooserDialog(title="Επιλέξτε το αρχείο passwd προς εισαγωγή", 

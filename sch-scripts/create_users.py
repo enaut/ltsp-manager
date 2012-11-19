@@ -7,10 +7,12 @@ from gi.repository import Gtk
 import datetime
 import libuser
 import config
+import shared_folders
 
 class NewUsersDialog:
-    def __init__(self, system, refresh):
+    def __init__(self, system, sf, refresh):
         self.system = system
+        self.sf = sf
         self.refresh = refresh #FIXME
         
         self.glade = Gtk.Builder()
@@ -134,6 +136,14 @@ class NewUsersDialog:
                     progressbar.set_fraction(float(groups_created) / float(total_groups))
                 else:
                     tmp_gid=self.system.groups[classn].gid
+            
+            # Create shared folders
+            if self.glade.get_object('shared_checkbutton').get_active():
+                self.refresh() # So shared_folders library is updated
+                for classn in self.classes:
+                    while Gtk.events_pending():
+                        Gtk.main_iteration()
+                    self.sf.add([classn])
                 
 
         # And finally, create the users
