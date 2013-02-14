@@ -119,13 +119,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="mi_set_static_ip">
+                      <object class="GtkMenuItem" id="mi_configuration_network">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Ανάθεση στατικής IP...</property>
+                        <property name="label" translatable="yes">Ρύθμιση σύνδεσης δικτύου</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_mi_set_static_ip_activate" swapped="no"/>
+                        <signal name="activate" handler="on_mi_configuration_network_activate" swapped="no"/>
                       </object>
                     </child>
                     <child>
