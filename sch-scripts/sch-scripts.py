@@ -246,6 +246,7 @@ class Gui:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
         
+        chooser.set_icon_from_file('/usr/share/pixmaps/sch-scripts.svg')        
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -275,6 +276,7 @@ class Gui:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
         
+        chooser.set_icon_from_file('/usr/share/pixmaps/sch-scripts.svg')        
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -302,7 +304,7 @@ class Gui:
 
 ## Server menu
 
-    def on_mi_set_static_ip_activate(self, widget):
+    def on_mi_configuration_network_activate(self, widget):
         subprocess.Popen(['./ip_dialog.py'])
 
     def on_mi_ltsp_update_image_activate(self, widget):

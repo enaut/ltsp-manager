@@ -13,7 +13,8 @@ class ExportDialog:
                                         action=Gtk.FileChooserAction.SAVE,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
-        
+
+        chooser.set_icon_from_file('/usr/share/pixmaps/sch-scripts.svg') 
         chooser.set_default_response(Gtk.ResponseType.OK)
         chooser.set_do_overwrite_confirmation(True)
         homepath = os.path.expanduser('~')

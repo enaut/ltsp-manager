@@ -36,6 +36,7 @@ class Ip_Dialog:
         self.label11 = self.builder.get_object('label11')
         self.label12 = self.builder.get_object('label12')
         self.label13 = self.builder.get_object('label13')
+        self.ok_button = self.builder.get_object('ok_button')
 
         self.ip_entry.connect('changed', self.callback_ip_changed)
         self.ip = False
@@ -351,11 +352,10 @@ class Ip_Dialog:
     
     def check_button(self):
         '''Make active the button OK'''
-        button = self.builder.get_object('ok_button')
         if self.ip: 
-            button.set_sensitive(True)
+            self.ok_button.set_sensitive(True)
         else:
-            button.set_sensitive(False)
+            self.ok_button.set_sensitive(False)
         return True
 
 
