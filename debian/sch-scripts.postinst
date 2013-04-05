@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2009-2012 Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2009-2013 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 set -e
@@ -67,6 +67,9 @@ install() {
         fi
     fi
 
+    # Work around gnome-panel not appearing (LP: #1078679).
+    ln -sf /usr/share/sch-scripts/gnome-panel /usr/local/bin/ || true
+    
     # Add group "teachers"
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
     if [ -n "$TEACHERS" ]; then

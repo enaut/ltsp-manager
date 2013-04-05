@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2009-2012 Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2009-2013 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 set -e
@@ -16,12 +16,17 @@ set -e
 # <new-postrm> abort-upgrade <old-version>
 
 remove() {
-    local -
+    local - file
 
     set +e
     if [ -f /etc/ssh/sshd_config ]; then
-        sed -i -e 's/MaxStartups 20:30:60/#MaxStartups 10:30:60/' /etc/ssh/sshd_config
+        sed 's/MaxStartups 20:30:60/#MaxStartups 10:30:60/' -i /etc/ssh/sshd_config
     fi
+    for file in /usr/local/bin/gnome-panel; do
+        if [ -h "$file" ]; then
+            rm -f "$file"
+        fi
+    done
 }
 
 purge() {

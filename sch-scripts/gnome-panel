@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ "$LTSP_FATCLIENT" != "True" ]; then
+    exec /usr/bin/gnome-panel "$@"
+fi
+
+/usr/bin/gnome-panel "$@" &
+sleep 10
+if ! pgrep -nx indicator-sound -U $USER >/dev/null 2>&1; then
+    echo "$(date) - restarting gnome-panel" >> $HOME/.xsession-errors
+    exec /usr/bin/gnome-panel --replace
+fi
