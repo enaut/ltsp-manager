@@ -1,0 +1,5 @@
+# http://en.wikipedia.org/wiki/RC4 is an SSH cipher which is more than 2 times 
+# faster than the default aes128-ctr.
+if [ -z "$LDM_SSHOPTIONS" ]; then
+    set_lts_var LDM_SSHOPTIONS "-o Ciphers=arcfour128"
+fi

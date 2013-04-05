@@ -1,4 +1,5 @@
 etc/*                   etc/
+ltsp                    usr/share/
 sbin/*                  usr/sbin/
 sch-scripts             usr/share/
 sch-scripts.svg         usr/share/pixmaps/
