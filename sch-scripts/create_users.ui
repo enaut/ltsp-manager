@@ -351,7 +351,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">•</property>
-                    <property name="text" translatable="yes">user{0i}{c}</property>
+                    <property name="text" translatable="yes">{c}-{0i}</property>
                     <signal name="changed" handler="on_template_changed" swapped="no"/>
                   </object>
                   <packing>
@@ -398,7 +398,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
-                <property name="text" translatable="yes">Χρήστης {0i}-{c}</property>
+                <property name="text" translatable="yes">Χρήστης {c}-{0i}</property>
                 <signal name="changed" handler="on_template_changed" swapped="no"/>
               </object>
               <packing>
@@ -413,7 +413,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
-                <property name="text" translatable="yes">pass{0i}{c}</property>
+                <property name="text" translatable="yes">{c}-{0i}</property>
                 <signal name="changed" handler="on_template_changed" swapped="no"/>
               </object>
               <packing>
