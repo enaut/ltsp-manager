@@ -12,10 +12,10 @@ gui_defaults = {'show_system_groups' : False,
                 'requests_checked_groups' : ''
                }
 roles_defaults = {
-                  'Καθηγητής' : 'adm,sambashare,plugdev,vboxusers,cdrom,epoptes,$$teachers',
-                  'Διαχειριστής' : 'adm,sudo,sambashare,plugdev,vboxusers,cdrom,lpadmin,epoptes,$$teachers,dip',
-                  'Μαθητής' : 'sambashare,vboxusers',
-                  'Προσωπικό' : 'adm,sambashare,plugdev,vboxusers,cdrom'
+                  'Καθηγητής' : 'adm,cdrom,epoptes,fuse,plugdev,sambashare,vboxusers,$$teachers',
+                  'Διαχειριστής' : 'adm,cdrom,dip,epoptes,fuse,lpadmin,plugdev,sambashare,sudo,vboxusers,$$teachers',
+                  'Μαθητής' : 'fuse,sambashare,vboxusers',
+                  'Προσωπικό' : 'adm,cdrom,fuse,plugdev,sambashare,vboxusers'
                  }
 
 parser = ConfigParser.SafeConfigParser()
@@ -37,7 +37,10 @@ def setdefaults(overwrite=False):
         parser.add_section('Roles')
     
     for k, v in roles_defaults.iteritems():
-        if overwrite or not parser.has_option('Roles', k):
+        # TODO: new sch-scripts versions are not able to append groups like
+        # 'fuse' to the saved user Roles, so don't read the user settings
+        # at all until we reapproach the issue.
+        # if overwrite or not parser.has_option('Roles', k):
             parser.set('Roles', k, str(v))
     
     

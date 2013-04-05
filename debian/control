@@ -22,7 +22,7 @@ Recommends: apturl,
  iperf,
  ldm-ubuntu-theme | ldm-edubuntu-theme | ldm-kubuntu-theme | ldm-lubuntu-theme | ldm-xubuntu-theme,
  ltsp-client (>= 5.4.0),
- ltsp-server (>= 5.4.0),
+ ltsp-server-standalone (>= 5.4.0) | ltsp-server (>= 5.4.0),
  xserver-xorg-video-s3virge
 Suggests: ident2,
  squid,
