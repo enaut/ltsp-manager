@@ -22,6 +22,7 @@ import create_users
 import shared_folders
 import ltsp_info
 import parsers
+import purge_kernels
 
 class Gui:
     def __init__(self):
@@ -323,7 +324,7 @@ class Gui:
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
 
     def on_mi_purge_kernels_activate(self, widget):
-        subprocess.Popen(['./run-in-terminal', './purge-kernels'])
+        purge_kernels.PurgeKernels(self.main_window)
 
     def on_mi_apt_get_clean_activate(self, widget):
         subprocess.Popen(['./run-in-terminal', 'apt-get', 'clean'])
