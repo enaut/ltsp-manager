@@ -237,32 +237,21 @@ class Ip_Dialog:
                                 'ipv4':s_ip4,
                                 'ipv6':s_ip6})
 
-     
+            subprocess.Popen(['sh', '-c', 'ltsp-config dnsmasq --overwrite'])     
             setting_proxy = self.bus.get_object('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager/Settings')
             settings_interface = dbus.Interface(setting_proxy, 'org.freedesktop.NetworkManager.Settings')
             for setting in settings_interface.ListConnections():
                 connection_proxy = self.bus.get_object('org.freedesktop.NetworkManager', setting)
                 connection_interface = dbus.Interface(connection_proxy, 'org.freedesktop.NetworkManager.Settings.Connection')
                 connection_settings = connection_interface.GetSettings()
-                print connection_settings
-            
-                '''For every connection to this eth disable autoconnect'''
-                try:
-                    if mac == ':'.join([hexlify(chr(v)) for v in connection_settings['802-3-ethernet']['mac-address']]).upper():
-                        connection_settings['connection'][dbus.String('autoconnect')] = dbus.String('false') 
-                        connection_interface.Update(connection_settings)
-                except KeyError:
-                    pass
-
-
-                '''Update connection'''                
+                
+                '''Update existing connection'''                
                 if connection_settings['connection']['id'] == name:
                     connection_interface.Update(con)
                     con = setting
                     add_new_connection = False
                 
             
-            subprocess.Popen(['sh', '-c', 'ltsp-config dnsmasq --overwrite'])
             msg = 'Η σύνδεση δημιουργήθηκε. Θέλετε να ενεργοποιηθεί τώρα;'
             response = dialogs.AskDialog( msg, 'Ενεργοποιήση καινούριας σύνδεσης' ).showup()
             if response == Gtk.ResponseType.YES:
@@ -274,6 +263,20 @@ class Ip_Dialog:
             else:
                 if add_new_connection:
                     settings_interface.AddConnection(con)
+
+            for setting in settings_interface.ListConnections():
+                connection_proxy = self.bus.get_object('org.freedesktop.NetworkManager', setting)
+                connection_interface = dbus.Interface(connection_proxy, 'org.freedesktop.NetworkManager.Settings.Connection')
+                connection_settings = connection_interface.GetSettings()
+                print connection_settings
+            
+                '''For every connection to this eth disable autoconnect'''
+                try:
+                    if mac == ':'.join([hexlify(chr(v)) for v in connection_settings['802-3-ethernet']['mac-address']]).upper() and name != connection_settings['connection']['id']:
+                        connection_settings['connection'][dbus.String('autoconnect')] = dbus.String('false') 
+                        connection_interface.Update(connection_settings)
+                except KeyError:
+                    pass
             Gtk.main_quit()
         else:
             return False     
