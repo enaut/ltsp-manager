@@ -324,13 +324,13 @@ class Gui:
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
 
     def on_mi_purge_kernels_activate(self, widget):
-        maintenance.Purge(self.main_window).run()
+        maintenance.Purge(self.main_window)
 
     def on_mi_apt_get_clean_activate(self, widget):
-        maintenance.Clean(self.main_window).run()
+        maintenance.Clean(self.main_window)
 
     def on_mi_apt_get_purge_activate(self, widget):
-        maintenance.AutoRemove(self.main_window).run()
+        maintenance.AutoRemove(self.main_window)
 
 ## View menu
 

@@ -118,7 +118,55 @@
                     <property name="margin_bottom">5</property>
                     <property name="shadow_type">in</property>
                     <child>
-                      <placeholder/>
+                      <object class="GtkTreeView" id="main_dlg_tview">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">main_dlg_tstore</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="main_dlg_tview-selection"/>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="main_dlg_pkg">
+                            <property name="sizing">fixed</property>
+                            <property name="title" translatable="yes">Πακέτο</property>
+                            <property name="expand">True</property>
+                            <child>
+                              <object class="GtkCellRendererToggle" id="main_dlg_pkg_toggle">
+                                <signal name="toggled" handler="on_main_dlg_pkg_toggle_toggled" swapped="no"/>
+                              </object>
+                              <attributes>
+                                <attribute name="visible">7</attribute>
+                                <attribute name="activatable">6</attribute>
+                                <attribute name="active">5</attribute>
+                              </attributes>
+                            </child>
+                            <child>
+                              <object class="GtkCellRendererPixbuf" id="main_dlg_pkg_pixbuf"/>
+                              <attributes>
+                                <attribute name="icon-name">1</attribute>
+                                <attribute name="stock-size">4</attribute>
+                              </attributes>
+                            </child>
+                            <child>
+                              <object class="GtkCellRendererText" id="main_dlg_pkg_text"/>
+                              <attributes>
+                                <attribute name="markup">2</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="main_dlg_size">
+                            <property name="title" translatable="yes">Μέγεθος</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="main_dlg_size_text"/>
+                              <attributes>
+                                <attribute name="text">3</attribute>
+                              </attributes>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
                     </child>
                   </object>
                   <packing>
@@ -137,7 +185,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="stock">gtk-missing-image</property>
-                        <property name="pixel_size">16</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -186,176 +233,24 @@
       <action-widget response="-5">main_dlg_apply</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkTreeStore" id="main_dlg_auto_tstore">
+  <object class="GtkTreeStore" id="main_dlg_tstore">
     <columns>
       <!-- column-name Package_inst -->
       <column type="PyObject"/>
       <!-- column-name Icon -->
       <column type="gchararray"/>
-      <!-- column-name Package -->
-      <column type="gchararray"/>
-      <!-- column-name Size -->
-      <column type="gchararray"/>
-      <!-- column-name Icon_Size -->
-      <column type="gint"/>
-    </columns>
-  </object>
-  <object class="GtkTreeView" id="main_dlg_auto_tview">
-    <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="model">main_dlg_auto_tstore</property>
-    <child internal-child="selection">
-      <object class="GtkTreeSelection" id="main_dlg_auto_tview-selection"/>
-    </child>
-    <child>
-      <object class="GtkTreeViewColumn" id="main_dlg_auto_pkg">
-        <property name="sizing">fixed</property>
-        <property name="title" translatable="yes">Πακέτο</property>
-        <property name="expand">True</property>
-        <child>
-          <object class="GtkCellRendererPixbuf" id="packagepixbuf2"/>
-          <attributes>
-            <attribute name="icon-name">1</attribute>
-            <attribute name="stock-size">4</attribute>
-          </attributes>
-        </child>
-        <child>
-          <object class="GtkCellRendererText" id="packagetext2"/>
-          <attributes>
-            <attribute name="markup">2</attribute>
-          </attributes>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkTreeViewColumn" id="main_dlg_auto_size">
-        <property name="title" translatable="yes">Μέγεθος</property>
-        <child>
-          <object class="GtkCellRendererText" id="sizetext2"/>
-          <attributes>
-            <attribute name="text">3</attribute>
-          </attributes>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkTreeStore" id="main_dlg_clean_tstore">
-    <columns>
-      <!-- column-name Deb_inst -->
-      <column type="PyObject"/>
-      <!-- column-name Icon -->
-      <column type="gchararray"/>
-      <!-- column-name Deb -->
+      <!-- column-name Name -->
       <column type="gchararray"/>
       <!-- column-name Size -->
       <column type="gchararray"/>
       <!-- column-name Icon_size -->
       <column type="gint"/>
-    </columns>
-  </object>
-  <object class="GtkTreeView" id="main_dlg_clean_tview">
-    <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="model">main_dlg_clean_tstore</property>
-    <child internal-child="selection">
-      <object class="GtkTreeSelection" id="main_dlg_clean_tview_selection"/>
-    </child>
-    <child>
-      <object class="GtkTreeViewColumn" id="main_dlg_clean_pkg">
-        <property name="sizing">fixed</property>
-        <property name="title" translatable="yes">Αρχείο</property>
-        <property name="expand">True</property>
-        <child>
-          <object class="GtkCellRendererPixbuf" id="packagepixbuf3"/>
-          <attributes>
-            <attribute name="icon-name">1</attribute>
-            <attribute name="stock-size">4</attribute>
-          </attributes>
-        </child>
-        <child>
-          <object class="GtkCellRendererText" id="packagetext3"/>
-          <attributes>
-            <attribute name="markup">2</attribute>
-          </attributes>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkTreeViewColumn" id="main_dlg_clean_size">
-        <property name="title" translatable="yes">Μέγεθος</property>
-        <child>
-          <object class="GtkCellRendererText" id="sizetext3"/>
-          <attributes>
-            <attribute name="text">3</attribute>
-          </attributes>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkTreeStore" id="main_dlg_purge_tstore">
-    <columns>
-      <!-- column-name Package_inst -->
-      <column type="PyObject"/>
       <!-- column-name Select -->
       <column type="gboolean"/>
-      <!-- column-name Icon -->
-      <column type="gchararray"/>
-      <!-- column-name Package -->
-      <column type="gchararray"/>
-      <!-- column-name Size -->
-      <column type="gchararray"/>
       <!-- column-name Active -->
       <column type="gboolean"/>
-      <!-- column-name Icon_size -->
-      <column type="gint"/>
+      <!-- column-name Show_select -->
+      <column type="gboolean"/>
     </columns>
-  </object>
-  <object class="GtkTreeView" id="main_dlg_purge_tview">
-    <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="model">main_dlg_purge_tstore</property>
-    <child internal-child="selection">
-      <object class="GtkTreeSelection" id="main_dlg_purge_tview-selection"/>
-    </child>
-    <child>
-      <object class="GtkTreeViewColumn" id="main_dlg_purge_pkg">
-        <property name="sizing">fixed</property>
-        <property name="title" translatable="yes">Πακέτο</property>
-        <property name="expand">True</property>
-        <child>
-          <object class="GtkCellRendererToggle" id="packagetoggle1">
-            <signal name="toggled" handler="on_packagetoggle1_toggled" swapped="no"/>
-          </object>
-          <attributes>
-            <attribute name="activatable">5</attribute>
-            <attribute name="active">1</attribute>
-          </attributes>
-        </child>
-        <child>
-          <object class="GtkCellRendererPixbuf" id="packagepixbuf1"/>
-          <attributes>
-            <attribute name="icon-name">2</attribute>
-            <attribute name="stock-size">6</attribute>
-          </attributes>
-        </child>
-        <child>
-          <object class="GtkCellRendererText" id="packagetext1"/>
-          <attributes>
-            <attribute name="markup">3</attribute>
-          </attributes>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkTreeViewColumn" id="main_dlg_purge_size">
-        <property name="title" translatable="yes">Μέγεθος</property>
-        <child>
-          <object class="GtkCellRendererText" id="sizetext1"/>
-          <attributes>
-            <attribute name="text">4</attribute>
-          </attributes>
-        </child>
-      </object>
-    </child>
   </object>
 </interface>
