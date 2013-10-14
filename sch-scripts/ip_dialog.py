@@ -1,389 +1,564 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>, Yannis Siahos <Siahos@cti.gr>
+# Copyright (C) 2013
+# Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>, Yannis Siahos <Siahos@cti.gr>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk, GObject
 from binascii import unhexlify, hexlify
-from dbus.mainloop.glib import DBusGMainLoop
 import re
 import subprocess
-import dbus, sys
+import sys
 import uuid
 import struct, socket
 import dialogs
+import dbus
 
-class Ip_Dialog:
+
+## Define global variables
+
+IP_REG = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$"
+BUS = dbus.SystemBus()
+DBUS_SERVICE_NAME = 'org.freedesktop.NetworkManager'
+
+
+## Define global functions
+
+def string_to_int32(address):
+    '''Convert ip to int32'''
+    return struct.unpack("I",socket.inet_aton(address))[0]
+
+def int32_to_string(num):
+    '''Convert int32 to ip'''
+    return socket.inet_ntoa(struct.pack("I",num))
+
+def bits_to_subnet(bits):
+    '''Convert bits to subnet mask'''
+    try:
+        bits=int(bits)
+        if bits<=0 or bits>32:
+            raise Exception
+    except:
+        return "255.255.255.255"
+    num = ((1L<<bits)-1L)<<(32L-bits)
+    return socket.inet_ntoa(struct.pack("!I",num))
+
+def subnet_to_bits(subnet):
+    '''Convert mask to bits'''
+    return sum([bin(int(x)).count('1') for x in subnet.split('.')])
+
+
+## Define Network Manager classes
+
+class Network_Manager_DBus(object):
+    def __init__(self, object_path, interface_name):
+        self.proxy = BUS.get_object(DBUS_SERVICE_NAME, object_path)
+        self.interface = dbus.Interface(self.proxy, interface_name)
+        try:
+            self.properties = self.proxy.GetAll(interface_name, 'org.freedesktop.DBus.Properties')
+        except dbus.exceptions.DBusException:
+            pass 
+
+class Network_Manager(Network_Manager_DBus):
+    def __init__(self):
+        self.object_path = '/org/freedesktop/NetworkManager'
+        self.interface_name = 'org.freedesktop.NetworkManager'
+        super(Network_Manager, self).__init__(self.object_path, self.interface_name)
+    
+    def get_devices(self):
+        return self.interface.GetDevices()
+
+   
+class Device(Network_Manager_DBus):
+    def __init__(self, device_name):
+        self.object_path = device_name
+        self.interface_name = 'org.freedesktop.NetworkManager.Device'
+        super(Device, self).__init__(self.object_path, self.interface_name)
+
+    def get_properties(self):
+        ip4config_path = self.properties['Ip4Config']
+        interface = self.properties['Interface']
+        driver = self.properties['Driver']
+        device_type = self.properties['DeviceType']
+        return ip4config_path, interface, driver, device_type
+        
+
+class Device_Wired(Network_Manager_DBus):
+    def __init__(self, device_name):
+        self.object_path = device_name
+        self.interface_name = 'org.freedesktop.NetworkManager.Device.Wired'
+        super(Device_Wired, self).__init__(self.object_path, self.interface_name)
+
+    def get_properties(self):
+        mac = self.properties['HwAddress']
+        speed = self.properties['Speed']
+        if speed == 0:
+            speed = 'Άγνωστη'
+        carrier = self.properties['Carrier']
+        if carrier == '':
+            carrier = 0
+        return mac, str(speed), carrier
+
+
+class IP4_Config(Network_Manager_DBus):
+    def __init__(self, ip4config_name):
+        self.object_path = ip4config_name
+        self.interface_name = 'org.freedesktop.NetworkManager.IP4Config'
+        super(IP4_Config, self).__init__(self.object_path, self.interface_name)
+
+    def get_properties(self):
+        ip, subnet, route = self.properties['Addresses'][0]
+        dnss = self.properties['Nameservers']
+        return ip, subnet, route, dnss
+
+
+class Connection_Settings(Network_Manager_DBus):
+    def __init__(self, connection_settings_name):
+        self.object_path = connection_settings_name
+        self.interface_name = 'org.freedesktop.NetworkManager.Settings.Connection'
+        super(Connection_Settings, self).__init__(self.object_path, self.interface_name)
+
+    def get_settings(self):
+        return self.interface.GetSettings()
+
+
+class Settings(Network_Manager_DBus):
+    def __init__(self):
+        self.object_path = '/org/freedesktop/NetworkManager/Settings'
+        self.interface_name = 'org.freedesktop.NetworkManager.Settings'
+        super(Settings, self).__init__(self.object_path, self.interface_name)
+
+    def get_list_connections(self):
+        return self.interface.ListConnections()
+
+
+## Define Interface class
+
+class Interface:
+    def __init__(self, ip4config_path, device_path, interface, driver, \
+                 device_type, mac, speed, carrier):
+        self.ip4config_path, self.device_path, self.interface, self.driver, \
+        self.device_type, self.mac, self.speed, self.carrier = ip4config_path, device_path, \
+        interface, driver, device_type, mac, speed, carrier
+        
+        self.id = '%s,sch-scripts' %self.interface
+        self.interface_connections = []
+        self.page = None
+        self.conflict = None
+        self.connection = None
+        self.set_ips()
+
+    def set_ips(self):
+        if self.ip4config_path != '/':
+            ip4config = IP4_Config(self.ip4config_path) 
+            ip, subnet, route, dnss = ip4config.get_properties()
+            self.ip = int32_to_string(ip)
+            self.subnet = bits_to_subnet(subnet)
+            self.route = int32_to_string(route)
+            self.dnss = [int32_to_string(x) for x in dnss]
+            self.has_active_connection = True 
+        else:
+            self.ip = 'Δεν βρέθηκε διεύθυνση'
+            self.subnet = 'Δεν βρέθηκε διεύθυνση'
+            self.route = 'Δεν βρέθηκε διεύθυνση'
+            self.dnss = ['Δεν βρέθηκε διεύθυνση', 'Δεν βρέθηκε διεύθυνση', \
+                        'Δεν βρέθηκε διεύθυνση']
+            self.has_active_connection = False
+
+
+## Define Page class
+   
+class Page:
     def __init__(self):
         self.builder = Gtk.Builder()
         self.builder.add_from_file('ip_dialog.ui')
-        self.builder.connect_signals(self)
-
-        self.dialog = self.builder.get_object('ip_dialog')
-        self.connection_title_label = self.builder.get_object('connection_title_label')
-        self.assignment_entry = self.builder.get_object('assignment_entry')
-        self.name_entry = self.builder.get_object('name_entry')
-        self.interface_entry = self.builder.get_object('interface_entry')
-        self.mac_entry = self.builder.get_object('mac_entry')
+        self.grid = self.builder.get_object('grid')
+        self.method_lstore = self.builder.get_object('method_lstore')
+        self.method_entry = self.builder.get_object('method_entry')
+        self.id_entry = self.builder.get_object('id_entry')  
+        self.interface_entry = self.builder.get_object('interface_entry') 
+        self.mac_entry = self.builder.get_object('mac_entry') 
         self.driver_entry = self.builder.get_object('driver_entry')
         self.speed_entry = self.builder.get_object('speed_entry')
         self.ip_entry = self.builder.get_object('ip_entry')
-        self.subnet_entry = self.builder.get_object('subnet_entry')
-        self.gateway_entry = self.builder.get_object('gateway_entry')
-        self.dns1_entry = self.builder.get_object('dns1_entry')
-        self.dns2_entry = self.builder.get_object('dns2_entry')
-        self.dns3_entry = self.builder.get_object('dns3_entry')
-        self.label11 = self.builder.get_object('label11')
-        self.label12 = self.builder.get_object('label12')
-        self.label13 = self.builder.get_object('label13')
-        self.ok_button = self.builder.get_object('ok_button')
+        self.subnet_entry = self.builder.get_object('subnet_entry') 
+        self.route_entry = self.builder.get_object('route_entry')
+        self.dns1_entry = self.builder.get_object('dns1_entry')         
+        self.dns2_entry = self.builder.get_object('dns2_entry') 
+        self.dns3_entry = self.builder.get_object('dns3_entry') 
+        self.ip_lbl = self.builder.get_object('ip_lbl')
+        self.subnet_lbl = self.builder.get_object('subnet_lbl')
+        self.route_lbl = self.builder.get_object('route_lbl')
+        self.dns1_lbl = self.builder.get_object('dns1_lbl') 
+        self.dns2_lbl = self.builder.get_object('dns2_lbl') 
+        self.dns3_lbl = self.builder.get_object('dns3_lbl')
+        self.auto_checkbutton = self.builder.get_object('auto_checkbutton')
+        
+    def fill_entries(self, interface):
+        self.id_entry.set_text(interface.id)
+        self.interface_entry.set_text('Ethernet (%s)' %interface.interface)
+        self.mac_entry.set_text(interface.mac)
+        self.driver_entry.set_text(interface.driver)
+        self.speed_entry.set_text(interface.speed)       
+        self.ip_entry.set_text(interface.ip)
+        self.subnet_entry.set_text(interface.subnet)
+        self.route_entry.set_text(interface.route)
+        if len(interface.dnss) >= 1:
+            self.dns1_entry.set_visible(True)
+            self.dns1_lbl.set_visible(True)
+            self.dns1_entry.set_text(interface.dnss[0])
+        else:
+            self.dns1_entry.set_visible(False)
+            self.dns1_lbl.set_visible(False)
+        if len(interface.dnss) >= 2:
+            self.dns2_entry.set_visible(True)
+            self.dns2_lbl.set_visible(True)
+            self.dns2_entry.set_text(interface.dnss[1])
+        else:
+            self.dns2_entry.set_visible(False)
+            self.dns2_lbl.set_visible(False)
+        if len(interface.dnss) >= 3:
+            self.dns3_entry.set_visible(True)
+            self.dns3_lbl.set_visible(True)
+            self.dns3_entry.set_text(interface.dnss[2])
+        else:
+            self.dns3_entry.set_visible(False)
+            self.dns3_lbl.set_visible(False)
+    
+        if interface.has_active_connection:
+            self.method_entry.get_model()[2][1] = True
+        else:
+            self.method_entry.get_model()[2][1] = False   
 
-        self.ip_entry.connect('changed', self.callback_ip_changed)
-        self.ip = False
-        self.liststore = Gtk.ListStore(str)
 
-        '''Set glib as mainloop'''          
-        DBusGMainLoop(set_as_default=True)
+## Define Ip_Dialog class
 
-        '''Connect to dbus and NetworkManager'''       
-        self.bus = dbus.SystemBus()
+class Ip_Dialog:
+    def __init__(self, parent):
+        self.interfaces = []
+        self.timeout = 0
+        self.ts_dns = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
+        self.builder = Gtk.Builder()
+        self.builder.add_from_file('ip_dialog.ui')
+        self.builder.connect_signals(self)
+        self.main_dlg = self.builder.get_object('main_dlg')
+        self.main_dlg_notebook = self.builder.get_object('main_dlg_notebook')
+        self.main_dlg.set_transient_for(parent)
+        
         try:
-            self.nm_proxy = self.bus.get_object('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager')
-            self.nm_interface = dbus.Interface(self.nm_proxy, 'org.freedesktop.NetworkManager')         
-            self.nm_interface.connect_to_signal('PropertiesChanged', self.callback_network_changed)
-            self.collect_info(True)
+            self.nm = Network_Manager()
         except dbus.exceptions.DBusException:
-            msg = 'Αδυναμία σύνδεσης στη Διαχείριση Δικτύου. Ο διάλογος θα κλείσει.'
+            msg = 'Αδυναμία σύνδεσης στη Διαχείριση Δικτύου.'
+            dialogs.ErrorDialog(msg, 'Σφάλμα').showup()
+            return
+        self.settings = Settings()
+        device_paths = self.nm.get_devices()
+        if len(device_paths) == 0:
+            msg = 'Δεν υπάρχει διαθέσιμη διεπαφή.'
             dialogs.ErrorDialog( msg, 'Σφάλμα' ).showup()
-            sys.exit(0)
-
-    def collect_info(self, main_loop):
-        '''Collect devices'''
-        nm_properties = self.nm_proxy.GetAll('org.freedesktop.NetworkManager')
-        if nm_properties['NetworkingEnabled'] == 1:
-            devices = self.nm_interface.GetDevices()
-            
-            for device in devices:
-                device_proxy = self.bus.get_object('org.freedesktop.NetworkManager', device)
-                device_properties = device_proxy.GetAll('org.freedesktop.NetworkManager.Device')
-
-                if device_properties['DeviceType'] == 1 and device_properties['ActiveConnection'] != "/":
-                    if main_loop:
-                        address_proxy = self.bus.get_object('org.freedesktop.NetworkManager', device_properties['Ip4Config'])
-                        try:
-                            address_properties = address_proxy.GetAll('org.freedesktop.NetworkManager.IP4Config') 
-                        except dbus.exceptions.DBusException:
-                            continue
-                    self.liststore.append(['Ethernet (' + str(device_properties['Interface']) + ')'])
-
-            if len(self.liststore) != 0:
-                self.interface_entry.set_model(self.liststore)
-                self.interface_entry.set_active(0)
-                self.dialog.show()
-                
-            else:
-                msg = 'Πρέπει να είστε συνδεδεμένος σε ένα δίκτυο. Ο διάλογος θα κλείσει.'
-                dialogs.ErrorDialog( msg, 'Αποτυχία σύνδεσης' ).showup()
-                if main_loop:
-                    sys.exit(0)
-                else:
-                    Gtk.main_quit()
-                
+            return  
+        for device_path in device_paths:
+            device = Device(device_path)
+            ip4config_path, interface, driver, device_type = device.get_properties()
+            if device_type == 1:
+                devicewired = Device_Wired(device_path)
+                mac, speed, carrier = devicewired.get_properties()
+                interface = Interface(ip4config_path, device_path, interface, \
+                                        driver, device_type, mac, speed, carrier)
+                self.interfaces.append(interface)
+        if len(self.interfaces) == 0:
+            msg = 'Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή.'
+            dialogs.ErrorDialog( msg, 'Σφάλμα' ).showup()
+            return  
+        self.interfaces.sort(key=lambda interface: interface.interface)                     
+        for interface in self.interfaces:
+            self.populate_pages(interface) 
+        self.set_default()          
+        self.main_dlg.show()
+     
+    def populate_pages(self, interface):       
+        page = Page()
+        interface.page = page
+        page.ip_entry.connect('changed', self.on_ip_entry_changed, interface)
+        page.method_entry.connect('changed', self.on_method_entry_changed, interface)
+        page.fill_entries(interface)
+        if Gdk.Screen.get_default().get_height() <= 600:
+            scrolledwindow = Gtk.ScrolledWindow()
+            scrolledwindow.add_with_viewport(page.grid)
+            scrolledwindow.show()
+            self.main_dlg_notebook.append_page(scrolledwindow, Gtk.Label('Ethernet (%s)' \
+                                               %interface.interface))
+            self.main_dlg_notebook.set_tab_reorderable(scrolledwindow, True) 
         else:
-            msg = 'Η δικτύωση θα πρέπει να είναι ενεργοποιημένη. Ο διάλογος θα κλείσει.'
-            dialogs.ErrorDialog( msg, 'Αποτυχία δικτύου' ).showup()
-            if main_loop:
-                sys.exit(0)
+            self.main_dlg_notebook.append_page(page.grid, Gtk.Label('Ethernet (%s)' \
+                                               %interface.interface))
+            self.main_dlg_notebook.set_tab_reorderable(page.grid, True) 
+
+    def set_default(self):
+        #By default active is 3
+        #TODO: Add if statenent for connection sharing (non active connection)
+        carrier_connect = [interface.page for interface in self.interfaces \
+                           if interface.carrier == 1]
+        if len(carrier_connect) == 0:
+            self.interfaces[0].page.method_entry.set_active(1)
+            self.main_dlg_notebook.reorder_child(self.interfaces[0].page.grid, 0) 
+        else:
+            if carrier_connect[0].ip_entry.get_text().startswith('10.'):
+                carrier_connect[0].method_entry.set_active(2)
             else:
-                Gtk.main_quit()  
-
-
-## Main Callbacks
-
-    def on_interface_entry_changed(self, widget):
-        '''Handle the changes on field Interface'''
-
-        '''
-        This is needed in open/close connections because 
-        callback function called by none text in combotext
-        '''
-        if widget.get_active_text() is None:
-            return False
-
-        #TODO:Find another way to strip interface
-        interface = widget.get_active_text().replace('Ethernet (', "")
-        interface = interface.replace(')', "")
-        interface = interface.strip()
-        self.interface = interface
-        device = self.nm_interface.GetDeviceByIpIface(self.interface)
-        
-        device_proxy = self.bus.get_object('org.freedesktop.NetworkManager', device)
-        device_properties = device_proxy.GetAll('org.freedesktop.NetworkManager.Device')        
-        device_wired_properties = device_proxy.GetAll('org.freedesktop.NetworkManager.Device.Wired')
-
-        address_proxy = self.bus.get_object('org.freedesktop.NetworkManager', device_properties['Ip4Config'])
-        address_properties = address_proxy.GetAll('org.freedesktop.NetworkManager.IP4Config')
+                carrier_connect[0].method_entry.set_active(1)
+            self.main_dlg_notebook.reorder_child(carrier_connect[0].grid, 0)
+        self.main_dlg_notebook.set_current_page(0) 
+        #TODO: Add the sharing connection method to carrier_connect[1]      
       
-        driver = device_properties['Driver']
-        mac = device_wired_properties['HwAddress']
-        speed = str(device_wired_properties['Speed'])
-        ip = self.int32_to_dotted_quad_string(address_properties['Addresses'][0][0])
-        self.subnet = address_properties['Addresses'][0][1]
-        subnet = self.bits_to_subnet_mask(address_properties['Addresses'][0][1])
-        gateway = self.int32_to_dotted_quad_string(address_properties['Addresses'][0][2])
-        self.default_dnss = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
-        self.dhcp_dnss= []
-        for i in range(len(address_properties['Nameservers'])):       
-            self.dhcp_dnss.append(self.int32_to_dotted_quad_string(address_properties['Nameservers'][i]))
+    def watch_nm(self, interest_interfaces):
+        self.timeout += 1000
+        break_bool = True
+        for interface in interest_interfaces:
+            if interface.carrier != 1:
+                continue
+            #TODO: Change it (do not create new instances)   
+            device = Device(interface.device_path)
+            ip4config_path, interface, driver, device_type = device.get_properties()
+            if ip4config_path == '/':
+                break_bool = False
         
-        self.ip_sub = ".".join(self.int32_to_dotted_quad_string(address_properties['Addresses'][0][0]).split('.')[0:3])+'.'
-        if ip.split('.')[0] != '10':
-            self.assignment_entry.set_active(1)
-        else:
-            self.assignment_entry.set_active(2)
-            ip = self.ip_sub+'10'      
-
-        '''Fill entries'''
-        self.connection_title_label.set_label(self.interface+',sch-scripts')
-        self.name_entry.set_text(interface + ',sch-scripts')
-        self.driver_entry.set_text(driver)
-        self.mac_entry.set_text(mac)
-        self.speed_entry.set_text(speed)
-        self.ip_entry.set_text(ip)
-        self.subnet_entry.set_text(subnet)
-
-        label10 = self.builder.get_object('label10')
-        self.gateway_entry.set_text(gateway)
+        if break_bool:
+            p = subprocess.Popen(['sh', '-c', 'ltsp-config dnsmasq --overwrite'])
+            p.wait()
+            msg = 'Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του ' \
+                  'αρχείου ρυθμίσεων του dnsmasq έγινε επιτυχώς.'
+            dialogs.InfoDialog(msg, 'Επιτυχία').showup()
+            self.main_dlg.destroy() 
+            return False
+        elif not break_bool and self.timeout == 30000:
+            msg = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του ' \
+                  'αρχείου dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν.'
+            dialogs.ErrorDialog(msg, 'Σφάλμα').showup()
+            self.main_dlg.destroy()
+            return False
+        return True          
         
-        if gateway != '0.0.0.0':
-            label10.set_visible(True)
-            self.gateway_entry.set_visible(True)
+    def check_button(self):
+        check_ip = True
+        check_method = False
+        for interface in self.interfaces:
+            if interface.page is None:
+                continue
+            ip = interface.page.ip_entry.get_text()
+            method = interface.page.method_entry.get_active()
+            if not re.match(IP_REG, ip) and ip != 'Δεν βρέθηκε διεύθυνση':
+                check_ip = False
+            if method != 3:
+                check_method = True
+
+        if check_ip and check_method:
+            self.main_dlg.set_response_sensitive(Gtk.ResponseType.OK, True)
         else:
-            label10.set_visible(False)
-            self.gateway_entry.set_visible(False)
-
-        self.fill_dns()
-
-        self.ip = True
-        self.check_button() 
-
-    def on_assignment_entry_changed(self, widget):
-        '''Handle the changes on field Method'''
-        if self.assignment_entry.get_active() != 2:
-            self.ip_entry.set_sensitive(False) 
-        else:
-            self.ip_entry.set_sensitive(True)
-        self.fill_dns()
- 
-    def on_ok_button_clicked(self, widget):
-        '''Make the configuration file in /etc/NetworkManager/system-connections'''
-        add_new_connection = True
-
-        '''Read values from dialog'''
-        name = self.name_entry.get_text().strip()
-        interface = self.interface
-        mac = self.mac_entry.get_text().strip()
-        driver = self.driver_entry.get_text().strip()
-        speed = self.speed_entry.get_text().strip()
-        ip = self.dotted_quad_string_to_int32(self.ip_entry.get_text().strip())
-        subnet = str(self.subnet) + 'L'
-        if self.gateway_entry.get_visible():
-            gateway = self.dotted_quad_string_to_int32(self.gateway_entry.get_text().strip())
-        if self.dns1_entry.get_visible():
-            dns1 = self.dotted_quad_string_to_int32(self.dns1_entry.get_text().strip())
-        if self.dns2_entry.get_visible():
-            dns2 = self.dotted_quad_string_to_int32(self.dns2_entry.get_text().strip())
-        if self.dns1_entry.get_visible():
-            dns3 = self.dotted_quad_string_to_int32(self.dns3_entry.get_text().strip())
-
-        msg = '''Θα δημιουργηθεί μια νέα σύνδεση με όνομα '%s' και θα γίνει επαναδημιουργία των ρυθμίσεων του dnsmasq.''' %(name)
-        response = dialogs.AskDialog( msg, 'Θέλετε να συνεχίσετε;' ).showup()
-        if response == Gtk.ResponseType.YES:
-            bytes = [unhexlify(v) for v in mac.split(":")]
-            s_wired = dbus.Dictionary({'duplex':'full',
-                                'mac-address':dbus.Array(bytes, signature=dbus.Signature('y'))})    
-            s_con = dbus.Dictionary({'type':'802-3-ethernet',
-                                'uuid':str(uuid.uuid4()),
-                                'id':name})
-            s_ip6 = dbus.Dictionary({'method':'ignore'})
-
-            
-            if self.assignment_entry.get_active() == 0:
-                s_ip4 = dbus.Dictionary({'method':'auto'})
-            elif self.assignment_entry.get_active() == 1:
-                dns = dbus.Array([dbus.UInt32(dns1),
-                                dbus.UInt32(dns2),
-                                dbus.UInt32(dns3)],
-                                signature=dbus.Signature('u'))
-                s_ip4 = dbus.Dictionary({'method':'auto',
-                                'dns':dns,
-                                'ignore-auto-dns':1})
-            elif self.assignment_entry.get_active() == 2: 
-                addr = dbus.Array([dbus.UInt32(ip),
-                                dbus.UInt32(subnet),
-                                dbus.UInt32(gateway)],
-                                signature=dbus.Signature('u'))
-                dns = dbus.Array([dbus.UInt32(dns1),
-                                dbus.UInt32(dns2),
-                                dbus.UInt32(dns3)],
-                                signature=dbus.Signature('u'))
-                s_ip4 = dbus.Dictionary({'method':'manual',
-                                'addresses':dbus.Array([addr], signature=dbus.Signature('au')),
-                                'dns':dns,
-                                'dhcp-send-hostname':'false'})
-           
-            con = dbus.Dictionary({'802-3-ethernet':s_wired,
-                                'connection':s_con,
-                                'ipv4':s_ip4,
-                                'ipv6':s_ip6})
-
-            subprocess.Popen(['sh', '-c', 'ltsp-config dnsmasq --overwrite'])     
-            setting_proxy = self.bus.get_object('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager/Settings')
-            settings_interface = dbus.Interface(setting_proxy, 'org.freedesktop.NetworkManager.Settings')
-            for setting in settings_interface.ListConnections():
-                connection_proxy = self.bus.get_object('org.freedesktop.NetworkManager', setting)
-                connection_interface = dbus.Interface(connection_proxy, 'org.freedesktop.NetworkManager.Settings.Connection')
-                connection_settings = connection_interface.GetSettings()
-                
-                '''Update existing connection'''                
-                if connection_settings['connection']['id'] == name:
-                    connection_interface.Update(con)
-                    con = setting
-                    add_new_connection = False
-                
-            
-            msg = 'Η σύνδεση δημιουργήθηκε. Θέλετε να ενεργοποιηθεί τώρα;'
-            response = dialogs.AskDialog( msg, 'Ενεργοποιήση καινούριας σύνδεσης' ).showup()
-            if response == Gtk.ResponseType.YES:
-                device = self.nm_interface.GetDeviceByIpIface(self.interface)
-                if add_new_connection:
-                    self.nm_interface.AddAndActivateConnection(con, device, '/')
-                else:
-                    self.nm_interface.ActivateConnection(con, device, '/')
-            else:
-                if add_new_connection:
-                    settings_interface.AddConnection(con)
-
-            for setting in settings_interface.ListConnections():
-                connection_proxy = self.bus.get_object('org.freedesktop.NetworkManager', setting)
-                connection_interface = dbus.Interface(connection_proxy, 'org.freedesktop.NetworkManager.Settings.Connection')
-                connection_settings = connection_interface.GetSettings()
-                print connection_settings
-            
-                '''For every connection to this eth disable autoconnect'''
-                try:
-                    if mac == ':'.join([hexlify(chr(v)) for v in connection_settings['802-3-ethernet']['mac-address']]).upper() and name != connection_settings['connection']['id']:
-                        connection_settings['connection'][dbus.String('autoconnect')] = dbus.String('false') 
-                        connection_interface.Update(connection_settings)
-                except KeyError:
-                    pass
-            Gtk.main_quit()
-        else:
-            return False     
-
-    def on_cancel_button_clicked(self, widget):
-        '''Close dialog on cancel button event'''
-        Gtk.main_quit()
-
-    def on_ip_dialog_delete_event(self, widget, event):
-        '''Close dialog on exit dialog event'''
-        Gtk.main_quit()
-
+            self.main_dlg.set_response_sensitive(Gtk.ResponseType.OK, False)
+    
 
 ## Callbacks
 
-    def callback_ip_changed(self, widget):
-        '''Handle the changes on fields IP Address and Name'''
-        if self.assignment_entry.get_active() == 2:
-            reg = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$"
-            new_ip = widget.get_text()
-            if new_ip[0:len(".".join(new_ip.split(".")[0:3]))+1] != self.ip_sub:
-                widget.set_text(self.ip_sub)
-                widget.set_position(-1)
-                new_ip = self.ip_sub
-            if re.match(reg, new_ip) and new_ip != self.gateway_entry.get_text():
-                self.ip = True
-                widget.set_icon_from_stock(1, None) 
+    def on_method_entry_changed(self, method_entry, interface):
+        if interface.page.method_entry.get_active() == 0:
+            interface.page.ip_entry.set_sensitive(False)
+            interface.page.auto_checkbutton.set_sensitive(True)
+            interface.set_ips()
+            interface.page.fill_entries(interface)
+        elif interface.page.method_entry.get_active() == 1:
+            interface.page.ip_entry.set_sensitive(False)
+            interface.page.auto_checkbutton.set_sensitive(True)
+            interface.dnss = [dns for dns in self.ts_dns]
+            interface.page.fill_entries(interface)
+        elif interface.page.method_entry.get_active() == 2:
+            interface.page.ip_entry.set_sensitive(True)
+            interface.page.auto_checkbutton.set_sensitive(True)
+            connection_settings_paths = self.settings.get_list_connections()
+            if interface.page.ip_entry.get_text().startswith('10.'): 
+                for counter, connection_settings_path in enumerate(connection_settings_paths):
+                    connection_settings = Connection_Settings(connection_settings_path)
+                    connection_settings_id = connection_settings.get_settings()['connection']['id']
+                    connection_settings_method = connection_settings.get_settings()['ipv4']['method']
+                    if connection_settings_id == interface.id and \
+                       connection_settings_method == dbus.String('manual'):
+                        break
+                    elif counter == len(connection_settings_paths) - 1:
+                        interface.ip = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
+            interface.dnss = [dns for dns in self.ts_dns]
+            interface.page.fill_entries(interface)
+        elif interface.page.method_entry.get_active() == 3:
+            interface.page.ip_entry.set_sensitive(False)
+            interface.page.auto_checkbutton.set_sensitive(False)
+            interface.set_ips()
+            interface.page.fill_entries(interface)
+        self.check_button()
+        
+
+    def on_ip_entry_changed(self, ip_entry, interface):
+        if interface.page.ip_entry.get_text() != 'Δεν βρέθηκε διεύθυνση':
+            ip = interface.page.ip_entry.get_text()
+            sub_ip = '.'.join(interface.ip.split('.')[0:3])+'.'
+            if re.match(IP_REG, ip) and ip != interface.page.route_entry.get_text():
+                interface.page.ip_entry.set_icon_from_stock(1, None)               
             else:
-                self.ip = False
-                widget.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
-                widget.set_icon_tooltip_text(1, 'Μη-έγκυρη διεύθυνση IP. Πρέπει να επεξεργαστείτε τη διεύθυνση IP της σύνδεσης.')
-            self.check_button()           
-            return True
-    
-    def callback_network_changed(self, event):
-        '''Handle NetworkManager changes'''
-        self.dialog.hide()
-        self.liststore.clear()
-        self.collect_info(False)
-        return True
+                interface.page.ip_entry.set_position(-1)
+                if ip != interface.page.route_entry.get_text():
+                    interface.page.ip_entry.set_text(sub_ip)
+                interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
+                interface.page.ip_entry.set_icon_tooltip_text(1, '%s' \
+                    %'Μη-έγκυρη διεύθυνση IP. θα πρέπει να είναι της μορφής x.y.z.w όπου ' \
+                     'x, y, z, w παίρνουν τιμές μεταξύ του 1 και 254.')
+            self.check_button()
 
+    def on_ip_dialog_response(self, main_dlg, response):
+        if response != Gtk.ResponseType.OK:
+            self.main_dlg.destroy()
+            return
 
-## Useful functions
+        dnsmasq_via_carrier = False
+        dnsmasq_via_autoconnect = False
+        new_connections = []
+        replace_connections = []
+        interest_interfaces = [interface for interface in self.interfaces \
+                           if interface.page.method_entry.get_active()!=3]
 
-    def fill_dns(self):
-        '''Fill dns entries'''
-        if self.assignment_entry.get_active() != 0:
-            self.dns1_entry.set_text(self.default_dnss[0])
-            self.dns1_entry.set_visible(True)
-            self.label11.set_visible(True)
-            self.dns2_entry.set_text(self.default_dnss[1])
-            self.dns2_entry.set_visible(True)
-            self.label12.set_visible(True)
-            self.dns3_entry.set_text(self.default_dnss[2])
-            self.dns3_entry.set_visible(True)
-            self.label13.set_visible(True)
-        else:
-            try:
-                self.dns1_entry.set_text(self.dhcp_dnss[0])
-            except:
-                self.dns1_entry.set_visible(False)
-                self.label11.set_visible(False)
+        for interface in interest_interfaces:
+            bytes = [unhexlify(v) for v in interface.mac.split(":")]
+            ethernet = dbus.Dictionary({'duplex':'full',
+                                'mac-address':dbus.Array(bytes, signature=dbus.Signature('y'))}) 
+            if interface.page.auto_checkbutton.get_active():   
+                connection = dbus.Dictionary({'type':'802-3-ethernet',
+                                'uuid':str(uuid.uuid4()),
+                                'id':interface.id})
+            else:
+                connection = dbus.Dictionary({'type':'802-3-ethernet',
+                                'uuid':str(uuid.uuid4()),
+                                'id':interface.id,
+                                 'autoconnect':dbus.String('false')})
+            ipv6 = dbus.Dictionary({'method':'ignore'})
+            if interface.page.method_entry.get_active() == 0:
+                ipv4 = dbus.Dictionary({'method':'auto'})
+            elif interface.page.method_entry.get_active() == 1:
+                dns = dbus.Array([dbus.UInt32(string_to_int32(self.ts_dns[0])),
+                                dbus.UInt32(string_to_int32(self.ts_dns[1])),
+                                dbus.UInt32(string_to_int32(self.ts_dns[2]))],
+                                signature=dbus.Signature('u'))
+                ipv4 = dbus.Dictionary({'method':'auto',
+                                'dns':dns,
+                                'ignore-auto-dns':1})
+            elif interface.page.method_entry.get_active() == 2: 
+                ip = string_to_int32(interface.page.ip_entry.get_text().strip())
+                subnet = subnet_to_bits(interface.page.subnet_entry.get_text().strip())
+                route = string_to_int32(interface.page.route_entry.get_text().strip())
+                addresses = dbus.Array([dbus.UInt32(ip),
+                                dbus.UInt32(subnet),
+                                dbus.UInt32(route)],
+                                signature=dbus.Signature('u'))
+                dns = dbus.Array([dbus.UInt32(string_to_int32(self.ts_dns[0])),
+                                dbus.UInt32(string_to_int32(self.ts_dns[1])),
+                                dbus.UInt32(string_to_int32(self.ts_dns[2]))],
+                                signature=dbus.Signature('u'))
+                ipv4 = dbus.Dictionary({'method':'manual',
+                                'addresses':dbus.Array([addresses],
+                                                        signature=dbus.Signature('au')),
+                                'dns':dns,
+                                'dhcp-send-hostname':'false'})
+           
+            conn = dbus.Dictionary({'802-3-ethernet':ethernet,
+                                'connection':connection,
+                                'ipv4':ipv4,
+                                'ipv6':ipv6})
+            interface.connection = conn
+            new_connections.append(interface)
 
-            try:
-                self.dns2_entry.set_text(self.dhcp_dnss[1])
-            except:
-                self.dns2_entry.set_visible(False)
-                self.label12.set_visible(False)
             
-            try:
-                self.dns3_entry.set_text(self.dhcp_dnss[2])
-            except:
-                self.dns3_entry.set_visible(False)
-                self.label13.set_visible(False)
-        return True
-    
-    def check_button(self):
-        '''Make active the button OK'''
-        if self.ip: 
-            self.ok_button.set_sensitive(True)
+            connection_settings_paths = self.settings.get_list_connections() 
+            for connection_settings_path in connection_settings_paths:
+                connection_settings = Connection_Settings(connection_settings_path)
+                connection_settings_id = connection_settings.get_settings()['connection']['id']
+                if connection_settings_id == interface.id:
+                    interface.conflict = connection_settings
+                    replace_connections.append(interface)
+                    new_connections.remove(interface)
+                try:
+                    connection_settings_mac = ':'.join([hexlify(chr(v)) for v in \
+                 connection_settings.get_settings()['802-3-ethernet']['mac-address']]).upper()
+                except KeyError:
+                    continue
+                if interface.mac == connection_settings_mac and \
+                   interface.id != connection_settings_id and \
+                   interface.page.auto_checkbutton.get_active():
+                    interface.interface_connections.append(connection_settings) 
+
+        title = 'Είστε σίγουροι ότι θέλετε να συνεχίσετε;'
+        msg = 'Πρόκειται '
+        if len(new_connections) > 0:
+            msg += 'να δημιουργήσετε '
+        
+            if len(new_connections) == 1: 
+                msg += 'τη σύνδεση: \n\n'
+            else:
+                msg += 'τις συνδέσεις: \n\n'
+            
+            for counter, interface in enumerate(new_connections):
+                if interface.carrier == 1:
+                    dnsmasq_via_carrier = True
+                if interface.page.auto_checkbutton.get_active():
+                    dnsmasq_via_autoconnect = True
+                msg += '<b>%s</b> (%s)\n' %(str(interface.id), 
+                    interface.page.method_lstore[interface.page.method_entry.get_active()][0]) 
+                if counter == len(new_connections) -1 and len(replace_connections) != 0:
+                    msg += '\n'
+        if len(replace_connections) > 0:
+            msg += 'να ενημερώσετε '
+        
+            if len(replace_connections) == 1: 
+                msg += 'τη σύνδεση: \n\n'
+            else:
+                msg += 'τις συνδέσεις: \n\n'
+        
+            for interface in replace_connections:
+                if interface.carrier == 1:
+                    dnsmasq_via_carrier = True
+                if interface.page.auto_checkbutton.get_active():
+                    dnsmasq_via_autoconnect = True
+                msg += '<b>%s</b> (%s)\n' %(str(interface.id), \
+                    interface.page.method_lstore[interface.page.method_entry.get_active()][0]) 
+        if dnsmasq_via_carrier and dnsmasq_via_autoconnect:
+            msg += '\nκαι να επαναδημιουργήσετε το αρχείο ρυθμίσεων του dnsmasq;'
+        elif not dnsmasq_via_carrier and dnsmasq_via_autoconnect:
+            msg += '\n<b>Προσοχή:</b> Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq δεν ' \
+                   'είναι δυνατή καθώς σε καμία διεπαφή δεν είναι συνδεδεμένο το καλώδιο.'
+        
+        ask_dialog = dialogs.AskDialog(title, 'Επιβεβαίωση')
+        ask_dialog.format_secondary_markup(msg)
+        ask_dialog.set_transient_for(self.main_dlg)
+        if ask_dialog.showup() != Gtk.ResponseType.YES:    
+            return
+        
+        #TODO:Maybe use hide
+        self.main_dlg.set_sensitive(False)
+        for interface in interest_interfaces:
+            if interface.conflict is not None:
+                interface.conflict.interface.Update(interface.connection)
+                if interface.carrier == 1 and interface.page.auto_checkbutton.get_active():
+                    self.nm.interface.ActivateConnection(interface.conflict.object_path, \
+                        interface.device_path, '/')
+            else:
+                object_path = self.settings.interface.AddConnection(interface.connection)
+                if interface.carrier == 1 and interface.page.auto_checkbutton.get_active():
+                    self.nm.interface.ActivateConnection(object_path, interface.device_path, '/')
+            
+        
+            for connection_settings in interface.interface_connections:
+                settings = connection_settings.get_settings()
+                settings['connection'][dbus.String('autoconnect')] = dbus.String('false')
+                connection_settings.interface.Update(settings)
+
+        if dnsmasq_via_carrier and dnsmasq_via_autoconnect:
+            GObject.timeout_add(1000, self.watch_nm, interest_interfaces)
         else:
-            self.ok_button.set_sensitive(False)
-        return True
-
-
-    def dotted_quad_string_to_int32(self, address):
-        '''Convert ip to int32'''
-        return struct.unpack("L",socket.inet_aton(address))[0]
-
-   
-    def int32_to_dotted_quad_string(self, num):
-        '''Convert int32 to ip'''
-        return socket.inet_ntoa(struct.pack("L",num))
-
-
-    def bits_to_subnet_mask(self, bits):
-        '''Convert bits to subnet mask'''
-        try:
-            bits=int(bits)
-            if bits<=0 or bits>32:
-                raise Exception
-        except:
-            return "255.255.255.255"
-        num = ((1L<<bits)-1L)<<(32L-bits)
-        return socket.inet_ntoa(struct.pack("!L",num))
-    
-
-if __name__ == '__main__':
-    ip_dialog = Ip_Dialog()
-    Gtk.main()  
+            msg = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς.'
+            dialogs.InfoDialog(msg, 'Επιτυχία').showup()
+            self.main_dlg.destroy() 

@@ -23,6 +23,7 @@ import shared_folders
 import ltsp_info
 import parsers
 import maintenance
+import ip_dialog
 
 class Gui:
     def __init__(self):
@@ -306,7 +307,7 @@ class Gui:
 ## Server menu
 
     def on_mi_configuration_network_activate(self, widget):
-        subprocess.Popen(['./ip_dialog.py'])
+        ip_dialog.Ip_Dialog(self.main_window)
 
     def on_mi_ltsp_update_image_activate(self, widget):
         subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
