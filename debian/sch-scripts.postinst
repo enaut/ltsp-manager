@@ -74,7 +74,7 @@ install() {
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
     if [ -n "$TEACHERS" ]; then
         if ! getent group "$TEACHERS" >/dev/null; then
-            addgroup "$TEACHERS"
+            addgroup --system "$TEACHERS"
             if administrator=$(getent passwd 1000 | cut -d : -f 1); then
                 gpasswd -a "$administrator" "$TEACHERS"
                 gpasswd -a "$administrator" epoptes
