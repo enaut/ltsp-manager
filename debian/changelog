@@ -1,3 +1,12 @@
+sch-scripts (12.04.10) precise; urgency=low
+
+  * Διόρθωση του flash player σε παλιότερες CPU (LP: #968759).
+  * Αλλαγή του teachers σε ομάδα συστήματος.
+  * Βελτίωση του σεναρίου ip_dialog.
+  * Επαναπροσθήκη του σεναρίου purge_kernels.
+
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 18 Oct 2013 22:45:49 +0300
+
 sch-scripts (12.04.9) precise; urgency=low
 
   * Μη αυτόματη εκκίνηση κάποιων εφαρμογών κατά τη σύνδεση σε fat clients.
