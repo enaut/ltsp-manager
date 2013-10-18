@@ -537,8 +537,7 @@ class Ip_Dialog:
         if ask_dialog.showup() != Gtk.ResponseType.YES:    
             return
         
-        #TODO:Maybe use hide
-        self.main_dlg.set_sensitive(False)
+        self.main_dlg.hide()
         for interface in interest_interfaces:
             if interface.conflict is not None:
                 interface.conflict.interface.Update(interface.connection)
