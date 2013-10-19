@@ -1,3 +1,9 @@
+sch-scripts (12.04.11) precise; urgency=low
+
+  * Μεταφορά του init-ltsp.d/50-flashplugin-no-sse2 στο πακέτο του.
+
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sat, 19 Oct 2013 19:18:48 +0300
+
 sch-scripts (12.04.10) precise; urgency=low
 
   * Διόρθωση του flash player σε παλιότερες CPU (LP: #968759).
