@@ -379,7 +379,10 @@ class Ip_Dialog:
                 for counter, connection_settings_path in enumerate(connection_settings_paths):
                     connection_settings = Connection_Settings(connection_settings_path)
                     connection_settings_id = connection_settings.get_settings()['connection']['id']
-                    connection_settings_method = connection_settings.get_settings()['ipv4']['method']
+                    try:
+                        connection_settings_method = connection_settings.get_settings()['ipv4']['method']
+                    except KeyError:
+                        connection_settings_method = None
                     if connection_settings_id == interface.id and \
                        connection_settings_method == dbus.String('manual'):
                         break
