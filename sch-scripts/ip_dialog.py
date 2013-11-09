@@ -369,6 +369,7 @@ class Ip_Dialog:
         elif interface.page.method_entry.get_active() == 1:
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
+            interface.set_ips()
             interface.dnss = [dns for dns in self.ts_dns]
             interface.page.fill_entries(interface)
         elif interface.page.method_entry.get_active() == 2:

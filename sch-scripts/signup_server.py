@@ -269,8 +269,12 @@ class UI:
                     self.system.add_group(libuser.Group(user.primary_group, user.gid, {}))
                 self.system.add_user(user)
                 libuser.system.reload()
-            # FIXME: sch-scripts trees won't update
-            self.requests_list.clear()
+                # FIXME: sch-scripts trees won't update
+                for counter, row in enumerate(self.requests_list):
+                    if row[0].user.name == user.name:
+                        self.requests_list.remove(self.requests_list.get_iter(counter))
+            if len(self.requests_list) == 0:
+                self.builder.get_object('apply_button').set_sensitive(False)
     
     def on_close_button_clicked(self, widget):    
         if len(self.requests_list):
