@@ -136,6 +136,13 @@ class NewUsersDialog:
                     progressbar.set_fraction(float(groups_created) / float(total_groups))
                 else:
                     tmp_gid=self.system.groups[classn].gid
+                
+                # Add teachers to group
+                if self.glade.get_object('teachers_checkbutton').get_active():
+                    for user in self.system.users.values():
+                        if 'teachers' in user.groups and classn not in user.groups:
+                            user.groups.append(classn)
+                            self.system.update_user(user.name, user)
             
             # Create shared folders
             if self.glade.get_object('shared_checkbutton').get_active():
