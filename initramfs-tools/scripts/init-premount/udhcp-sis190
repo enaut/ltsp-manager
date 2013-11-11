@@ -1,0 +1,11 @@
+#!/bin/sh
+# Work around LP: #345374 by setting mtu=1492 for sis19x NICs.
+
+test -d /sys/module/sis190 || exit 0
+
+for f in /run/net-*.conf; do
+    . "$f"
+done
+
+DEVICE=${DEVICE:-eth0}
+ip link set dev "$DEVICE" mtu 1492

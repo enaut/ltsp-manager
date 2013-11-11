@@ -1,4 +1,5 @@
 etc/*                   etc/
+initramfs-tools         usr/share/
 ltsp                    usr/share/
 sbin/*                  usr/sbin/
 sch-scripts             usr/share/
