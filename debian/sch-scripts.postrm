@@ -22,7 +22,7 @@ remove() {
     if [ -f /etc/ssh/sshd_config ]; then
         sed 's/MaxStartups 20:30:60/#MaxStartups 10:30:60/' -i /etc/ssh/sshd_config
     fi
-    for file in /usr/local/bin/gnome-panel; do
+    for file in /usr/local/bin/gnome-panel /usr/local/bin/unzip; do
         if [ -h "$file" ]; then
             rm -f "$file"
         fi

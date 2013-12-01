@@ -1,0 +1,27 @@
+#!/bin/sh
+# Detect the correct DOS charset for unzip and zipinfo (LP: #580961).
+
+prog=${0##*/}
+if [ ! -x "/usr/bin/$prog" ]; then
+    echo "$prog: command not found" >&2
+    exit 127
+fi
+
+if [ -z "$LANG" ] && [ -f /etc/default/locale ]; then
+    . /etc/default/locale
+fi
+
+# From e.g. "en_US.UTF-8", only keep "en".
+lang=${LANG%.*}
+lang=${lang%_*}
+case "$lang" in
+    el) charset=cp737 ;;
+    *) unset charset ;;
+esac
+
+if [ -n "$charset" ]; then
+    export UNZIP="-O $charset"
+    export ZIPINFO="-O $charset"
+fi
+
+exec "/usr/bin/$prog" "$@"

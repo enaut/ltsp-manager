@@ -69,6 +69,9 @@ install() {
 
     # Work around gnome-panel not appearing (LP: #1078679).
     ln -sf /usr/share/sch-scripts/gnome-panel /usr/local/bin/ || true
+
+    # Work around unzip not using the correct charset (LP: #580961).
+    ln -sf /usr/share/sch-scripts/unzip /usr/local/bin/ || true
     
     # Add group "teachers"
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
