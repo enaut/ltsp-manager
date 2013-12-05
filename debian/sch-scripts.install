@@ -1,7 +1,3 @@
 etc/*                   etc/
-initramfs-tools         usr/share/
-ltsp                    usr/share/
+share/*                 usr/share/
 sbin/*                  usr/sbin/
-sch-scripts             usr/share/
-sch-scripts.svg         usr/share/pixmaps/
-sch-scripts.desktop     usr/share/applications/

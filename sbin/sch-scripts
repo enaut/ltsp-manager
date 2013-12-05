@@ -6,6 +6,8 @@
 run_as_root() {
     if [ "$(id -u)" = 0 ]; then
         exec "$@"
+    elif [ -x /usr/bin/pkexec ]; then
+        exec pkexec "$@"
     elif [ -x /usr/bin/kdesudo ]; then
         exec kdesudo -- "$@"
     elif [ -x /usr/bin/gksudo ]; then
@@ -62,6 +64,14 @@ fi
 cd /usr/share/sch-scripts
 case "$1" in
     # help and version need to run without root
-    -h|--help|-v|--version) ./sch-scripts.py "$@" ;;
-    *) run_as_root ./sch-scripts.py -e "$(create_runas_script)" "$@" ;;
+    -h|--help|-v|--version)
+        exec ./sch-scripts.py "$@"
+        ;;
+    *)
+        if [ "$(id -u)" -eq 0 ]; then
+            exec ./sch-scripts.py "$@"
+        else
+            run_as_root /usr/sbin/sch-scripts -e "$(create_runas_script)" "$@"
+        fi
+        ;;
 esac
