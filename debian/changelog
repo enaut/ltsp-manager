@@ -1,3 +1,12 @@
+sch-scripts (12.04.13) precise; urgency=low
+
+  * Μετακίνηση των κουμπιών των παραθύρων στα δεξιά και για την 14.04.
+  * Χρήση του pkexec για την εκκίνηση των sch-scripts.
+  * Χρήση των ENCRYPTED_SWAP=False, NBD_RAM_THRESHOLD=2222 ως προεπιλογή.
+  * Ανίχνευση του σωστής κωδικοσελίδας DOS για το unzip (LP: #580961).
+  * Αύξηση του ελέγχου για επανεκκίνηση του gnome-panel στα 15 δευτερόλεπτα.
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sun, 08 Dec 2013 08:46:38 +0200
+
 sch-scripts (12.04.12) precise; urgency=low
 
   * Αποφυγή προβλημάτων εκκίνησης με κάρτες sis190 (LP: #345374).
