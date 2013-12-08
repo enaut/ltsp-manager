@@ -7,7 +7,8 @@ run_as_root() {
     if [ "$(id -u)" = 0 ]; then
         exec "$@"
     elif [ -x /usr/bin/pkexec ]; then
-        exec pkexec "$@"
+        # pkexec refuses to spawn tasks when PPID=1, so we can't use exec.
+        pkexec "$@"
     elif [ -x /usr/bin/kdesudo ]; then
         exec kdesudo -- "$@"
     elif [ -x /usr/bin/gksudo ]; then
@@ -69,6 +70,13 @@ case "$1" in
         ;;
     *)
         if [ "$(id -u)" -eq 0 ]; then
+            # When pkexec is used, provide SUDO* variables for compatibility.
+            if [ -n "$PKEXEC_UID" ]; then
+                IFS=: read SUDO_USER dummy SUDO_UID SUDO_GID dummy <<EOF
+$(getent passwd "$PKEXEC_UID")
+EOF
+                export SUDO_USER SUDO_UID SUDO_GID
+            fi
             exec ./sch-scripts.py "$@"
         else
             run_as_root /usr/sbin/sch-scripts -e "$(create_runas_script)" "$@"
