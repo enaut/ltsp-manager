@@ -1,0 +1,13 @@
+# http://en.wikipedia.org/wiki/RC4 is an SSH cipher which is more than 2 times 
+# faster than the default aes128-ctr.
+if [ -z "$LDM_SSHOPTIONS" ]; then
+    set_lts_var LDM_SSHOPTIONS "-o Ciphers=arcfour128"
+fi
+
+# Encrypted swap is slower, wastes RAM, and corrupts any local swap UUIDs.
+# No need to call "set_lts_var", we just want to bypass 35encrypted-swap.
+ENCRYPT_SWAP=${ENCRYPT_SWAP:-False}
+
+# Fat clients with 1 GB RAM should get NBD_SWAP too.
+# This can be removed when it's applied upstream.
+NBD_RAM_THRESHOLD=${NBD_RAM_THRESHOLD:-2222}
