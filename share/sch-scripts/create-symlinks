@@ -133,6 +133,9 @@ if [ $# -ne 0 ]; then
     esac
 fi
 
+# Don't run on LTSP clients. See /usr/share/ldm/rc.d/X50-create-symlinks
+test -n "$LTSP_CLIENT" && exit 0
+
 . /etc/default/shared-folders
 # For fat clients, try to get a newer version of SHARE_GROUPS by using
 # the LOCALAPPS_EXTRA_MOUNT mount.

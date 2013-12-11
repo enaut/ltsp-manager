@@ -1,0 +1,3 @@
+# On LTSP clients, run create-symlinks on the server
+
+ssh -S "$LDM_SOCKET" "$LDM_SERVER" /usr/share/sch-scripts/create-symlinks &
