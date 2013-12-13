@@ -1,3 +1,11 @@
+sch-scripts (12.04.14) precise; urgency=low
+
+  * Δημιουργία των συντομεύσεων των κοινόχρηστων φακέλων μέσω ssh.
+  * Αύξηση της προτεραιότητας του dh_installgsettings σε 20.
+  * Πρώτη συμβατή έκδοση με 14.04.
+
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 13 Dec 2013 12:24:05 +0200
+
 sch-scripts (12.04.13) precise; urgency=low
 
   * Μετακίνηση των κουμπιών των παραθύρων στα δεξιά και για την 14.04.
