@@ -72,7 +72,10 @@ install() {
 
     # Work around unzip not using the correct charset (LP: #580961).
     ln -sf /usr/share/sch-scripts/unzip /usr/local/bin/ || true
-    
+
+    # Specify better default apps for some mime types.
+    ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
+
     # Add group "teachers"
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
     if [ -n "$TEACHERS" ]; then
