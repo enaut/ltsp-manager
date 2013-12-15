@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2012-2013 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 import subprocess
@@ -78,10 +78,8 @@ class Gui:
         # TODO: Maybe throw an error message if not os.path.isfile(filename)
 
     def run_as_sudo_user(self, cmd):
-        if runas_user_script is None:
-            sys.stderr.write("Please use /sbin/sch-scripts, not sch-scripts.py\n")
-        else:
-            subprocess.Popen(['/bin/sh', runas_user_script] + cmd)
+        print('EXECUTE:\t' + '\t'.join(cmd))
+        sys.stdout.flush()
 
     def open_link(self, link):
         self.run_as_sudo_user(['xdg-open', link])
@@ -486,26 +484,20 @@ def usage():
 
 def print_version():
     print """sch-scripts %s
-Copyright (C) 2009-2012 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
+Copyright (C) 2009-2013 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
 Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/gpl.html>.
 
 Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.""" % version.__version__
 
 if __name__ == '__main__':
-    runas_user_script=None
     if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):
         print_version()
         sys.exit(0)
     elif len(sys.argv) == 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
         usage()
         sys.exit(0)
-    elif len(sys.argv) == 3 and (sys.argv[1] == '-e'):
-        runas_user_script=sys.argv[2]
     elif len(sys.argv) >= 2:
         usage()
         sys.exit(1)
     Gui()
     Gtk.main()
-# TODO: put these in on_mainwin_destroy
-#    if runas_user_script != None:
-#        os.unlink(runas_user_script)

@@ -1,60 +1,26 @@
 #!/bin/sh
 # Wrapper to execute sch-scripts as root.
-# Copyright (C) 2012 Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2012-2013 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-run_as_root() {
-    if [ "$(id -u)" = 0 ]; then
-        exec "$@"
-    elif [ -x /usr/bin/pkexec ]; then
-        # pkexec refuses to spawn tasks when PPID=1, so we can't use exec.
-        pkexec "$@"
-    elif [ -x /usr/bin/kdesudo ]; then
-        exec kdesudo -- "$@"
-    elif [ -x /usr/bin/gksudo ]; then
-        exec gksudo -- "$@"
-    else
-        if [ -x /usr/bin/sudo ]; then
-            set sudo -- "$@"
-        elif [ -x /bin/su ]; then
-            set su -c "$*"
-        fi
-        if [ -t 0 ]; then
-            exec "$@"
-        elif [ -x run-in-terminal ]; then
-            exec ./run-in-terminal "$@"
+# Read a tab-separated command from stdin and execute it
+# but only if it starts from EXECUTE:
+exec_input() {
+    local tab old_ifs cmd
+
+    tab=$(printf '\t')
+    old_ifs=$IFS
+    while read -r cmd; do
+        IFS=$tab
+        set $cmd
+        IFS="$old_ifs"
+        if [ "$1" = "EXECUTE:" ]; then
+            shift
+            "$@" &
         else
-            echo "Could not find gksudo or kdesudo in order to run: $*" >&2
-            exit 1
+            printf "Ignoring input: %s\n" "$*" >&2
         fi
-    fi
-}
-
-# /usr/sbin/sch-scripts is usually run from a user account without sudo.
-# That then launches `sudo sch-scripts.py`, so the python script doesn't have
-# access to the user's environment, which is needed e.g. to open the help
-# menu URLs in the user's browser.
-# kdesudo doesn't preserve the environment, so they need to be passed in some
-# other way.
-# This doesn't work either: env | gksudo -- sh -c 'cat - > /tmp/env'.
-# So we create in /tmp a shell script that contains all the environment and
-# we pass it to sch-scripts.py with `-e /tmp/file`.
-create_runas_script() {
-    local script
-
-    script=$(mktemp)
-    cat > "$script" <<EOF
-#!/bin/sh
-# Helper script that contains the user environment in order for sch-scripts
-# to be able to launch processes as the user that launched it.
-
-if [ "\$(id -u)" = 0 ] && [ $(id -u) -ne 0 ]; then
-    exec sudo -u "#$(id -u)" /bin/sh "\$0" "\$@"
-fi
-$(export -p)
-exec "\$@"
-EOF
-    echo "$script"
+    done
 }
 
 if [ ! -x /usr/share/sch-scripts/sch-scripts.py ]; then
@@ -69,17 +35,28 @@ case "$1" in
         exec ./sch-scripts.py "$@"
         ;;
     *)
-        if [ "$(id -u)" -eq 0 ]; then
-            # When pkexec is used, provide SUDO* variables for compatibility.
-            if [ -n "$PKEXEC_UID" ]; then
-                IFS=: read SUDO_USER dummy SUDO_UID SUDO_GID dummy <<EOF
+        if [ "$(id -u)" -ne 0 ]; then
+            pkexec /usr/sbin/sch-scripts "$@" | exec_input
+# The above unfortunately wastes one extra shell.
+# mkfifo works but it makes the code a bit complicated.
+# This doesn't work, it waits until sch-scripts is closed to evaluate its output
+#            exec_input <<EOF
+#$(pkexec /usr/sbin/sch-scripts "$@")
+#EOF
+        else
+            # sch-scripts rely on some SUDO* variables, set them if unset
+            if [ -n "$PKEXEC_UID" ] && [ -z "$SUDO_USER" ]; then
+                IFS=":" read SUDO_USER dummy SUDO_UID SUDO_GID dummy <<EOF
 $(getent passwd "$PKEXEC_UID")
 EOF
                 export SUDO_USER SUDO_UID SUDO_GID
             fi
-            exec ./sch-scripts.py "$@"
-        else
-            run_as_root /usr/sbin/sch-scripts -e "$(create_runas_script)" "$@"
+            if [ -n "$PKEXEC_UID" ]; then
+                exec ./sch-scripts.py "$@"
+            else
+                # This means that the user ran sudo sch-scripts without pkexec
+                ./sch-scripts.py "$@" | exec_input
+            fi
         fi
         ;;
 esac
