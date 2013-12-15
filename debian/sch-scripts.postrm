@@ -16,15 +16,18 @@ set -e
 # <new-postrm> abort-upgrade <old-version>
 
 remove() {
-    local - file
+    local - link
 
     set +e
     if [ -f /etc/ssh/sshd_config ]; then
         sed 's/MaxStartups 20:30:60/#MaxStartups 10:30:60/' -i /etc/ssh/sshd_config
     fi
-    for file in /usr/local/bin/gnome-panel /usr/local/bin/unzip; do
-        if [ -h "$file" ]; then
-            rm -f "$file"
+    for link in /usr/local/bin/gnome-panel /usr/local/bin/unzip \
+        /usr/lib/firefox/defaults/pref/sch-scripts.js \
+        /usr/local/share/applications/mimeapps.list
+    do
+        if [ -h "$link" ]; then
+            rm -f "$link"
         fi
     done
 }

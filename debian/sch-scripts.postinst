@@ -73,6 +73,11 @@ install() {
     # Work around unzip not using the correct charset (LP: #580961).
     ln -sf /usr/share/sch-scripts/unzip /usr/local/bin/ || true
 
+    # Work around apturl not working after firefox 16 (LP: #1261178).
+    if [ -d /usr/lib/firefox/defaults/pref ]; then
+        ln -sf /usr/share/sch-scripts/sch-scripts.js /usr/lib/firefox/defaults/pref/ || true
+    fi
+
     # Specify better default apps for some mime types.
     ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
 
