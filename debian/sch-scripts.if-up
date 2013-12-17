@@ -28,6 +28,15 @@ if [ -x /sbin/ethtool ]; then
     if ethtool --pause $IFACE autoneg off rx off >/dev/null 2>&1; then
         $logger -t sch-scripts -p syslog.info "Successfully disabled flow control for interface $IFACE"
     else
-        $logger -t sch-scripts -p syslog.info "Didn't disable flow control for interface $IFACE"
+        $logger -t sch-scripts -p syslog.info "Failed to disable flow control for interface $IFACE"
     fi
+fi
+
+read dummy dummy dummy ip dummy <<EOF
+$(ip -oneline -family inet addr show dev "$IFACE" 2>/dev/null || true)
+EOF
+if [ "$ip" = "192.168.67.1/24" ]; then
+    sysctl net.ipv4.ip_forward=0
+    iptables -t nat -D POSTROUTING -s 192.168.67.0/24 -j MASQUERADE
+    $logger -t sch-scripts -p syslog.info "Enabled IP forwarding/masquerading for interface $IFACE"
 fi
