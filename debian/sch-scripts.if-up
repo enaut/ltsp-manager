@@ -1,4 +1,4 @@
-#!/bin/sh
+	#!/bin/sh
 # Disable flow control. For more info, see
 # https://help.ubuntu.com/community/UbuntuLTSP/FlowControl
 
@@ -37,6 +37,6 @@ $(ip -oneline -family inet addr show dev "$IFACE" 2>/dev/null || true)
 EOF
 if [ "$ip" = "192.168.67.1/24" ]; then
     sysctl net.ipv4.ip_forward=0
-    iptables -t nat -D POSTROUTING -s 192.168.67.0/24 -j MASQUERADE
+    iptables -s 192.168.67.0/24 -t nat -A POSTROUTING -j MASQUERADE
     $logger -t sch-scripts -p syslog.info "Enabled IP forwarding/masquerading for interface $IFACE"
 fi
