@@ -12,8 +12,3 @@ if [ "$LTSP_FATCLIENT" != "True" ]; then
 fi
 
 "/usr/bin/$prog" "$@" &
-sleep 15
-if ! pgrep -nx indicator-sound -U $USER >/dev/null 2>&1; then
-    echo "$(date) - restarting $prog" >> $HOME/.xsession-errors
-    exec "/usr/bin/$prog" --replace
-fi
