@@ -29,7 +29,7 @@
         <property name="halign">end</property>
         <property name="hexpand">True</property>
         <property name="model">method_lstore</property>
-        <property name="active">3</property>
+        <property name="active">4</property>
         <child>
           <object class="GtkCellRendererText" id="method_cellrenderertext"/>
           <attributes>
@@ -605,6 +605,10 @@
       </row>
       <row>
         <col id="0" translatable="yes">Χειροκίνητα</col>
+        <col id="1">True</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">LTSP (προϋποθέτει 2 κάρτες δικτύου)</col>
         <col id="1">True</col>
       </row>
       <row>

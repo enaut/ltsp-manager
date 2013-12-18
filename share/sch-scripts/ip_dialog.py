@@ -238,6 +238,7 @@ class Ip_Dialog:
         self.interfaces = []
         self.timeout = 0
         self.ts_dns = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
+        self.ltsp_ips = ['192.168.67.1', '255.255.255.0', '0.0.0.0']
         self.builder = Gtk.Builder()
         self.builder.add_from_file('ip_dialog.ui')
         self.builder.connect_signals(self)
@@ -282,7 +283,7 @@ class Ip_Dialog:
         page.ip_entry.connect('changed', self.on_ip_entry_changed, interface)
         page.method_entry.connect('changed', self.on_method_entry_changed, interface)
         page.fill_entries(interface)
-        if Gdk.Screen.get_default().get_height() <= 600:
+        if Gdk.Screen.get_default().get_height() <= 768:
             scrolledwindow = Gtk.ScrolledWindow()
             scrolledwindow.add_with_viewport(page.grid)
             scrolledwindow.show()
@@ -296,7 +297,6 @@ class Ip_Dialog:
 
     def set_default(self):
         #By default active is 3
-        #TODO: Add if statenent for connection sharing (non active connection)
         carrier_connect = [interface.page for interface in self.interfaces \
                            if interface.carrier == 1]
         if len(carrier_connect) == 0:
@@ -308,9 +308,13 @@ class Ip_Dialog:
             else:
                 carrier_connect[0].method_entry.set_active(1)
             self.main_dlg_notebook.reorder_child(carrier_connect[0].grid, 0)
+
+        if len(self.interfaces) < 2:
+            for interface in self.interfaces:
+                interface.page.method_entry.get_model()[3][1] = False
+                
         self.main_dlg_notebook.set_current_page(0) 
-        #TODO: Add the sharing connection method to carrier_connect[1]      
-      
+        
     def watch_nm(self, interest_interfaces):
         self.timeout += 1000
         break_bool = True
@@ -361,6 +365,14 @@ class Ip_Dialog:
 ## Callbacks
 
     def on_method_entry_changed(self, method_entry, interface):
+        reset_ltsp_method = True
+        for l_interface in self.interfaces:
+            if l_interface.page.method_entry.get_active() == 3:
+                    reset_ltsp_method = False
+
+        if reset_ltsp_method:
+            for l_interface in self.interfaces:
+                l_interface.page.method_entry.get_model()[3][1] = True         
         if interface.page.method_entry.get_active() == 0:
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
@@ -392,6 +404,15 @@ class Ip_Dialog:
             interface.dnss = [dns for dns in self.ts_dns]
             interface.page.fill_entries(interface)
         elif interface.page.method_entry.get_active() == 3:
+            interface.page.ip_entry.set_sensitive(False)
+            interface.page.auto_checkbutton.set_sensitive(True)
+            interface.ip, interface.subnet, interface.route = self.ltsp_ips
+            interface.dnss = [dns for dns in self.ts_dns]
+            interface.page.fill_entries(interface)
+            for l_interface in self.interfaces:
+                if l_interface != interface:
+                    l_interface.page.method_entry.get_model()[3][1] = False
+        elif interface.page.method_entry.get_active() == 4:
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(False)
             interface.set_ips()
@@ -425,7 +446,7 @@ class Ip_Dialog:
         new_connections = []
         replace_connections = []
         interest_interfaces = [interface for interface in self.interfaces \
-                           if interface.page.method_entry.get_active()!=3]
+                           if interface.page.method_entry.get_active()!=4]
 
         for interface in interest_interfaces:
             bytes = [unhexlify(v) for v in interface.mac.split(":")]
@@ -451,7 +472,8 @@ class Ip_Dialog:
                 ipv4 = dbus.Dictionary({'method':'auto',
                                 'dns':dns,
                                 'ignore-auto-dns':1})
-            elif interface.page.method_entry.get_active() == 2: 
+            elif interface.page.method_entry.get_active() == 2 or \
+                    interface.page.method_entry.get_active() == 3: 
                 ip = string_to_int32(interface.page.ip_entry.get_text().strip())
                 subnet = subnet_to_bits(interface.page.subnet_entry.get_text().strip())
                 route = string_to_int32(interface.page.route_entry.get_text().strip())
