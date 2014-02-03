@@ -436,7 +436,7 @@ class Gui:
         self.open_link('https://answers.launchpad.net/sch-scripts')
     
     def on_helpdesk_ticket_activate(self, widget):
-        self.open_link('http://helpdesk.sch.gr/ticketnew_user.php?category_id=5017')
+        self.open_link('http://helpdesk.sch.gr/ticketnew_user.php?category_id=9017')
     
     def on_mi_irc_activate(self, widget):
         user = os.getenv("SUDO_USER")
