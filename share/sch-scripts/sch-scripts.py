@@ -6,7 +6,8 @@
 import subprocess
 import sys
 import os
-from gi.repository import Gtk
+import signal
+from gi.repository import Gtk, GObject
 
 import version
 import libuser
@@ -44,6 +45,9 @@ class Gui:
         self.groups_filter = self.builder.get_object('groups_filter')
         self.users_model = self.builder.get_object('users_store')
         self.groups_model = self.builder.get_object('groups_store')
+
+        #Initialize listening signal
+        signal.signal(signal.SIGUSR1, self.sigusr1_handler)
 
         self.show_private_groups = False
         self.show_system_groups = False
@@ -95,6 +99,16 @@ class Gui:
         paths = selection.get_selected_rows()[1]
         selected = [self.groups_sort[path][0] for path in paths]
         return selected
+
+## Signup signal handler functions
+
+    def sigusr1_handler(self, signum, frame):
+        self.repopulate_treeviews()
+
+    def signup_polling(self, process):
+        if process.poll() is None:
+            return True
+        return False
 
 ## Groups and users treeviews
 
@@ -235,7 +249,8 @@ class Gui:
 ## File menu
 
     def on_mi_signup_activate(self, widget):
-        subprocess.Popen(['./signup_server.py'])
+        process = subprocess.Popen(['./signup_server.py'])
+        GObject.timeout_add(1000, self.signup_polling, process)
 
     def on_mi_new_users_activate(self, widget):
         create_users.NewUsersDialog(self.system, self.sf, self.repopulate_treeviews)
