@@ -82,6 +82,7 @@ install() {
     fi
 
     # Specify better default apps for some mime types.
+    mkdir -p /usr/local/share/applications
     ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
 
     # Add group "teachers"
