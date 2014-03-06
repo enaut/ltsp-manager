@@ -323,7 +323,20 @@ class Gui:
         ip_dialog.Ip_Dialog(self.main_window)
 
     def on_mi_ltsp_update_image_activate(self, widget):
-        subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
+        message = "Θέλετε σίγουρα να προχωρήσετε στην δημοσίευση του εικονικού δίσκου;"
+        second_message = "Ανάλογα με την ταχύτητα του επεξεργαστή σας και το μέγεθος του δίσκου σας, αυτή η διαδικασία μπορεί να χρειαστεί γύρω στα 10 λεπτά. Στη συνέχεια (επαν)εκκινήστε τους σταθμούς εργασίας."
+        dlg = dialogs.AskDialog(message)
+        dlg.format_secondary_text(second_message)
+        response = dlg.showup()
+        if response == Gtk.ResponseType.YES:        
+            subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
+
+    def on_mi_ltsp_revert_image_activate(self, widget):
+        message = "Θέλετε σίγουρα να προχωρήσετε στην επαναφορά του εικονικού δίσκου σε προηγούμενη έκδοση;"
+        dlg = dialogs.AskDialog(message)
+        response = dlg.showup()
+        if response == Gtk.ResponseType.YES: 
+            subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--revert', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
         self.edit_file('/var/lib/tftpboot/ltsp/i386/lts.conf')

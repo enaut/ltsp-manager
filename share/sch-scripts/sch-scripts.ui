@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkTreeModelSort" id="groups_sort">
+    <property name="model">groups_filter</property>
+  </object>
   <object class="GtkListStore" id="groups_store">
     <columns>
       <!-- column-name instance -->
@@ -13,9 +16,6 @@
   </object>
   <object class="GtkTreeModelFilter" id="groups_filter">
     <property name="child_model">groups_store</property>
-  </object>
-  <object class="GtkTreeModelSort" id="groups_sort">
-    <property name="model">groups_filter</property>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
@@ -129,14 +129,40 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="mi_ltsp_update_image">
+                      <object class="GtkMenuItem" id="mi_ltsp_image">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Δημοσιεύει ένα αντίγραφο του δίσκου του εξυπηρετητή στο δίκτυο</property>
-                        <property name="label" translatable="yes">Δημοσίευση εικονικού δίσκου</property>
+                        <property name="label" translatable="yes">Εικονικός δίσκος</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_mi_ltsp_update_image_activate" swapped="no"/>
+                        <child type="submenu">
+                          <object class="GtkMenu" id="mn_ltsp_image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_update_image">
+                                <property name="use_action_appearance">False</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Δημοσιεύει ένα αντίγραφο του δίσκου του εξυπηρετητή στο δίκτυο</property>
+                                <property name="label" translatable="yes">Δημοσίευση</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mi_ltsp_update_image_activate" swapped="no"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_revert_image">
+                                <property name="use_action_appearance">False</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Επαναφέρει τον εικονικό δίσκο του εξυπηρετητή στην προηγούμενη έκδοση</property>
+                                <property name="label" translatable="yes">Επαναφορά</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mi_ltsp_revert_image_activate" swapped="no"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
@@ -959,6 +985,12 @@
       </object>
     </child>
   </object>
+  <object class="GtkTreeModelFilter" id="users_filter">
+    <property name="child_model">users_store</property>
+  </object>
+  <object class="GtkTreeModelSort" id="users_sort">
+    <property name="model">users_filter</property>
+  </object>
   <object class="GtkListStore" id="users_store">
     <columns>
       <!-- column-name instance -->
@@ -996,11 +1028,5 @@
       <!-- column-name Expire -->
       <column type="gint"/>
     </columns>
-  </object>
-  <object class="GtkTreeModelFilter" id="users_filter">
-    <property name="child_model">users_store</property>
-  </object>
-  <object class="GtkTreeModelSort" id="users_sort">
-    <property name="model">users_filter</property>
   </object>
 </interface>
