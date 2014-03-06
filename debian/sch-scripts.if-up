@@ -1,4 +1,4 @@
-	#!/bin/sh
+#!/bin/sh
 # Disable flow control. For more info, see
 # https://help.ubuntu.com/community/UbuntuLTSP/FlowControl
 
