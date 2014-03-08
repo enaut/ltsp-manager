@@ -145,7 +145,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Δημοσιεύει ένα αντίγραφο του δίσκου του εξυπηρετητή στο δίκτυο</property>
-                                <property name="label" translatable="yes">Δημοσίευση</property>
+                                <property name="label" translatable="yes">Δημοσίευση...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_ltsp_update_image_activate" swapped="no"/>
                               </object>
@@ -156,7 +156,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Επαναφέρει τον εικονικό δίσκο του εξυπηρετητή στην προηγούμενη έκδοση</property>
-                                <property name="label" translatable="yes">Επαναφορά</property>
+                                <property name="label" translatable="yes">Επαναφορά...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_ltsp_revert_image_activate" swapped="no"/>
                               </object>
@@ -243,7 +243,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Αφαιρεί τα αρχεία εγκατάστασης .deb των πακέτων που έχετε ήδη εγκαταστήσει</property>
-                                <property name="label" translatable="yes">Καθαρισμός μνήμης πακέτων</property>
+                                <property name="label" translatable="yes">Καθαρισμός μνήμης πακέτων...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_apt_get_clean_activate" swapped="no"/>
                               </object>
