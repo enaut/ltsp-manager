@@ -353,7 +353,7 @@ class Ip_Dialog:
             method = interface.page.method_entry.get_active()
             if not re.match(IP_REG, ip) and ip != 'Δεν βρέθηκε διεύθυνση':
                 check_ip = False
-            if method != 3:
+            if method != 4:
                 check_method = True
 
         if check_ip and check_method:
@@ -370,7 +370,7 @@ class Ip_Dialog:
             if l_interface.page.method_entry.get_active() == 3:
                     reset_ltsp_method = False
 
-        if reset_ltsp_method:
+        if reset_ltsp_method and len(self.interfaces) >= 2:
             for l_interface in self.interfaces:
                 l_interface.page.method_entry.get_model()[3][1] = True         
         if interface.page.method_entry.get_active() == 0:
