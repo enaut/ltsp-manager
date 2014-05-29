@@ -136,7 +136,7 @@ class UserForm(object):
         return Gtk.STOCK_DIALOG_ERROR
     
     def to_alpha(self, s):
-        return ''.join(c for c in s if c.isalpha())
+        return ''.join(c for c in s.decode('utf-8') if c.isalpha())
 
     def get_suggestions(self, name):       
         tokens = []
@@ -148,12 +148,12 @@ class UserForm(object):
             return []
         sug = []
         _append = lambda x: sug.append(x) if x not in sug else False # FIXME? heh
-        _append(iso843.strip_accents(iso843.transcript(tokens[0] + ''.join(tok[0] for tok in tokens[1:])).decode('utf-8')))
-        _append(iso843.strip_accents(iso843.transcript(''.join(tok[0] for tok in tokens[:-1]) + tokens[-1]).decode('utf-8')))
-        _append(iso843.strip_accents(iso843.transcript(''.join(tok[0] for tok in tokens[1:]) + tokens[0]).decode('utf-8')))
-        _append(iso843.strip_accents(iso843.transcript(tokens[-1] + ''.join(tok[0] for tok in tokens[:-1])).decode('utf-8')))
-        _append(iso843.strip_accents(iso843.transcript(tokens[-1]).decode('utf-8')))
-        _append(iso843.strip_accents(iso843.transcript(tokens[0]).decode('utf-8')))
+        _append(iso843.transcript(tokens[0] + ''.join(tok[0] for tok in tokens[1:]), False))
+        _append(iso843.transcript(''.join(tok[0] for tok in tokens[:-1]) + tokens[-1], False))
+        _append(iso843.transcript(''.join(tok[0] for tok in tokens[1:]) + tokens[0], False))
+        _append(iso843.transcript(tokens[-1] + ''.join(tok[0] for tok in tokens[:-1]), False))
+        _append(iso843.transcript(tokens[-1], False))
+        _append(iso843.transcript(tokens[0], False))
         
         return sug
     
@@ -161,6 +161,7 @@ class UserForm(object):
         name = widget.get_text()
         icon = self.get_icon(re.match(self.connection.realname_regex(), name.decode('utf-8'), re.UNICODE))
         self.username_combo.remove_all()
+        self.username_entry.set_text('')
         sug = self.get_suggestions(name)
         sug = [s for s in sug if re.match(self.connection.username_regex(), s.decode('utf-8'), re.UNICODE) and not self.connection.user_exists(s)]
         if sug:
