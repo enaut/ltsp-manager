@@ -10,7 +10,7 @@ import libuser
 import config
 
 class UserForm(object):
-    def __init__(self, system, refresh=None):
+    def __init__(self, system):
         self.system = system
         self.mode = None
         self.builder = Gtk.Builder()
@@ -18,8 +18,6 @@ class UserForm(object):
         
         self.roles = {i : config.parser.get('Roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('Roles')}
         self.selected_role = None
-        
-        self.refresh = refresh #OMG FIXME
         
         self.dialog = self.builder.get_object('dialog')
         self.username = self.builder.get_object('username_entry')
@@ -312,8 +310,8 @@ class UserForm(object):
         self.dialog.destroy()
          
 class NewUserDialog(UserForm):
-    def __init__(self, system, refresh):
-        super(NewUserDialog, self).__init__(system, refresh)
+    def __init__(self, system):
+        super(NewUserDialog, self).__init__(system)
         self.mode = 'new'
         self.builder.connect_signals(self)
         
@@ -353,12 +351,11 @@ class NewUserDialog(UserForm):
         self.system.add_user(user)
         if self.builder.get_object('locked_account_check').get_active():
             self.system.lock_user(user)
-        self.refresh()
         self.dialog.destroy()
     
 class EditUserDialog(UserForm):
-    def __init__(self, system, user, refresh):
-        super(EditUserDialog, self).__init__(system, refresh)
+    def __init__(self, system, user):
+        super(EditUserDialog, self).__init__(system)
         self.mode = 'edit'
         self.user = user
         self.builder.connect_signals(self)
@@ -426,7 +423,6 @@ class EditUserDialog(UserForm):
         self.system.update_user(username, self.user)
         if self.builder.get_object('locked_account_check').get_active():
             self.system.lock_user(self.user)
-        self.refresh()
         self.dialog.destroy()
         
 class ReviewUserDialog(UserForm):

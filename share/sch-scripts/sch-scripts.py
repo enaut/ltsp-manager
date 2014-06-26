@@ -3,11 +3,14 @@
 # Copyright (C) 2012-2013 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
+from twisted.internet import gtk3reactor
+gtk3reactor.install()
+
 import subprocess
 import sys
 import os
-import signal
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk
+from twisted.internet import reactor, defer
 
 import version
 import libuser
@@ -46,9 +49,6 @@ class Gui:
         self.users_model = self.builder.get_object('users_store')
         self.groups_model = self.builder.get_object('groups_store')
 
-        #Initialize listening signal
-        signal.signal(signal.SIGUSR1, self.sigusr1_handler)
-
         self.show_private_groups = False
         self.show_system_groups = False
         self.builder.get_object('mi_show_private_groups').set_active(self.conf.getboolean('GUI', 'show_private_groups'))
@@ -73,6 +73,9 @@ class Gui:
             menuitem.set_active(title in visible)
             mn_view_columns.append(menuitem)
         self.populate_treeviews()
+
+        self.queue = []
+        self.system.connect_event(self.on_libuser_changed)
         self.main_window.show_all()
 
 ## General helper functions
@@ -100,16 +103,19 @@ class Gui:
         selected = [self.groups_sort[path][0] for path in paths]
         return selected
 
-## Signup signal handler functions
+## INotify
 
-    def sigusr1_handler(self, signum, frame):
-        self.repopulate_treeviews()
-
-    def signup_polling(self, process):
-        if process.poll() is None:
-            return True
-        return False
-
+    def on_libuser_changed(self, event):
+        self.queue.append(event)
+        d = defer.Deferred()
+        reactor.callLater(1, d.callback, len(self.queue))
+        d.addCallback(self.check_libuser_events)
+            
+    def check_libuser_events(self, len_queue):
+        if len_queue == len(self.queue): 
+            self.queue = []
+            self.repopulate_treeviews()
+    
 ## Groups and users treeviews
 
     def populate_treeviews(self):
@@ -129,7 +135,6 @@ class Gui:
         # Clear and refill the treeviews
         self.users_model.clear()
         self.groups_model.clear()
-        self.system.reload()
         self.populate_treeviews()
 
         # Reselect the previously selected groups and users, if possible
@@ -230,10 +235,10 @@ class Gui:
             return True
 
     def on_users_treeview_row_activated(self, widget, path, column):
-        user_form.EditUserDialog(self.system, widget.get_model()[path][0], self.repopulate_treeviews)
+        user_form.EditUserDialog(self.system, widget.get_model()[path][0])
 
     def on_groups_treeview_row_activated(self, widget, path, column):
-        group_form.EditGroupDialog(self.system, self.sf, widget.get_model()[path][0], self.repopulate_treeviews)
+        group_form.EditGroupDialog(self.system, self.sf, widget.get_model()[path][0])
     
     def on_unselect_all_groups_clicked(self, widget):
         self.groups_tree.get_selection().unselect_all()
@@ -249,11 +254,12 @@ class Gui:
 ## File menu
 
     def on_mi_signup_activate(self, widget):
-        process = subprocess.Popen(['./signup_server.py'])
-        GObject.timeout_add(1000, self.signup_polling, process)
-
+        subprocess.Popen(['./signup_server.py'])
+        
+    #FIXME: Maybe use notify /etc/group then self.populate_treeviews not need to 
+    #update user groups for shared folder library
     def on_mi_new_users_activate(self, widget):
-        create_users.NewUsersDialog(self.system, self.sf, self.repopulate_treeviews)
+        create_users.NewUsersDialog(self.system, self.sf)
     
     def on_mi_import_passwd_activate(self, widget):
         chooser = Gtk.FileChooserDialog(title="Επιλέξτε το αρχείο passwd προς εισαγωγή", 
@@ -281,7 +287,7 @@ class Gui:
                 dialogs.ErrorDialog(text, "Σφάλμα").showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users, self.repopulate_treeviews)
+            import_dialog.ImportDialog(new_users)
         else:
             chooser.destroy()
     
@@ -304,7 +310,7 @@ class Gui:
                 dialogs.ErrorDialog(text, "Σφάλμα").showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users, self.repopulate_treeviews)
+            import_dialog.ImportDialog(new_users)
         else:
             chooser.destroy()
     
@@ -379,10 +385,10 @@ class Gui:
 ## Users menu
 
     def on_mi_new_user_activate(self, widget):
-        user_form.NewUserDialog(self.system, self.repopulate_treeviews)
+        user_form.NewUserDialog(self.system)
 
     def on_mi_edit_user_activate(self, widget):
-        user_form.EditUserDialog(self.system, self.get_selected_users()[0], self.repopulate_treeviews)
+        user_form.EditUserDialog(self.system, self.get_selected_users()[0])
 
     def on_mi_delete_user_activate(self, widget):
         users = self.get_selected_users()
@@ -409,8 +415,7 @@ class Gui:
             rm_homes = rm_homes_check.get_active()
             for user in self.get_selected_users():
                 self.system.delete_user(user, rm_homes)
-            self.repopulate_treeviews()
-
+            
     def on_mi_remove_user_activate(self, widget):
         users = self.get_selected_users()
         groups = self.get_selected_groups()
@@ -426,15 +431,14 @@ class Gui:
         if response == Gtk.ResponseType.YES:
             for user in self.get_selected_users():
                 self.system.remove_user_from_groups(user, groups)
-            self.repopulate_treeviews()
 
 ## Groups menu
 
     def on_mi_new_group_activate(self, widget):
-        group_form.NewGroupDialog(self.system, self.sf, self.repopulate_treeviews)
+        group_form.NewGroupDialog(self.system, self.sf)
 
     def on_mi_edit_group_activate(self, widget):
-        group_form.EditGroupDialog(self.system, self.sf, self.get_selected_groups()[0], self.repopulate_treeviews)
+        group_form.EditGroupDialog(self.system, self.sf, self.get_selected_groups()[0])
 
     def on_mi_delete_group_activate(self, widget):
         groups = self.get_selected_groups()
@@ -450,7 +454,6 @@ class Gui:
             self.sf.remove(groups)
             for group in groups:
                 self.system.delete_group(group)
-            self.repopulate_treeviews()
 
 ## Help menu
 
@@ -528,4 +531,4 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
     Gui()
-    Gtk.main()
+    reactor.run()

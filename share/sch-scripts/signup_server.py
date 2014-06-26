@@ -3,7 +3,6 @@
 
 import os
 import time
-import signal
 from twisted.internet.protocol import Factory
 from twisted.protocols.basic import LineReceiver
 from twisted.internet import gtk3reactor
@@ -284,11 +283,9 @@ class UI:
                 reactor.stop()
         else:
             reactor.stop()
-        os.kill(os.getppid(), signal.SIGUSR1)
     
     def on_window_delete_event(self, widget, event):
         reactor.stop()
-        os.kill(os.getppid(), signal.SIGUSR1)
     
 
 def startServer(system, groups, roles):   

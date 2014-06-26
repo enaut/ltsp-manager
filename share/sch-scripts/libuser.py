@@ -1,4 +1,6 @@
 #-*- coding: utf-8 -*-
+from twisted.internet import inotify
+from twisted.python import filepath
 import pwd
 import spwd
 import grp
@@ -194,6 +196,18 @@ class Set(object):
         return gid
 
 
+class Event:
+    def __init__(self):
+        self.subscribers = []
+
+    def connect(self, func):
+        self.subscribers.append(func)
+
+    def notify(self, arg=None, *kwargs):
+        for subscriber in self.subscribers:
+            subscriber(arg)
+
+
 class System(Set):
     def __init__(self):
         super(System, self).__init__()
@@ -201,7 +215,19 @@ class System(Set):
         # These might be updated from shared_folders, if they're used
         self.teachers='teachers'
         self.share_groups=[self.teachers]
-    
+
+        # INotifier for /etc/group and /etc/shadow
+        self.system_event = Event()
+        self.libuser_event = Event()
+        self.system_event.connect(self.on_system_changed)
+        self.mask = inotify.IN_MODIFY
+        self.group_fp = filepath.FilePath('/etc/group')
+        self.shadow_fp = filepath.FilePath('/etc/shadow')
+        self.notifier = inotify.INotify()
+        self.notifier.startReading()
+        self.notifier._addWatch(self.group_fp, self.mask, False, [self.on_fd_changed])
+        self.notifier._addWatch(self.shadow_fp, self.mask, False, [self.on_fd_changed])
+
     def add_group(self, group):
         common.run_command(['groupadd', '-g', str(group.gid), group.name])
         for user in group.members.values():
@@ -343,6 +369,7 @@ class System(Set):
         self.users = {}
         self.groups = {}
         self.load()
+        self.libuser_event.notify('event')
             
     def get_valid_shells(self):
         try:
@@ -393,6 +420,21 @@ class System(Set):
         salt=''.join([ random.choice(alphabet) for i in range(8) ])
 
         return crypt.crypt(plainpw, "$6$%s$" % salt)
+
+    # Event functions
+    def connect_event(self, func):
+        self.libuser_event.connect(func)
+
+    # Event callback
+    def on_system_changed(self, event):
+        self.reload()
+
+    # INotifier callback
+    def on_fd_changed(self, ignored, filename, mask):
+        # For debugging use _watchpoint & _watchpaths
+        self.notifier.ignore(filename)
+        self.notifier._addWatch(filename, self.mask, False, [self.on_fd_changed])
+        self.system_event.notify(filename.path)
     
 system = System()
 

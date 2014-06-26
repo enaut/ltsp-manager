@@ -10,10 +10,9 @@ import config
 import shared_folders
 
 class NewUsersDialog:
-    def __init__(self, system, sf, refresh):
+    def __init__(self, system, sf):
         self.system = system
         self.sf = sf
-        self.refresh = refresh #FIXME
         
         self.glade = Gtk.Builder()
         self.glade.add_from_file('create_users.ui')
@@ -146,7 +145,6 @@ class NewUsersDialog:
             
             # Create shared folders
             if self.glade.get_object('shared_checkbutton').get_active():
-                self.refresh() # So shared_folders library is updated
                 for classn in self.classes:
                     while Gtk.events_pending():
                         Gtk.main_iteration()
@@ -195,7 +193,6 @@ class NewUsersDialog:
         #TODO self.glade.get_object('success_hbox').show()
         progressbar.set_text("Η διαδικασία ολοκληρώθηκε.")
         button_close.set_sensitive(True)
-        self.refresh()
 
     def on_progress_button_close_clicked(self, widget):
         self.dialog.destroy()

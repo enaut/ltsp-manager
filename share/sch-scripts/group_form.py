@@ -9,14 +9,12 @@ import libuser
 import shared_folders
 
 class GroupForm(object):
-    def __init__(self, system, sf, refresh):
+    def __init__(self, system, sf):
         self.system = system
         self.sf = sf
         #self.mode = None
         self.builder = Gtk.Builder()
         self.builder.add_from_file('group_form.ui')
-        
-        self.refresh = refresh #OMG FIXME
         
         self.dialog = self.builder.get_object('dialog')
         self.groupname = self.builder.get_object('name_entry')
@@ -98,9 +96,9 @@ class GroupForm(object):
         self.dialog.destroy()
     
 class NewGroupDialog(GroupForm):
-    def __init__(self, system, sf, refresh):
+    def __init__(self, system, sf):
         self.mode = 'new'
-        super(NewGroupDialog, self).__init__(system, sf, refresh)
+        super(NewGroupDialog, self).__init__(system, sf)
         self.builder.connect_signals(self)
         
         self.gid_entry.set_text(str(system.get_free_gid()))
@@ -113,16 +111,15 @@ class NewGroupDialog(GroupForm):
         members = {u[0].name : u[0] for u in self.users_store if u[1]}
         g = libuser.Group(name, gid, members)
         self.system.add_group(g)
-        self.refresh()
         if self.has_shared.get_active():
             self.sf.add([g.name])
         self.dialog.destroy()
 
 class EditGroupDialog(GroupForm):
-    def __init__(self, system, sf, group, refresh):
+    def __init__(self, system, sf, group):
         self.mode = 'edit'
         self.group = group
-        super(EditGroupDialog, self).__init__(system, sf, refresh)
+        super(EditGroupDialog, self).__init__(system, sf)
         self.builder.connect_signals(self)
         
         self.groupname.set_text(group.name)
@@ -179,5 +176,4 @@ class EditGroupDialog(GroupForm):
                 elif old_gid != self.group.gid:
                     self.sf.mount([self.group.name])
 
-        self.refresh()
         self.dialog.destroy()
