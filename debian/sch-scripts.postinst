@@ -55,11 +55,20 @@ install() {
     # Specify that the BIOS clock is not set to UTC, to match Windows.
     sed 's/^UTC=yes/UTC=no/' -i /etc/default/rcS
 
+    # Don't prompt for new lts releases until we're ready for them
+    sed 's/Prompt=lts/Prompt=never/' -i /etc/update-manager/release-upgrades
+
     # Set gnome-session-fallback as the default session.
-    if [ -f /usr/share/xsessions/gnome-fallback.desktop ] && 
-        ! grep -qs "user-session=gnome-fallback" /etc/lightdm/lightdm.conf
+    if [ -x /usr/sbin/lightdm ] &&
+        [ -f /usr/share/xsessions/gnome-fallback.desktop ]
     then
-        /usr/lib/lightdm/lightdm-set-defaults -s gnome-fallback
+        # Set the default session for 12.04.
+        # For 14.04 we ship a file in lightdm.conf.d instead.
+        if [ -x /usr/lib/lightdm/lightdm-set-defaults ] &&
+            ! grep -qs "user-session=gnome-fallback" /etc/lightdm/lightdm.conf
+        then
+            /usr/lib/lightdm/lightdm-set-defaults -s gnome-fallback
+        fi
         # Also workaround the keyboard layout problem for administrator
         if [ -n "$SUDO_USER" ]; then
             rm -f "/home/$SUDO_USER/.dmrc"
