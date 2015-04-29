@@ -4,6 +4,12 @@ if [ -z "$LDM_SSHOPTIONS" ]; then
     set_lts_var LDM_SSHOPTIONS "-o Ciphers=arcfour128"
 fi
 
+# Store the login password hash on fat clients, so that things like `sudo` work.
+# Note that local password changes are not propagated to the server.
+if [ -z "$LDM_PASSWORD_HASH" ]; then
+    set_lts_var LDM_PASSWORD_HASH True
+fi
+
 # Encrypted swap is slower, wastes RAM, and corrupts any local swap UUIDs.
 # No need to call "set_lts_var", we just want to bypass 35encrypted-swap.
 ENCRYPT_SWAP=${ENCRYPT_SWAP:-False}
