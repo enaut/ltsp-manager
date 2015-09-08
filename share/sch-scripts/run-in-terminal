@@ -78,6 +78,10 @@ add_repository()
     repo="$1"
 
     release="${release:-$(lsb_release -sc)}"
+    # Transform linuxmint names to respective ubuntu names
+    if [ -f "/usr/share/mintsources/$release/mintsources.conf" ]; then
+        release=$(sed -n 's/^base_codename=//p' "/usr/share/mintsources/$release/mintsources.conf")
+    fi
 
     # To get the repository parameters:
     # apt-key list
@@ -186,8 +190,12 @@ install_sch_scripts() {
     fi
 
     release=$(lsb_release -sc)
-    if [ "$release" != "precise" ]; then
-        die "Τα sch-scripts μπορούν να εγκατασταθούν μόνο σε Ubuntu 12.04 (Precise)."
+    # Transform linuxmint names to respective ubuntu names
+    if [ -f "/usr/share/mintsources/$release/mintsources.conf" ]; then
+        release=$(sed -n 's/^base_codename=//p' "/usr/share/mintsources/$release/mintsources.conf")
+    fi
+    if [ "$release" != "precise" ] && [ "$release" != "trusty" ]; then
+        die "Τα sch-scripts μπορούν να εγκατασταθούν μόνο σε LTS εκδόσεις του Ubuntu."
     fi
     # Remove the old repository filenames that contain "." instead of "_".
     rm -f /etc/apt/sources.list.d/ts.sch.gr*.list
