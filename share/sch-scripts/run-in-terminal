@@ -194,7 +194,7 @@ install_sch_scripts() {
     if [ -f "/usr/share/mintsources/$release/mintsources.conf" ]; then
         release=$(sed -n 's/^base_codename=//p' "/usr/share/mintsources/$release/mintsources.conf")
     fi
-    if [ "$release" != "precise" ] && [ "$release" != "trusty" ]; then
+    if [ "$release" != "precise" ] && [ "$release" != "trusty" ] && [ "$release" != "wily" ]; then
         die "Τα sch-scripts μπορούν να εγκατασταθούν μόνο σε LTS εκδόσεις του Ubuntu."
     fi
     # Remove the old repository filenames that contain "." instead of "_".
@@ -229,8 +229,8 @@ install_sch_scripts() {
 }
 
 # First check if we need to spawn an x-terminal-emulator
-if [ "$SPAWNED_TERM" != true ] && [ ! -t 0 ] &&
-    xprop -root somevar >/dev/null 2>&1
+if [ "$SPAWNED_TERM" != true ] && { [ ! -t 0 ] || [ ! -t 1 ] ;} &&
+    xmodmap -n >/dev/null 2>&1
 then
     title=${1##*/}
     case "$title" in
