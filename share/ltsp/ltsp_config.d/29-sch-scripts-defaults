@@ -1,7 +1,8 @@
 # http://en.wikipedia.org/wiki/RC4 is an SSH cipher which is more than 2 times 
 # faster than the default aes128-ctr.
+# But it's been deprecated in newer openssh versions, so put alternatives.
 if [ -z "$LDM_SSHOPTIONS" ]; then
-    set_lts_var LDM_SSHOPTIONS "-o Ciphers=arcfour128"
+    set_lts_var LDM_SSHOPTIONS "-o Ciphers=arcfour128,chacha20-poly1305@openssh.com,aes128-ctr"
 fi
 
 # Store the login password hash on fat clients, so that things like `sudo` work.
