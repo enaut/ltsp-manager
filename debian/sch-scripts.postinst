@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2009-2013 Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2009-2015 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 set -e
@@ -17,6 +17,28 @@ set -e
 # But it also can be called like this, from dpkg-reconfigure <package>:
 # <postinst> reconfigure <most-recently-configured-version>
 
+# $search must be ready for sed, e.g. '^whole line$'.
+# Return 0 if a replacement was made, 1 otherwise.
+search_and_replace() {
+    local search=$1
+    local replace=$2
+    local file=$3
+    local migrate=$4
+    local old_search
+
+    if grep -qs "$search" "$file"; then
+        sed "s/$search/$replace # Commented by sch-scripts: &/" -i "$file"
+        return 0
+    elif [ "$migrate" = true ] && grep -qs "^${replace}$" "$file"; then
+        # strip ^$ from the search string, we'll use it in the replacement
+        old_search=${search#^}
+        old_search=${old_search%$}
+        sed "s/^${replace}$/& # Commented by sch-scripts: $old_search/" -i "$file"
+        return 0
+    fi
+    return 1
+}
+
 install() {
     local -
 
@@ -27,17 +49,9 @@ install() {
         ltsp-config lts.conf
     fi
 
-    # TODO: remove after a few weeks
-    # Work around the broken Live CDs shipped at 2012-10-01
-    if [ ! -e /etc/resolv.conf ]; then
-        ln -s ../run/resolvconf/resolv.conf /etc/resolv.conf
-        service resolvconf restart
-    fi
-
     # Remove the local resolver (LP: #959037), we want a real DNS server.
-    if grep -qs "^dns=dnsmasq" /etc/NetworkManager/NetworkManager.conf; then
-        sed 's/^dns=dnsmasq/# Commented by sch-scripts: dns=dnsmasq/' \
-            -i /etc/NetworkManager/NetworkManager.conf
+    if search_and_replace "^dns=dnsmasq" "" /etc/NetworkManager/NetworkManager.conf; then
+        search_and_replace "^bind-dynamic$" "" /etc/dnsmasq.d/network-manager || true
         echo "Restarting network-manager to remove its spawned dnsmasq..." >&2
         service network-manager restart
     fi
@@ -47,16 +61,16 @@ install() {
         ltsp-config dnsmasq
     fi
 
-    # Allow more simultaneous ssh connections from the local network.
-    if [ -f /etc/ssh/sshd_config ]; then
-        sed 's/#MaxStartups 10:30:60/MaxStartups 20:30:60/' -i /etc/ssh/sshd_config
-    fi
+    # Allow more simultaneous SSH connections from the local network.
+    search_and_replace "^#MaxStartups 10:30:60$" "MaxStartups 20:30:60" \
+        /etc/ssh/sshd_config true
 
     # Specify that the BIOS clock is not set to UTC, to match Windows.
-    sed 's/^UTC=yes/UTC=no/' -i /etc/default/rcS
+    search_and_replace "^UTC=yes$" "UTC=no" /etc/default/rcS true
 
-    # Don't prompt for new lts releases until we're ready for them
-    sed 's/Prompt=lts/Prompt=never/' -i /etc/update-manager/release-upgrades
+    # Don't prompt for new LTS releases until we're ready for them.
+    search_and_replace "^Prompt=lts$" "Prompt=never" \
+        /etc/update-manager/release-upgrades true
 
     # Set gnome-session-fallback as the default session.
     if [ -x /usr/sbin/lightdm ] &&

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2009-2013 Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2009-2015 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 set -e
@@ -15,13 +15,19 @@ set -e
 # <new-postrm> abort-install <old-version>
 # <new-postrm> abort-upgrade <old-version>
 
+# Restore "# Commented by sch-scripts:" lines to their original values
+restore_config() {
+    local file=$1
+
+    if grep -qs "# Commented by sch-scripts:" "$file"; then
+        sed "s/.*# Commented by sch-scripts:[[:space:]]*//" -i "$file"
+    fi
+}
+
 remove() {
     local - link
 
     set +e
-    if [ -f /etc/ssh/sshd_config ]; then
-        sed 's/MaxStartups 20:30:60/#MaxStartups 10:30:60/' -i /etc/ssh/sshd_config
-    fi
     for link in /usr/local/bin/gnome-panel \
         /usr/local/bin/tuxtype \
         /usr/local/bin/unzip \
@@ -43,6 +49,14 @@ purge() {
         /etc/dnsmasq.d/ltsp-server-dnsmasq.conf
         /var/lib/tftpboot/ltsp/i386/lts.conf
     "
+    configs="
+        /etc/NetworkManager/NetworkManager.conf
+        /etc/dnsmasq.d/network-manager
+        /etc/ssh/sshd_config
+        /etc/default/rcS
+        /etc/update-manager/release-upgrades
+        
+    "
 
     # Don't purge the examples, move them to /tmp to give a chance for recovery.
     temp=$(mktemp -d --tmpdir sch-scripts-purged.XXXXXX)
@@ -51,10 +65,9 @@ purge() {
             mv -b "$file" "$temp"
         fi
     done
-	if grep -qs "^# Commented by sch-scripts: dns=dnsmasq" /etc/NetworkManager/NetworkManager.conf; then
-	    sed 's/^# Commented by sch-scripts: dns=dnsmasq/dns=dnsmasq/' \
-            -i /etc/NetworkManager/NetworkManager.conf
-    fi
+    for file in $configs; do
+        restore_config "$file"
+    done
 }
 
 case "$1" in
