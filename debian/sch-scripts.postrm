@@ -17,7 +17,8 @@ set -e
 
 # Restore "# Commented by sch-scripts:" lines to their original values
 restore_config() {
-    local file=$1
+    local file
+    file=$1
 
     if grep -qs "# Commented by sch-scripts:" "$file"; then
         sed "s/.*# Commented by sch-scripts:[[:space:]]*//" -i "$file"

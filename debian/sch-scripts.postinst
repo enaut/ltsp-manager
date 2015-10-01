@@ -20,11 +20,11 @@ set -e
 # $search must be ready for sed, e.g. '^whole line$'.
 # Return 0 if a replacement was made, 1 otherwise.
 search_and_replace() {
-    local search=$1
-    local replace=$2
-    local file=$3
-    local migrate=$4
-    local old_search
+    local search replace file migrate old_search 
+    search=$1
+    replace=$2
+    file=$3
+    migrate=$4
 
     if grep -qs "$search" "$file"; then
         sed "s/$search/$replace # Commented by sch-scripts: &/" -i "$file"
