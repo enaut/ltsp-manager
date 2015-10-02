@@ -50,6 +50,12 @@ install() {
         ltsp-config lts.conf
     fi
 
+    # Ensure that "server" is resolvable by DNS.
+    if ! getent hosts server >/dev/null; then
+        search_and_replace "^127.0.0.1[[:space:]]*localhost$" "& server" \
+            /etc/hosts || true
+    fi & # Background it in case the DNS resolve takes a long time.
+
     # Remove the local resolver (LP: #959037), we want a real DNS server.
     if search_and_replace "^dns=dnsmasq" "" /etc/NetworkManager/NetworkManager.conf; then
         search_and_replace "^bind-dynamic$" "" /etc/dnsmasq.d/network-manager || true
