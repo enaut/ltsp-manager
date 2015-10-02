@@ -44,8 +44,9 @@ install() {
 
     set +e
     # Install lts.conf.
-    if [ ! -f /var/lib/tftpboot/ltsp/i386/lts.conf ]; then
-        mkdir -p /var/lib/tftpboot/ltsp/i386
+    if [ ! -f /var/lib/tftpboot/ltsp/i386/lts.conf ] &&
+        [ ! -f /var/lib/tftpboot/ltsp/amd64/lts.conf ]
+    then
         ltsp-config lts.conf
     fi
 
