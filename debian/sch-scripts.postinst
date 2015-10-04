@@ -79,26 +79,36 @@ install() {
     search_and_replace "^Prompt=lts$" "Prompt=never" \
         /etc/update-manager/release-upgrades true
 
-    # Set gnome-session-fallback as the default session.
-    if [ -x /usr/sbin/lightdm ] &&
-        [ -f /usr/share/xsessions/gnome-fallback.desktop ]
-    then
-        # Set the default session for 12.04.
-        # For 14.04 we ship a file in lightdm.conf.d instead.
-        if [ -x /usr/lib/lightdm/lightdm-set-defaults ] &&
-            ! grep -qs "user-session=gnome-fallback" /etc/lightdm/lightdm.conf
-        then
-            /usr/lib/lightdm/lightdm-set-defaults -s gnome-fallback
+    # If gnome-fallback exists, set it as the default session.
+    for session in gnome-fallback gnome-flashback-metacity ""; do
+        test -f "/usr/share/xsessions/$session.desktop" && break
+    done
+    if [ -n "$session" ] && [ -x /usr/sbin/lightdm ]; then
+        if [ -x /usr/lib/lightdm/lightdm-set-defaults ]; then
+            # Set the default session for 12.04.
+            grep -qs "user-session=$session" /etc/lightdm/lightdm.conf ||
+                /usr/lib/lightdm/lightdm-set-defaults -s "$session"
+        else
+            # We can't ship a conffile because the session name varies.
+            mkdir -p /etc/lightdm/lightdm.conf.d
+            cat >/etc/lightdm/lightdm.conf.d/90_sch-scripts.conf <<EOF
+[SeatDefaults]
+user-session=$session
+EOF
         fi
         # Also workaround the keyboard layout problem for administrator
         if [ -n "$SUDO_USER" ]; then
             rm -f "/home/$SUDO_USER/.dmrc"
             rm -f "/var/lib/AccountsService/users/$SUDO_USER"
         fi
-    fi
 
-    # Work around gnome-panel not appearing (LP: #1078679).
-    ln -sf /usr/share/sch-scripts/gnome-panel /usr/local/bin/ || true
+        # Work around gnome-panel not appearing (LP: #1078679).
+        ln -sf /usr/share/sch-scripts/gnome-panel /usr/local/bin/ || true
+
+        # Specify better default apps for some mime types.
+        mkdir -p /usr/local/share/applications
+        ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
+    fi
 
     # Start tuxtype with the correct theme for the current locale.
     ln -sf /usr/share/sch-scripts/tuxtype /usr/local/bin/ || true
@@ -110,10 +120,6 @@ install() {
     if [ -d /usr/lib/firefox/defaults/pref ]; then
         ln -sf /usr/share/sch-scripts/sch-scripts.js /usr/lib/firefox/defaults/pref/ || true
     fi
-
-    # Specify better default apps for some mime types.
-    mkdir -p /usr/local/share/applications
-    ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
 
     # Add group "teachers"
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
