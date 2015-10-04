@@ -56,7 +56,7 @@ purge() {
         /etc/ssh/sshd_config
         /etc/default/rcS
         /etc/update-manager/release-upgrades
-        
+        /etc/default/im-config
     "
 
     # Don't purge the examples, move them to /tmp to give a chance for recovery.
