@@ -1,3 +1,4 @@
 etc/*                   etc/
+etc/.java               etc/
 share/*                 usr/share/
 sbin/*                  usr/sbin/
