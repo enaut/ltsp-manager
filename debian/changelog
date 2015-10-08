@@ -1,3 +1,17 @@
+sch-scripts (12.04.17) precise; urgency=low
+
+  * Μερική υποστήριξη για Ubuntu Wily.
+  * Εξασφάλιση ότι το DNS όνομα "server" υπάρχει.
+  * Το Arcfour δεν υποστηρίζεται σε νεότερες εκδόσεις του ssh.
+  * Υποστήριξη κεντρικής λίστας εξαιρούμενων ιστοχώρων της Oracle Java
+    (http://ts.sch.gr/wiki/Linux/Oracle_Java).
+  * Μερική υποστήριξη για Ubuntu Trusty και Linux Mint.
+  * Απενεργοποίηση του flow control σε κάρτες που υποστηρίζουν το mii-tool.
+  * Αποθήκευση του κρυπτογραφημένου (hash) κωδικού εισόδου σε fat clients.
+  * Αρχική υποστήριξη για το mate-desktop.
+
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Tue, 06 Oct 2015 06:37:35 +0300
+
 sch-scripts (12.04.16) precise; urgency=low
 
   * Απενεργοποίηση του μηνύματος αναβάθμισης σε 14.04.
