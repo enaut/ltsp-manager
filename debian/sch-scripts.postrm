@@ -55,7 +55,6 @@ purge() {
         /etc/dnsmasq.d/network-manager
         /etc/ssh/sshd_config
         /etc/default/rcS
-        /etc/update-manager/release-upgrades
         /etc/default/im-config
     "
 

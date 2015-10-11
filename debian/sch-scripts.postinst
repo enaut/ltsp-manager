@@ -76,12 +76,12 @@ install() {
     search_and_replace "^UTC=yes$" "UTC=no" /etc/default/rcS true
 
     # Don't prompt for new LTS releases until we're ready for them.
-    search_and_replace "^Prompt=lts$" "Prompt=never" \
-        /etc/update-manager/release-upgrades true
+    # Note that we can't use search_and_replace here (LP: #1504893).
+    sed 's/^Prompt=.*/Prompt=never/' -i /etc/update-manager/release-upgrades
 
     # Prevent ibus from starting (LP: #1481025).
     search_and_replace "^IM_CONFIG_DEFAULT_MODE=auto$" \
-        "IM_CONFIG_DEFAULT_MODE=none" /etc/default/im-config
+        "IM_CONFIG_DEFAULT_MODE=xim" /etc/default/im-config
 
     # If gnome-fallback exists, set it as the default session.
     for session in gnome-fallback gnome-flashback-metacity ""; do
