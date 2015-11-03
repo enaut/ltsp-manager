@@ -13,7 +13,6 @@ import dbus
 import common
 import parsers
 
-
 ## Define global variables
 
 IP_REG = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$"
@@ -226,6 +225,9 @@ class Info:
         self._calculate_subnet()
 
     def set_values(self, dict=None):
+        """
+        Set info values
+        """
         if dict:
             self.ip = dict['ip']
             self.mask = dict['mask']
@@ -236,7 +238,19 @@ class Info:
             self.ip, self.mask, self.route = [self.msg]*3
             self.dnss = [self.msg]*3
 
+    def get_dhcp_values(self, dnss=False):
+        """
+        Return info as dict
+        """
+        if dnss:
+            return {'ip': self.ip, 'mask': self.mask, 'route': self.route, 'dnss': self.dnss}
+        else:
+            return {'ip': self.ip, 'mask': self.mask, 'route': self.route}
+
     def _calculate_subnet(self):
+        """
+        Calculate subnet
+        """
         if self.ip:
             self.subnet = '.'.join(self.ip.split('.')[:3]) + '.0'
 
@@ -367,7 +381,7 @@ class Page:
         if interface.has_active_connection:
             self.method_entry.get_model()[2][1] = True
         else:
-            self.method_entry.get_model()[2][1] = False   
+            self.method_entry.get_model()[2][1] = False
 
 
 ## Define Ip_Dialog class
@@ -491,21 +505,31 @@ class Ip_Dialog:
         
         if break_bool:
             common.run_command(['sh', '-c', 'ltsp-config dnsmasq --overwrite'])
+            title = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς'
             msg = 'Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του ' \
                   'αρχείου ρυθμίσεων του dnsmasq έγινε επιτυχώς.'
             if prefered_hostname:
-                pre_msg = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>%s</b>. ' % prefered_hostname
+                pre_msg = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>%s</b>. \n\n' % prefered_hostname
                 msg = pre_msg + msg
-            dialogs.InfoDialog(msg, 'Επιτυχία').showup()
-            self.main_dlg.destroy() 
+
+            success_dialog = dialogs.InfoDialog(title, 'Επιτυχία')
+            success_dialog.format_secondary_markup(msg)
+            success_dialog.set_transient_for(self.main_dlg)
+            success_dialog.showup()
+            self.main_dlg.destroy()
             return False
         elif not break_bool and self.timeout == 30000:
+            title = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς'
             msg = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του ' \
                   'αρχείου dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν.'
             if prefered_hostname:
-                pre_msg = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>%s</b>. ' % prefered_hostname
+                pre_msg = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>%s</b>. \n\n' % prefered_hostname
                 msg = pre_msg + msg
-            dialogs.ErrorDialog(msg, 'Σφάλμα').showup()
+
+            success_dialog = dialogs.InfoDialog(title, 'Επιτυχία')
+            success_dialog.format_secondary_markup(msg)
+            success_dialog.set_transient_for(self.main_dlg)
+            success_dialog.showup()
             self.main_dlg.destroy()
             return False
         return True          
@@ -542,14 +566,16 @@ class Ip_Dialog:
 
         if interface.page.method_entry.get_active() == 0:
             # Auto
+
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
-            interface.page.fill_entries(interface)
+            interface.page.fill_entries(interface, **interface.dhcp_request_info.get_dhcp_values(dnss=True))
         elif interface.page.method_entry.get_active() == 1:
             # Only auto addresses
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
-            interface.page.fill_entries(interface, dnss=[dns for dns in self.ts_dns])
+            interface.page.fill_entries(interface, dnss=[dns for dns in self.ts_dns],
+                                        **interface.dhcp_request_info.get_dhcp_values())
         elif interface.page.method_entry.get_active() == 2:
             # Manual
             ip = None
@@ -573,32 +599,10 @@ class Ip_Dialog:
                         # If connection found and is active then load those settings
                         break
                     elif counter == len(connection_settings_paths) - 1:
-                        # Else try first .10 and the .11
-                        test_ip_10 = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
-                        test_ip_11 = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.11'
-                        if test_ip_10 != interface.ip:
-                            found_10, response_10 = common.run_command(['arping', '-f', '-w1', test_ip_10])
-                            if not found_10:
-                                ip = test_ip_10
-                            elif test_ip_11 != interface.ip:
-                                found_11, response_11 = common.run_command(['arping', '-f', '-w1', test_ip_11])
-                                if not found_11:
-                                    ip = test_ip_11
-                                else:
-                                    ip = test_ip_10
-                                    interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
-                                    interface.page.ip_entry.set_icon_tooltip_text(1, 'Η διεύθυνση %s χρησιμοποιείται '
-                                                                                     'ήδη από άλλον υπολογιστή. '
-                                                                                     'Παρακάλω δώστε μια διαφορετική'
-                                                                                  % test_ip_10)
-                            else:
-                                ip = test_ip_11
-                        else:
-                            ip = test_ip_10
+                        ip = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
             elif interface.page.ip_entry.get_text().startswith('10.'):
-                # if ip starts with 10. and we don't have active connections
-                # We do this, to avoid arping and waiting 4 seconds (timeout)
-                ip  = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
+                # if ip starts with 10. and we don't have active connections load instant .10
+                ip = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
             interface.page.fill_entries(interface, ip=ip, dnss=[dns for dns in self.ts_dns])
         elif interface.page.method_entry.get_active() == 3:
             # Ltsp
@@ -683,17 +687,17 @@ class Ip_Dialog:
                 ipv4 = dbus.Dictionary({'method': 'manual', 'dns': dns, 'may-fail': 0, 'dhcp-send-hostname': 'false',
                                         'addresses': dbus.Array([addresses], signature=dbus.Signature('au'))})
 
-                if int32_to_string(ip).startswith('.10') and \
+                if int32_to_string(ip).startswith('10.') and \
                         (int32_to_string(ip).endswith('.10') or int32_to_string(ip).endswith('.11')) and \
                         interface.carrier == 1:
                     # Try to resolve the ip and purpose hostname
-                    found, hostname = common.run_command(['dig', '@nic.sch.gr', '+short', int32_to_string(ip)])
+                    found, hostname = common.run_command(['dig', '@nic.sch.gr', '+short', '-x', int32_to_string(ip)])
                     if found:
                         hostname = hostname.split('\n')[0].strip('.')
                         prefered_hostname = hostname.split('.')[0]
-                        dns_search = hostname.split('.')[1:]
+                        dns_search = '.'.join(hostname.split('.')[1:])
 
-                        dns_search = dbus.Array([dns_search], signature=dbus.Signature('u'))
+                        dns_search = dbus.Array([dns_search], signature=dbus.Signature('s'))
                         ipv4.update({'dns-search': dns_search})
             elif interface.page.method_entry.get_active() == 3:
                 # LTSP
@@ -782,7 +786,7 @@ class Ip_Dialog:
                             interface.carrier == 1 and self.nm.get_active_connections():
                 test_ip = interface.page.ip_entry.get_text()
                 if test_ip != interface.ip:
-                    found, response = common.run_command(['arping', '-f', '-w1', test_ip])
+                    found, response = common.run_command(['arping', '-f', '-w1', '-I', interface.interface, test_ip])
                     if found:
                         interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
                         interface.page.ip_entry.set_icon_tooltip_text(1, 'Η διεύθυνση %s χρησιμοποιείται ήδη από άλλον '
