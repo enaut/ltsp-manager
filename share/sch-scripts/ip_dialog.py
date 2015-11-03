@@ -220,9 +220,13 @@ class Connection_Settings(Network_Manager_DBus):
 class Info:
     def __init__(self, ip=None, mask=None, route=None, dnss=None):
         self.ip, self.mask, self.route, self.dnss = ip, mask, route, dnss
-        self.msg = 'Δεν βρέθηκε διεύθυνση'
+
+        # If IP address is not defined then initialize the attributes with a string
+        msg = 'Δεν βρέθηκε διεύθυνση'
+        if not self.ip:
+            self.ip, self.mask, self.route = [msg]*3
+            self.dnss = [msg]*3
         self.subnet = None
-        self._calculate_subnet()
 
     def set_values(self, dict=None):
         """
@@ -234,11 +238,8 @@ class Info:
             self.route = dict['route']
             self.dnss = dict['dnss']
             self._calculate_subnet()
-        else:
-            self.ip, self.mask, self.route = [self.msg]*3
-            self.dnss = [self.msg]*3
 
-    def get_dhcp_values(self, dnss=False):
+    def get_values(self, dnss=False):
         """
         Return info as dict
         """
@@ -276,29 +277,28 @@ class Interface:
         self._set_ips()
 
     def __getattr__(self, item):
-        if self.existing_info:
-            if self.dhcp_request_info:
-                if self.dhcp_request_info.subnet != self.existing_info.subnet:
-                    try:
-                        return getattr(self.dhcp_request_info, item)
-                    except AttributeError:
-                        raise AttributeError
-            try:
-                return getattr(self.existing_info, item)
-            except AttributeError:
-                raise AttributeError
-        else:
+        if self.dhcp_request_info:
             try:
                 return getattr(self.dhcp_request_info, item)
             except AttributeError:
                 raise AttributeError
+        else:
+            try:
+                return getattr(self.existing_info, item)
+            except AttributeError:
+                raise AttributeError
 
     def _set_ips(self):
+        self.existing_info = Info()
         if self.ip4config_path != '/':
             ip4config = IP4_Config(self.ip4config_path) 
             ip, mask, route, dnss = ip4config.get_properties()
-            self.existing_info = Info(int32_to_string(ip), bits_to_subnet(mask), int32_to_string(route),
-                                      [int32_to_string(x) for x in dnss])
+            self.existing_info.set_values({
+                'ip': int32_to_string(ip),
+                'mask': bits_to_subnet(mask),
+                'route': int32_to_string(route),
+                'dnss': [int32_to_string(x) for x in dnss]
+            })
             self.has_active_connection = True
 
         self.dhcp_request_info = Info()
@@ -308,8 +308,6 @@ class Interface:
             dhcp_dict = dhcp_parser.parse(self.interface)
             self.has_active_connection = True
             self.dhcp_request_info.set_values(dhcp_dict)
-        else:
-            self.dhcp_request_info.set_values()
 
 
 ## Define Page class
@@ -393,11 +391,7 @@ class Ip_Dialog:
         self.interfaces_diff_subnet = []
         self.timeout = 0
         self.ts_dns = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
-        self.ltsp_ips = dict(
-            ip='192.168.67.1',
-            mask='255.255.255.0',
-            route='0.0.0.0'
-        )
+        self.ltsp_ips = dict(ip='192.168.67.1', mask='255.255.255.0', route='0.0.0.0')
         self.builder = Gtk.Builder()
         self.builder.add_from_file('ip_dialog.ui')
         self.builder.connect_signals(self)
@@ -419,7 +413,7 @@ class Ip_Dialog:
         if len(device_paths) == 0:
             msg = 'Δεν υπάρχει διαθέσιμη διεπαφή.'
             dialogs.ErrorDialog( msg, 'Σφάλμα' ).showup()
-            return  
+            return
         for device_path in device_paths:
             device = Device(device_path)
             ip4config_path, interface, driver, device_type = device.get_properties()
@@ -432,40 +426,40 @@ class Ip_Dialog:
         if len(self.interfaces) == 0:
             msg = 'Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή.'
             dialogs.ErrorDialog( msg, 'Σφάλμα' ).showup()
-            return  
-        self.interfaces.sort(key=lambda interface: interface.interface)                     
+            return
+        self.interfaces.sort(key=lambda interface: interface.interface)
 
         # Populate GUI
         for interface in self.interfaces:
-            if interface.dhcp_request_info and interface.existing_info:
-                if interface.dhcp_request_info.subnet != interface.existing_info.subnet:
+            if interface.dhcp_request_info.subnet and interface.existing_info.subnet and \
+                            interface.dhcp_request_info.subnet != interface.existing_info.subnet:
                     self.interfaces_diff_subnet.append(interface)
             self.populate_pages(interface)
+
+        # Set the appropriate method to each device
+        self.set_default()
+        self.main_dlg.show()
 
         # If subnet has change alert message which define devices with different subnet
         if len(self.interfaces_diff_subnet) > 0:
             title = 'Το υποδίκτυο έχει αλλάξει.'
             msg = 'Το υποδίκτυο έχει αλλάξει για '
             if len(self.interfaces_diff_subnet) > 1:
-                msg += 'τις <b>%s</b>. ' % ','.join([str(interface.interface) for interface in self.interfaces_diff_subnet])
+                msg += 'τις <b>%s</b>. ' % ', '.join([str(interface.interface) for interface in self.interfaces_diff_subnet])
             else:
-                msg += 'την <b>%s</b>. ' % ','.join([str(interface.interface) for interface in self.interfaces_diff_subnet])
+                msg += 'την <b>%s</b>. ' % ', '.join([str(interface.interface) for interface in self.interfaces_diff_subnet])
             msg += 'Ο διάλογος θα προτείνει μια νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router.'
             info_dialog = dialogs.InfoDialog(title, 'Πληροφορία')
             info_dialog.format_secondary_markup(msg)
             info_dialog.set_transient_for(self.main_dlg)
             info_dialog.showup()
 
-        # Set the appropriate method to each device
-        self.set_default()
-        self.main_dlg.show()
-     
     def populate_pages(self, interface):       
         page = Page()
         interface.page = page
         page.ip_entry.connect('changed', self.on_ip_entry_changed, interface)
         page.method_entry.connect('changed', self.on_method_entry_changed, interface)
-        page.fill_entries(interface)
+        page.fill_entries(interface, **interface.existing_info.get_values(dnss=True))
         if Gdk.Screen.get_default().get_height() <= 768:
             scrolledwindow = Gtk.ScrolledWindow()
             scrolledwindow.add_with_viewport(page.grid)
@@ -477,17 +471,16 @@ class Ip_Dialog:
             self.main_dlg_notebook.set_tab_reorderable(page.grid, True) 
 
     def set_default(self):
-        #By default active is 3
-        carrier_connect = [interface.page for interface in self.interfaces if interface.carrier == 1]
-        if len(carrier_connect) == 0:
-            self.interfaces[0].page.method_entry.set_active(1)
-            self.main_dlg_notebook.reorder_child(self.interfaces[0].page.grid, 0) 
+        # By default active is 4, no creation to all interfaces.
+        # We care about the first only, so we purpose one method
+        # only for the first interface. All other interfaces
+        # maintained to 4.
+        carrier_interfaces = [interface for interface in self.interfaces if interface.carrier == 1]
+        if carrier_interfaces[0].ip.startswith('10.'):
+            carrier_interfaces[0].page.method_entry.set_active(2)
         else:
-            if carrier_connect[0].ip_entry.get_text().startswith('10.'):
-                carrier_connect[0].method_entry.set_active(2)
-            else:
-                carrier_connect[0].method_entry.set_active(1)
-            self.main_dlg_notebook.reorder_child(carrier_connect[0].grid, 0)
+            carrier_interfaces[0].page.method_entry.set_active(1)
+        self.main_dlg_notebook.reorder_child(carrier_interfaces[0].page.grid, 0)
 
         self.main_dlg_notebook.set_current_page(0)
         
@@ -564,26 +557,25 @@ class Ip_Dialog:
             for l_interface in self.interfaces:
                 l_interface.page.method_entry.get_model()[3][1] = True
 
+        # Auto. We want always to show the dhcp request values
         if interface.page.method_entry.get_active() == 0:
-            # Auto
-
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
-            interface.page.fill_entries(interface, **interface.dhcp_request_info.get_dhcp_values(dnss=True))
+            interface.page.fill_entries(interface, **interface.dhcp_request_info.get_values(dnss=True))
+        # Only auto addresses. The same as above
         elif interface.page.method_entry.get_active() == 1:
-            # Only auto addresses
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
             interface.page.fill_entries(interface, dnss=[dns for dns in self.ts_dns],
-                                        **interface.dhcp_request_info.get_dhcp_values())
+                                        **interface.dhcp_request_info.get_values())
+        # Manual
         elif interface.page.method_entry.get_active() == 2:
-            # Manual
             ip = None
             interface.page.ip_entry.set_sensitive(True)
             interface.page.auto_checkbutton.set_sensitive(True)
             connection_settings_paths = self.settings.get_list_connections()
             # TODO: If we want to bring back the settings from any connection we have to remove the following line
-            if interface.page.ip_entry.get_text().startswith('10.') and self.nm.get_active_connections():
+            if interface.ip.startswith('10.') and self.nm.get_active_connections():
                 # if ip starts with 10. and we have active connections
                 for counter, connection_settings_path in enumerate(connection_settings_paths):
                     connection_settings = Connection_Settings(connection_settings_path)
@@ -596,29 +588,30 @@ class Ip_Dialog:
                     if connection_settings_id == interface.id and \
                                     connection_settings_method == dbus.String('manual') and \
                                     connection_settings_path in self.nm.get_active_connections_settings_path():
+
                         # If connection found and is active then load those settings
+                        ip = interface.existing_info.ip
                         break
                     elif counter == len(connection_settings_paths) - 1:
-                        ip = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
-            elif interface.page.ip_entry.get_text().startswith('10.'):
+                        ip = '.'.join(interface.ip.split('.')[0:3])+'.10'
+            elif interface.ip.startswith('10.'):
                 # if ip starts with 10. and we don't have active connections load instant .10
-                ip = '.'.join(interface.page.ip_entry.get_text().split('.')[0:3])+'.10'
+                ip = '.'.join(interface.ip.split('.')[0:3])+'.10'
             interface.page.fill_entries(interface, ip=ip, dnss=[dns for dns in self.ts_dns])
+        # Ltsp
         elif interface.page.method_entry.get_active() == 3:
-            # Ltsp
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(True)
             interface.page.fill_entries(interface, dnss=[dns for dns in self.ts_dns], **self.ltsp_ips)
             for l_interface in self.interfaces:
                 if l_interface != interface:
                     l_interface.page.method_entry.get_model()[3][1] = False
+        # No creation
         elif interface.page.method_entry.get_active() == 4:
-            # No creation
             interface.page.ip_entry.set_sensitive(False)
             interface.page.auto_checkbutton.set_sensitive(False)
-            interface.page.fill_entries(interface)
+            interface.page.fill_entries(interface, **interface.existing_info.get_values(dnss=True))
         self.check_button()
-        
 
     def on_ip_entry_changed(self, ip_entry, interface):
         if interface.page.ip_entry.get_text() != 'Δεν βρέθηκε διεύθυνση':
@@ -785,7 +778,7 @@ class Ip_Dialog:
             if interface.page.method_entry.get_active() == 2 and \
                             interface.carrier == 1 and self.nm.get_active_connections():
                 test_ip = interface.page.ip_entry.get_text()
-                if test_ip != interface.ip:
+                if test_ip != interface.existing_info.ip:
                     found, response = common.run_command(['arping', '-f', '-w1', '-I', interface.interface, test_ip])
                     if found:
                         interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
