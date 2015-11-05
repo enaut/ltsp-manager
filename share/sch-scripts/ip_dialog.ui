@@ -497,13 +497,41 @@
       </packing>
     </child>
   </object>
+  <object class="GtkBox" id="loading_box">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="spacing">10</property>
+    <child>
+      <object class="GtkLabel" id="loading_lbl">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Παρακάλω περιμένετε μέχρι να τελειώσει το DHCP Request.</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkSpinner" id="loading_spinner">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="active">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
   <object class="GtkDialog" id="main_dlg">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Δημιουργία σύνδεσης δικτύου</property>
     <property name="modal">True</property>
-    <property name="default_width">550</property>
-    <property name="default_height">400</property>
     <property name="type_hint">dialog</property>
+    <property name="deletable">False</property>
     <signal name="response" handler="on_ip_dialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="main_dlg_vbox">
@@ -565,7 +593,6 @@
             <property name="column_spacing">12</property>
             <child>
               <object class="GtkImage" id="main_dlg_image">
-                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0</property>
                 <property name="stock">gtk-info</property>
@@ -580,7 +607,6 @@
             </child>
             <child>
               <object class="GtkLabel" id="main_dlg_lbl_title">
-                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="xalign">0</property>

@@ -4,26 +4,30 @@ import subprocess
 import datetime
 import re
 
-def run_command(cmd):
+def run_command(cmd, poll=False):
     # Runs a command and returns either True, on successful
     # completion, or the whole stdout and stderr of the command, on error.
+    # If poll is set return only the process
     
     # Popen doesn't like integers like uid or gid in the command line.
     cmdline = [str(s) for s in cmd]
     
     p = subprocess.Popen(cmdline, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    res = p.wait()
-    if res == 0:
-        return (True, p.stdout.read())
+    if not poll:
+        res = p.wait()
+        if res == 0:
+            return (True, p.stdout.read())
+        else:
+            print "Σφάλμα κατά την εκτέλεση εντολής:"
+            print " $ %s" % ' '.join(cmdline)
+            print p.stdout.read()
+            err = p.stderr.read()
+            print err
+            if err == '':
+                err = "\n"
+            return (False, err)
     else:
-        print "Σφάλμα κατά την εκτέλεση εντολής:"
-        print " $ %s" % ' '.join(cmdline)
-        print p.stdout.read()
-        err = p.stderr.read()
-        print err
-        if err == '':
-            err = "\n"
-        return (False, err)
+        return p
     
 def days_since_epoch():
     epoch = datetime.datetime.utcfromtimestamp(0)
