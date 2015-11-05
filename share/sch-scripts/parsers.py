@@ -194,7 +194,7 @@ class DHCP():
         except ConfigParser.NoOptionError:
             dns2 = None
 
-        dnss = [value for key, value in locals().items() if key.startswith('dns') and value and value != '0.0.0.0']
+        dnss = sorted([value for key, value in locals().items() if key.startswith('dns') and value and value != '0.0.0.0'])
 
         self.dhcp_info.update(ip=ip,mask=mask,route=route,dnss=dnss)
 
