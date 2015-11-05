@@ -18,7 +18,30 @@ import parsers
 IP_REG = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$"
 BUS = dbus.SystemBus()
 DBUS_SERVICE_NAME = 'org.freedesktop.NetworkManager'
-
+MSG_PC_CONFLICT_IP = 'Η διεύθυνση {0} χρησιμοποιείται ήδη από άλλον υπολογιστή. Παρακάλω δώστε μια διαφορετική.'
+MSG_ROUTE_CONFLICT_IP = 'Η διεύθυνση {0} χρησιμοποείται ήδη σαν προεπιλεγμένη διαδρομή. Παρακάλω δώστε μια διαφορετική.'
+MSG_WRONG_REGEX_IP = 'Μη-έγκυρη διεύθυνση IP. θα πρέπει να είναι της μορφής x.y.z.w όπου x, y, z, w παίρνουν τιμές ' \
+                     'μεταξύ του 1 και 254.'
+MSG_ERROR_CONNECT_NM = 'Αδυναμία σύνδεσης στη Διαχείριση Δικτύου.'
+MSG_NO_DEVICES = 'Δεν υπάρχει διαθέσιμη διεπαφή.'
+MSG_NO_WIRED_DEVICES = 'Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή.'
+MSG_TITLE_SUBNET = 'Το υποδίκτυο έχει αλλάξει.'
+MSG_SUBNET = 'Το υποδίκτυο έχει αλλάξει για την <b>{0}</b>. Ο διάλογος θα προτείνει μια νέα μέθοδο σύμφωνα με τις ' \
+             'νέες τιμές που λήφθηκαν από τον router.'
+MSG_SUBNET_PLURAL = 'Το υποδίκτυο έχει αλλάξει για τις <b>{0}</b>. Ο διάλογος θα προτείνει μια νέα μέθοδο σύμφωνα με' \
+                    ' τις νέες τιμές που λήφθηκαν από τον router.'
+MSG_TITLE_CONNECTIONS_CREATE = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς.'
+MSG_TITLE_DNSMASQ_RESTART_FAIL = 'Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq απέτυχε.'
+MSG_SUGGEST_HOSTNAME = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>{0}</b>\n\n'
+MSG_DNSMASQ_RESTART_SUCCESS = 'Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του αρχείου ρυθμίσεων του ' \
+                              'dnsmasq έγινε επιτυχώς.'
+MSG_DNSMASQ_RESTART_FAIL_ENABLE = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου ' \
+                                  'dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν.'
+MSG_DNSMASQ_RESTART_FAIL = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου ρυθμίσεων ' \
+                           'του dnsmasq απέτυχε.'
+TITLE_ERROR = 'Σφάλμα'
+TITLE_INFO = 'Πληροφορία'
+TITLE_SUCCESS = 'Επιτυχία'
 
 ## Define global functions
 
@@ -395,6 +418,7 @@ class Ip_Dialog:
         self.interfaces = []
         self.interfaces_diff_subnet = []
         self.timeout = 0
+        self.settings = None
         self.ts_dns = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
         self.ltsp_ips = dict(ip='192.168.67.1', mask='255.255.255.0', route='0.0.0.0')
         self.builder = Gtk.Builder()
@@ -411,8 +435,9 @@ class Ip_Dialog:
         try:
             self.nm = Network_Manager()
         except dbus.exceptions.DBusException:
-            msg = 'Αδυναμία σύνδεσης στη Διαχείριση Δικτύου.'
-            dialogs.ErrorDialog(msg, 'Σφάλμα').showup()
+            error_dialog = dialogs.ErrorDialog(MSG_ERROR_CONNECT_NM, TITLE_ERROR)
+            error_dialog.set_transient_for(self.main_dlg)
+            error_dialog.showup()
             return
 
         # Hide some widget and show loading widget until dhcp request finished
@@ -427,8 +452,7 @@ class Ip_Dialog:
         self.settings = Settings()
         device_paths = self.nm.get_devices()
         if len(device_paths) == 0:
-            msg = 'Δεν υπάρχει διαθέσιμη διεπαφή.'
-            dialogs.ErrorDialog( msg, 'Σφάλμα' ).showup()
+            dialogs.ErrorDialog(MSG_NO_DEVICES, TITLE_ERROR).showup()
             return
         for device_path in device_paths:
             device = Device(device_path)
@@ -440,8 +464,7 @@ class Ip_Dialog:
                                         driver, device_type, mac, speed, carrier)
                 self.interfaces.append(interface)
         if len(self.interfaces) == 0:
-            msg = 'Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή.'
-            dialogs.ErrorDialog( msg, 'Σφάλμα' ).showup()
+            dialogs.ErrorDialog(MSG_NO_WIRED_DEVICES, TITLE_ERROR).showup()
             return
         self.interfaces.sort(key=lambda interface: interface.interface)
 
@@ -454,8 +477,6 @@ class Ip_Dialog:
 
         # Show all widgets and destroy loading widget. Dialog is ready
         self.main_dlg.set_deletable(True)
-        (x, y) = self.parent.get_position()
-        self.main_dlg.move(x + 15, y)
         self.main_dlg.show_all()
         self.loading_box.destroy()
 
@@ -464,14 +485,13 @@ class Ip_Dialog:
 
         # If subnet has change alert message which define devices with different subnet
         if len(self.interfaces_diff_subnet) > 0:
-            title = 'Το υποδίκτυο έχει αλλάξει.'
-            msg = 'Το υποδίκτυο έχει αλλάξει για '
             if len(self.interfaces_diff_subnet) > 1:
-                msg += 'τις <b>%s</b>. ' % ', '.join([str(interface.interface) for interface in self.interfaces_diff_subnet])
+                msg = MSG_SUBNET_PLURAL.format(', '.join([str(interface.interface)
+                                                          for interface in self.interfaces_diff_subnet]))
             else:
-                msg += 'την <b>%s</b>. ' % ', '.join([str(interface.interface) for interface in self.interfaces_diff_subnet])
-            msg += 'Ο διάλογος θα προτείνει μια νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router.'
-            info_dialog = dialogs.InfoDialog(title, 'Πληροφορία')
+                msg = MSG_SUBNET.format(', '.join([str(interface.interface)
+                                                   for interface in self.interfaces_diff_subnet]))
+            info_dialog = dialogs.InfoDialog(MSG_TITLE_SUBNET, TITLE_INFO)
             info_dialog.format_secondary_markup(msg)
             info_dialog.set_transient_for(self.main_dlg)
             info_dialog.showup()
@@ -529,42 +549,81 @@ class Ip_Dialog:
                     Gtk.main_iteration()
 
             if p.returncode == 0:
-                title = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς'
-                msg = 'Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του ' \
-                      'αρχείου ρυθμίσεων του dnsmasq έγινε επιτυχώς.'
+                msg = MSG_DNSMASQ_RESTART_SUCCESS
                 if prefered_hostname:
-                    pre_msg = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>%s</b>. \n\n' % prefered_hostname
-                    msg = pre_msg + msg
+                    msg = MSG_SUGGEST_HOSTNAME.format(prefered_hostname) + msg
 
-                success_dialog = dialogs.InfoDialog(title, 'Επιτυχία')
+                success_dialog = dialogs.InfoDialog(MSG_TITLE_CONNECTIONS_CREATE, TITLE_SUCCESS)
                 success_dialog.format_secondary_markup(msg)
                 success_dialog.set_transient_for(self.main_dlg)
                 success_dialog.showup()
                 self.main_dlg.destroy()
             else:
-                title = 'Η δημιουργία των συνδέσεων απέτυχε'
-                msg = 'Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq απέτυχε.'
-                error_dialog = dialogs.ErrorDialog(title, 'Σφάλμα')
-                error_dialog.format_secondary_markup(msg)
+                error_dialog = dialogs.ErrorDialog(MSG_TITLE_DNSMASQ_RESTART_FAIL, TITLE_ERROR)
+                error_dialog.format_secondary_markup(MSG_DNSMASQ_RESTART_FAIL)
                 error_dialog.set_transient_for(self.main_dlg)
                 error_dialog.showup()
                 self.main_dlg.destroy()
             return False
         elif not break_bool and self.timeout == 30000:
-            title = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς'
-            msg = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του ' \
-                  'αρχείου dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν.'
+            msg = MSG_DNSMASQ_RESTART_FAIL_ENABLE
             if prefered_hostname:
-                pre_msg = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>%s</b>. \n\n' % prefered_hostname
-                msg = pre_msg + msg
+                msg = MSG_SUGGEST_HOSTNAME.format(prefered_hostname) + msg
 
-            success_dialog = dialogs.InfoDialog(title, 'Επιτυχία')
+            success_dialog = dialogs.InfoDialog(MSG_TITLE_CONNECTIONS_CREATE, TITLE_SUCCESS)
             success_dialog.format_secondary_markup(msg)
             success_dialog.set_transient_for(self.main_dlg)
             success_dialog.showup()
             self.main_dlg.destroy()
             return False
-        return True          
+        return True
+
+    def create_update_connections(self, interest_interfaces, prefered_hostname, dnsmasq_via_carrier,
+                                  dnsmasq_via_autoconnect):
+        for interface in interest_interfaces:
+            # Test if static ip exists in network
+            # Case which doesn't work: User had set .10 manual and .10 is owned by another pc,
+            # arping always fail so we can't catch the conflict.
+            if interface.page.method_entry.get_active() == 2 and \
+                            interface.carrier == 1 and self.nm.get_active_connections():
+                test_ip = interface.page.ip_entry.get_text()
+                if test_ip != interface.existing_info.ip:
+                    p = common.run_command(['arping', '-f', '-w1', '-I', interface.interface, test_ip], True)
+                    while p.poll() is None:
+                        while Gtk.events_pending():
+                            Gtk.main_iteration()
+                    if p.returncode == 0:
+                        interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
+                        interface.page.ip_entry.set_icon_tooltip_text(1, MSG_PC_CONFLICT_IP.format(test_ip))
+                        title = MSG_PC_CONFLICT_IP.format(test_ip)
+                        err_dialog = dialogs.ErrorDialog(title, TITLE_ERROR)
+                        err_dialog.set_transient_for(self.main_dlg)
+                        if err_dialog.showup() != Gtk.ResponseType.OK:
+                            self.main_dlg.set_sensitive(True)
+                            self.main_dlg.show()
+                            return
+
+            if interface.conflict is not None:
+                interface.conflict.interface.Update(interface.connection)
+                if interface.carrier == 1 and interface.page.auto_checkbutton.get_active():
+                    self.nm.interface.ActivateConnection(interface.conflict.object_path, interface.device_path, '/')
+            else:
+                object_path = self.settings.interface.AddConnection(interface.connection)
+                if interface.carrier == 1 and interface.page.auto_checkbutton.get_active():
+                    self.nm.interface.ActivateConnection(object_path, interface.device_path, '/')
+
+            for connection_settings in interface.interface_connections:
+                settings = connection_settings.get_settings()
+                settings['connection'][dbus.String('autoconnect')] = dbus.String('false')
+                connection_settings.interface.Update(settings)
+
+        if dnsmasq_via_carrier and dnsmasq_via_autoconnect:
+            GObject.timeout_add(1000, self.watch_nm, interest_interfaces, prefered_hostname)
+        else:
+            success_dialog = dialogs.InfoDialog(MSG_TITLE_CONNECTIONS_CREATE, TITLE_SUCCESS)
+            success_dialog.set_transient_for(self.main_dlg)
+            success_dialog.showup()
+            self.main_dlg.destroy()
         
     def check_button(self):
         check_ip = True
@@ -613,7 +672,7 @@ class Ip_Dialog:
             interface.page.ip_entry.set_sensitive(True)
             interface.page.auto_checkbutton.set_sensitive(True)
             connection_settings_paths = self.settings.get_list_connections()
-            # TODO: If we want to bring back the settings from any connection we have to remove the following line
+            # if we want to bring back the settings from any connection we have to remove the following line
             if interface.ip.startswith('10.'):
                 if interface.existing_info.subnet and interface.dhcp_request_info.subnet and \
                                 interface.existing_info.subnet != interface.dhcp_request_info.subnet:
@@ -658,16 +717,20 @@ class Ip_Dialog:
         if interface.page.ip_entry.get_text() != 'Δεν βρέθηκε διεύθυνση':
             ip = interface.page.ip_entry.get_text()
             sub_ip = '.'.join(interface.ip.split('.')[0:3])+'.'
-            if re.match(IP_REG, ip) and ip != interface.page.route_entry.get_text():
-                interface.page.ip_entry.set_icon_from_stock(1, None)
-            else:
+            if not re.match(IP_REG, ip):
                 interface.page.ip_entry.set_position(-1)
                 if ip != interface.page.route_entry.get_text():
                     interface.page.ip_entry.set_text(sub_ip)
                 interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
-                interface.page.ip_entry.set_icon_tooltip_text(1, '%s' \
-                    %'Μη-έγκυρη διεύθυνση IP. θα πρέπει να είναι της μορφής x.y.z.w όπου ' \
-                     'x, y, z, w παίρνουν τιμές μεταξύ του 1 και 254.')
+                interface.page.ip_entry.set_icon_tooltip_text(1, MSG_WRONG_REGEX_IP)
+            elif ip == interface.page.route_entry.get_text():
+                interface.page.ip_entry.set_position(-1)
+                if ip != interface.page.route_entry.get_text():
+                    interface.page.ip_entry.set_text(sub_ip)
+                interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
+                interface.page.ip_entry.set_icon_tooltip_text(1, MSG_ROUTE_CONFLICT_IP.format(ip))
+            else:
+                interface.page.ip_entry.set_icon_from_stock(1, None)
             self.check_button()
 
     def on_ip_dialog_response(self, main_dlg, response):
@@ -724,7 +787,7 @@ class Ip_Dialog:
                 if int32_to_string(ip).startswith('10.') and \
                         (int32_to_string(ip).endswith('.10') or int32_to_string(ip).endswith('.11')) and \
                         interface.carrier == 1:
-                    # Try to resolve the ip and purpose hostname
+                    # Try to resolve the ip and purpose hostname. We keep info if dns_search endswith sch.gr
                     found, hostname = common.run_command(['dig', '@nic.sch.gr', '+short', '-x', int32_to_string(ip)])
                     if found:
                         hostname = hostname.split('\n')[0].strip('.')
@@ -739,8 +802,7 @@ class Ip_Dialog:
                 ipv4 = dbus.Dictionary({'method': 'manual', 'dns': dns, 'may-fail': 0, 'dhcp-send-hostname': 'false',
                                         'addresses': dbus.Array([addresses], signature=dbus.Signature('au'))})
 
-
-            conn = dbus.Dictionary({'802-3-ethernet':ethernet, 'connection':connection, 'ipv4':ipv4, 'ipv6':ipv6})
+            conn = dbus.Dictionary({'802-3-ethernet': ethernet, 'connection': connection, 'ipv4': ipv4, 'ipv6': ipv6})
             interface.connection = conn
             new_connections.append(interface)
 
@@ -810,55 +872,8 @@ class Ip_Dialog:
         if ask_dialog.showup() != Gtk.ResponseType.YES:    
             return
 
+        # Make window sensitive until popup dialog appears
         self.main_dlg.set_sensitive(False)
 
         GObject.idle_add(self.create_update_connections, interest_interfaces, prefered_hostname, dnsmasq_via_carrier,
                          dnsmasq_via_autoconnect)
-
-    def create_update_connections(self, interest_interfaces, prefered_hostname, dnsmasq_via_carrier, dnsmasq_via_autoconnect):
-        for interface in interest_interfaces:
-            # Test if static ip exists in network
-            #TODO: Case which doesn't work: User had set .10 manual and .10 is owned by another pc, arping always fail
-            #TODO: so we can't catch the conflict.
-            if interface.page.method_entry.get_active() == 2 and \
-                            interface.carrier == 1 and self.nm.get_active_connections():
-                test_ip = interface.page.ip_entry.get_text()
-                if test_ip != interface.existing_info.ip:
-                    p = common.run_command(['arping', '-f', '-w1', '-I', interface.interface, test_ip], True)
-                    while p.poll() is None:
-                        while Gtk.events_pending():
-                            Gtk.main_iteration()
-                    if p.returncode == 0:
-                        interface.page.ip_entry.set_icon_from_stock(1, Gtk.STOCK_DIALOG_WARNING)
-                        interface.page.ip_entry.set_icon_tooltip_text(1, 'Η διεύθυνση %s χρησιμοποιείται ήδη από άλλον '
-                                                                         'υπολογιστή. Παρακάλω δώστε μια διαφορετική.'
-                                                                      % test_ip)
-                        title = 'Η διεύθυνση %s χρησιμοποιείται ήδη από άλλον ' \
-                                'υπολογιστή. Παρακαλώ δώστε μια διαφορετική.' % test_ip
-                        err_dialog = dialogs.ErrorDialog(title, 'Σφάλμα')
-                        err_dialog.set_transient_for(self.main_dlg)
-                        if err_dialog.showup() != Gtk.ResponseType.OK:
-                            self.main_dlg.set_sensitive(True)
-                            self.main_dlg.show()
-                            return
-
-            if interface.conflict is not None:
-                interface.conflict.interface.Update(interface.connection)
-                if interface.carrier == 1 and interface.page.auto_checkbutton.get_active():
-                    self.nm.interface.ActivateConnection(interface.conflict.object_path, interface.device_path, '/')
-            else:
-                object_path = self.settings.interface.AddConnection(interface.connection)
-                if interface.carrier == 1 and interface.page.auto_checkbutton.get_active():
-                    self.nm.interface.ActivateConnection(object_path, interface.device_path, '/')
-        
-            for connection_settings in interface.interface_connections:
-                settings = connection_settings.get_settings()
-                settings['connection'][dbus.String('autoconnect')] = dbus.String('false')
-                connection_settings.interface.Update(settings)
-
-        if dnsmasq_via_carrier and dnsmasq_via_autoconnect:
-            GObject.timeout_add(1000, self.watch_nm, interest_interfaces, prefered_hostname)
-        else:
-            msg = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς.'
-            dialogs.InfoDialog(msg, 'Επιτυχία').showup()
-            self.main_dlg.destroy()
