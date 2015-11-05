@@ -2,6 +2,9 @@
 
 import csv
 import libuser
+import os
+import ConfigParser
+from io import StringIO, BytesIO
 
 FIELDS_MAP = {'Όνομα χρήστη': 'name', 'Τελευταία αλλαγή κωδικού': 'lstchg', 'Κύρια ομάδα': 'gid', 'Όνομα κύριας ομάδας' : 'primary_group', 'Κέλυφος': 'shell', 'UID': 'uid', 'Γραφείο': 'office', 'Κρυπτογραφημένος κωδικός': 'password', 'Κωδικός': 'plainpw', 'Λήξη': 'expire', 'Μέγιστη διάρκεια': 'max', 'Προειδοποίηση': 'warn', 'Κατάλογος': 'directory', 'Ελάχιστη διάρκεια': 'min', 'Άλλο': 'other', 'Ομάδες': 'groups', 'Τηλ. γραφείου': 'wphone', 'Ανενεργός': 'inact', 'Ονοματεπώνυμο': 'rname', 'Τηλ. οικίας': 'hphone'}
 
@@ -147,4 +150,52 @@ class passwd():
                     #u.groups.append(u.primary_group)
         
         return new_set
-        
+
+
+class DHCP():
+    def __init__(self):
+        self.dhcp_info = {}
+
+    def parse(self, interface):
+        config_file = None
+        file_run = '/run/net-%s.conf' % interface
+        file_tmp = '/tmp/net-%s.conf' % interface
+        if os.path.isfile(file_run):
+            config_file = file_run
+        elif os.path.isfile(file_tmp):
+            config_file = file_tmp
+
+        if not config_file:
+            return
+
+        vconfig_file = StringIO(u'[Root]\n%s' % open(config_file).read())
+        config = ConfigParser.ConfigParser(allow_no_value=True)
+        config.readfp(vconfig_file)
+        try:
+            ip = config.get('Root', 'ipv4addr').strip("'")
+        except ConfigParser.NoOptionError:
+            return
+
+        mask = config.get('Root', 'ipv4netmask').strip("'")
+        route = config.get('Root', 'ipv4gateway').strip("'")
+
+        try:
+            dns0 = config.get('Root', 'ipv4dns0').strip("'")
+        except ConfigParser.NoOptionError:
+            dns0 = None
+
+        try:
+            dns1 = config.get('Root', 'ipv4dns1').strip("'")
+        except ConfigParser.NoOptionError:
+            dns1 = None
+
+        try:
+            dns2 = config.get('Root', 'ipv4dns2').strip("'")
+        except ConfigParser.NoOptionError:
+            dns2 = None
+
+        dnss = sorted([value for key, value in locals().items() if key.startswith('dns') and value and value != '0.0.0.0'])
+
+        self.dhcp_info.update(ip=ip,mask=mask,route=route,dnss=dnss)
+
+        return self.dhcp_info
