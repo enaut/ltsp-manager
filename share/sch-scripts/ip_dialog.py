@@ -614,7 +614,7 @@ class Ip_Dialog:
 
             for connection_settings in interface.interface_connections:
                 settings = connection_settings.get_settings()
-                settings['connection'][dbus.String('autoconnect')] = dbus.String('false')
+                settings['connection'][dbus.String('autoconnect')] = dbus.Boolean('false')
                 connection_settings.interface.Update(settings)
 
         if dnsmasq_via_carrier and dnsmasq_via_autoconnect:
@@ -760,18 +760,21 @@ class Ip_Dialog:
 
             ipv6 = dbus.Dictionary({'method': 'ignore'})
 
-            # This variables is used only in 2 and 3 method
-            ip = string_to_int32(interface.page.ip_entry.get_text().strip())
-            subnet = subnet_to_bits(interface.page.subnet_entry.get_text().strip())
-            route = string_to_int32(interface.page.route_entry.get_text().strip())
+            try:
+                # This variables is used only in 2 and 3 method
+                ip = string_to_int32(interface.page.ip_entry.get_text().strip())
+                subnet = subnet_to_bits(interface.page.subnet_entry.get_text().strip())
+                route = string_to_int32(interface.page.route_entry.get_text().strip())
 
-            addresses = dbus.Array([dbus.UInt32(ip),
-                                    dbus.UInt32(subnet),
-                                    dbus.UInt32(route)],
-                                   signature=dbus.Signature('u'))
+                addresses = dbus.Array([dbus.UInt32(ip),
+                                        dbus.UInt32(subnet),
+                                        dbus.UInt32(route)],
+                                       signature=dbus.Signature('u'))
+            except:
+                pass
 
             if not interface.page.auto_checkbutton.get_active():
-                connection.update({'autoconnect': dbus.String('false')})
+                connection.update({'autoconnect': dbus.Boolean('false')})
 
             if interface.page.method_entry.get_active() == 0:
                 # Auto
@@ -781,7 +784,8 @@ class Ip_Dialog:
                 ipv4 = dbus.Dictionary({'method': 'auto', 'may-fail': 0, 'dns': dns, 'ignore-auto-dns': 1})
             elif interface.page.method_entry.get_active() == 2:
                 # Manual
-                ipv4 = dbus.Dictionary({'method': 'manual', 'dns': dns, 'may-fail': 0, 'dhcp-send-hostname': 'false',
+                ipv4 = dbus.Dictionary({'method': 'manual', 'dns': dns, 'may-fail': 0,
+                                        'dhcp-send-hostname': dbus.Boolean('false'),
                                         'addresses': dbus.Array([addresses], signature=dbus.Signature('au'))})
 
                 if int32_to_string(ip).startswith('10.') and \
@@ -799,7 +803,8 @@ class Ip_Dialog:
             elif interface.page.method_entry.get_active() == 3:
                 # LTSP
                 ethernet = dbus.Dictionary({'duplex': 'full'})
-                ipv4 = dbus.Dictionary({'method': 'manual', 'dns': dns, 'may-fail': 0, 'dhcp-send-hostname': 'false',
+                ipv4 = dbus.Dictionary({'method': 'manual', 'dns': dns, 'may-fail': 0,
+                                        'dhcp-send-hostname': dbus.Boolean('false'),
                                         'addresses': dbus.Array([addresses], signature=dbus.Signature('au'))})
 
             conn = dbus.Dictionary({'802-3-ethernet': ethernet, 'connection': connection, 'ipv4': ipv4, 'ipv6': ipv6})
@@ -810,7 +815,11 @@ class Ip_Dialog:
             for connection_settings_path in connection_settings_paths:
                 connection_settings = Connection_Settings(connection_settings_path)
                 connection_settings_id = connection_settings.get_settings()['connection']['id']
+                # If connection with same id found set conflict variable to this existing connection and give to our
+                # connection the existing connection uuid
                 if connection_settings_id == interface.id:
+                    connection_settings_uuid = connection_settings.get_settings()['connection']['uuid']
+                    interface.connection['connection']['uuid'] = connection_settings_uuid
                     interface.conflict = connection_settings
                     replace_connections.append(interface)
                     new_connections.remove(interface)
