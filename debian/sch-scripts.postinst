@@ -82,7 +82,7 @@ install() {
 
     # Prevent ibus from starting (LP: #1481025).
     search_and_replace "^IM_CONFIG_DEFAULT_MODE=auto$" \
-        "IM_CONFIG_DEFAULT_MODE=xim" /etc/default/im-config
+        "IM_CONFIG_DEFAULT_MODE=cjkv" /etc/default/im-config
 
     # If gnome-fallback exists, set it as the default session.
     for session in gnome-fallback gnome-flashback-metacity ""; do
