@@ -58,6 +58,7 @@ install() {
 
     # Remove the local resolver (LP: #959037), we want a real DNS server.
     if search_and_replace "^dns=dnsmasq" "" /etc/NetworkManager/NetworkManager.conf; then
+        search_and_replace "^bind-interfaces$" "" /etc/dnsmasq.d/network-manager || true
         search_and_replace "^bind-dynamic$" "" /etc/dnsmasq.d/network-manager || true
         echo "Restarting network-manager to remove its spawned dnsmasq..." >&2
         service network-manager restart
