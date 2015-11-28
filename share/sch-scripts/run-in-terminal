@@ -194,7 +194,9 @@ install_sch_scripts() {
     if [ -f "/usr/share/mintsources/$release/mintsources.conf" ]; then
         release=$(sed -n 's/^base_codename=//p' "/usr/share/mintsources/$release/mintsources.conf")
     fi
-    if [ "$release" != "precise" ] && [ "$release" != "trusty" ] && [ "$release" != "wily" ]; then
+    if [ "$release" != "precise" ] && [ "$release" != "trusty" ] &&
+        [ "$release" != "wily" ] && [ "$release" != "xenial" ]
+    then
         die "Τα sch-scripts μπορούν να εγκατασταθούν μόνο σε LTS εκδόσεις του Ubuntu."
     fi
     # Remove the old repository filenames that contain "." instead of "_".
