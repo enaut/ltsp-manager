@@ -1,0 +1,25 @@
+# Prefer gnome-flashback over other sessions if it's installed,
+# because it's usually installed alongside other gnome sessions.
+# The current script filename needs to be after X50-dmrc-processing,
+# and before X50-generate-env.
+
+if [ "$LDM_SESSION" = "gnome-fallback" ]; then
+    # If gnome-fallback is defined in lts.conf (possibly by older sch-scripts),
+    # unset it, we'll set it again or set the correct one.
+    LDM_SESSION=""
+elif [ -n "$LDM_SESSION" ]; then
+    # If it's set to something else, bail out.
+    return 0
+fi
+
+# Use ^ as a marker for the start of line.
+sessions=$(do_command "find /usr/share/xsessions/ -name '*.desktop' -printf '^%f\n'")
+
+for session in gnome-fallback gnome-flashback-metacity gnome-flashback-compiz ''
+do
+    case "$sessions" in
+        *^$session.desktop*)
+            LDM_SESSION=$(do_command "sed -n 's/^Exec=//p' '/usr/share/xsessions/$session.desktop'")
+            break
+    esac
+done
