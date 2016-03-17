@@ -10,7 +10,8 @@ Homepage: http://ts.sch.gr/wiki/Linux/LTSP
 
 Package: sch-scripts
 Architecture: all
-Depends: librsvg2-common,
+Depends: iputils-arping,
+ librsvg2-common,
  policykit-1,
  python (>= 2.6),
  python-aptdaemon.gtk3widgets,
