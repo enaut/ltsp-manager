@@ -1,3 +1,8 @@
+sch-scripts (16.04.1) xenial; urgency=low
+  * Εκκίνηση εργασιών για την έκδοση 16.04.1.
+
+ -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 10 Mar 2017 10:19:32 +0200
+
 sch-scripts (12.04.17) precise; urgency=low
 
   * Μερική υποστήριξη για Ubuntu Wily.
