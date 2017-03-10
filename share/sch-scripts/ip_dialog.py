@@ -90,7 +90,7 @@ class Network_Manager_DBus(object):
         self.proxy = BUS.get_object(DBUS_SERVICE_NAME, object_path)
         self.interface = dbus.Interface(self.proxy, interface_name)
         try:
-            self.properties = self.proxy.GetAll(interface_name, 'org.freedesktop.DBus.Properties')
+            self.properties = self.interface.get_dbus_method('GetAll', dbus_interface='org.freedesktop.DBus.Properties')(interface_name)
         except dbus.exceptions.DBusException:
             pass
 
