@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2013
-# Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>, Yannis Siahos <Siahos@cti.gr>
+# Copyright (C) 2013 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# 2017, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 from gi.repository import Gtk, Gdk, GObject
 from binascii import unhexlify, hexlify
@@ -162,7 +162,8 @@ class Device(Network_Manager_DBus):
         interface = self.properties['Interface']
         driver = self.properties['Driver']
         device_type = self.properties['DeviceType']
-        return ip4config_path, interface, driver, device_type
+        managed = self.properties['Managed']
+        return ip4config_path, interface, driver, device_type, managed
         
 
 class Device_Wired(Network_Manager_DBus):
@@ -456,8 +457,8 @@ class Ip_Dialog:
             return
         for device_path in device_paths:
             device = Device(device_path)
-            ip4config_path, interface, driver, device_type = device.get_properties()
-            if device_type == 1:
+            ip4config_path, interface, driver, device_type, managed = device.get_properties()
+            if device_type == 1 and managed:
                 devicewired = Device_Wired(device_path)
                 mac, speed, carrier = devicewired.get_properties()
                 interface = Interface(ip4config_path, device_path, interface, \
@@ -538,7 +539,7 @@ class Ip_Dialog:
                 continue
             #TODO: Change it (do not create new instances)   
             device = Device(interface.device_path)
-            ip4config_path, interface, driver, device_type = device.get_properties()
+            ip4config_path, interface, driver, device_type, managed = device.get_properties()
             if ip4config_path == '/':
                 break_bool = False
         
