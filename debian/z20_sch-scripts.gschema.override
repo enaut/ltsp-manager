@@ -29,9 +29,6 @@ active = false
 autoload-subtitles = true
 subtitle-encoding = 'WINDOWS-1253'
 
-[org.mate.desktop.screensaver]
-lock-enabled = false
-
 [org.mate.NotificationDaemon]
 popup-location = 'bottom_right'
 
@@ -45,3 +42,7 @@ bracket-matching = true
 color-scheme = 'oblivion'
 insert-spaces = true
 shown-in-menu-encodings = ['WINDOWS-1253','ISO-8859-15']
+
+[org.mate.screensaver]
+lock-enabled = false
+mode = 'blank-only'
