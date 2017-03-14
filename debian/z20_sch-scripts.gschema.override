@@ -33,11 +33,15 @@ subtitle-encoding = 'WINDOWS-1253'
 lock-enabled = false
 
 [org.mate.NotificationDaemon]
-popup-location='bottom_right'
+popup-location = 'bottom_right'
 
 [org.mate.panel]
-default-layout='redmond'
+default-layout = 'redmond'
 
-[org.mate.pluma.preferences.encodings]
+[org.mate.pluma]
 auto-detected-encodings = ['UTF-8','CURRENT','WINDOWS-1253','ISO-8859-15','UTF-16']
+auto-indent = true
+bracket-matching = true
+color-scheme = 'oblivion'
+insert-spaces = true
 shown-in-menu-encodings = ['WINDOWS-1253','ISO-8859-15']
