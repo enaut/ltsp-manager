@@ -32,9 +32,12 @@ subtitle-encoding = 'WINDOWS-1253'
 [org.mate.desktop.screensaver]
 lock-enabled = false
 
+[org.mate.NotificationDaemon]
+popup-location='bottom_right'
+
 [org.mate.panel]
 default-layout='redmond'
 
-[org.gnome.pluma.preferences.encodings]
+[org.mate.pluma.preferences.encodings]
 auto-detected-encodings = ['UTF-8','CURRENT','WINDOWS-1253','ISO-8859-15','UTF-16']
 shown-in-menu-encodings = ['WINDOWS-1253','ISO-8859-15']

@@ -46,18 +46,22 @@ purge() {
 
     set +e
     remove
+    # Restore all the files that were diverted by sch-scripts
+    dpkg-divert --list sch-scripts \
+    | while read temp temp file temp; do
+        dpkg-divert --package sch-scripts --rename --remove "$file"
+    done
+
     examples="
         /etc/dnsmasq.d/ltsp-server-dnsmasq.conf
         /var/lib/tftpboot/ltsp/i386/lts.conf
     "
     configs="
         /etc/NetworkManager/NetworkManager.conf
-        /etc/dnsmasq.d/network-manager
         /etc/ssh/sshd_config
         /etc/default/rcS
         /etc/default/im-config
     "
-
     # Don't purge the examples, move them to /tmp to give a chance for recovery.
     temp=$(mktemp -d --tmpdir sch-scripts-purged.XXXXXX)
     for file in $examples; do

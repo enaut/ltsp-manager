@@ -58,8 +58,6 @@ install() {
 
     # Remove the local resolver (LP: #959037), we want a real DNS server.
     if search_and_replace "^dns=dnsmasq" "" /etc/NetworkManager/NetworkManager.conf; then
-        search_and_replace "^bind-interfaces$" "" /etc/dnsmasq.d/network-manager || true
-        search_and_replace "^bind-dynamic$" "" /etc/dnsmasq.d/network-manager || true
         echo "Restarting network-manager to remove its spawned dnsmasq..." >&2
         service network-manager restart
     fi
@@ -126,6 +124,15 @@ EOF
         ln -sf /usr/share/sch-scripts/sch-scripts.js /usr/lib/firefox/defaults/pref/ || true
     fi
 
+    while read file temp; do
+        if [ ! -e "/etc/sch-scripts/diverted/${file##*/}" ]; then
+            dpkg-divert --package sch-scripts --divert "/etc/sch-scripts/diverted/${file##*/}" --rename "$file"
+        fi
+    done <<EOF
+        /usr/share/mate/autostart/tilda.desktop  # Useless terminal that opens with F12
+        /etc/init.d/nbd-client  # Break ordering cycle with n-m (LP: #1487679)
+        /etc/dnsmasq.d/network-manager  # Makes dnsmasq malfunction sometimes
+EOF
     # Add group "teachers"
     test -f /etc/default/shared-folders && . /etc/default/shared-folders
     if [ -n "$TEACHERS" ]; then
