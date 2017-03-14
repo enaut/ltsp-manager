@@ -18,10 +18,6 @@ switch-input-source-backward = ['<Shift>Alt_L']
 [org.gnome.desktop.wm.preferences]
 button-layout = 'menu:minimize,maximize,close'
 
-[org.gnome.gedit.preferences.encodings]
-auto-detected = ['UTF-8','CURRENT','WINDOWS-1253','ISO-8859-15','UTF-16']
-shown-in-menu = ['WINDOWS-1253','ISO-8859-15']
-
 [org.gnome.settings-daemon.plugins.print-notifications]
 active = false
 

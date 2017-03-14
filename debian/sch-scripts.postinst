@@ -125,7 +125,7 @@ EOF
     fi
 
     while read file temp; do
-        if [ ! -e "/etc/sch-scripts/diverted/${file##*/}" ]; then
+        if [ -f "$file" ] && [ ! -f "/etc/sch-scripts/diverted/${file##*/}" ]; then
             dpkg-divert --package sch-scripts --divert "/etc/sch-scripts/diverted/${file##*/}" --rename "$file"
         fi
     done <<EOF
