@@ -1,21 +1,23 @@
 #!/usr/bin/python
-# -*- coding:utf-8 -*-
-# Copyright (C) 2013 
-# Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>,  Yannis Siahos <Siahos@cti.gr>
+#-*- coding: utf-8 -*-
+# Copyright (C) 2013 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# 2017, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+import apt
+import aptdaemon.client
 from aptdaemon.enums import *
+import aptdaemon.errors
 from aptdaemon.gtk3widgets import AptErrorDialog, AptProgressDialog
 import apt_pkg
-import apt
-import os
 import gc
 import mimetypes
-import aptdaemon.client
-import aptdaemon.errors
-import dialogs
+import os
 
+import dialogs
 
 class Package:
     def __init__(self, src,  cache=None):
