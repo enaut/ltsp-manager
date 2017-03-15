@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2012-2017 Alkis Georgopoulos <alkisg@gmail.com>
 # 2012-2015, Fotis Tsamis <ftsamis@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
@@ -493,7 +493,7 @@ class Gui:
         self.open_link('http://manpages.ubuntu.com/lts.conf')
 
     def on_mi_ltsp_info_activate(self, widget):
-        ltsp_info.LtspInfo()
+        ltsp_info.LtspInfo(self.main_window)
 
     def on_mi_about_activate(self, widget):
         about_dialog.AboutDialog(self.main_window)

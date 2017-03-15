@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
 # 2013-2014, Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
 # 2017, Alkis Georgopoulos <alkisg@gmail.com>
