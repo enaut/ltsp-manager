@@ -1,33 +1,38 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-# Copyright (C) 2012-2013 Fotis Tsamis <ftsamis@gmail.com>, Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2012-2017 Alkis Georgopoulos <alkisg@gmail.com>
+# 2012-2015, Fotis Tsamis <ftsamis@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-from twisted.internet import gtk3reactor
-gtk3reactor.install()
-
+import getpass
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+import locale
+import os
+import socket
 import subprocess
 import sys
-import os
-from gi.repository import Gtk
+from twisted.internet import gtk3reactor
+gtk3reactor.install()
 from twisted.internet import reactor, defer
 
-import version
-import libuser
-import user_form
-import group_form
-import dialogs
-import import_dialog
-import export_dialog
-import config
-import common
 import about_dialog
+import common
+import config
 import create_users
-import shared_folders
-import ltsp_info
-import parsers
-import maintenance
+import dialogs
+import export_dialog
+import group_form
+import import_dialog
 import ip_dialog
+import libuser
+import ltsp_info
+import maintenance
+import parsers
+import shared_folders
+import user_form
+import version
 
 class Gui:
     def __init__(self):
@@ -470,11 +475,13 @@ class Gui:
         self.open_link('http://helpdesk.sch.gr/ticketnew_user.php?category_id=9017')
     
     def on_mi_irc_activate(self, widget):
-        user = os.getenv("SUDO_USER")
-        if user is None:
-            user = "sch_scripts_user." # The dot is converted to a random digit
-        self.open_link("http://webchat.freenode.net/?nick=" + user +
-            "&channels=ubuntu-gr,ts.sch.gr&prompt=1")
+        host = socket.gethostname()
+        user = getpass.getuser()
+        if user == "root":
+            user = os.getlogin()
+        lang = locale.getdefaultlocale()[0]
+        self.open_link("http://ts.sch.gr/repo/irc?user=%s&host=%s&lang=%s" % \
+                       (user, host, lang))
 
     def on_mi_forum_activate(self, widget):
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
@@ -489,7 +496,7 @@ class Gui:
         ltsp_info.LtspInfo()
 
     def on_mi_about_activate(self, widget):
-        about_dialog.AboutDialog()
+        about_dialog.AboutDialog(self.main_window)
 
 
 # To export a man page:

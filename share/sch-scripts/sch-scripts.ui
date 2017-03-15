@@ -454,7 +454,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Ανοίγει το wiki του οδηγού εγκατάστασης Ubuntu 12.04 LTSP</property>
+                        <property name="tooltip_text" translatable="yes">Ανοίγει το wiki του οδηγού εγκατάστασης Ubuntu 16.04 LTSP</property>
                         <property name="label" translatable="yes">Αρχική (wiki)</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_home_activate" swapped="no"/>

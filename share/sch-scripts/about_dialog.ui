@@ -11,8 +11,8 @@
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="program_name">Διαχείριση ΣΕΠΕΗΥ</property>
-    <property name="version">12.04</property>
-    <property name="copyright" translatable="yes">Copyright © 2015 Τεχνική Στήριξη ΣΕΠΕΗΥ</property>
+    <property name="version">16.04</property>
+    <property name="copyright" translatable="yes">Copyright © 2017 Τεχνική Στήριξη ΣΕΠΕΗΥ</property>
     <property name="comments" translatable="yes">Mια συλλογή από βοηθήματα για τη διαχείριση εργαστηρίου υπολογιστών.</property>
     <property name="website">http://ts.sch.gr/wiki/Linux/LTSP</property>
     <property name="website_label" translatable="yes">http://ts.sch.gr/wiki/Linux/LTSP</property>
