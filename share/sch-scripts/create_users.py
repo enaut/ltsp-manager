@@ -1,12 +1,16 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 # Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# 2017, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-from gi.repository import Gtk
 import datetime
-import libuser
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
 import config
+import libuser
 import shared_folders
 
 class NewUsersDialog:
