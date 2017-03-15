@@ -110,14 +110,14 @@ EOF
 
         # Specify better default apps for some mime types.
         mkdir -p /usr/local/share/applications
-        ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
+        ln -rsf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
     fi
 
     # If gnome-flashback isn't installed, and mate is, use its mimeapps for root
     if [ ! -f /usr/local/share/applications/mimeapps.list ] &&
-      [ -f /usr/share/applications/mate-mimeapps.list ]; then
+      [ -f /usr/share/mate/applications/defaults.list ]; then
         mkdir -p /usr/local/share/applications
-        ln -sf /usr/share/applications/mate-mimeapps.list /usr/local/share/applications/mimeapps.list
+        ln -rsf /usr/share/mate/applications/defaults.list /usr/local/share/applications/mimeapps.list || true
     fi
 
     # Start tuxtype with the correct theme for the current locale.
