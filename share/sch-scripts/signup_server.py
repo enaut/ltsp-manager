@@ -1,19 +1,24 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
+# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# 2013-2014, Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# 2017, Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 import os
 import time
 from twisted.internet.protocol import Factory
-from twisted.protocols.basic import LineReceiver
 from twisted.internet import gtk3reactor
 gtk3reactor.install()
 from twisted.internet import reactor
+from twisted.protocols.basic import LineReceiver
 
-from gi.repository import Gtk
-
+import common
 import config
 import dialogs
-import common
 import user_form
 
 class Registrations(LineReceiver):

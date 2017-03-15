@@ -1,12 +1,19 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-import socket
-import os
-import sys
-import re
+# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
+# 2012-2014, Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# 2012-2017, Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
 import crypt
-import random
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+import os
+import random
+import re
+import socket
+import sys
 
 import iso843
 
