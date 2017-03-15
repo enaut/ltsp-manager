@@ -113,6 +113,13 @@ EOF
         ln -sf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
     fi
 
+    # If gnome-flashback isn't installed, and mate is, use its mimeapps for root
+    if [ ! -f /usr/local/share/applications/mimeapps.list ] &&
+      [ -f /usr/share/applications/mate-mimeapps.list ]; then
+        mkdir -p /usr/local/share/applications
+        ln -sf /usr/share/applications/mate-mimeapps.list /usr/local/share/applications/mimeapps.list
+    fi
+
     # Start tuxtype with the correct theme for the current locale.
     ln -sf /usr/share/sch-scripts/tuxtype /usr/local/bin/ || true
 

@@ -31,6 +31,9 @@ popup-location = 'bottom_right'
 [org.mate.panel]
 default-layout = 'redmond'
 
+[org.mate.peripherals-keyboard-xkb.general]
+group-per-window = false
+
 [org.mate.pluma]
 auto-detected-encodings = ['UTF-8','CURRENT','WINDOWS-1253','ISO-8859-15','UTF-16']
 auto-indent = true
