@@ -1,43 +1,22 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
+# Copyright (C) 2009-2012 Fotis Tsamis <ftsamis@gmail.com>
+# 2009-2017, Alkis Georgopoulos <alkisg@gmail.com>
+# 2014, Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-###########################################################################
-# Imports/exports user accounds from/to various sources.
-#
-# Copyright (C) 2009 Τεχνική Στήριξη ΣΕΠΕΗΥ <devs@ts.sch.gr>
-#  * Original:
-#    Sep 2009 - Alkis Georgopoulos <alkisg@gmail.com>
-#    Sep 2009 - Fotis Tsamis <ftsamis@gmail.com>
-#  * Extended by:
-#    Feb 2012 - Lefteris Nikoltsios <nikoltsios@ceid.upatras.gr> 
-#    Feb 2012 - Yannis Siahos <yannis.siahos@gmail.com>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-# On Debian GNU/Linux systems, the complete text of the GNU General
-# Public License can be found in `/usr/share/common-licenses/GPL".
-###########################################################################
-
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 from gi.repository import Gtk, Gdk
 import os
 import re
 import sys
-import libuser
+
 import common
 import dialogs
+import libuser
 import user_form
-
 
 # NOTE: User.plainpw overrides the User.password if it's set
 class ImportDialog:
