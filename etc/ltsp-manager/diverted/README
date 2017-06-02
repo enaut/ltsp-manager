@@ -1,9 +1,9 @@
-Τα ltsp-manager τοποθετούν σε αυτόν τον φάκελο κάποια αρχεία άλλων
-προγραμμάτων τα οποία παρουσιάζουν προβλήματα, έτσι ώστε να μην
-τα βρίσκει το σύστημα και να αποφεύγονται τα προβλήματα.
+ltsp-manager diverts into this folder some files of other packages that
+cause issues, so that the system doesn't find them and the issues are
+bypassed.
 
-Η λίστα αυτών των αρχείων εμφανίζεται με την εντολή
+The list of those files can be shown with
   dpkg-divert --list ltsp-manager
 
-Κατά την απεγκατάσταση (apt purge ltsp-manager) τα αρχεία αυτά
-επανέρχονται στην αρχική τους θέση.
+On ltsp-manager uninstallation (apt purge ltsp-manager) those files are
+restored to their original location.
