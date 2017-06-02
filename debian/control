@@ -1,12 +1,13 @@
 Source: ltsp-manager
 Section: admin
 Priority: extra
-Maintainer: Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>
-Build-Depends: debhelper (>= 7.3.0)
-Standards-Version: 3.9.6
-Vcs-Bzr: http://bazaar.launchpad.net/~ts.sch.gr/ltsp-manager/trunk
-Vcs-Browser: http://bazaar.launchpad.net/~ts.sch.gr/ltsp-manager/trunk/files
-Homepage: http://ts.sch.gr/wiki/Linux/LTSP
+Maintainer: LTSP Developers <ltsp-developer@lists.sourceforge.net>
+Uploaders: Alkis Georgopoulos <alkisg@gmail.com>, Vagrant Cascadian <vagrant@debian.org>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Vcs-Git: https://git.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
+Vcs-Browser: https://code.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
+Homepage: http://ltsp.org
 
 Package: ltsp-manager
 Architecture: all
@@ -32,10 +33,7 @@ Recommends: apturl,
 Suggests: ident2,
  squid,
  x2goserver
-Description: Διαχείριση ΣΕΠΕΗΥ
- Παρέχει ένα σύνολο εξαρτήσεων για την αυτοματοποίηση της εγκατάστασης
- σχολικών εργαστηρίων, και ένα γραφικό περιβάλλον που υποστηρίζει διαχείριση
- λογαριασμών χρηστών, δημιουργία εικονικού δίσκου LTSP κ.α.
- .
- Πολλά από τα συμπεριλαμβανόμενα βοηθήματα προσανατολίζονται σε LTSP
- εγκαταστάσεις, αλλά το πακέτο είναι χρήσιμο και χωρίς LTSP.
+Description: LTSP manager
+ It depends on a set of packages suitable for configuring LTSP in small
+ computer labs, and it provides a GUI for managing user accounts, running
+ maintenance tasks etc.
