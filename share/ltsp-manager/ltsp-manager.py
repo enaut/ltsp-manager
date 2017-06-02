@@ -41,7 +41,7 @@ class Gui:
         self.conf = config.parser
 
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('sch-scripts.ui')
+        self.builder.add_from_file('ltsp-manager.ui')
         self.builder.connect_signals(self)
 
         self.main_window = self.builder.get_object('main_window')
@@ -272,7 +272,7 @@ class Gui:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
         
-        chooser.set_icon_from_file('/usr/share/pixmaps/sch-scripts.svg')        
+        chooser.set_icon_from_file('/usr/share/pixmaps/ltsp-manager.svg')        
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -302,7 +302,7 @@ class Gui:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
         
-        chooser.set_icon_from_file('/usr/share/pixmaps/sch-scripts.svg')        
+        chooser.set_icon_from_file('/usr/share/pixmaps/ltsp-manager.svg')        
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -466,10 +466,10 @@ class Gui:
         self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
 
     def on_mi_report_bug_activate(self, widget):
-        self.open_link('https://bugs.launchpad.net/sch-scripts')
+        self.open_link('https://bugs.launchpad.net/ltsp-manager')
 
     def on_mi_ask_question_activate(self, widget):
-        self.open_link('https://answers.launchpad.net/sch-scripts')
+        self.open_link('https://answers.launchpad.net/ltsp-manager')
     
     def on_helpdesk_ticket_activate(self, widget):
         self.open_link('http://helpdesk.sch.gr/ticketnew_user.php?category_id=9017')
@@ -500,9 +500,9 @@ class Gui:
 
 
 # To export a man page:
-# help2man -L el -s 8 -o sch-scripts.8 -N ./sch-scripts && man ./sch-scripts.8
+# help2man -L el -s 8 -o ltsp-manager.8 -N ./ltsp-manager && man ./ltsp-manager.8
 def usage():
-    print """Χρήση: sch-scripts [ΕΠΙΛΟΓΕΣ]
+    print """Χρήση: ltsp-manager [ΕΠΙΛΟΓΕΣ]
 
 Παρέχει ένα σύνολο εξαρτήσεων για την αυτοματοποίηση της εγκατάστασης
 σχολικών εργαστηρίων και ένα γραφικό περιβάλλον που υποστηρίζει διαχείριση
@@ -515,13 +515,13 @@ def usage():
 
 Επιλογές:
     -h, --help     Σελίδα βοήθειας της εφαρμογής.
-    -v, --version  Προβολή έκδοσης των sch-scripts.
+    -v, --version  Προβολή έκδοσης των ltsp-manager.
 
-Αναφορά σφαλμάτων στο https://bugs.launchpad.net/sch-scripts."""
+Αναφορά σφαλμάτων στο https://bugs.launchpad.net/ltsp-manager."""
 
 
 def print_version():
-    print """sch-scripts %s
+    print """ltsp-manager %s
 Copyright (C) 2009-2013 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
 Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/gpl.html>.
 

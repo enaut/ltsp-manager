@@ -290,7 +290,7 @@ class Interface:
         self.ip4config_path, self.device_path, self.interface, self.driver, self.device_type, self.mac,\
         self.speed, self.carrier = ip4config_path, device_path, interface, driver, device_type, mac, speed, carrier
         
-        self.id = '%s,sch-scripts' % self.interface
+        self.id = '%s,ltsp-manager' % self.interface
         self.interface_connections = []
         self.page = None
         self.conflict = None

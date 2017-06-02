@@ -4,7 +4,7 @@
 # and before X50-generate-env.
 
 if [ "$LDM_SESSION" = "gnome-fallback" ]; then
-    # If gnome-fallback is defined in lts.conf (possibly by older sch-scripts),
+    # If gnome-fallback is defined in lts.conf (possibly by older ltsp-manager),
     # unset it, we'll set it again or set the correct one.
     LDM_SESSION=""
 elif [ -n "$LDM_SESSION" ]; then

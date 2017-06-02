@@ -10,8 +10,8 @@ It runs the specified COMMAND in a terminal, either the current if one
 is open, or in a new one if run e.g. with Alt+F2.
 In the end it shows a failure or success message.
 
-As a special case, if run as /tmp/sch-scripts with no parameters, it adds
-the appropriate repositories and installs sch-scripts.
+As a special case, if run as /tmp/ltsp-manager with no parameters, it adds
+the appropriate repositories and installs ltsp-manager.
 
 Options:
     -s, --source  COMMAND is assumed to be a shell script which is sourced in
@@ -29,7 +29,7 @@ bold() {
 }
 
 log() {
-    logger -t sch-scripts -p syslog.err "$@"
+    logger -t ltsp-manager -p syslog.err "$@"
 }
 
 # Outputs a message to stderr and aborts execution
@@ -197,7 +197,7 @@ install_sch_scripts() {
     if [ "$release" != "precise" ] && [ "$release" != "trusty" ] &&
         [ "$release" != "wily" ] && [ "$release" != "xenial" ]
     then
-        die "Τα sch-scripts μπορούν να εγκατασταθούν μόνο σε LTS εκδόσεις του Ubuntu."
+        die "Τα ltsp-manager μπορούν να εγκατασταθούν μόνο σε LTS εκδόσεις του Ubuntu."
     fi
     # Remove the old repository filenames that contain "." instead of "_".
     rm -f /etc/apt/sources.list.d/ts.sch.gr*.list
@@ -210,11 +210,11 @@ install_sch_scripts() {
     # Hide the nbd-client debconf dialog
     echo 'nbd-client	nbd-client/killall	boolean	false' | debconf-set-selections
 
-    bold "Γίνεται εγκατάσταση των sch-scripts."
-    apt-get --yes install sch-scripts || die "Σφάλμα κατά την εγκατάσταση των sch-scripts."
+    bold "Γίνεται εγκατάσταση των ltsp-manager."
+    apt-get --yes install ltsp-manager || die "Σφάλμα κατά την εγκατάσταση των ltsp-manager."
 
-    bold "Γίνεται εκτέλεση των sch-scripts."
-    sch-scripts >/dev/null 2>&1 &
+    bold "Γίνεται εκτέλεση των ltsp-manager."
+    ltsp-manager >/dev/null 2>&1 &
 
     if [ -x "/usr/sbin/update-apt-xapian-index" ]; then
         bold "Γίνεται ενημέρωση του ευρετηρίου πακέτων."
@@ -254,9 +254,9 @@ case "$1" in
         . "$script"
         ;;
     '')
-        # Special case: if run as /tmp/sch-scripts, install sch-scripts!
-        if [ "${0##*/}" = "sch-scripts" ] && [ "$(pwd)" = "/tmp" ]; then
-            title="sch-scripts"
+        # Special case: if run as /tmp/ltsp-manager, install ltsp-manager!
+        if [ "${0##*/}" = "ltsp-manager" ] && [ "$(pwd)" = "/tmp" ]; then
+            title="ltsp-manager"
             install_sch_scripts
             pause_exit $?
         else

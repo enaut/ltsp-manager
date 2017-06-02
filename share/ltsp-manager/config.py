@@ -2,7 +2,7 @@
 import ConfigParser
 import os
 
-path = os.path.expanduser('~/.config/sch-scripts/')
+path = os.path.expanduser('~/.config/ltsp-manager/')
 settings_f = os.path.join(path, 'settings')
 
 gui_defaults = {'show_system_groups' : False,
@@ -37,7 +37,7 @@ def setdefaults(overwrite=False):
         parser.add_section('Roles')
     
     for k, v in roles_defaults.iteritems():
-        # TODO: new sch-scripts versions are not able to append groups like
+        # TODO: new ltsp-manager versions are not able to append groups like
         # 'fuse' to the saved user Roles, so don't read the user settings
         # at all until we reapproach the issue.
         # if overwrite or not parser.has_option('Roles', k):

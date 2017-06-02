@@ -20,7 +20,7 @@
     <property name="authors">Άλκης Γεωργόπουλος &lt;alkisg@gmail.com&gt;
 Φώτης Τσάμης &lt;ftsamis@gmail.com&gt;
 Λευτέρης Νικόλτσιος &lt;lefteris.nikoltsios@gmail.com&gt;</property>
-    <property name="logo">/usr/share/pixmaps/sch-scripts.svg</property>
+    <property name="logo">/usr/share/pixmaps/ltsp-manager.svg</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">

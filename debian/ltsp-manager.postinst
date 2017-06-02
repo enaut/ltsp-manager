@@ -27,13 +27,13 @@ search_and_replace() {
     migrate=$4
 
     if grep -qs "$search" "$file"; then
-        sed "s/$search/$replace # Commented by sch-scripts: &/" -i "$file"
+        sed "s/$search/$replace # Commented by ltsp-manager: &/" -i "$file"
         return 0
     elif [ "$migrate" = true ] && grep -qs "^${replace}$" "$file"; then
         # strip ^$ from the search string, we'll use it in the replacement
         old_search=${search#^}
         old_search=${old_search%$}
-        sed "s/^${replace}$/& # Commented by sch-scripts: $old_search/" -i "$file"
+        sed "s/^${replace}$/& # Commented by ltsp-manager: $old_search/" -i "$file"
         return 0
     fi
     return 1
@@ -94,7 +94,7 @@ install() {
         else
             # We can't ship a conffile because the session name varies.
             mkdir -p /etc/lightdm/lightdm.conf.d
-            cat >/etc/lightdm/lightdm.conf.d/90_sch-scripts.conf <<EOF
+            cat >/etc/lightdm/lightdm.conf.d/90_ltsp-manager.conf <<EOF
 [SeatDefaults]
 user-session=$session
 EOF
@@ -106,11 +106,11 @@ EOF
         fi
 
         # Work around gnome-panel not appearing (LP: #1078679).
-        ln -sf /usr/share/sch-scripts/gnome-panel /usr/local/bin/ || true
+        ln -sf /usr/share/ltsp-manager/gnome-panel /usr/local/bin/ || true
 
         # Specify better default apps for some mime types.
         mkdir -p /usr/local/share/applications
-        ln -rsf /usr/share/sch-scripts/mimeapps.list /usr/local/share/applications/ || true
+        ln -rsf /usr/share/ltsp-manager/mimeapps.list /usr/local/share/applications/ || true
     fi
 
     # If gnome-flashback isn't installed, and mate is, use its mimeapps for root
@@ -121,19 +121,19 @@ EOF
     fi
 
     # Start tuxtype with the correct theme for the current locale.
-    ln -sf /usr/share/sch-scripts/tuxtype /usr/local/bin/ || true
+    ln -sf /usr/share/ltsp-manager/tuxtype /usr/local/bin/ || true
 
     # Work around unzip not using the correct charset (LP: #580961).
-    ln -sf /usr/share/sch-scripts/unzip /usr/local/bin/ || true
+    ln -sf /usr/share/ltsp-manager/unzip /usr/local/bin/ || true
 
     # Work around apturl not working after firefox 16 (LP: #1261178).
     if [ -d /usr/lib/firefox/defaults/pref ]; then
-        ln -sf /usr/share/sch-scripts/sch-scripts.js /usr/lib/firefox/defaults/pref/ || true
+        ln -sf /usr/share/ltsp-manager/ltsp-manager.js /usr/lib/firefox/defaults/pref/ || true
     fi
 
     while read file temp; do
-        if [ -f "$file" ] && [ ! -f "/etc/sch-scripts/diverted/${file##*/}" ]; then
-            dpkg-divert --package sch-scripts --divert "/etc/sch-scripts/diverted/${file##*/}" --rename "$file"
+        if [ -f "$file" ] && [ ! -f "/etc/ltsp-manager/diverted/${file##*/}" ]; then
+            dpkg-divert --package ltsp-manager --divert "/etc/ltsp-manager/diverted/${file##*/}" --rename "$file"
         fi
     done <<EOF
         /etc/dnsmasq.d/network-manager  # Makes dnsmasq malfunction sometimes

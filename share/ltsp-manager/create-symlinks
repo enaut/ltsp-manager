@@ -69,7 +69,7 @@ ln_sf() {
         elif [ -h "$src" ]; then
             rm "$src"
         else
-            mv "$src" "$(mktemp -u "$src.moved-by-sch-scripts.XXXX")"
+            mv "$src" "$(mktemp -u "$src.moved-by-ltsp-manager.XXXX")"
         fi
     fi
     ln -s "$dst" "$src"

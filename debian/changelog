@@ -1,9 +1,9 @@
-sch-scripts (16.04.1) xenial; urgency=low
+ltsp-manager (16.04.1) xenial; urgency=low
   * Εκκίνηση εργασιών για την έκδοση 16.04.1.
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 10 Mar 2017 10:19:32 +0200
 
-sch-scripts (12.04.17) precise; urgency=low
+ltsp-manager (12.04.17) precise; urgency=low
 
   * Μερική υποστήριξη για Ubuntu Wily.
   * Εξασφάλιση ότι το DNS όνομα "server" υπάρχει.
@@ -17,7 +17,7 @@ sch-scripts (12.04.17) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Tue, 06 Oct 2015 06:37:35 +0300
 
-sch-scripts (12.04.16) precise; urgency=low
+ltsp-manager (12.04.16) precise; urgency=low
 
   * Απενεργοποίηση του μηνύματος αναβάθμισης σε 14.04.
   * Εναλλαγή ελληνικών/αγγλικών με Alt+Shift στην 14.04.
@@ -27,10 +27,10 @@ sch-scripts (12.04.16) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Thu, 08 Jan 2015 11:18:30 +0200
 
-sch-scripts (12.04.15) precise; urgency=low
+ltsp-manager (12.04.15) precise; urgency=low
 
   * Καθορισμός καλύτερων προεπιλεγμένων εφαρμογών για ορισμένους τύπους mime.
-  * Αποφυγή χρήσης προσωρινού αρχείου για την εκκίνηση των sch-scripts.
+  * Αποφυγή χρήσης προσωρινού αρχείου για την εκκίνηση των ltsp-manager.
   * Διόρθωση του apturl που δεν δουλεύει μετά τον firefox 16 (LP: #1261178).
   * Ενεργοποίηση IP forwarding/masquerading για το 192.168.67.1.
   * Προσθήκη επιλογής για εσωτερική σύνδεση LTSP στο διάλογο δικτύου.
@@ -42,7 +42,7 @@ sch-scripts (12.04.15) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Thu, 06 Mar 2014 09:45:33 +0200
 
-sch-scripts (12.04.14) precise; urgency=low
+ltsp-manager (12.04.14) precise; urgency=low
 
   * Δημιουργία των συντομεύσεων των κοινόχρηστων φακέλων μέσω ssh.
   * Αύξηση της προτεραιότητας του dh_installgsettings σε 20.
@@ -50,16 +50,16 @@ sch-scripts (12.04.14) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 13 Dec 2013 12:24:05 +0200
 
-sch-scripts (12.04.13) precise; urgency=low
+ltsp-manager (12.04.13) precise; urgency=low
 
   * Μετακίνηση των κουμπιών των παραθύρων στα δεξιά και για την 14.04.
-  * Χρήση του pkexec για την εκκίνηση των sch-scripts.
+  * Χρήση του pkexec για την εκκίνηση των ltsp-manager.
   * Χρήση των ENCRYPTED_SWAP=False, NBD_RAM_THRESHOLD=2222 ως προεπιλογή.
   * Ανίχνευση του σωστής κωδικοσελίδας DOS για το unzip (LP: #580961).
   * Αύξηση του ελέγχου για επανεκκίνηση του gnome-panel στα 15 δευτερόλεπτα.
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sun, 08 Dec 2013 08:46:38 +0200
 
-sch-scripts (12.04.12) precise; urgency=low
+ltsp-manager (12.04.12) precise; urgency=low
 
   * Αποφυγή προβλημάτων εκκίνησης με κάρτες sis190 (LP: #345374).
   * Κατά τη μαζική δημιουργία χρηστών, ανάθεση καθηγητών στα τμήματα.
@@ -68,13 +68,13 @@ sch-scripts (12.04.12) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Mon, 11 Nov 2013 18:29:45 +0200
 
-sch-scripts (12.04.11) precise; urgency=low
+ltsp-manager (12.04.11) precise; urgency=low
 
   * Μεταφορά του init-ltsp.d/50-flashplugin-no-sse2 στο πακέτο του.
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sat, 19 Oct 2013 19:18:48 +0300
 
-sch-scripts (12.04.10) precise; urgency=low
+ltsp-manager (12.04.10) precise; urgency=low
 
   * Διόρθωση του flash player σε παλιότερες CPU (LP: #968759).
   * Αλλαγή του teachers σε ομάδα συστήματος.
@@ -83,7 +83,7 @@ sch-scripts (12.04.10) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 18 Oct 2013 22:45:49 +0300
 
-sch-scripts (12.04.9) precise; urgency=low
+ltsp-manager (12.04.9) precise; urgency=low
 
   * Μη αυτόματη εκκίνηση κάποιων εφαρμογών κατά τη σύνδεση σε fat clients.
   * Επιβολή τερματισμού εάν υπάρχουν πολλοί συνδεδεμένοι χρήστες (LP: #861171).
@@ -92,7 +92,7 @@ sch-scripts (12.04.9) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sat, 05 Oct 2013 09:42:06 +0300
 
-sch-scripts (12.04.8) precise; urgency=low
+ltsp-manager (12.04.8) precise; urgency=low
 
   * Χρήση του arcfour128 για μεγαλύτερη ταχύτητα στο SSHFS.
   * Αυτόματη εγκατάσταση των ltsp-server-standalone και ltsp-docs.
@@ -104,18 +104,18 @@ sch-scripts (12.04.8) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Fri, 05 Apr 2013 11:23:44 +0300
 
-sch-scripts (12.04.7) precise; urgency=low
+ltsp-manager (12.04.7) precise; urgency=low
 
-  * Επανεκκίνηση του network manager κατά την εγκατάσταση των sch-scripts.
+  * Επανεκκίνηση του network manager κατά την εγκατάσταση των ltsp-manager.
   * Μετακίνηση των κουμπιών των παραθύρων στα δεξιά.
   * Χρήση εξελληνισμένων ρυθμίσεων για totem, gedit κλπ.
   * Αποφυγή χρήσης CPU 100% και αναβοσβήματος του numlock (LP: #969359).
   * Αποτροπή άπειρου loop κατά το άνοιγμα των συνδέσμων του μενού Βοήθεια,
-    όταν τα sch-scripts εκτελούνταν με sudo.
+    όταν τα ltsp-manager εκτελούνταν με sudo.
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Mon, 22 Oct 2012 17:41:52 +0300
 
-sch-scripts (12.04.6) precise; urgency=low
+ltsp-manager (12.04.6) precise; urgency=low
 
   * Διόρθωση προβλήματος DNS των fat clients στα Live CDs.
   * Ορθή ενεργοποίηση κοινόχρηστων φακέλων κατά τη δημιουργία νέας ομάδας.
@@ -123,7 +123,7 @@ sch-scripts (12.04.6) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sat, 06 Oct 2012 09:26:43 +0300
 
-sch-scripts (12.04.5) precise; urgency=low
+ltsp-manager (12.04.5) precise; urgency=low
 
   * Συμπερίληψη τονισμένων φωνηέντων κατά τις προτάσεις ονομάτων χρηστών.
   * Καθορισμός του ρολογιού του BIOS σε τοπική ώρα.
@@ -135,7 +135,7 @@ sch-scripts (12.04.5) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sun, 23 Sep 2012 09:42:22 +0300
 
-sch-scripts (12.04.4) precise; urgency=low
+ltsp-manager (12.04.4) precise; urgency=low
 
   * Ορισμός της γλώσσας πληκτρολογίου σε Αγγλικά και Ελληνικά
     (Προσωρινή διόρθωση του LP bug #1051288).
@@ -152,7 +152,7 @@ sch-scripts (12.04.4) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Mon, 17 Sep 2012 03:49:20 +0300
 
-sch-scripts (12.04.3) precise; urgency=low
+ltsp-manager (12.04.3) precise; urgency=low
 
   * Διόρθωση του διαλόγου μαζικής δημιουργίας χρηστών.
   * Προσθήκη μενού στον LDM για αιτήσεις νέων χρηστών.
@@ -162,17 +162,17 @@ sch-scripts (12.04.3) precise; urgency=low
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Mon, 03 Sep 2012 09:15:12 +0300
 
-sch-scripts (12.04.2) precise; urgency=low
+ltsp-manager (12.04.2) precise; urgency=low
 
   * Προσθήκη σελίδας εγχειριδίου για το shared-folders.
-  * Αυτόματη διαχείριση της έκδοσης του πακέτου sch-scripts.
+  * Αυτόματη διαχείριση της έκδοσης του πακέτου ltsp-manager.
   * Προσθήκη μενού Εξυπηρετητής > Συντήρηση.
   * Αποφυγή καταστροφής του συνθηματικού κατά την επεξεργασία χρηστών.
   * Προσθήκη μενού Βοήθεια > Υποβολή αιτήματος στο helpdesk.
 
  -- Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>  Sun, 01 Jul 2012 11:18:08 +0300
 
-sch-scripts (12.04.1) precise; urgency=low
+ltsp-manager (12.04.1) precise; urgency=low
 
   * Αρχική έκδοση.
 

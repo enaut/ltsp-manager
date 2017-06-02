@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Classroom administration
+Name[el]=Διαχείριση ΣΕΠΕΗΥ
+Comment=ltsp-manager: a collection of scripts for classroom administration
+Comment[el]=ltsp-manager: μια συλλογή από βοηθήματα για τη διαχείριση εργαστηρίου υπολογιστών
+TryExec=/usr/sbin/ltsp-manager
+Exec=/usr/sbin/ltsp-manager
+Icon=ltsp-manager
+Terminal=false
+Type=Application
+Categories=Settings;System;
+X-KDE-SubstituteUID=true

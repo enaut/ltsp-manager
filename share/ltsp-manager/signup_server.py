@@ -274,7 +274,7 @@ class UI:
                     self.system.add_group(libuser.Group(user.primary_group, user.gid, {}))
                 self.system.add_user(user)
                 libuser.system.reload()
-                # FIXME: sch-scripts trees won't update
+                # FIXME: ltsp-manager trees won't update
                 for counter, row in enumerate(self.requests_list):
                     if row[0].user.name == user.name:
                         self.requests_list.remove(self.requests_list.get_iter(counter))

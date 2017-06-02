@@ -10,11 +10,11 @@ override_dh_gconf:
 
 override_dh_install:
 	dh_install
-	echo "__version__='$(DEBVERS)'" > "$(CURDIR)/debian/sch-scripts/usr/share/sch-scripts/version.py"
+	echo "__version__='$(DEBVERS)'" > "$(CURDIR)/debian/ltsp-manager/usr/share/ltsp-manager/version.py"
 
 override_dh_installinit:
 	dh_installinit --name=shared-folders
 
 override_dh_installgsettings:
 	#dh_installgsettings --priority=20
-	dh_install -psch-scripts debian/z20_sch-scripts.gschema.override /usr/share/glib-2.0/schemas/
+	dh_install -pltsp-manager debian/z20_ltsp-manager.gschema.override /usr/share/glib-2.0/schemas/

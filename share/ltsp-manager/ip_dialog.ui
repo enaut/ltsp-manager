@@ -473,7 +473,7 @@
             <property name="relief">none</property>
             <property name="xalign">0</property>
             <property name="image_position">bottom</property>
-            <property name="uri">http://ts.sch.gr/wiki/Linux/sch-scripts/Ρύθμιση_σύνδεσης_δικτύου</property>
+            <property name="uri">http://ts.sch.gr/wiki/Linux/ltsp-manager/Ρύθμιση_σύνδεσης_δικτύου</property>
             <child>
               <object class="GtkImage" id="method_help_image">
                 <property name="visible">True</property>

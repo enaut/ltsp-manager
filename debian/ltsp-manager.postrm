@@ -15,13 +15,13 @@ set -e
 # <new-postrm> abort-install <old-version>
 # <new-postrm> abort-upgrade <old-version>
 
-# Restore "# Commented by sch-scripts:" lines to their original values
+# Restore "# Commented by ltsp-manager:" lines to their original values
 restore_config() {
     local file
     file=$1
 
-    if grep -qs "# Commented by sch-scripts:" "$file"; then
-        sed "s/.*# Commented by sch-scripts:[[:space:]]*//" -i "$file"
+    if grep -qs "# Commented by ltsp-manager:" "$file"; then
+        sed "s/.*# Commented by ltsp-manager:[[:space:]]*//" -i "$file"
     fi
 }
 
@@ -32,7 +32,7 @@ remove() {
     for link in /usr/local/bin/gnome-panel \
         /usr/local/bin/tuxtype \
         /usr/local/bin/unzip \
-        /usr/lib/firefox/defaults/pref/sch-scripts.js \
+        /usr/lib/firefox/defaults/pref/ltsp-manager.js \
         /usr/local/share/applications/mimeapps.list
     do
         if [ -h "$link" ]; then
@@ -46,10 +46,10 @@ purge() {
 
     set +e
     remove
-    # Restore all the files that were diverted by sch-scripts
-    dpkg-divert --list sch-scripts \
+    # Restore all the files that were diverted by ltsp-manager
+    dpkg-divert --list ltsp-manager \
     | while read temp temp file temp; do
-        dpkg-divert --package sch-scripts --rename --remove "$file"
+        dpkg-divert --package ltsp-manager --rename --remove "$file"
     done
 
     examples="
@@ -63,7 +63,7 @@ purge() {
         /etc/default/im-config
     "
     # Don't purge the examples, move them to /tmp to give a chance for recovery.
-    temp=$(mktemp -d --tmpdir sch-scripts-purged.XXXXXX)
+    temp=$(mktemp -d --tmpdir ltsp-manager-purged.XXXXXX)
     for file in $examples; do
         if [ -f "$file" ]; then
             mv -b "$file" "$temp"

@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cd /usr/share/sch-scripts
+cd /usr/share/ltsp-manager
 exec ./signup.py

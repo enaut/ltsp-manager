@@ -1,14 +1,14 @@
-Source: sch-scripts
+Source: ltsp-manager
 Section: admin
 Priority: extra
 Maintainer: Hellenic Schools Technical Support Team (Τεχνική Στήριξη ΣΕΠΕΗΥ) <devs@ts.sch.gr>
 Build-Depends: debhelper (>= 7.3.0)
 Standards-Version: 3.9.6
-Vcs-Bzr: http://bazaar.launchpad.net/~ts.sch.gr/sch-scripts/trunk
-Vcs-Browser: http://bazaar.launchpad.net/~ts.sch.gr/sch-scripts/trunk/files
+Vcs-Bzr: http://bazaar.launchpad.net/~ts.sch.gr/ltsp-manager/trunk
+Vcs-Browser: http://bazaar.launchpad.net/~ts.sch.gr/ltsp-manager/trunk/files
 Homepage: http://ts.sch.gr/wiki/Linux/LTSP
 
-Package: sch-scripts
+Package: ltsp-manager
 Architecture: all
 Depends: iputils-arping,
  librsvg2-common,
