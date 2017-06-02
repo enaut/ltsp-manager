@@ -1,8 +1,7 @@
 [Desktop Entry]
-Name=Classroom administration
-Name[el]=Διαχείριση ΣΕΠΕΗΥ
-Comment=ltsp-manager: a collection of scripts for classroom administration
-Comment[el]=ltsp-manager: μια συλλογή από βοηθήματα για τη διαχείριση εργαστηρίου υπολογιστών
+Name=LTSP manager
+Comment=ltsp-manager: easy administration of LTSP-based computer labs
+Comment[el]=ltsp-manager: εύκολη διαχείριση εργαστηρίων υπολογιστών βασισμένων στο LTSP
 TryExec=/usr/sbin/ltsp-manager
 Exec=/usr/sbin/ltsp-manager
 Icon=ltsp-manager
