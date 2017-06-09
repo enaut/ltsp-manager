@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.2"/>
   <object class="GtkListStore" id="groups_store">
     <columns>
       <!-- column-name instance -->
@@ -17,9 +18,53 @@
   <object class="GtkTreeModelSort" id="groups_sort">
     <property name="model">groups_filter</property>
   </object>
+  <object class="GtkListStore" id="users_store">
+    <columns>
+      <!-- column-name instance -->
+      <column type="PyObject"/>
+      <!-- column-name UID -->
+      <column type="gint"/>
+      <!-- column-name Username -->
+      <column type="gchararray"/>
+      <!-- column-name Primary_group -->
+      <column type="gchararray"/>
+      <!-- column-name Full_name -->
+      <column type="gchararray"/>
+      <!-- column-name Office -->
+      <column type="gchararray"/>
+      <!-- column-name Office_phone -->
+      <column type="gchararray"/>
+      <!-- column-name Home_phone -->
+      <column type="gchararray"/>
+      <!-- column-name Other -->
+      <column type="gchararray"/>
+      <!-- column-name Directory -->
+      <column type="gchararray"/>
+      <!-- column-name Shell -->
+      <column type="gchararray"/>
+      <!-- column-name Last_password_change -->
+      <column type="gint"/>
+      <!-- column-name Minimum -->
+      <column type="gint"/>
+      <!-- column-name Maximum -->
+      <column type="gint"/>
+      <!-- column-name Warn -->
+      <column type="gint"/>
+      <!-- column-name Inactive -->
+      <column type="gint"/>
+      <!-- column-name Expire -->
+      <column type="gint"/>
+    </columns>
+  </object>
+  <object class="GtkTreeModelFilter" id="users_filter">
+    <property name="child_model">users_store</property>
+  </object>
+  <object class="GtkTreeModelSort" id="users_sort">
+    <property name="model">users_filter</property>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Διαχείριση ΣΕΠΕΗΥ</property>
+    <property name="title" translatable="yes">LTSP manager</property>
     <property name="window_position">center</property>
     <property name="default_width">600</property>
     <property name="default_height">350</property>
@@ -39,7 +84,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Αρχείο</property>
+                <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="mn_file">
@@ -50,8 +95,8 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Ανοίγει μία φόρμα η οποία δέχεται αιτήσεις ανοίγματος λογαριασμών από τους χρήστες</property>
-                        <property name="label" translatable="yes">Ενεργοποίηση εγγραφών χρηστών...</property>
+                        <property name="tooltip_text" translatable="yes">Opens a dialog which handles user signup requests</property>
+                        <property name="label" translatable="yes">Allow user sign ups...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_signup_activate" swapped="no"/>
                       </object>
@@ -61,7 +106,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Δημιουργία χρηστών ανά υπολογιστή...</property>
+                        <property name="label" translatable="yes">Create users per workstation...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_new_users_activate" swapped="no"/>
                       </object>
@@ -78,7 +123,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εισαγωγή από passwd...</property>
+                        <property name="label" translatable="yes">Import from passwd...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_import_passwd_activate" swapped="no"/>
                       </object>
@@ -88,7 +133,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εισαγωγή από csv...</property>
+                        <property name="label" translatable="yes">Import from csv...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_import_csv_activate" swapped="no"/>
                       </object>
@@ -98,7 +143,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εξαγωγή σε csv...</property>
+                        <property name="label" translatable="yes">Export to csv...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_export_csv_activate" swapped="no"/>
                       </object>
@@ -112,7 +157,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Εξυπηρετητής</property>
+                <property name="label" translatable="yes">_Server</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="mn_server">
@@ -123,7 +168,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Ρύθμιση σύνδεσης δικτύου</property>
+                        <property name="label" translatable="yes">Configure network connection</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_configuration_network_activate" swapped="no"/>
                       </object>
@@ -133,7 +178,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εικονικός δίσκος</property>
+                        <property name="label" translatable="yes">LTSP image</property>
                         <property name="use_underline">True</property>
                         <child type="submenu">
                           <object class="GtkMenu" id="mn_ltsp_image">
@@ -144,8 +189,8 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Δημοσιεύει ένα αντίγραφο του δίσκου του εξυπηρετητή στο δίκτυο</property>
-                                <property name="label" translatable="yes">Δημοσίευση...</property>
+                                <property name="tooltip_text" translatable="yes">Publishes a clone of the server installation for the clients to boot from it</property>
+                                <property name="label" translatable="yes">Update...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_ltsp_update_image_activate" swapped="no"/>
                               </object>
@@ -155,8 +200,8 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Επαναφέρει τον εικονικό δίσκο του εξυπηρετητή στην προηγούμενη έκδοση</property>
-                                <property name="label" translatable="yes">Επαναφορά...</property>
+                                <property name="tooltip_text" translatable="yes">Reverts the LTSP image to its previous version</property>
+                                <property name="label" translatable="yes">Revert...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_ltsp_revert_image_activate" swapped="no"/>
                               </object>
@@ -170,7 +215,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Αρχεία ρυθμίσεων</property>
+                        <property name="label" translatable="yes">Configuration files</property>
                         <child type="submenu">
                           <object class="GtkMenu" id="mn_configuration_files">
                             <property name="visible">True</property>
@@ -180,7 +225,7 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Επεξεργασία του lts.conf</property>
+                                <property name="label" translatable="yes">Edit lts.conf</property>
                                 <signal name="activate" handler="on_mi_edit_lts_conf_activate" swapped="no"/>
                               </object>
                             </child>
@@ -189,7 +234,7 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Επεξεργασία ρυθμίσεων κοινόχρηστων φακέλων</property>
+                                <property name="label" translatable="yes">Edit shared folder settings</property>
                                 <signal name="activate" handler="on_mi_edit_shared_folders_activate" swapped="no"/>
                               </object>
                             </child>
@@ -198,7 +243,7 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Επεξεργασία ρυθμίσεων dnsmasq</property>
+                                <property name="label" translatable="yes">Edit dnsmasq settings</property>
                                 <signal name="activate" handler="on_mi_edit_dnsmasq_conf_activate" swapped="no"/>
                               </object>
                             </child>
@@ -207,7 +252,7 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Επεξεργασία ρυθμίσεων PXELinux</property>
+                                <property name="label" translatable="yes">Edit PXELinux settings</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_edit_pxelinux_cfg_activate" swapped="no"/>
                               </object>
@@ -221,7 +266,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Συντήρηση</property>
+                        <property name="label" translatable="yes">Maintenance</property>
                         <child type="submenu">
                           <object class="GtkMenu" id="mn_maintenance">
                             <property name="visible">True</property>
@@ -231,8 +276,8 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Αφαιρεί τους παλιότερους kernels για εξοικονόμηση χώρου στο δίσκο</property>
-                                <property name="label" translatable="yes">Αφαίρεση παλιών πυρήνων...</property>
+                                <property name="tooltip_text" translatable="yes">Purges older kernel packages to save disk space</property>
+                                <property name="label" translatable="yes">Purge old kernels...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_purge_kernels_activate" swapped="no"/>
                               </object>
@@ -242,8 +287,8 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Αφαιρεί τα αρχεία εγκατάστασης .deb των πακέτων που έχετε ήδη εγκαταστήσει</property>
-                                <property name="label" translatable="yes">Καθαρισμός μνήμης πακέτων...</property>
+                                <property name="tooltip_text" translatable="yes">Cleans downloaded .deb packages which are already installed</property>
+                                <property name="label" translatable="yes">Clean apt package cache...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_apt_get_clean_activate" swapped="no"/>
                               </object>
@@ -253,8 +298,8 @@
                                 <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Αφαιρεί τα εγκατεστημένα βοηθητικά πακέτα που δεν χρειάζονται πια</property>
-                                <property name="label" translatable="yes">Διαγραφή ορφανών πακέτων...</property>
+                                <property name="tooltip_text" translatable="yes">Purges automatically installed packages that are no longer required</property>
+                                <property name="label" translatable="yes">Purge orphan packages...</property>
                                 <property name="use_underline">True</property>
                                 <signal name="activate" handler="on_mi_apt_get_purge_activate" swapped="no"/>
                               </object>
@@ -272,7 +317,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Προβολή</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="mn_view">
@@ -283,7 +328,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Στήλες</property>
+                        <property name="label" translatable="yes">Columns</property>
                         <property name="use_underline">True</property>
                         <child type="submenu">
                           <object class="GtkMenu" id="mn_view_columns">
@@ -298,7 +343,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εμφάνιση ομάδων συστήματος</property>
+                        <property name="label" translatable="yes">Show system groups</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="on_mi_show_system_groups_toggled" swapped="no"/>
                       </object>
@@ -308,7 +353,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εμφάνιση προσωπικών ομάδων</property>
+                        <property name="label" translatable="yes">Show private groups</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="on_mi_show_private_groups_toggled" swapped="no"/>
                       </object>
@@ -325,7 +370,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Ανανέωση</property>
+                        <property name="label" translatable="yes">Refresh</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_refresh_activate" swapped="no"/>
                       </object>
@@ -339,7 +384,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Ομάδες</property>
+                <property name="label" translatable="yes">_Groups</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="mn_groups">
@@ -350,7 +395,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Νέα ομάδα...</property>
+                        <property name="label" translatable="yes">New group...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_new_group_activate" swapped="no"/>
                       </object>
@@ -361,7 +406,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Επεξεργασία ομάδας...</property>
+                        <property name="label" translatable="yes">Edit group...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_edit_group_activate" swapped="no"/>
                       </object>
@@ -372,7 +417,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Διαγραφή ομάδας...</property>
+                        <property name="label" translatable="yes">Delete group...</property>
                         <signal name="activate" handler="on_mi_delete_group_activate" swapped="no"/>
                       </object>
                     </child>
@@ -385,7 +430,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Χρήστες</property>
+                <property name="label" translatable="yes">_Users</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="mn_users">
@@ -396,7 +441,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Νέος χρήστης...</property>
+                        <property name="label" translatable="yes">New user...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_new_user_activate" swapped="no"/>
                       </object>
@@ -407,7 +452,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Επεξεργασία χρήστη...</property>
+                        <property name="label" translatable="yes">Edit user...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_edit_user_activate" swapped="no"/>
                       </object>
@@ -418,7 +463,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Διαγραφή χρήστη...</property>
+                        <property name="label" translatable="yes">Delete user...</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_delete_user_activate" swapped="no"/>
                       </object>
@@ -429,7 +474,7 @@
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Αφαίρεση από τις επιλεγμένες ομάδες</property>
+                        <property name="label" translatable="yes">Remove user from selected groups</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_remove_user_activate" swapped="no"/>
                       </object>
@@ -443,7 +488,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Βοήθεια</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="mn_help">
@@ -454,8 +499,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Ανοίγει το wiki του οδηγού εγκατάστασης Ubuntu 16.04 LTSP</property>
-                        <property name="label" translatable="yes">Αρχική (wiki)</property>
+                        <property name="label" translatable="yes">Online documentation</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_home_activate" swapped="no"/>
                       </object>
@@ -465,7 +509,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Αναφορά σφάλματος</property>
+                        <property name="label" translatable="yes">Report bug</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_report_bug_activate" swapped="no"/>
                       </object>
@@ -475,7 +519,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Υποβολή ερώτησης</property>
+                        <property name="label" translatable="yes">Ask question</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_ask_question_activate" swapped="no"/>
                       </object>
@@ -485,7 +529,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Υποβολή αιτήματος στο helpdesk</property>
+                        <property name="label" translatable="yes">File a helpdesk issue</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_helpdesk_ticket_activate" swapped="no"/>
                       </object>
@@ -495,7 +539,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Ζωντανή συνομιλία (IRC)</property>
+                        <property name="label" translatable="yes">Live chat (IRC)</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_irc_activate" swapped="no"/>
                       </object>
@@ -505,7 +549,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Φόρουμ συζητήσεων</property>
+                        <property name="label" translatable="yes">Discussion forum</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_forum_activate" swapped="no"/>
                       </object>
@@ -522,7 +566,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Χάρτης ΣΕΠΕΗΥ με LTSP</property>
+                        <property name="label" translatable="yes">LTSP installations map</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_map_activate" swapped="no"/>
                       </object>
@@ -532,7 +576,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Εγχειρίδιο του lts.conf</property>
+                        <property name="label" translatable="yes">Man page of lts.conf</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_lts_conf_manpage_activate" swapped="no"/>
                       </object>
@@ -542,8 +586,8 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Σε αναφορές σφαλμάτων, συμπεριλάβετε και αυτές τις πληροφορίες</property>
-                        <property name="label" translatable="yes">Πληροφορίες LTSP</property>
+                        <property name="tooltip_text" translatable="yes">Display LTSP version information, useful for reporting bugs</property>
+                        <property name="label" translatable="yes">Local LTSP information</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_ltsp_info_activate" swapped="no"/>
                       </object>
@@ -560,7 +604,7 @@
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Περί</property>
+                        <property name="label" translatable="yes">About</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_mi_about_activate" swapped="no"/>
                       </object>
@@ -624,7 +668,7 @@
                         <child>
                           <object class="GtkTreeViewColumn" id="gtv_groupname_column">
                             <property name="resizable">True</property>
-                            <property name="title" translatable="yes">Όνομα ομάδας</property>
+                            <property name="title" translatable="yes">Group name</property>
                             <property name="clickable">True</property>
                             <property name="reorderable">True</property>
                             <property name="sort_column_id">2</property>
@@ -651,12 +695,11 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkButton" id="unselect_all_groups">
-                        <property name="label" translatable="yes">Αποεπιλογή όλων</property>
+                        <property name="label" translatable="yes">Unselect all</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_action_appearance">False</property>
                         <signal name="clicked" handler="on_unselect_all_groups_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -718,7 +761,7 @@
                       <object class="GtkTreeViewColumn" id="utv_username_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Όνομα χρήστη</property>
+                        <property name="title" translatable="yes">Username</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">2</property>
@@ -734,7 +777,7 @@
                       <object class="GtkTreeViewColumn" id="utv_primary_group_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Κύρια ομάδα</property>
+                        <property name="title" translatable="yes">Primary group</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">3</property>
@@ -750,7 +793,7 @@
                       <object class="GtkTreeViewColumn" id="utv_full_name_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Ονοματεπώνυμο</property>
+                        <property name="title" translatable="yes">Real name</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">4</property>
@@ -766,7 +809,7 @@
                       <object class="GtkTreeViewColumn" id="utv_office_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Γραφείο</property>
+                        <property name="title" translatable="yes">Office</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">5</property>
@@ -782,7 +825,7 @@
                       <object class="GtkTreeViewColumn" id="utv_office_phone_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Τηλ. γραφείου</property>
+                        <property name="title" translatable="yes">Office phone</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">6</property>
@@ -798,7 +841,7 @@
                       <object class="GtkTreeViewColumn" id="utv_home_phone_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Τηλ. οικίας</property>
+                        <property name="title" translatable="yes">Home phone</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">7</property>
@@ -814,7 +857,7 @@
                       <object class="GtkTreeViewColumn" id="utv_other_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Άλλο</property>
+                        <property name="title" translatable="yes">Other</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">8</property>
@@ -830,7 +873,7 @@
                       <object class="GtkTreeViewColumn" id="utv_directory_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Κατάλογος</property>
+                        <property name="title" translatable="yes">Directory</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">9</property>
@@ -846,7 +889,7 @@
                       <object class="GtkTreeViewColumn" id="utv_shell_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Κέλυφος</property>
+                        <property name="title" translatable="yes">Shell</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">10</property>
@@ -862,7 +905,7 @@
                       <object class="GtkTreeViewColumn" id="utv_last_pass_change_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Τελευταία αλλαγή κωδικού</property>
+                        <property name="title" translatable="yes">Last password change</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">11</property>
@@ -878,7 +921,7 @@
                       <object class="GtkTreeViewColumn" id="utv_minimum_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Ελάχιστη διάρκεια</property>
+                        <property name="title" translatable="yes">Minimum password age</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">12</property>
@@ -894,7 +937,7 @@
                       <object class="GtkTreeViewColumn" id="utv_maximum_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Μέγιστη διάρκεια</property>
+                        <property name="title" translatable="yes">Maximum password age</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">13</property>
@@ -910,7 +953,7 @@
                       <object class="GtkTreeViewColumn" id="utv_warn_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Προειδοποίηση</property>
+                        <property name="title" translatable="yes">Warning period</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">14</property>
@@ -926,7 +969,7 @@
                       <object class="GtkTreeViewColumn" id="utv_inactive_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Ανενεργός</property>
+                        <property name="title" translatable="yes">Inactive</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">15</property>
@@ -942,7 +985,7 @@
                       <object class="GtkTreeViewColumn" id="utv_expire_column">
                         <property name="visible">False</property>
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">Λήξη</property>
+                        <property name="title" translatable="yes">Expired</property>
                         <property name="clickable">True</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">16</property>
@@ -984,49 +1027,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="users_store">
-    <columns>
-      <!-- column-name instance -->
-      <column type="PyObject"/>
-      <!-- column-name UID -->
-      <column type="gint"/>
-      <!-- column-name Username -->
-      <column type="gchararray"/>
-      <!-- column-name Primary_group -->
-      <column type="gchararray"/>
-      <!-- column-name Full_name -->
-      <column type="gchararray"/>
-      <!-- column-name Office -->
-      <column type="gchararray"/>
-      <!-- column-name Office_phone -->
-      <column type="gchararray"/>
-      <!-- column-name Home_phone -->
-      <column type="gchararray"/>
-      <!-- column-name Other -->
-      <column type="gchararray"/>
-      <!-- column-name Directory -->
-      <column type="gchararray"/>
-      <!-- column-name Shell -->
-      <column type="gchararray"/>
-      <!-- column-name Last_password_change -->
-      <column type="gint"/>
-      <!-- column-name Minimum -->
-      <column type="gint"/>
-      <!-- column-name Maximum -->
-      <column type="gint"/>
-      <!-- column-name Warn -->
-      <column type="gint"/>
-      <!-- column-name Inactive -->
-      <column type="gint"/>
-      <!-- column-name Expire -->
-      <column type="gint"/>
-    </columns>
-  </object>
-  <object class="GtkTreeModelFilter" id="users_filter">
-    <property name="child_model">users_store</property>
-  </object>
-  <object class="GtkTreeModelSort" id="users_sort">
-    <property name="model">users_filter</property>
   </object>
 </interface>

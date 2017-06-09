@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkTextBuffer" id="textbuffer1"/>
   <object class="GtkDialog" id="dialog1">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Πληροφορίες LTSP</property>
-    <property name="resizable">True</property>
+    <property name="title" translatable="yes">LTSP information</property>
     <property name="default_width">600</property>
     <property name="default_height">500</property>
     <property name="destroy_with_parent">True</property>
@@ -27,7 +28,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="Close" swapped="no"/>
               </object>
@@ -56,7 +56,7 @@
                 <property name="yalign">0</property>
                 <property name="ypad">5</property>
                 <property name="stock">gtk-info</property>
-                <property name="icon-size">6</property>
+                <property name="icon_size">6</property>
               </object>
               <packing>
                 <property name="resize">True</property>
@@ -72,8 +72,8 @@
                   <object class="GtkLabel" id="label1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">LTSP information</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Πληροφορίες LTSP</property>
                     <attributes>
                       <attribute name="font-desc" value="Sans Bold 13"/>
                     </attributes>
@@ -133,5 +133,4 @@
       <action-widget response="0">button1</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkTextBuffer" id="textbuffer1"/>
 </interface>

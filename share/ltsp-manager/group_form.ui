@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkListStore" id="users_liststore">
+    <columns>
+      <!-- column-name Object -->
+      <column type="PyObject"/>
+      <!-- column-name Activated -->
+      <column type="gboolean"/>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Activatable -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
+  <object class="GtkTreeModelFilter" id="users_filter">
+    <property name="child_model">users_liststore</property>
+  </object>
+  <object class="GtkTreeModelSort" id="users_sort">
+    <property name="model">users_filter</property>
+  </object>
   <object class="GtkDialog" id="dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Πληροφορίες ομάδας</property>
+    <property name="title" translatable="yes">Group properties</property>
     <property name="default_width">350</property>
     <property name="default_height">400</property>
     <property name="type_hint">dialog</property>
@@ -13,6 +32,50 @@
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area1">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="button1">
+                <property name="label">gtk-cancel</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_cancel_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="apply_button">
+                <property name="label">gtk-apply</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_apply_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkBox" id="infobox">
             <property name="can_focus">False</property>
@@ -33,7 +96,7 @@
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Περιγραφή</property>
+                <property name="label" translatable="yes">Description</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -82,28 +145,24 @@
                               <object class="GtkLabel" id="label4">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Group name</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Όνομα ομάδας</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
                                 <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkLabel" id="label5">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">GID</property>
+                                <property name="xalign">0</property>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
                                 <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -111,14 +170,11 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">•</property>
-                                <property name="invisible_char_set">True</property>
                                 <signal name="changed" handler="on_name_entry_changed" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -130,8 +186,6 @@
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -139,14 +193,11 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">•</property>
-                                <property name="invisible_char_set">True</property>
                                 <signal name="changed" handler="on_gid_changed" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
                               </packing>
                             </child>
                             <child>
@@ -158,8 +209,6 @@
                               <packing>
                                 <property name="left_attach">2</property>
                                 <property name="top_attach">1</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
                               </packing>
                             </child>
                           </object>
@@ -187,7 +236,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkTreeViewColumn" id="treeviewcolumn1">
-                                    <property name="title" translatable="yes">Μέλη</property>
+                                    <property name="title" translatable="yes">Members</property>
                                     <child>
                                       <object class="GtkCellRendererToggle" id="cellrenderertoggle1">
                                         <signal name="toggled" handler="on_user_toggled" swapped="no"/>
@@ -216,12 +265,11 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="checkbutton1">
-                            <property name="label" translatable="yes">Εμφάνιση χρηστών συστήματος</property>
+                            <property name="label" translatable="yes">Show system users</property>
                             <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="xalign">0</property>
                             <property name="draw_indicator">True</property>
                             <signal name="toggled" handler="on_show_sys_users_toggled" swapped="no"/>
@@ -240,7 +288,7 @@
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Γενικά&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;General&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
@@ -271,12 +319,11 @@
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkCheckButton" id="shared_folders_check">
-                            <property name="label" translatable="yes">Δημιουργία κοινόχρηστων καταλόγων για αυτήν την ομάδα</property>
+                            <property name="label" translatable="yes">Create shared folders for this group</property>
                             <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="xalign">0</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -289,11 +336,10 @@
                         <child>
                           <object class="GtkLabel" id="warning">
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
                             <property name="xpad">2</property>
-                            <property name="label" translatable="yes">Προσοχή: Εάν οι μαθητές έχουν ανοιχτά αρχεία στον κοινόχρηστο
-κατάλογο δεν θα μπορέσουν να τα αποθηκεύσουν εφόσον
-απενεργοποιήσετε την κοινή χρήση.</property>
+                            <property name="label" translatable="yes">Warning: if users have open files in shared folders, they
+won't be able to save them if you disable folder sharing.</property>
+                            <property name="xalign">0</property>
                             <attributes>
                               <attribute name="style" value="italic"/>
                               <attribute name="weight" value="bold"/>
@@ -315,7 +361,7 @@
                   <object class="GtkLabel" id="label3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Κοινόχρηστοι κατάλογοι&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Shared folders&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
@@ -333,75 +379,11 @@
             <property name="position">1</property>
           </packing>
         </child>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="dialog-action_area1">
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="button1">
-                <property name="label">gtk-cancel</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_cancel_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="apply_button">
-                <property name="label">gtk-apply</property>
-                <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_action_appearance">False</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_apply_clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
       </object>
     </child>
     <action-widgets>
       <action-widget response="0">button1</action-widget>
       <action-widget response="0">apply_button</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkListStore" id="users_liststore">
-    <columns>
-      <!-- column-name Object -->
-      <column type="PyObject"/>
-      <!-- column-name Activated -->
-      <column type="gboolean"/>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name Activatable -->
-      <column type="gboolean"/>
-    </columns>
-  </object>
-  <object class="GtkTreeModelFilter" id="users_filter">
-    <property name="child_model">users_liststore</property>
-  </object>
-  <object class="GtkTreeModelSort" id="users_sort">
-    <property name="model">users_filter</property>
   </object>
 </interface>
