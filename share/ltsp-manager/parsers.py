@@ -6,7 +6,9 @@ import os
 import ConfigParser
 from io import StringIO, BytesIO
 
-FIELDS_MAP = {'Όνομα χρήστη': 'name', 'Τελευταία αλλαγή κωδικού': 'lstchg', 'Κύρια ομάδα': 'gid', 'Όνομα κύριας ομάδας' : 'primary_group', 'Κέλυφος': 'shell', 'UID': 'uid', 'Γραφείο': 'office', 'Κρυπτογραφημένος κωδικός': 'password', 'Κωδικός': 'plainpw', 'Λήξη': 'expire', 'Μέγιστη διάρκεια': 'max', 'Προειδοποίηση': 'warn', 'Κατάλογος': 'directory', 'Ελάχιστη διάρκεια': 'min', 'Άλλο': 'other', 'Ομάδες': 'groups', 'Τηλ. γραφείου': 'wphone', 'Ανενεργός': 'inact', 'Ονοματεπώνυμο': 'rname', 'Τηλ. οικίας': 'hphone'}
+# The field names are also defined in ltsp-manager.ui.
+# Keep them *untranslatable* to be able to import .csv files from other locales.
+FIELDS_MAP = {'Username': 'name', 'UID': 'uid', 'GID': 'gid', 'Primary group' : 'primary_group', 'Real name': 'rname', 'Office': 'office', 'Office phone': 'wphone', 'Home phone': 'hphone', 'Other': 'other', 'Directory': 'directory', 'Shell': 'shell', 'Groups': 'groups', 'Last password change': 'lstchg', 'Minimum password age': 'min', 'Maximum password age': 'max', 'Warning period': 'warn', 'Inactivity period': 'inact', 'Expiration': 'expire', 'Encrypted password': 'password', 'Password': 'plainpw', }
 
 class CSV:
     def __init__(self):

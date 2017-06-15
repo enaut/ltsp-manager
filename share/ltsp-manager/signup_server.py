@@ -248,9 +248,9 @@ class UI:
     
     def on_reject_tb_clicked(self, widget):
         selected = self.get_selected_rows()
-        msg = "Θέλετε σίγουρα να διαγραφούν τα παρακάτω αιτήματα από τη λίστα;\n\n"
-        msg += ', '.join([row[4] for row in selected])
-        r = dialogs.AskDialog(msg, "Διαγραφή αιτημάτων").showup()
+        msg = _("Are you sure you want to remove the following requests from the list?") \
+            + "\n\n" + ', '.join([row[4] for row in selected])
+        r = dialogs.AskDialog(msg, _("Reject requests")).showup()
         if r == Gtk.ResponseType.YES:
             for row in selected:
                 self.requests_list.remove(row.iter)
@@ -267,7 +267,9 @@ class UI:
         requests = [row[0] for row in self.requests_list]
         users = [req.user for req in requests]
         usernames = ', '.join([u.name for u in users])
-        r=dialogs.AskDialog("Θα δημιουργηθούν οι παρακάτω χρήστες:\n%s\n\nΣυνέχεια;" % usernames, "Δημιουργία χρηστών").showup()
+        r=dialogs.AskDialog(_("The following user accounts will be created:") \
+            + "\n%s\n\n" % usernames + _("Proceed?"),
+            _("Create user accounts")).showup()
         if r == Gtk.ResponseType.YES:
             for user in users:
                 if user.primary_group not in self.system.groups:
@@ -283,7 +285,8 @@ class UI:
     
     def on_close_button_clicked(self, widget):    
         if len(self.requests_list):
-            r=dialogs.AskDialog("Θέλετε σίγουρα να τερματίσετε την εφαρμογή αιτήσεων; Όλες οι εκκρεμείς αιτήσεις θα χαθούν.", "Επιβεβαίωση").showup()
+            r=dialogs.AskDialog(_("Are you sure you want to close the sign up server? All pending requests will be lost."),
+                _("Confirmation")).showup()
             if r == Gtk.ResponseType.YES:
                 reactor.stop()
         else:

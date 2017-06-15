@@ -508,7 +508,7 @@ In templates, you may use the following variables:
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xpad">10</property>
-                <property name="label" translatable="yes">User name template:</property>
+                <property name="label" translatable="yes">Username template:</property>
                 <property name="use_underline">True</property>
                 <property name="xalign">0</property>
               </object>
@@ -702,7 +702,7 @@ In templates, you may use the following variables:
                     <child>
                       <object class="GtkTreeViewColumn" id="utv_username_column">
                         <property name="resizable">True</property>
-                        <property name="title" translatable="yes">User name</property>
+                        <property name="title" translatable="yes">Username</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">0</property>
                         <child>

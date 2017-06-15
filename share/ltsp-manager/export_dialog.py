@@ -9,7 +9,7 @@ import common
 class ExportDialog:
     def __init__(self, system, users):
         self.csv = parsers.CSV()
-        chooser = Gtk.FileChooserDialog(title="Επιλέξτε όνομα αρχείου για εξαγωγή", 
+        chooser = Gtk.FileChooserDialog(title=_("Enter the name for the exported file"), 
                                         action=Gtk.FileChooserAction.SAVE,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))

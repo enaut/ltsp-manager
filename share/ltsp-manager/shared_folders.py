@@ -10,6 +10,8 @@ import sys
 import subprocess
 import libuser
 
+# TODO: rename shared-folders to ltsp-shared-folders
+
 # TODO: after the workshop, let's move the shared_folders ui into its own
 # dialog, and only disable editing groups that have shares in group_form.py
 # Unrelated, we might also want a "restrict_dirs" function that
@@ -186,38 +188,33 @@ SHARE_GROUPS="%s"
         return list(set(self.system.groups) & set(groups))
 
 def usage():
-    return """Χρήση: shared-folders [ΕΝΤΟΛΕΣ]
+    return """Usage: shared-folders [COMMANDS]
 
-Διαχειρίζεται κοινόχρηστους φακέλους για συγκεκριμένες ομάδες χρηστών,
-με τη βοήθεια του bindfs.
+Manage shared folders for specific user groups, with the help of bindfs.
 
-Εντολές:
-    add <ομάδες>
-        Δημιουργεί φακέλους για τις καθορισμένες ομάδες, εάν δεν υπάρχουν
-        ήδη, και τους προσαρτεί με χρήση του bindfs.
-    list-mounted <ομάδες>
-        Εμφανίζει ποιες από τις καθορισμένες ομάδες έχουν προσαρτημένους
-        φακέλους.
-    list-shared <ομάδες>
-        Εμφανίζει ποιες από τις καθορισμένες ομάδες έχουν ενεργοποιημένους
-        τους κοινόχρηστους φακέλους.
-    mount <ομάδες>
-        Επαναπροσαρτεί τους κοινόχρηστους φακέλους για όσες από τις
-        καθορισμένες ομάδες έχει αλλάξει το όνομα ή το GID, και για όσες
-        δεν ήταν προσαρτημένοι οι φάκελοί τους.
-    rename <παλιά ομάδα> <νέα ομάδα>
-        Αλλάζει το όνομα ενός φακέλου από την παλιά του ομάδα στη νέα,
-        η οποία πρέπει είναι υπαρκτή. Εάν ο φάκελος ήταν προσαρτημένος,
-        αποπροσαρτείται, μετονομάζεται και προσαρτείται πάλι.
-    remove <ομάδες>
-        Αποπροσαρτεί και αφαιρεί τη δυνατότητα κοινόχρηστων φακέλων από
-        τις καθορισμένες ομάδες. Οι φάκελοι δεν διαγράφονται από το
-        σύστημα αρχείων.
-    unmount <ομάδες>
-        Αποπροσαρτεί τους κοινόχρηστους φακέλους των καθορισμένων ομάδων.
+Commands:
+    add <groups>
+        Create folders for the specified groups, if they don't already exist,
+        and mount them using bindfs.
+    list-mounted <groups>
+        List which of the specified groups have mounted folders.
+    list-shared <groups>
+        List which of the specified groups have shared folders.
+    mount <groups>
+        Remount the shared folders for the specified groups, where the name
+        or GID have changed, or where the folders are not already mounted.
+    rename <old group> <new group>
+        Rename a folder from the old to the new group name, which must already
+        exist. If the folder is already mounted, then unmount it, rename it,
+        and mount it again.
+    remove <groups>
+        Unmount and remove the sharing for the specified groups. The folders
+        are not removed from the file system.
+    unmount <groups>
+        Unmount the shared folders for the specified groups.
 
-Σε όλες τις παραπάνω περιπτώσεις εκτός από την add και τη rename, εάν δεν
-καθοριστούν οι <ομάδες>, χρησιμοποιούνται όλες οι κοινόχρηστες ομάδες.
+In all the aforementioend commands, except for add and rename, if no groups are
+specified, then the command is applied to all the shared groups.
 """
 
 if __name__ == '__main__':

@@ -84,13 +84,13 @@ class UserForm(object):
         try:
             self.connection = Connection(host, port)
         except socket.error as e:
-            msg1 = "Πιθανόν ο διαχειριστής να μην έχει ενεργοποιήσει τις εγγραφές."
-            msg2 = "Πιθανόν να υπάρχει πρόβλημα δικτύου."
-            msg = "Σφάλμα %d: %s\n\n%s" % (e.errno, e.strerror, msg1 if e.errno == 111 else msg2)
+            msg1 = _("The sysadmin might not have activated sign ups.")
+            msg2 = _("Possible networking issue.")
+            msg = _("Error") + "%d: %s\n\n%s" % (e.errno, e.strerror, msg1 if e.errno == 111 else msg2)
             dlg = Gtk.MessageDialog(type = Gtk.MessageType.ERROR,
                                     buttons = Gtk.ButtonsType.CLOSE,
                                     message_format = msg)
-            dlg.set_title("Σφάλμα σύνδεσης")
+            dlg.set_title(_("Connection error"))
             dlg.run()
             dlg.destroy()
             sys.exit(1)
@@ -222,21 +222,21 @@ class UserForm(object):
         role = self.role_combo.get_active_text() or ''
         groups = [g[1] for g in self.groups_store if g[0]]
         if self.connection.send_data(realname, username, password, role, groups):
-            msg = "Το αίτημά σας καταχωρήθηκε επιτυχώς για αναθεώρηση."
+            msg = _("Your request was successfully delivered for review.")
             dlg = Gtk.MessageDialog(parent = self.dialog,
                                     type = Gtk.MessageType.INFO,
                                     flags = Gtk.DialogFlags.MODAL,
                                     buttons = Gtk.ButtonsType.CLOSE,
                                     message_format = msg)
-            dlg.set_title("Επιτυχία")
+            dlg.set_title(_("Success"))
         else:
-            msg = "Αποτυχία αποστολής του αιτήματός σας. Ζητήστε βοήθεια από τον υπεύθυνο."
+            msg = _("Your request was not delivered successfully. Ask for help from your sysadmin.")
             dlg = Gtk.MessageDialog(parent = self.dialog,
                                     type = Gtk.MessageType.ERROR,
                                     flags = Gtk.DialogFlags.MODAL,
                                     buttons = Gtk.ButtonsType.CLOSE,
                                     message_format = msg)
-            dlg.set_title("Αποτυχία")
+            dlg.set_title(_("Failure"))
         
         self.connection.close()
         self.connection = None

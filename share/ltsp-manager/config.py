@@ -12,10 +12,10 @@ gui_defaults = {'show_system_groups' : False,
                 'requests_checked_groups' : ''
                }
 roles_defaults = {
-                  'Καθηγητής' : 'adm,cdrom,epoptes,fuse,plugdev,sambashare,vboxusers,$$teachers',
-                  'Διαχειριστής' : 'adm,cdrom,dip,epoptes,fuse,lpadmin,plugdev,sambashare,sudo,vboxusers,$$teachers',
-                  'Μαθητής' : 'fuse,sambashare,vboxusers',
-                  'Προσωπικό' : 'adm,cdrom,fuse,plugdev,sambashare,vboxusers'
+                  _("Teacher") : 'adm,cdrom,epoptes,plugdev,sambashare,vboxusers,$$teachers',
+                  _("Administrator") : 'adm,cdrom,dip,epoptes,lpadmin,plugdev,sambashare,sudo,vboxusers,$$teachers',
+                  _("Student") : 'sambashare,vboxusers',
+                  _("Staff") : 'adm,cdrom,plugdev,sambashare,vboxusers'
                  }
 
 parser = ConfigParser.SafeConfigParser()

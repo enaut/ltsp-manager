@@ -29,7 +29,7 @@ class NewUsersDialog:
         self.groups = []
         
         self.glade.get_object('computers_number_spin').set_value(12)
-        for group in self.roles['Μαθητής'].split(","):
+        for group in self.roles[_("Student")].split(","):
             if group in self.system.groups:
                 self.groups.append(group)   
         self.glade.get_object('groups_template_entry').set_text("{c} "+" ".join(self.groups))
@@ -96,7 +96,7 @@ class NewUsersDialog:
 
         users_number = self.computers * len(self.classes)
         self.glade.get_object('users_number_label').set_text(
-            'Θα δημιουργηθούν οι παρακάτω %d λογαριασμοί' %users_number)
+            _("The following %d accounts will be created") % users_number)
 
     def on_button_apply_clicked(self, widget):
         self.computers = self.glade.get_object('computers_number_spin').\
@@ -127,7 +127,7 @@ class NewUsersDialog:
                     tmp_gid = self.system.get_free_gid(exclude=set_gids)
                     set_gids.append(tmp_gid)
                     cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
-                    progressbar.set_text('Δημιουργία ομάδας %d από %d' 
+                    progressbar.set_text(_"Creating group %d of %d...")
                         % (groups_created+1, total_groups))
                     #TODO expect returned value from add_group
                     if False and cmd_error != "":
@@ -161,7 +161,7 @@ class NewUsersDialog:
             for compn in range(1, self.computers+1):
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                progressbar.set_text('Δημιουργία χρήστη %d από %d...' 
+                progressbar.set_text(_("Creating user %d of %d..."
                     %(users_created+1, total_users))
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
@@ -195,7 +195,7 @@ class NewUsersDialog:
 
         # Display a success message and make the Close button sensitive
         #TODO self.glade.get_object('success_hbox').show()
-        progressbar.set_text("Η διαδικασία ολοκληρώθηκε.")
+        progressbar.set_text("The operation completed successfully.")
         button_close.set_sensitive(True)
 
     def on_progress_button_close_clicked(self, widget):

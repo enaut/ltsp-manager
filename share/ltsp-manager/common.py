@@ -18,7 +18,7 @@ def run_command(cmd, poll=False):
         if res == 0:
             return (True, p.stdout.read())
         else:
-            print "Σφάλμα κατά την εκτέλεση εντολής:"
+            print _("Error while executing command:")
             print " $ %s" % ' '.join(cmdline)
             print p.stdout.read()
             err = p.stderr.read()

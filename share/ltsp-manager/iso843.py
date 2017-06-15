@@ -3,6 +3,8 @@
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 # http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf
 # Transliterate and transcript made according iso843
+# TODO: transform this library into a more generic one,
+# that additionally checks the locale before doing any transliterations.
 
 import re
 import unicodedata

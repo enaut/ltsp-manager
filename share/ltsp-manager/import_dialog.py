@@ -138,11 +138,11 @@ class ImportDialog:
                     identical.append(row.iter)
         if not identical:
             return
-        msg = "Βρέθηκαν στο σύστημα οι ακόλουθοι %s χρήστες αυτής της λίστας με τα ίδια ακριβώς πεδία.\n\n"
-        msg += "%s\n\n"
-        msg += "Επιθυμείτε να διαγραφούν από αυτή τη λίστα οι πανομοιότυποι χρήστες και να μη γίνει εισαγωγή τους;"
+        msg = _("The following %s user accounts already exist on the system, with identical information.") 
+        msg += "\n\n%s\n\n"
+        msg += _("Would you like to remove those accounts from the list, to avoid trying to create them again?")
         msg = msg % (len(identical), ', '.join(self.list[iter_][0] for iter_ in identical))
-        resp = dialogs.AskDialog(msg, "Βρέθηκαν πανομοιότυποι χρήστες").showup()
+        resp = dialogs.AskDialog(msg, _("Identical existing accounts were found").showup())
         if resp == Gtk.ResponseType.YES:
             for iter_ in identical:
                 self.RemoveRow(iter_)
@@ -371,18 +371,17 @@ class ImportDialog:
         new_users['dirs'] = [user.directory for user in self.set.users.values()]
         
         log = []
-        def log_msg(item, user, a, b):
-            txt = "Αλλάχθηκε το %s του χρήστη '%s' από %s σε %s." % (item, user, a, b)
+        def log_msg(txt):
             log.append(txt)
             return txt
         def log_uid(u, f, t):
-            return log_msg('UID', u, f, t)
+            return log_msg(_("The UID of user \"%s\" was changed from %s to %s.") % (u, f, t))
         def log_gid(u, f, t):
-            return log_msg('GID', u, f, t)
+            return log_msg(_("The GID of user \"%s\" was changed from %s to %s.") % (u, f, t))
         def log_home(u, f, t):
-            return log_msg('Home', u, f, t)
+            return log_msg(_("The home directory of user \"%s\" was changed from \"%s\" to %s.") % (u, f, t))
         def log_group(u, f, t):
-            return log_msg('όνομα του primary group', u, f, t)
+            return log_msg(_("The primary group name of user \"%s\" was changed from %s to %s.") % (u, f, t))
         
         for row in self.list:
             if row[60] != self.states['error']:
@@ -454,7 +453,7 @@ class ImportDialog:
             log_dlg.hide()
             self.DetectConflicts()
         else:
-            dialogs.WarningDialog('Δεν ήταν δυνατή η αυτόματη επίλυση κάποιου προβλήματος').showup()
+            dialogs.WarningDialog(_("Some issues remain that could not be resolved automatically")).showup()
     
     def Edit(self, widget, user):
         form = user_form.ReviewUserDialog(libuser.system, user, role='')
@@ -462,7 +461,7 @@ class ImportDialog:
         form.dialog.set_modal(True)
     
     def Apply(self, widget):
-        text = "Να δημιουργηθούν οι νέοι χρήστες;"
+        text = _("Create the following users?")
         response = dialogs.AskDialog(text, "Confirm").showup()
         if response == Gtk.ResponseType.YES:
             new_groups = {}
@@ -521,28 +520,28 @@ class ImportDialog:
             if row_info is not None:
                 col = row_info[1]
                 
-                if model[path][0+40] == "con" and col.get_title() == "Όνομα χρήστη":
-                    tooltip.set_text("Αυτό το όνομα χρήστη υπάρχει ήδη στο σύστημα")
-                elif model[path][0+40] == "char" and col.get_title() == "Όνομα χρήστη":                    
-                    tooltip.set_text("Αυτό το όνομα χρήστη δεν είναι αποδεκτό")
+                if model[path][0+40] == "con" and col.get_title() == _("Username"):
+                    tooltip.set_text(_("This username already exists in the system"))
+                elif model[path][0+40] == "char" and col.get_title() == "Username":                    
+                    tooltip.set_text(_("This is not a valid username"))
                 elif model[path][1+40] == "con" and col.get_title() == "UID":
-                    tooltip.set_text("Αυτό το UID υπάρχει ήδη στο σύστημα")
+                    tooltip.set_text(_("This UID already exists in the system"))
                 elif model[path][1+40] == "dup" and col.get_title() == "UID":
-                    tooltip.set_text("Αυτό το UID υπάρχει ήδη σε αυτή τη λίστα")
+                    tooltip.set_text(_("This UID already exists in this list"))
                 elif model[path][1+40] == "hijack" and col.get_title() == "UID":
-                    tooltip.set_text("Αυτό το UID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε")
+                    tooltip.set_text(_("This UID does not match the home directory UID"))
                 elif model[path][2+40] == "hijack" and col.get_title() == "UID":
-                    tooltip.set_text("Αυτό το GID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε")
-                elif model[path][9+40] == "con" and col.get_title() == "Κατάλογος":
-                    tooltip.set_text("Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη του συστήματος")
-                elif model[path][9+40] == "dup" and col.get_title() == "Κατάλογος":
-                    tooltip.set_text("Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη σε αυτή τη λίστα")
-                elif model[path][9+40] == "hijack" and col.get_title() == "Κατάλογος":
-                    tooltip.set_text("Αυτός ο κατάλογος υπάρχει στο σύστημα αλλά με διαφορετικά UID ή/και GID από αυτά που δώσατε")
-                elif 'mismatch' in model[path][2+40] and col.get_title() == "Κύρια ομάδα":
-                    tooltip.set_text("Αυτό το GID δεν ανήκει στην ομάδα %s" % model[path][3])
-                elif 'mismatch' in model[path][3+40] and col.get_title() == "Όνομα κύριας ομάδας":
-                    tooltip.set_text("Το GID αυτής της ομάδας δεν είναι %s" % model[path][2])
+                    tooltip.set_text(_("This GID does not match the home directory GID"))
+                elif model[path][9+40] == "con" and col.get_title() == "Directory":
+                    tooltip.set_text(_("This directory is in use by another user in the system"))
+                elif model[path][9+40] == "dup" and col.get_title() == "Directory":
+                    tooltip.set_text(_("This directory is in use by another user in the list"))
+                elif model[path][9+40] == "hijack" and col.get_title() == "Directory":
+                    tooltip.set_text(_("This directory already exists in the system but with a different UID/GID"))
+                elif 'mismatch' in model[path][2+40] and col.get_title() == "GID":
+                    tooltip.set_text(_("This GID does not belong to the group %s") % model[path][3])
+                elif 'mismatch' in model[path][3+40] and col.get_title() == "Primary group":
+                    tooltip.set_text(_("The GID for this group is not %s") % model[path][2])
                 else:
                     return
                 

@@ -173,12 +173,12 @@ class Gui:
             mi_delete_group.set_sensitive(False)
         elif rows == 1:
             mi_edit_group.set_sensitive(True)
-            mi_edit_group.set_label('Επεξεργασία ομάδας...')
-            mi_delete_group.set_label('Διαγραφή ομάδας...')
+            mi_edit_group.set_label(_("Edit group..."))
+            mi_delete_group.set_label(_("Delete group..."))
             mi_delete_group.set_sensitive(True)
         else:
             mi_edit_group.set_sensitive(False)
-            mi_delete_group.set_label('Διαγραφή ομάδων...')
+            mi_delete_group.set_label(_("Delete groups..."))
             mi_delete_group.set_sensitive(True)
 
     def on_users_selection_changed(self, selection):
@@ -200,11 +200,11 @@ class Gui:
 
             if rows == 1:
                 mi_edit_user.set_sensitive(True)
-                mi_edit_user.set_label('Επεξεργασία χρήστη...')
-                mi_delete_user.set_label('Διαγραφή χρήστη...')
+                mi_edit_user.set_label(_("Edit user..."))
+                mi_delete_user.set_label(_("Delete user..."))
             else:
                 mi_edit_user.set_sensitive(False)
-                mi_delete_user.set_label('Διαγραφή χρηστών...')
+                mi_delete_user.set_label(_("Delete users..."))
 
 
     def on_users_tv_button_press_event(self, widget, event):
@@ -267,7 +267,7 @@ class Gui:
         create_users.NewUsersDialog(self.system, self.sf)
     
     def on_mi_import_passwd_activate(self, widget):
-        chooser = Gtk.FileChooserDialog(title="Επιλέξτε το αρχείο passwd προς εισαγωγή", 
+        chooser = Gtk.FileChooserDialog(title=_("Select the passwd file to import"), 
                                         action=Gtk.FileChooserAction.OPEN,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -288,8 +288,8 @@ class Gui:
                 group = None
             new_users = parsers.passwd().parse(passwd, shadow, group)
             if len(new_users.users) == 0:
-                text = "Το αρχείο '%s' δεν περιέχει δεδομένα." % passwd
-                dialogs.ErrorDialog(text, "Σφάλμα").showup()
+                text = _("The file \"%s\" contains no data.") % passwd
+                dialogs.ErrorDialog(text, _("Error")).showup()
                 return False
             chooser.destroy()
             import_dialog.ImportDialog(new_users)
@@ -297,7 +297,7 @@ class Gui:
             chooser.destroy()
     
     def on_mi_import_csv_activate(self, widget):
-        chooser = Gtk.FileChooserDialog(title="Επιλέξτε το αρχείο CSV προς εισαγωγή", 
+        chooser = Gtk.FileChooserDialog(title=_("Select the CSV file to import"), 
                                         action=Gtk.FileChooserAction.OPEN,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -311,8 +311,8 @@ class Gui:
             fname = chooser.get_filename()
             new_users = parsers.CSV().parse(fname)
             if len(new_users.users) == 0:
-                text = "Το αρχείο '%s' δεν περιέχει δεδομένα." % fname
-                dialogs.ErrorDialog(text, "Σφάλμα").showup()
+                text = _("The file \"%s\" contains no data.") % fname
+                dialogs.ErrorDialog(text, _("Error")).showup()
                 return False
             chooser.destroy()
             import_dialog.ImportDialog(new_users)
@@ -334,8 +334,8 @@ class Gui:
         ip_dialog.Ip_Dialog(self.main_window)
 
     def on_mi_ltsp_update_image_activate(self, widget):
-        message = "Θέλετε σίγουρα να προχωρήσετε στην δημοσίευση του εικονικού δίσκου;"
-        second_message = "Ανάλογα με την ταχύτητα του επεξεργαστή σας και το μέγεθος του δίσκου σας, αυτή η διαδικασία μπορεί να χρειαστεί γύρω στα 10 λεπτά. Στη συνέχεια (επαν)εκκινήστε τους σταθμούς εργασίας."
+        message = _("Are you sure you want to update the LTSP image?")
+        second_message = _("Depending on the CPU speed and image size, this may need about 10 minutes. After that, (re)boot your workstations.")
         dlg = dialogs.AskDialog(message)
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
@@ -343,16 +343,18 @@ class Gui:
             subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
 
     def on_mi_ltsp_revert_image_activate(self, widget):
-        message = "Θέλετε σίγουρα να προχωρήσετε στην επαναφορά του εικονικού δίσκου σε προηγούμενη έκδοση;"
+        message = _("Are you sure you want to revert to the previous version of the LTSP image?")
         dlg = dialogs.AskDialog(message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES: 
             subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--revert', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
+        # TODO: replace i386 with either ARCH or *
         self.edit_file('/var/lib/tftpboot/ltsp/i386/lts.conf')
 
     def on_mi_edit_pxelinux_cfg_activate(self, widget):
+        # TODO: replace i386 with either ARCH or *
         self.edit_file('/var/lib/tftpboot/ltsp/i386/pxelinux.cfg/default')
 
     def on_mi_edit_shared_folders_activate(self, widget):
@@ -399,15 +401,15 @@ class Gui:
         users = self.get_selected_users()
         users_n = len(users)
         if users_n == 1:
-            message = "Θέλετε σίγουρα να διαγράψετε τον χρήστη %s;" % users[0].name
-            homes_message = "Να διαγραφεί και ο αρχικός κατάλογος του παραπάνω χρήστη."
-            homes_warn = "ΠΡΟΣΟΧΗ: Αν ενεργοποιήσετε αυτήν την επιλογή θα διαγραφεί ο αρχικός κατάλογος του χρήστη, καθώς και όλα τα αρχεία που αυτός περιέχει, αλλά και ο αντίστοιχος κατάλογος e-mail στο /var/mail (εάν υπάρχει)."
+            message = _("Are you sure you want to delete user \"%s\"?") % users[0].name
+            homes_message = _("Also delete the user's home directory.")
+            homes_warn = _("WARNING: if you enable this option, the user's home directory with all its files will be deleted, along with the user's e-mail at /var/mail, if it exists")
         else:
-            message = "Θέλετε σίγουρα να διαγράψετε τους παρακάτω %d χρήστες;" % users_n
+            message = _("Are you sure you want to delete the following %d users?") % users_n
             message += "\n" + ', '.join([user.name for user in users])
-            homes_message = "Να διαγραφούν και οι αρχικοί κατάλογοι των παραπάνω χρηστών."
-            homes_warn = "ΠΡΟΣΟΧΗ: Αν ενεργοποιήσετε αυτήν την επιλογή θα διαγραφούν οι αρχικοί κατάλογοι όλων των παραπάνω χρηστών, καθώς και όλα τα αρχεία που αυτοί περιέχουν, αλλά και οι αντίστοιχοι κατάλογοι e-mail στο /var/mail (εάν υπάρχουν)."
-        homes_warn += "\n\nΗ ενέργεια αυτή είναι μη-αναστρέψιμη."
+            homes_message = _("Also delete the users' home directories.")
+            homes_warn = _("WARNING: if you enable this option, the users' home directories with all their files will be deleted, along with the users' e-mails at /var/mail, if they exist")
+        homes_warn += "\n\n" + _("This action can't be undone.")
         
         dlg = dialogs.AskDialog(message)
         vbox = dlg.get_message_area()
@@ -427,9 +429,9 @@ class Gui:
         users_n = len(users)
         group_names = ', '.join([group.name for group in groups])
         if users_n == 1:
-            message = "Θέλετε σίγουρα να αφαιρέσετε τον χρήστη %s από τις επιλεγμένες ομάδες (%s);" % (users[0].name, group_names)
+            message = _("Are you sure you want to remove user %s from the selected groups (%s)?") % (users[0].name, group_names)
         else:
-            message = "Θέλετε σίγουρα να αφαιρέσετε τους παρακάτω %d χρήστες από τις επιλεγμένες ομάδες (%s);" % (users_n, group_names)
+            message = _("Are you sure you want to remove the following %d users from the selected groups (%s)?") % (users_n, group_names)
             message += "\n" + ', '.join([user.name for user in users])
 
         response = dialogs.AskDialog(message).showup()
@@ -449,9 +451,9 @@ class Gui:
         groups = self.get_selected_groups()
         groups_n = len(groups)
         if groups_n == 1:
-            message = "Θέλετε σίγουρα να διαγράψετε την ομάδα %s;" % groups[0].name
+            message = _("Are you sure you want to delete group %s?") % groups[0].name
         else:
-            message = "Θέλετε σίγουρα να διαγράψετε τις παρακάτω %d ομάδες;" % groups_n
+            message = _("Are you sure you want to delete the following %d groups?") % groups_n
             message += "\n" + ', '.join([group.name for group in groups])
 
         response = dialogs.AskDialog(message).showup()
@@ -463,6 +465,7 @@ class Gui:
 ## Help menu
 
     def on_mi_home_activate(self, widget):
+        # TODO: localize URLs
         self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
 
     def on_mi_report_bug_activate(self, widget):
@@ -502,30 +505,25 @@ class Gui:
 # To export a man page:
 # help2man -L el -s 8 -o ltsp-manager.8 -N ./ltsp-manager && man ./ltsp-manager.8
 def usage():
-    print """Χρήση: ltsp-manager [ΕΠΙΛΟΓΕΣ]
+    print _("""Usage: ltsp-manager [OPTIONS]
 
-Παρέχει ένα σύνολο εξαρτήσεων για την αυτοματοποίηση της εγκατάστασης
-σχολικών εργαστηρίων και ένα γραφικό περιβάλλον που υποστηρίζει διαχείριση
-λογαριασμών χρηστών, δημιουργία εικονικού δίσκου LTSP κ.α.
+It depends on a set of packages suitable for configuring LTSP in small
+computer labs, and it provides a GUI for managing user accounts, running
+maintenance tasks etc.
 
-Πολλά από τα συμπεριλαμβανόμενα βοηθήματα προσανατολίζονται σε LTSP
-εγκαταστάσεις, αλλά το πακέτο είναι χρήσιμο και χωρίς LTSP.
+Options:
+    -h, --help     Display this help and exit.
+    -v, --version  Output version information and exit.
 
-Περισσότερες πληροφορίες: http://ts.sch.gr/wiki/Linux/LTSP.
-
-Επιλογές:
-    -h, --help     Σελίδα βοήθειας της εφαρμογής.
-    -v, --version  Προβολή έκδοσης των ltsp-manager.
-
-Αναφορά σφαλμάτων στο https://bugs.launchpad.net/ltsp-manager."""
+Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager.""")
 
 
 def print_version():
-    print """ltsp-manager %s
-Copyright (C) 2009-2013 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.
-Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/gpl.html>.
+    print _("""ltsp-manager %s
+Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.
+License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>.
 
-Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης <ftsamis@gmail.com>.""" % version.__version__
+Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):

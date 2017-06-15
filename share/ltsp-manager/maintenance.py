@@ -103,7 +103,7 @@ class MaintenanceDialog(object):
         except Exception as error:
             error = aptdaemon.errors.TransactionFailed(ERROR_UNKNOWN, str(error))
         self.error_dlg = AptErrorDialog(error, None)
-        self.error_dlg.set_title('Σφάλμα')
+        self.error_dlg.set_title(_("Error"))
         self.error_dlg.run()
 
     def on_trans_finished(self, trans, status):
@@ -134,15 +134,15 @@ class MaintenanceDialog(object):
             self.main_dlg.set_response_sensitive(Gtk.ResponseType.OK, True)
             if len(self.pkgs) == 1:
                 self.main_dlg_lbl_space.set_text(
-                '%d πακέτο έχει επιλέγει, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-                 %(len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                    _("1 package selected, %sB disk space will be freed.") %
+                    apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs)))
             else:
                 self.main_dlg_lbl_space.set_text(
-                '%d πακέτα έχουν επιλέγει, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-                 %(len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))    
+                    _("%d packages selected, %sB disk space will be freed.") %
+                    (len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
         else:
             self.main_dlg.set_response_sensitive(Gtk.ResponseType.OK, False)
-            self.main_dlg_lbl_space.set_text('Δεν έχετε επιλέξει κάποιο πυρήνα προς αφαίρεση.')
+            self.main_dlg_lbl_space.set_text(_("You haven't selected any kernels to remove."))
 
 
 
@@ -151,25 +151,25 @@ class Purge(MaintenanceDialog):
         super(Purge, self).__init__(parent)
         self.cache = apt.Cache()
         self.cache.open()
-        self.main_dlg.set_title('Αφαίρεση παλιών πυρήνων...')
+        self.main_dlg.set_title(_("Purge old kernels..."))
         self.main_dlg_lbl_title.set_markup(
-                '<b><big>Βρέθηκαν οι παρακάτω παλιοί πυρήνες στο σύστημα\n\n</big></b>' \
-                'Μπορείτε να επιλέξετε αυτούς που επιθυμείτε να αφαιρεθούν.')
+            "<b><big>" + _("The following old kernels were found in the system") \
+            + "\n\n</big></b>" + _("Select the ones you wish to purge."))
         self.main_dlg_img_lbl.set_from_icon_name('applications-other', Gtk.IconSize.SMALL_TOOLBAR)
         self.main_dlg_img_lbl.set_pixel_size(-1)
         if not self.find():
             self.clear_cache()
-            dialogs.InfoDialog('Δεν βρέθηκαν παλιοί πυρήνες για διαγραφή.', 'Ειδοποίηση').showup() 
+            dialogs.InfoDialog(_("No old kernels were found."), _("Warning")).showup() 
             return
 
         if len(self.pkgs) == 1:
             self.main_dlg_lbl_space.set_text(
-            '%d πακέτο έχει επιλέγει, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-             %(len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                _("1 package selected, %sB disk space will be freed.") %
+                apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs)))
         else:
             self.main_dlg_lbl_space.set_text(
-            '%d πακέτα έχουν επιλέγει, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-             %(len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                _("%d packages selected, %sB disk space will be freed.") %
+                (len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
         self.populate_treeview()
         self.main_dlg.show_all()             
 
@@ -220,8 +220,8 @@ class Purge(MaintenanceDialog):
             self.main_dlg.destroy()
             return
 
-        msg = 'Είστε σίγουροι ότι θέλετε να προχωρήσετε στην αφαίρεση των επιλεγμένων πυρήνων;'
-        ask_dlg = dialogs.AskDialog(msg, 'Επιβεβαίωση')
+        msg = _("Are you sure you want to purge the selected kernels?")
+        ask_dlg = dialogs.AskDialog(msg, _("Confirmation"))
         ask_dlg.set_transient_for(self.main_dlg) 
         if ask_dlg.showup() != Gtk.ResponseType.YES:
             return
@@ -238,23 +238,24 @@ class Purge(MaintenanceDialog):
 class Clean(MaintenanceDialog):
     def __init__(self, parent):
         super(Clean, self).__init__(parent)
-        self.main_dlg.set_title('Καθαρισμός μνήμης πακέτων...')
-        self.main_dlg_lbl_title.set_markup(
-                '<b><big>Βρέθηκαν τα παρακάτω αρχεία στην μνήμη\n</big></b>')
+        self.main_dlg.set_title(_("Clean apt package cache..."))
+        self.main_dlg_lbl_title.set_markup("<b><big>" \
+            + _("The following packages were found in apt cache") \
+            +"\n</big></b>")
         self.main_dlg_img_lbl.set_from_icon_name('package-x-generic', Gtk.IconSize.SMALL_TOOLBAR)
         self.main_dlg_img_lbl.set_pixel_size(-1)
         if not self.find():
-            dialogs.InfoDialog('Δεν υπάρχουν αρχεία στην μνήμη πακέτων για διαγραφή.', 'Ειδοποίηση').showup() 
+            dialogs.InfoDialog(_("There are no packages in apt cache."), _("Warning")).showup() 
             return
 
         if len(self.pkgs) == 1:
             self.main_dlg_lbl_space.set_markup(
-                '%s αρχείο βρέθηκε, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-                %(str(len(self.pkgs)), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                _("1 package selected, %sB disk space will be freed.") %
+                apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs)))
         else:
             self.main_dlg_lbl_space.set_markup(
-                '%s αρχεία βρέθηκαν, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-                %(str(len(self.pkgs)), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                _("%d packages selected, %sB disk space will be freed.") %
+                (len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
         self.populate_treeview() 
         self.main_dlg.show_all()   
                 
@@ -274,7 +275,7 @@ class Clean(MaintenanceDialog):
         super(Clean, self).populate_treeview()
         for row in self.main_dlg_tstore:
             row[1] = 'package-x-generic'
-        self.main_dlg_tview.get_columns()[0].set_title('Αρχείο')             
+        self.main_dlg_tview.get_columns()[0].set_title(_("Package"))             
             
 
     '''
@@ -285,8 +286,8 @@ class Clean(MaintenanceDialog):
             self.main_dlg.destroy()
             return
 
-        msg = 'Είστε σίγουροι ότι θέλετε να προχωρήσετε στον καθαρισμό της μνήμης πακέτων;'
-        ask_dlg = dialogs.AskDialog(msg, 'Επιβεβαίωση')
+        msg = _("Are you sure you want to clean the apt package cache?")
+        ask_dlg = dialogs.AskDialog(msg, _("Confirmation"))
         ask_dlg.set_transient_for(self.main_dlg) 
         if ask_dlg.showup() != Gtk.ResponseType.YES:
             return
@@ -300,24 +301,25 @@ class AutoRemove(MaintenanceDialog):
         super(AutoRemove, self).__init__(parent)
         self.cache = apt.Cache()
         self.cache.open()
-        self.main_dlg.set_title('Διαγραφή ορφανών πακέτων...')
-        self.main_dlg_lbl_title.set_markup(
-                '<b><big>Βρέθηκαν τα παρακάτω ορφανά πακέτα στο σύστημα\n</big></b>')
+        self.main_dlg.set_title(_("Purge orphan packages..."))
+        self.main_dlg_lbl_title.set_markup("<b><big>" +
+            _("The following orphan packages were found in the system:") \
+            + "\n</big></b>")
         self.main_dlg_img_lbl.set_from_icon_name('applications-other', Gtk.IconSize.SMALL_TOOLBAR)
         self.main_dlg_img_lbl.set_pixel_size(-1)
         if not self.find():
             self.clear_cache()
-            dialogs.InfoDialog('Δεν υπάρχουν ορφανά πακέτα για διαγραφή.', 'Ειδοποίηση').showup()
+            dialogs.InfoDialog(_("No orphan packages were found."), _("Warning")).showup()
             return
 
         if len(self.pkgs) == 1:
             self.main_dlg_lbl_space.set_markup(
-                '%s πακέτο βρέθηκε, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-                %(str(len(self.pkgs)), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                _("1 package selected, %sB disk space will be freed.") %
+                apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs)))
         else:
             self.main_dlg_lbl_space.set_markup(
-                '%s πακέτα βρέθηκαν, %sB χώρου στο δίσκο θα ελευθερωθούν.' \
-                %(str(len(self.pkgs)), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
+                _("%d packages selected, %sB disk space will be freed.") %
+                (len(self.pkgs), apt_pkg.size_to_str(sum(pkg.size for pkg in self.pkgs))))
         self.populate_treeview()
         self.main_dlg.show_all()
     
@@ -347,8 +349,8 @@ class AutoRemove(MaintenanceDialog):
             self.main_dlg.destroy()
             return
 
-        msg = 'Είστε σίγουροι ότι θέλετε να προχωρήσετε στην αφαίρεση των ορφανών πακέτων;'
-        ask_dlg = dialogs.AskDialog(msg, 'Επιβεβαίωση')
+        msg = _("Are you sure you want to purge all orphan packages?")
+        ask_dlg = dialogs.AskDialog(msg, _("Confirmation"))
         ask_dlg.set_transient_for(self.main_dlg) 
         if ask_dlg.showup() != Gtk.ResponseType.YES:
             return

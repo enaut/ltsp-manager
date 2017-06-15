@@ -18,30 +18,25 @@ import parsers
 IP_REG = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-4])$"
 BUS = dbus.SystemBus()
 DBUS_SERVICE_NAME = 'org.freedesktop.NetworkManager'
-MSG_PC_CONFLICT_IP = 'Η διεύθυνση {0} χρησιμοποιείται ήδη από άλλον υπολογιστή. Παρακάλω δώστε μια διαφορετική.'
-MSG_ROUTE_CONFLICT_IP = 'Η διεύθυνση {0} χρησιμοποείται ήδη σαν προεπιλεγμένη διαδρομή. Παρακάλω δώστε μια διαφορετική.'
-MSG_WRONG_REGEX_IP = 'Μη-έγκυρη διεύθυνση IP. θα πρέπει να είναι της μορφής x.y.z.w όπου x, y, z, w παίρνουν τιμές ' \
-                     'μεταξύ του 1 και 254.'
-MSG_ERROR_CONNECT_NM = 'Αδυναμία σύνδεσης στη Διαχείριση Δικτύου.'
-MSG_NO_DEVICES = 'Δεν υπάρχει διαθέσιμη διεπαφή.'
-MSG_NO_WIRED_DEVICES = 'Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή.'
-MSG_TITLE_SUBNET = 'Το υποδίκτυο έχει αλλάξει.'
-MSG_SUBNET = 'Το υποδίκτυο έχει αλλάξει για την <b>{0}</b>. Ο διάλογος θα προτείνει μια νέα μέθοδο σύμφωνα με τις ' \
-             'νέες τιμές που λήφθηκαν από τον router.'
-MSG_SUBNET_PLURAL = 'Το υποδίκτυο έχει αλλάξει για τις <b>{0}</b>. Ο διάλογος θα προτείνει μια νέα μέθοδο σύμφωνα με' \
-                    ' τις νέες τιμές που λήφθηκαν από τον router.'
-MSG_TITLE_CONNECTIONS_CREATE = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς.'
-MSG_TITLE_DNSMASQ_RESTART_FAIL = 'Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq απέτυχε.'
-MSG_SUGGEST_HOSTNAME = 'Προτείνεται να μετανομάσετε τον υπολογίστη σας σε <b>{0}</b>\n\n'
-MSG_DNSMASQ_RESTART_SUCCESS = 'Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του αρχείου ρυθμίσεων του ' \
-                              'dnsmasq έγινε επιτυχώς.'
-MSG_DNSMASQ_RESTART_FAIL_ENABLE = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου ' \
-                                  'dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν.'
-MSG_DNSMASQ_RESTART_FAIL = 'Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου ρυθμίσεων ' \
-                           'του dnsmasq απέτυχε.'
-TITLE_ERROR = 'Σφάλμα'
-TITLE_INFO = 'Πληροφορία'
-TITLE_SUCCESS = 'Επιτυχία'
+MSG_PC_CONFLICT_IP = _("The address {0} is already is use by another workstation. Please enter another one.")
+MSG_ROUTE_CONFLICT_IP = _("The address {0} is already in use as the default gateway. Please enter another one.")
+MSG_WRONG_REGEX_IP = _("Invalid IP address. It must be in the form x.y.z.w, where x, y, z, w are between 1 and 255.")
+MSG_ERROR_CONNECT_NM = _("Could not connect to Network Manager")
+MSG_NO_DEVICES = _("No device available")
+MSG_NO_WIRED_DEVICES = _("No wired devices available")
+MSG_TITLE_SUBNET = _("The subnet has changed.")
+MSG_SUBNET = _("The subnet has changed for device <b>{0}</b>. The dialog will suggest a new method according to the new values that were received from the router.")
+MSG_SUBNET_PLURAL = _("The subnet has changed for devices <b>{0}</b>. The dialog will suggest a new method according to the new values that were received from the router.")
+MSG_TITLE_CONNECTIONS_CREATE = _("The connections were successfully created.")
+MSG_TITLE_DNSMASQ_RESTART_FAIL = _("Failure while restarting dnsmasq.")
+MSG_SUGGEST_HOSTNAME = _("It is suggested to change your hostname to <b>{0}</b>") + "\n\n"
+MSG_DNSMASQ_RESTART_SUCCESS = _("Successfully created network connections and restarted dnsmasq.")
+MSG_DNSMASQ_RESTART_FAIL_ENABLE = _("Successfully created network connections, but failed while restarting dnsmasq because the connections were not activated.")
+MSG_DNSMASQ_RESTART_FAIL = _("Successfully created network connections, but failed while restarting dnsmasq.")
+
+TITLE_ERROR = _("Error")
+TITLE_INFO = _("Information")
+TITLE_SUCCESS = _("Success")
 
 ## Define global functions
 
@@ -182,7 +177,7 @@ class Device_Wired(Network_Manager_DBus):
         mac = self.properties['HwAddress']
         speed = self.properties['Speed']
         if speed == 0:
-            speed = 'Άγνωστη'
+            speed = _("Unknown")
         carrier = self.properties['Carrier']
         if carrier == '':
             carrier = 0
@@ -246,7 +241,7 @@ class Info:
         self.ip, self.mask, self.route, self.dnss = ip, mask, route, dnss
 
         # If IP address is not defined then initialize the attributes with a string
-        msg = 'Δεν βρέθηκε διεύθυνση'
+        msg = _("No address found")
         if not self.ip:
             self.ip, self.mask, self.route = [msg]*3
             self.dnss = [msg]*3
@@ -420,6 +415,7 @@ class Ip_Dialog:
         self.interfaces_diff_subnet = []
         self.timeout = 0
         self.settings = None
+        # TODO: don't use Greek school DNS servers
         self.ts_dns = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
         self.ltsp_ips = dict(ip='192.168.67.1', mask='255.255.255.0', route='0.0.0.0')
         self.builder = Gtk.Builder()
@@ -634,7 +630,7 @@ class Ip_Dialog:
                 continue
             ip = interface.page.ip_entry.get_text()
             method = interface.page.method_entry.get_active()
-            if not re.match(IP_REG, ip) and ip != 'Δεν βρέθηκε διεύθυνση':
+            if not re.match(IP_REG, ip) and ip != _("No address found"):
                 check_ip = False
             if method != 4:
                 check_method = True
@@ -715,7 +711,7 @@ class Ip_Dialog:
         self.check_button()
 
     def on_ip_entry_changed(self, ip_entry, interface):
-        if interface.page.ip_entry.get_text() != 'Δεν βρέθηκε διεύθυνση':
+        if interface.page.ip_entry.get_text() != _("No address found"):
             ip = interface.page.ip_entry.get_text()
             sub_ip = '.'.join(interface.ip.split('.')[0:3])+'.'
             if not re.match(IP_REG, ip):
@@ -834,15 +830,14 @@ class Ip_Dialog:
                         interface.page.auto_checkbutton.get_active():
                     interface.interface_connections.append(connection_settings) 
 
-        title = 'Είστε σίγουροι ότι θέλετε να συνεχίσετε;'
-        msg = 'Πρόκειται '
+        title = _("Are you sure you want to continue?")
+        msg = ""
+
         if len(new_connections) > 0:
-            msg += 'να δημιουργήσετε '
-        
-            if len(new_connections) == 1: 
-                msg += 'τη σύνδεση: \n\n'
+            if len(new_connections) == 1:
+                msg += _("You're about to create the connection:") + "\n\n"
             else:
-                msg += 'τις συνδέσεις: \n\n'
+                msg += _("You're about to create the connections:") + "\n\n"
             
             for counter, interface in enumerate(new_connections):
                 if interface.carrier == 1:
@@ -855,12 +850,10 @@ class Ip_Dialog:
                     msg += '\n'
 
         if len(replace_connections) > 0:
-            msg += 'να ενημερώσετε '
-        
-            if len(replace_connections) == 1: 
-                msg += 'τη σύνδεση: \n\n'
+            if len(replace_connections) == 1:
+                msg += _("You're about to update the connection:") + "\n\n"
             else:
-                msg += 'τις συνδέσεις: \n\n'
+                msg += _("You're about to update the connections:") + "\n\n"
         
             for interface in replace_connections:
                 if interface.carrier == 1:
@@ -871,12 +864,11 @@ class Ip_Dialog:
                                             interface.page.method_lstore[interface.page.method_entry.get_active()][0])
 
         if dnsmasq_via_carrier and dnsmasq_via_autoconnect:
-            msg += '\nκαι να επαναδημιουργήσετε το αρχείο ρυθμίσεων του dnsmasq;'
+            msg += "\n" + _("and to recreate the dnsmasq configuration file.")
         elif not dnsmasq_via_carrier and dnsmasq_via_autoconnect:
-            msg += '\n<b>Προσοχή:</b> Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq δεν ' \
-                   'είναι δυνατή καθώς σε καμία διεπαφή δεν είναι συνδεδεμένο το καλώδιο.'
+            msg += "\n" + _("<b>Warning:</b> Recreating the dnsmasq configuration file is impossible because no network cable is attached to any of the available devices.")
         
-        ask_dialog = dialogs.AskDialog(title, 'Επιβεβαίωση')
+        ask_dialog = dialogs.AskDialog(title, _("Confirmation"))
         ask_dialog.format_secondary_markup(msg)
         ask_dialog.set_transient_for(self.main_dlg)
         if ask_dialog.showup() != Gtk.ResponseType.YES:    

@@ -26,15 +26,8 @@ LAST_GID=29999
 NAME_REGEX = "^[a-z][-a-z0-9_]*$"
 HOME_PREFIX = "/home"
 
-USER_FIELDS = ['Όνομα χρήστη', 'UID', 'Κύρια ομάδα', 'Ονοματεπώνυμο', 'Γραφείο', 
-'Τηλ. γραφείου', 'Τηλ. οικίας', 'Άλλο', 'Κατάλογος', 'Κέλυφος', 'Ομάδες',
-'Τελευταία αλλαγή κωδικού', 'Ελάχιστη διάρκεια', 'Μέγιστη διάρκεια', 'Προειδοποίηση', 'Ανενεργός', 'Λήξη']
-
-['Username', 'UID', 'GID', 'Primary Group Name', 'Real name', 'Office', 'Office phone', 'Home phone', 'Other', 'Directory', 'Shell', 'Groups', 'Last password change', 'Minimum days', 'Maximum days', 'Warn', 'Inactive', 'Expiration', 'Encrypted password', 'Password']
-CSV_USER_FIELDS = USER_FIELDS[:]
-CSV_USER_FIELDS.insert(3, 'Όνομα κύριας ομάδας')
-CSV_USER_FIELDS.extend(['Κρυπτογραφημένος κωδικός', 'Κωδικός'])
-
+USER_FIELDS = ['Username', 'UID', 'Primary group', 'Real name', 'Office', 'Office phone', 'Home phone', 'Other', 'Directory', 'Shell', 'Groups', 'Last password change', 'Minimum password age', 'Maximum password age', 'Warning period', 'Inactivity period', 'Expiration']
+CSV_USER_FIELDS = ['Username', 'UID', 'GID', 'Primary group', 'Real name', 'Office', 'Office phone', 'Home phone', 'Other', 'Directory', 'Shell', 'Groups', 'Last password change', 'Minimum password age', 'Maximum password age', 'Warning period', 'Inactivity period', 'Expiration', 'Encrypted password', 'Password']
 
 class User:
     def __init__(self, name=None, uid=None, gid=None, rname="", office="", wphone="",
