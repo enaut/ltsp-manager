@@ -13,7 +13,7 @@ override_dh_install:
 	echo "__version__='$(DEBVERS)'" > "$(CURDIR)/debian/ltsp-manager/usr/share/ltsp-manager/version.py"
 
 override_dh_installinit:
-	dh_installinit --name=shared-folders
+	dh_installinit --name=ltsp-shared-folders
 
 override_dh_installgsettings:
 	#dh_installgsettings --priority=20

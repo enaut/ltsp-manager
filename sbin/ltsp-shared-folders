@@ -2,9 +2,9 @@
 # Copyright (C) 2012 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-if [ ! -x /usr/share/ltsp-manager/shared_folders.py ]; then
-    echo "/usr/share/ltsp-manager/shared_folders.py not found!" >&2
+if [ ! -x /usr/share/ltsp-manager/ltsp_shared_folders.py ]; then
+    echo "/usr/share/ltsp-manager/ltsp_shared_folders.py not found!" >&2
     exit 1
 fi
 cd /usr/share/ltsp-manager
-exec ./shared_folders.py "$@"
+exec ./ltsp_shared_folders.py "$@"

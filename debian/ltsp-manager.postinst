@@ -142,7 +142,7 @@ EOF
         /usr/share/mate/autostart/tilda.desktop  # Useless terminal that opens with F12
 EOF
     # Add group "teachers"
-    test -f /etc/default/shared-folders && . /etc/default/shared-folders
+    test -f /etc/default/ltsp-shared-folders && . /etc/default/ltsp-shared-folders
     if [ -n "$TEACHERS" ]; then
         if ! getent group "$TEACHERS" >/dev/null; then
             addgroup --system "$TEACHERS"

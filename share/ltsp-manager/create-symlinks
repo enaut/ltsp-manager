@@ -61,7 +61,7 @@ ln_sf() {
     src=$2
 
     if [ -e "$src" ]; then
-        if [ "$(stat -c %m "$SHARE_DIR/.shared-folders")" = "$SHARE_DIR" ]; then
+        if [ "$(stat -c %m "$SHARE_DIR/.ltsp-shared-folders")" = "$SHARE_DIR" ]; then
             # Fat clients use SSH_FOLLOW_SYMLINKS=True so [ -h ] doesn't work.
             # But symlink deletion doesn't work either, so just assume the link
             # is correct. `mv` semi-works, but it's not worth it.
@@ -136,11 +136,11 @@ fi
 # Don't run on LTSP clients. See /usr/share/ldm/rc.d/X50-create-symlinks
 test -n "$LTSP_CLIENT" && exit 0
 
-. /etc/default/shared-folders
+. /etc/default/ltsp-shared-folders
 # For fat clients, try to get a newer version of SHARE_GROUPS by using
 # the LOCALAPPS_EXTRA_MOUNT mount.
-if [ -f "$SHARE_DIR/.shared-folders" ]; then
-    . "$SHARE_DIR/.shared-folders" 2>/dev/null || true
+if [ -f "$SHARE_DIR/.ltsp-shared-folders" ]; then
+    . "$SHARE_DIR/.ltsp-shared-folders" 2>/dev/null || true
 fi
 get_xdg_dirs
 create_symlinks

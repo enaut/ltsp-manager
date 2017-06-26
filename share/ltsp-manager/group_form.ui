@@ -318,7 +318,7 @@
                         <property name="orientation">vertical</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkCheckButton" id="shared_folders_check">
+                          <object class="GtkCheckButton" id="ltsp_shared_folders_check">
                             <property name="label" translatable="yes">Create shared folders for this group</property>
                             <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>

@@ -9,7 +9,7 @@ fi
 ENCRYPT_SWAP=${ENCRYPT_SWAP:-False}
 
 # A list of services to disable on both thin and fat clients.
-RM_SYSTEM_SERVICES="$RM_SYSTEM_SERVICES apache2 bluetooth clamav-daemon clamav-freshclam mysql network-manager nfs-kernel-server nmbd php5-fpm shared-folders smbd squid3 teamviewerd vboxweb whoopsie"
+RM_SYSTEM_SERVICES="$RM_SYSTEM_SERVICES apache2 bluetooth clamav-daemon clamav-freshclam mysql network-manager nfs-kernel-server nmbd php5-fpm ltsp-shared-folders smbd squid3 teamviewerd vboxweb whoopsie"
 
 # An additional list of services to disable on thin clients.
 RM_THIN_SYSTEM_SERVICES="$RM_THIN_SYSTEM_SERVICES irqbalance openbsd-inetd qemu-kvm virtualbox winbind"

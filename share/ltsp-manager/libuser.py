@@ -205,7 +205,7 @@ class System(Set):
     def __init__(self):
         super(System, self).__init__()
         self.load()
-        # These might be updated from shared_folders, if they're used
+        # These might be updated from ltsp_shared_folders, if they're used
         self.teachers='teachers'
         self.share_groups=[self.teachers]
 

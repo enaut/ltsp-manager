@@ -1,9 +1,0 @@
-[Allow Shutdown]
-Identity=unix-user:*
-Action=org.freedesktop.consolekit.system.stop-multiple-users
-ResultActive=yes
-
-[Allow Restart]
-Identity=unix-user:*
-Action=org.freedesktop.consolekit.system.restart-multiple-users
-ResultActive=yes

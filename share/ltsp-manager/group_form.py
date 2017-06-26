@@ -6,7 +6,7 @@ import os
 import subprocess
 from gi.repository import Gtk, Gdk
 import libuser
-import shared_folders
+import ltsp_shared_folders
 
 class GroupForm(object):
     def __init__(self, system, sf):
@@ -26,7 +26,7 @@ class GroupForm(object):
         self.sys_group_check = self.builder.get_object('sys_group_check')
         self.gname_valid_icon = self.builder.get_object('groupname_valid')
         self.gid_valid_icon = self.builder.get_object('gid_valid')
-        self.has_shared = self.builder.get_object('shared_folders_check')
+        self.has_shared = self.builder.get_object('ltsp_shared_folders_check')
         self.show_sys_users = False
         
         self.users_filter.set_visible_func(self.users_visible_func)

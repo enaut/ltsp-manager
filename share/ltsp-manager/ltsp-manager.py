@@ -17,6 +17,14 @@ from twisted.internet import gtk3reactor
 gtk3reactor.install()
 from twisted.internet import reactor, defer
 
+import gettext
+
+try:
+    gettext.install('ltsp-manager', unicode=True)
+except:
+    print("Installing gettext without unicode")
+    gettext.install('ltsp-manager')
+
 import about_dialog
 import common
 import config
@@ -30,14 +38,14 @@ import libuser
 import ltsp_info
 import maintenance
 import parsers
-import shared_folders
+import ltsp_shared_folders
 import user_form
 import version
 
 class Gui:
     def __init__(self):
         self.system = libuser.system
-        self.sf=shared_folders.SharedFolders(self.system)
+        self.sf=ltsp_shared_folders.SharedFolders(self.system)
         self.conf = config.parser
 
         self.builder = Gtk.Builder()
@@ -357,8 +365,8 @@ class Gui:
         # TODO: replace i386 with either ARCH or *
         self.edit_file('/var/lib/tftpboot/ltsp/i386/pxelinux.cfg/default')
 
-    def on_mi_edit_shared_folders_activate(self, widget):
-        self.edit_file('/etc/default/shared-folders')
+    def on_mi_edit_ltsp_shared_folders_activate(self, widget):
+        self.edit_file('/etc/default/ltsp-shared-folders')
 
     def on_mi_edit_dnsmasq_conf_activate(self, widget):
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')

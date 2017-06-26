@@ -11,7 +11,7 @@ from gi.repository import Gtk
 
 import config
 import libuser
-import shared_folders
+import ltsp_shared_folders
 
 class NewUsersDialog:
     def __init__(self, system, sf):
@@ -127,7 +127,7 @@ class NewUsersDialog:
                     tmp_gid = self.system.get_free_gid(exclude=set_gids)
                     set_gids.append(tmp_gid)
                     cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
-                    progressbar.set_text(_"Creating group %d of %d...")
+                    progressbar.set_text(_("Creating group %d of %d...")
                         % (groups_created+1, total_groups))
                     #TODO expect returned value from add_group
                     if False and cmd_error != "":
@@ -161,8 +161,8 @@ class NewUsersDialog:
             for compn in range(1, self.computers+1):
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                progressbar.set_text(_("Creating user %d of %d..."
-                    %(users_created+1, total_users))
+                progressbar.set_text(_("Creating user %d of %d...")
+                    % (users_created+1, total_users))
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                                 str(compn)).replace('{0i}', '%02d'%compn)

@@ -10,9 +10,7 @@ import sys
 import subprocess
 import libuser
 
-# TODO: rename shared-folders to ltsp-shared-folders
-
-# TODO: after the workshop, let's move the shared_folders ui into its own
+# TODO: after the workshop, let's move the ltsp_shared_folders ui into its own
 # dialog, and only disable editing groups that have shares in group_form.py
 # Unrelated, we might also want a "restrict_dirs" function that
 # chrgrp's the user dirs to "teachers".
@@ -69,10 +67,10 @@ class SharedFolders():
             "SHARE_GROUPS":"teachers",
             "ADM_UID":"1000",
             "ADM_GID":"1000"}
-        contents=shlex.split(open("/etc/default/shared-folders").read(), True)
+        contents=shlex.split(open("/etc/default/ltsp-shared-folders").read(), True)
         self.config.update(dict(v.split("=") for v in contents))
         self.config["SHARE_DIR/"]=os.path.join(self.config["SHARE_DIR"], "")
-        self.config["SHARE_CONF"]=self.config["SHARE_DIR/"] + ".shared-folders"
+        self.config["SHARE_CONF"]=self.config["SHARE_DIR/"] + ".ltsp-shared-folders"
         if os.path.isfile(self.config['SHARE_CONF']):
             contents=shlex.split(open(self.config['SHARE_CONF']).read(), True)
             self.config.update(dict(v.split("=") for v in contents))
@@ -157,7 +155,7 @@ class SharedFolders():
         self.save_config()
 
     def save_config(self):
-        """Save share_groups to /home/Shared/.shared-folders."""
+        """Save share_groups to /home/Shared/.ltsp-shared-folders."""
         f=open(self.config["SHARE_CONF"], "w")
         f.write("""# List of groups for which shared folders will be created.
 SHARE_GROUPS="%s"
@@ -188,11 +186,11 @@ SHARE_GROUPS="%s"
         return list(set(self.system.groups) & set(groups))
 
 def usage():
-    return """Usage: shared-folders [COMMANDS]
+    return """Usage: ltsp-shared-folders [COMMANDS]
 
 Manage shared folders for specific user groups, with the help of bindfs.
 
-Commands:
+COMMANDS
     add <groups>
         Create folders for the specified groups, if they don't already exist,
         and mount them using bindfs.
