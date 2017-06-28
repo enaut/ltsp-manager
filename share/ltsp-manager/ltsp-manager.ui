@@ -261,53 +261,6 @@
                         </child>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkMenuItem" id="mi_maintenance">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Maintenance</property>
-                        <child type="submenu">
-                          <object class="GtkMenu" id="mn_maintenance">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <child>
-                              <object class="GtkMenuItem" id="mi_purge_kernels">
-                                <property name="use_action_appearance">False</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Purges older kernel packages to save disk space</property>
-                                <property name="label" translatable="yes">Purge old kernels...</property>
-                                <property name="use_underline">True</property>
-                                <signal name="activate" handler="on_mi_purge_kernels_activate" swapped="no"/>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkMenuItem" id="mi_apt_get_clean">
-                                <property name="use_action_appearance">False</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Cleans downloaded .deb packages which are already installed</property>
-                                <property name="label" translatable="yes">Clean apt package cache...</property>
-                                <property name="use_underline">True</property>
-                                <signal name="activate" handler="on_mi_apt_get_clean_activate" swapped="no"/>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkMenuItem" id="mi_apt_get_purge">
-                                <property name="use_action_appearance">False</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Purges automatically installed packages that are no longer required</property>
-                                <property name="label" translatable="yes">Purge orphan packages...</property>
-                                <property name="use_underline">True</property>
-                                <signal name="activate" handler="on_mi_apt_get_purge_activate" swapped="no"/>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>

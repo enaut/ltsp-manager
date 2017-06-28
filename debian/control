@@ -15,7 +15,6 @@ Depends: iputils-arping,
  librsvg2-common,
  policykit-1,
  python (>= 2.6),
- python-aptdaemon.gtk3widgets,
  python-gtk2
 Recommends: apturl,
  bindfs,

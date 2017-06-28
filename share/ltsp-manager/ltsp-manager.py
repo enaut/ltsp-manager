@@ -36,7 +36,6 @@ import import_dialog
 import ip_dialog
 import libuser
 import ltsp_info
-import maintenance
 import parsers
 import ltsp_shared_folders
 import user_form
@@ -370,15 +369,6 @@ class Gui:
 
     def on_mi_edit_dnsmasq_conf_activate(self, widget):
         self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
-
-    def on_mi_purge_kernels_activate(self, widget):
-        maintenance.Purge(self.main_window)
-
-    def on_mi_apt_get_clean_activate(self, widget):
-        maintenance.Clean(self.main_window)
-
-    def on_mi_apt_get_purge_activate(self, widget):
-        maintenance.AutoRemove(self.main_window)
 
 ## View menu
 
