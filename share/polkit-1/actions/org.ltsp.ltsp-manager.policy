@@ -3,12 +3,12 @@
  "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
  "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
 <policyconfig>
-  <vendor>Τεχνική Στήριξη ΣΕΠΕΗΥ</vendor>
-  <vendor_url>http://ts.sch.gr/wiki/Linux/LTSP</vendor_url>
+  <vendor>LTSP Developers</vendor>
+  <vendor_url>http://ltsp.org</vendor_url>
   <icon_name>ltsp-manager</icon_name>
 
-  <action id="gr.sch.ts.ltsp-manager">
-    <message>Χρειάζεται να πιστοποιηθείτε πριν εκτελέσετε τη Διαχείριση ΣΕΠΕΗΥ.</message>
+  <action id="org.ltsp.ltsp-manager">
+    <message>Authentication is required to run LTSP manager.</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>

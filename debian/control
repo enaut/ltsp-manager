@@ -22,18 +22,14 @@ Recommends: apturl,
  dnsmasq,
  epoptes,
  ethtool,
- flashplugin-no-sse2,
- gnome-session-fallback | gnome-session-flashback | kde-workspace-bin | xfce4-utils | lxde-common | mate-session-manager,
  iperf,
- ldm-ubuntu-theme | ldm-edubuntu-theme | ldm-kubuntu-theme | ldm-lubuntu-theme | ldm-xubuntu-theme,
+ ldm-ubuntu-theme | ldm-edubuntu-theme | ldm-kubuntu-theme | ldm-lubuntu-theme | ldm-xubuntu-theme | ldm-themes,
  ltsp-client (>= 5.4.0),
  ltsp-docs,
- ltsp-server-standalone (>= 5.4.0) | ltsp-server (>= 5.4.0),
- xserver-xorg-video-s3virge
+ ltsp-server-standalone (>= 5.4.0) | ltsp-server (>= 5.4.0)
 Suggests: ident2,
- squid,
- x2goserver
-Description: LTSP manager
+ squid
+Description: Easy administration of LTSP-based computer labs
  It depends on a set of packages suitable for configuring LTSP in small
  computer labs, and it provides a GUI for managing user accounts, running
  maintenance tasks etc.

@@ -1,9 +1,0 @@
-ltsp-manager diverts into this folder some files of other packages that
-cause issues, so that the system doesn't find them and the issues are
-bypassed.
-
-The list of those files can be shown with
-  dpkg-divert --list ltsp-manager
-
-On ltsp-manager uninstallation (apt purge ltsp-manager) those files are
-restored to their original location.
