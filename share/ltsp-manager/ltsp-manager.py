@@ -427,9 +427,9 @@ class Gui:
         users_n = len(users)
         group_names = ', '.join([group.name for group in groups])
         if users_n == 1:
-            message = _("Are you sure you want to remove user %s from the selected groups (%s)?") % (users[0].name, group_names)
+            message = _("Are you sure you want to remove user %(user)s from the selected groups (%(groups)s)?") % {"user":users[0].name, "groups":group_names}
         else:
-            message = _("Are you sure you want to remove the following %d users from the selected groups (%s)?") % (users_n, group_names)
+            message = _("Are you sure you want to remove the following %(count)d users from the selected groups (%(groups)s)?") % {"count":users_n, "groups":group_names}
             message += "\n" + ', '.join([user.name for user in users])
 
         response = dialogs.AskDialog(message).showup()

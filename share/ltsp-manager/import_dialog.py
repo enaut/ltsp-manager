@@ -375,13 +375,13 @@ class ImportDialog:
             log.append(txt)
             return txt
         def log_uid(u, f, t):
-            return log_msg(_("The UID of user \"%s\" was changed from %s to %s.") % (u, f, t))
+            return log_msg(_("The UID of user \"%(user)s\" was changed from %(old)s to %(new)s.") % {"user":u, "old":f, "new":t})
         def log_gid(u, f, t):
-            return log_msg(_("The GID of user \"%s\" was changed from %s to %s.") % (u, f, t))
+            return log_msg(_("The GID of user \"%(user)s\" was changed from %(old)s to %(new)s.") % {"user":u, "old":f, "new":t})
         def log_home(u, f, t):
-            return log_msg(_("The home directory of user \"%s\" was changed from \"%s\" to %s.") % (u, f, t))
+            return log_msg(_("The home directory of user \"%(user)s\" was changed from %(old)s to %(new)s.") % {"user":u, "old":f, "new":t})
         def log_group(u, f, t):
-            return log_msg(_("The primary group name of user \"%s\" was changed from %s to %s.") % (u, f, t))
+            return log_msg(_("The primary group name of user \"%(user)s\" was changed from %(old)s to %(new)s.") % {"user":u, "old":f, "new":t})
         
         for row in self.list:
             if row[60] != self.states['error']:

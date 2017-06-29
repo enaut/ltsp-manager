@@ -1,0 +1,1243 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-29 18:42+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: etc/xdg/autostart/ltsp-shared-folders.desktop:3
+msgid "LTSP shared folders"
+msgstr ""
+
+#: etc/xdg/autostart/ltsp-shared-folders.desktop:5
+msgid "Creates shared folders symlinks for the groups the user is a member of"
+msgstr ""
+
+#: etc/xdg/autostart/ltsp-shared-folders.desktop:8
+msgid "folders-publicshare"
+msgstr ""
+
+#: share/applications/ltsp-manager.desktop:3
+#: share/ltsp-manager/ltsp-manager.ui:67
+msgid "LTSP manager"
+msgstr ""
+
+#: share/applications/ltsp-manager.desktop:4
+msgid "ltsp-manager: easy administration of LTSP-based computer labs"
+msgstr ""
+
+#: share/applications/ltsp-manager.desktop:8
+msgid "ltsp-manager"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:87
+msgid "_File"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:98
+msgid "Opens a dialog which handles user signup requests"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:99
+msgid "Allow user sign ups..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:109
+msgid "Create users per workstation..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:126
+msgid "Import from passwd..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:136
+msgid "Import from csv..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:146
+msgid "Export to csv..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:160
+msgid "_Server"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:171 share/ltsp-manager/ip_dialog.ui:36
+#: share/ltsp-manager/ip_dialog.ui:114
+msgid "Configure network connection"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:181
+msgid "LTSP image"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:192
+msgid ""
+"Publishes a clone of the server installation for the clients to boot from it"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:193
+msgid "Update..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:203
+msgid "Reverts the LTSP image to its previous version"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:204
+msgid "Revert..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:218
+msgid "Configuration files"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:228
+msgid "Edit lts.conf"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:237
+msgid "Edit LTSP shared folder settings"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:246
+msgid "Edit dnsmasq settings"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:255
+msgid "Edit PXELinux settings"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:273
+msgid "_View"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:284
+msgid "Columns"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:299 share/ltsp-manager/user_form.ui:785
+msgid "Show system groups"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:309
+msgid "Show private groups"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:326
+msgid "Refresh"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:340
+msgid "_Groups"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:351
+msgid "New group..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:362
+#: share/ltsp-manager/ltsp-manager.py:183
+msgid "Edit group..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:373
+#: share/ltsp-manager/ltsp-manager.py:184
+msgid "Delete group..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:386
+msgid "_Users"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:397
+msgid "New user..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:408
+#: share/ltsp-manager/ltsp-manager.py:210
+msgid "Edit user..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:419
+#: share/ltsp-manager/ltsp-manager.py:211
+msgid "Delete user..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:430
+msgid "Remove user from selected groups"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:444
+msgid "_Help"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:455
+msgid "Online documentation"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:465
+msgid "Report bug"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:475
+msgid "Ask question"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:485
+msgid "File a helpdesk issue"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:495
+msgid "Live chat (IRC)"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:505
+msgid "Discussion forum"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:522
+msgid "LTSP installations map"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:532
+msgid "Man page of lts.conf"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:542
+msgid "Display LTSP version information, useful for reporting bugs"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:543
+msgid "Local LTSP information"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:560
+msgid "About"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:609 share/ltsp-manager/group_form.ui:160
+msgid "GID"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:624 share/ltsp-manager/signup_form.ui:368
+#: share/ltsp-manager/group_form.ui:148
+msgid "Group name"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:651
+msgid "Unselect all"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:701
+msgid "UID"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:717
+#: share/ltsp-manager/import_dialog.py:523
+#: share/ltsp-manager/create_users.ui:705
+#: share/ltsp-manager/signup_server.ui:120
+msgid "Username"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:733
+msgid "Primary group"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:749
+#: share/ltsp-manager/create_users.ui:719
+#: share/ltsp-manager/signup_server.ui:109
+msgid "Real name"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:765
+msgid "Office"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:781
+msgid "Office phone"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:797
+msgid "Home phone"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:813
+msgid "Other"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:829
+msgid "Directory"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:845
+msgid "Shell"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:861
+msgid "Last password change"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:877
+msgid "Minimum password age"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:893
+msgid "Maximum password age"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:909
+msgid "Warning period"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:925
+msgid "Inactive"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:941
+msgid "Expired"
+msgstr ""
+
+#: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
+msgid "LTSP information"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:26
+msgid "Request user account"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:107
+msgid "Fill the following fields in order to request a user account"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:135 share/ltsp-manager/user_form.ui:187
+msgid "Username:"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:147 share/ltsp-manager/user_form.ui:212
+msgid "Password:"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:181 share/ltsp-manager/user_form.ui:331
+msgid "Real name:"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:218
+msgid "Role:"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:240 share/ltsp-manager/user_form.ui:270
+msgid "Confirm password:"
+msgstr ""
+
+#: share/ltsp-manager/signup_form.ui:323
+msgid "Check the groups that you are a member of"
+msgstr ""
+
+#: share/ltsp-manager/create_users.py:32 share/ltsp-manager/config.py:17
+msgid "Student"
+msgstr ""
+
+#: share/ltsp-manager/create_users.py:99 share/ltsp-manager/create_users.ui:660
+#, python-format
+msgid "The following %d accounts will be created"
+msgstr ""
+
+#: share/ltsp-manager/create_users.py:130
+#, python-format
+msgid "Creating group %(current)d of %(total)d..."
+msgstr ""
+
+#: share/ltsp-manager/create_users.py:164
+#, python-format
+msgid "Creating user %(current)d of %(total)d..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:188
+msgid "Delete groups..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:214
+msgid "Delete users..."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:277
+msgid "Select the passwd file to import"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:298
+#: share/ltsp-manager/ltsp-manager.py:321
+#, python-format
+msgid "The file \"%s\" contains no data."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:299
+#: share/ltsp-manager/ltsp-manager.py:322 share/ltsp-manager/signup.py:89
+#: share/ltsp-manager/ip_dialog.py:37
+msgid "Error"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:307
+msgid "Select the CSV file to import"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:344
+msgid "Are you sure you want to update the LTSP image?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:345
+msgid ""
+"Depending on the CPU speed and image size, this may need about 10 minutes. "
+"After that, (re)boot your workstations."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:353
+msgid ""
+"Are you sure you want to revert to the previous version of the LTSP image?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:402
+#, python-format
+msgid "Are you sure you want to delete user \"%s\"?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:403
+msgid "Also delete the user's home directory."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:404
+msgid ""
+"WARNING: if you enable this option, the user's home directory with all its "
+"files will be deleted, along with the user's e-mail at /var/mail, if it "
+"exists"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:406
+#, python-format
+msgid "Are you sure you want to delete the following %d users?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:408
+msgid "Also delete the users' home directories."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:409
+msgid ""
+"WARNING: if you enable this option, the users' home directories with all "
+"their files will be deleted, along with the users' e-mails at /var/mail, if "
+"they exist"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:410
+msgid "This action can't be undone."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:430
+#, python-format
+msgid ""
+"Are you sure you want to remove user %(user)s from the selected groups "
+"(%(groups)s)?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:432
+#, python-format
+msgid ""
+"Are you sure you want to remove the following %(count)d users from the "
+"selected groups (%(groups)s)?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:452
+#, python-format
+msgid "Are you sure you want to delete group %s?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:454
+#, python-format
+msgid "Are you sure you want to delete the following %d groups?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:506
+msgid ""
+"Usage: ltsp-manager [OPTIONS]\n"
+"\n"
+"It depends on a set of packages suitable for configuring LTSP in small\n"
+"computer labs, and it provides a GUI for managing user accounts, running\n"
+"maintenance tasks etc.\n"
+"\n"
+"Options:\n"
+"    -h, --help     Display this help and exit.\n"
+"    -v, --version  Output version information and exit.\n"
+"\n"
+"Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:520
+#, python-format
+msgid ""
+"ltsp-manager %s\n"
+"Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis "
+"<ftsamis@gmail.com>.\n"
+"License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl."
+"html>.\n"
+"\n"
+"Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail."
+"com>."
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:141
+#, python-format
+msgid ""
+"The following %s user accounts already exist on the system, with identical "
+"information."
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:143
+msgid ""
+"Would you like to remove those accounts from the list, to avoid trying to "
+"create them again?"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:145
+msgid "Identical existing accounts were found"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:378
+#, python-format
+msgid "The UID of user \"%(user)s\" was changed from %(old)s to %(new)s."
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:380
+#, python-format
+msgid "The GID of user \"%(user)s\" was changed from %(old)s to %(new)s."
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:382
+#, python-format
+msgid ""
+"The home directory of user \"%(user)s\" was changed from %(old)s to %(new)s."
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:384
+#, python-format
+msgid ""
+"The primary group name of user \"%(user)s\" was changed from %(old)s to "
+"%(new)s."
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:456
+msgid "Some issues remain that could not be resolved automatically"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:464
+msgid "Create the following users?"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:524
+msgid "This username already exists in the system"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:526
+msgid "This is not a valid username"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:528
+msgid "This UID already exists in the system"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:530
+msgid "This UID already exists in this list"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:532
+msgid "This UID does not match the home directory UID"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:534
+msgid "This GID does not match the home directory GID"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:536
+msgid "This directory is in use by another user in the system"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:538
+msgid "This directory is in use by another user in the list"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:540
+msgid ""
+"This directory already exists in the system but with a different UID/GID"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:542
+#, python-format
+msgid "This GID does not belong to the group %s"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:544
+#, python-format
+msgid "The GID for this group is not %s"
+msgstr ""
+
+#: share/ltsp-manager/signup_settings.ui:74
+msgid "Open the dialog that receives signup requests"
+msgstr ""
+
+#: share/ltsp-manager/signup_settings.ui:101
+msgid ""
+"Select the roles and groups that you want to make available for user signup "
+"requests.\n"
+"After you click [Next], a dialog that receives signup requests will open."
+msgstr ""
+
+#: share/ltsp-manager/signup_settings.ui:119
+msgid "Roles that will be available"
+msgstr ""
+
+#: share/ltsp-manager/signup_settings.ui:160
+#: share/ltsp-manager/signup_server.ui:131
+msgid "Role"
+msgstr ""
+
+#: share/ltsp-manager/signup_settings.ui:194
+msgid "Groups that will be available"
+msgstr ""
+
+#: share/ltsp-manager/signup_settings.ui:235
+msgid "Group"
+msgstr ""
+
+#: share/ltsp-manager/user_form.py:231
+#, python-format
+msgid "This directory belongs to UID %(uid)d and to GID %(gid)d"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:13
+msgid "Please wait until the DHCP request has finished..."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:162
+msgid "Automatic (DHCP)"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:166
+msgid "Automatic (DHCP) addresses only"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:170
+msgid "Manual"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:174
+msgid "LTSP (requires 2 network adapters)"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:178
+msgid "Do not configure a connection"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:193
+msgid "Method:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:206
+msgid "General"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:222
+msgid "Name:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:234
+msgid "Device:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:246
+msgid "MAC address:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:258
+msgid "Driver:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:270
+msgid "Speed:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:283
+msgid "IPv4"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:299
+msgid "Address:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:311
+msgid "Netmask:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:323
+msgid "Gateway:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:335
+msgid "Primary DNS:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:347
+msgid "Secondary DNS:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:359
+msgid "Tertiary DNS:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:369
+msgid "Automatically connect to this network when it is available"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.ui:375
+msgid ""
+"Activate this connection automatically. Also, disable the automatic "
+"activation of all other connections available for this adapter."
+msgstr ""
+
+#: share/ltsp-manager/common.py:21
+msgid "Error while executing command:"
+msgstr ""
+
+#: share/ltsp-manager/export_dialog.py:12
+msgid "Enter the name for the exported file"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:13
+msgid "User account creation help"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:18
+#, python-brace-format
+msgid ""
+"If you'd like to create only one user per workstation, specify only one "
+"group, for example \"pc\".\n"
+"\n"
+"The number of accounts per group usually matches the number of workstations "
+"in the classroom.\n"
+"\n"
+"In templates, you may use the following variables:\n"
+"{c}: the group, e.g. a1, a2, b1, ...\n"
+"{i}: the account index for this group, e.g. 1, 2, 3, ...\n"
+"{i0}: the account index with 0 prefixed, e.g. 01, 02, 03, ..."
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:54
+msgid "User account creation progress"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:99
+msgid "Progress:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:142
+msgid "An error has occured:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:189
+msgid "The accounts were successfully created!"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:225
+msgid "Create accounts per workstation"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:309
+msgid "Mandatory information"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:326
+msgid "Group names:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:340
+msgid "Number of accounts per group:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:370
+msgid "a1 a2 b1 b2 c1 c2"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:418
+msgid "Create shared folders:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:450
+msgid "Add teachers to those groups:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:494
+msgid "Account templates (optional)"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:511
+msgid "Username template:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:525
+msgid "Real name template:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:539
+msgid "Password template:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:553 share/ltsp-manager/user_form.ui:734
+msgid "Member of groups:"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:571
+#: share/ltsp-manager/create_users.ui:628
+msgid "{c}-{0i}"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:615
+msgid "User {c}-{0i}"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:681
+msgid "   "
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:733
+msgid "Home"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:747
+msgid "Password"
+msgstr ""
+
+#: share/ltsp-manager/create_users.ui:778
+msgid ""
+"<small><i>(Only the first 300 accounts are shown in the table above)</i></"
+"small>"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:13
+msgid "Please select a csv file to import"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:79
+msgid "Import user accounts"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:145
+msgid "Users"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:195
+msgid "Automatically resolve issues"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:200
+msgid ""
+"Try to automatically resolve any conflicts that exist with the user accounts "
+"to be imported"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:299
+msgid "Remove the selected users from the list"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.ui:300
+msgid "Remove"
+msgstr ""
+
+#: share/ltsp-manager/signup.py:87
+msgid "The sysadmin might not have activated sign ups."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:88
+msgid "Possible networking issue."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:93
+msgid "Connection error"
+msgstr ""
+
+#: share/ltsp-manager/signup.py:225
+msgid "Your request was successfully delivered for review."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:231 share/ltsp-manager/ip_dialog.py:39
+msgid "Success"
+msgstr ""
+
+#: share/ltsp-manager/signup.py:233
+msgid ""
+"Your request was not delivered successfully. Ask for help from your sysadmin."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:239
+msgid "Failure"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:21
+#, python-brace-format
+msgid ""
+"The address {0} is already is use by another workstation. Please enter "
+"another one."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:22
+#, python-brace-format
+msgid ""
+"The address {0} is already in use as the default gateway. Please enter "
+"another one."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:23
+msgid ""
+"Invalid IP address. It must be in the form x.y.z.w, where x, y, z, w are "
+"between 1 and 255."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:24
+msgid "Could not connect to Network Manager"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:25
+msgid "No device available"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:26
+msgid "No wired devices available"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:27
+msgid "The subnet has changed."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:28
+#, python-brace-format
+msgid ""
+"The subnet has changed for device <b>{0}</b>. The dialog will suggest a new "
+"method according to the new values that were received from the router."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:29
+#, python-brace-format
+msgid ""
+"The subnet has changed for devices <b>{0}</b>. The dialog will suggest a new "
+"method according to the new values that were received from the router."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:30
+msgid "The connections were successfully created."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:31
+msgid "Failure while restarting dnsmasq."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:32
+#, python-brace-format
+msgid "It is suggested to change your hostname to <b>{0}</b>"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:33
+msgid "Successfully created network connections and restarted dnsmasq."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:34
+msgid ""
+"Successfully created network connections, but failed while restarting "
+"dnsmasq because the connections were not activated."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:35
+msgid ""
+"Successfully created network connections, but failed while restarting "
+"dnsmasq."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:38
+msgid "Information"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:180
+msgid "Unknown"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:244 share/ltsp-manager/ip_dialog.py:633
+#: share/ltsp-manager/ip_dialog.py:714
+msgid "No address found"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:833
+msgid "Are you sure you want to continue?"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:838
+msgid "You're about to create the connection:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:840
+msgid "You're about to create the connections:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:854
+msgid "You're about to update the connection:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:856
+msgid "You're about to update the connections:"
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:867
+msgid "and to recreate the dnsmasq configuration file."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:869
+msgid ""
+"<b>Warning:</b> Recreating the dnsmasq configuration file is impossible "
+"because no network cable is attached to any of the available devices."
+msgstr ""
+
+#: share/ltsp-manager/ip_dialog.py:871 share/ltsp-manager/signup_server.py:289
+msgid "Confirmation"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:26
+msgid "Group properties"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:99
+msgid "Description"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:239
+msgid "Members"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:268
+msgid "Show system users"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:291
+msgid "<b>General</b>"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:322
+msgid "Create shared folders for this group"
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:340
+msgid ""
+"Warning: if users have open files in shared folders, they\n"
+"won't be able to save them if you disable folder sharing."
+msgstr ""
+
+#: share/ltsp-manager/group_form.ui:364
+msgid "<b>Shared folders</b>"
+msgstr ""
+
+#: share/ltsp-manager/config.py:15
+msgid "Teacher"
+msgstr ""
+
+#: share/ltsp-manager/config.py:16
+msgid "Administrator"
+msgstr ""
+
+#: share/ltsp-manager/config.py:18
+msgid "Staff"
+msgstr ""
+
+#: share/ltsp-manager/about_dialog.ui:8
+msgid "About LTSP Manager"
+msgstr ""
+
+#: share/ltsp-manager/about_dialog.ui:16
+msgid "Copyright © 2017 LTSP Manager developers"
+msgstr ""
+
+#: share/ltsp-manager/about_dialog.ui:17
+msgid "Easy maintenance of LTSP computer labs."
+msgstr ""
+
+#: share/ltsp-manager/about_dialog.ui:19
+msgid "http://ltsp.org"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.py:251
+msgid "Are you sure you want to remove the following requests from the list?"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.py:253
+msgid "Reject requests"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.py:270
+msgid "The following user accounts will be created:"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.py:271
+msgid "Proceed?"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.py:272
+msgid "Create user accounts"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.py:288
+msgid ""
+"Are you sure you want to close the sign up server? All pending requests will "
+"be lost."
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:150
+msgid "Input the user information"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:282
+msgid "UID:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:294
+msgid "Home directory:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:319
+msgid "Shell:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:343
+msgid "Office:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:355
+msgid "Office phone:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:367
+msgid "Home phone:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:499
+msgid "Other:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:581
+msgid "User information"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:604
+msgid "Primary group name:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:616
+msgid "Primary group GID:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:686
+msgid "User role:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:768
+msgid "Set as primary"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:816
+msgid "Group options"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:839
+msgid "Last change:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:851
+msgid "Minimum age:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:863
+msgid "Maximum age:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:875
+msgid "Warning period:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:887
+msgid "Inactive:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:899
+msgid "Expired:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:911
+msgid "Locked:"
+msgstr ""
+
+#: share/ltsp-manager/user_form.ui:1030
+msgid "Password options"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:26
+msgid "User signup requests"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:41
+msgid ""
+"User signup requests show up here as soon as they send them.\n"
+"You can continuously edit, delete and apply signup requests as long as this "
+"dialog stays open."
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:79
+msgid "  "
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:87
+msgid "Date"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:98
+msgid "From"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:142
+msgid "Groups"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:171
+msgid "Edit the selected signup request"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:172
+msgid "Edit request"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:188
+msgid "Reject the selected request, and remove it from the list"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:189
+msgid "Reject request"
+msgstr ""
+
+#: share/ltsp-manager/signup_server.ui:240
+msgid ""
+"Accept all the signup requests listed, creating a user account for each one "
+"of them"
+msgstr ""

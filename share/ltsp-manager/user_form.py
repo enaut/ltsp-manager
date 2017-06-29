@@ -228,8 +228,8 @@ class UserForm(object):
             if path_uid != uid or path_gid != gid:
                 if self.mode == 'new' or self.user.directory != home:
                     valid_icon.set_from_stock(Gtk.STOCK_CANCEL, Gtk.IconSize.BUTTON)
-                    valid_icon.set_tooltip_text(_("This directory belongs to UID %d and to GID %d") %
-                        (path_uid, path_gid))
+                    valid_icon.set_tooltip_text(_("This directory belongs to UID %(uid)d and to GID %(gid)d") %
+                        {"uid":path_uid, "gid":path_gid})
         else:
             if self.mode == 'edit' and self.user.directory != home:
                 valid_icon.set_from_stock(Gtk.STOCK_CANCEL, Gtk.IconSize.BUTTON)
