@@ -479,7 +479,10 @@ class Gui:
         host = socket.gethostname()
         user = getpass.getuser()
         if user == "root":
-            user = os.getlogin()
+            try:
+                user = os.getlogin()
+            except:
+                user = os.getenv("SUDO_USER")
         lang = locale.getdefaultlocale()[0]
         self.open_link("http://ts.sch.gr/repo/irc?user=%s&host=%s&lang=%s" % \
                        (user, host, lang))
