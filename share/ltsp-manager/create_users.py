@@ -29,7 +29,8 @@ class NewUsersDialog:
         self.groups = []
         
         self.glade.get_object('computers_number_spin').set_value(12)
-        for group in self.roles[_("Student")].split(","):
+        print "self.roles=", self.roles
+        for group in self.roles["student"].split(","):
             if group in self.system.groups:
                 self.groups.append(group)   
         self.glade.get_object('groups_template_entry').set_text("{c} "+" ".join(self.groups))
@@ -161,8 +162,8 @@ class NewUsersDialog:
             for compn in range(1, self.computers+1):
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                progressbar.set_text(_("Creating user %(current)d of %(total)d...")
-                    % {"current":users_created+1, "total":total_users})
+                progressbar.set_text(_("Creating user %d of %d...")
+                    % (users_created+1, total_users))
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                                 str(compn)).replace('{0i}', '%02d'%compn)

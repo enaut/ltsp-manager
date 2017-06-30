@@ -5,18 +5,24 @@ import os
 path = os.path.expanduser('~/.config/ltsp-manager/')
 settings_f = os.path.join(path, 'settings')
 
-gui_defaults = {'show_system_groups' : False,
-                'show_private_groups' : False,
-                'visible_user_columns' : 'all',
-                'requests_checked_roles' : '',
-                'requests_checked_groups' : ''
-               }
+gui_defaults = {
+    'show_system_groups' : False,
+    'show_private_groups' : False,
+    'visible_user_columns' : 'all',
+    'requests_checked_roles' : '',
+    'requests_checked_groups' : '' }
+# Role names are parsed with config.parser and need to be lowercase.
 roles_defaults = {
-                  _("Teacher") : 'adm,cdrom,epoptes,plugdev,sambashare,vboxusers,$$teachers',
-                  _("Administrator") : 'adm,cdrom,dip,epoptes,lpadmin,plugdev,sambashare,sudo,vboxusers,$$teachers',
-                  _("Student") : 'sambashare,vboxusers',
-                  _("Staff") : 'adm,cdrom,plugdev,sambashare,vboxusers'
-                 }
+    "administrator": 'adm,cdrom,dip,epoptes,lpadmin,plugdev,sambashare,sudo,vboxusers,$$teachers',
+    "staff": 'adm,cdrom,plugdev,sambashare,vboxusers',
+    "student": 'sambashare,vboxusers',
+    "teacher": 'adm,cdrom,epoptes,plugdev,sambashare,vboxusers,$$teachers' }
+# Used when displaying roles in a UI, but not when saving them in a config.
+roles_translations = {
+    "administrator": _("Administrator"),
+    "staff": _("Staff"),
+    "student": _("Student"),
+    "teacher": _("Teacher") }
 
 parser = ConfigParser.SafeConfigParser()
 
