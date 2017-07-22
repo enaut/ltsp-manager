@@ -162,8 +162,8 @@ class NewUsersDialog:
             for compn in range(1, self.computers+1):
                 while Gtk.events_pending():
                     Gtk.main_iteration()
-                progressbar.set_text(_("Creating user %d of %d...")
-                    % (users_created+1, total_users))
+                progressbar.set_text(_("Creating user %(current)d of %(total)d...")
+                    % {"current":users_created+1, "total":total_users})
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                                 str(compn)).replace('{0i}', '%02d'%compn)

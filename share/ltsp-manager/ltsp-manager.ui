@@ -64,7 +64,7 @@
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">LTSP manager</property>
+    <property name="title" translatable="yes">LTSP Manager</property>
     <property name="window_position">center</property>
     <property name="default_width">600</property>
     <property name="default_height">350</property>
