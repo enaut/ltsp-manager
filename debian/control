@@ -11,7 +11,8 @@ Homepage: http://ltsp.org
 
 Package: ltsp-manager
 Architecture: all
-Depends: iputils-arping,
+Depends: ${misc:Depends},
+ iputils-arping,
  librsvg2-common,
  policykit-1,
  python (>= 2.6),
