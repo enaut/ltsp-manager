@@ -1,13 +1,13 @@
 #!/usr/bin/make -f
 
-DEBVERS := $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
+include /usr/share/dpkg/pkg-info.mk
 
 %:
 	dh $@
 
 override_dh_install:
 	dh_install
-	echo "__version__='$(DEBVERS)'" > "$(CURDIR)/debian/ltsp-manager/usr/share/ltsp-manager/version.py"
+	echo "__version__='$(DEB_VERSION)'" > "$(CURDIR)/debian/ltsp-manager/usr/share/ltsp-manager/version.py"
 
 override_dh_installinit:
 	dh_installinit --name=ltsp-shared-folders
