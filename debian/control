@@ -17,7 +17,7 @@ Depends: ${misc:Depends},
  lsb-base (>= 3.0-6),
  policykit-1,
  python (>= 2.6),
- python-gtk2
+ python-gtk2,
 Recommends: apturl,
  bindfs,
  dnsmasq,
@@ -27,9 +27,9 @@ Recommends: apturl,
  ldm-ubuntu-theme | ldm-edubuntu-theme | ldm-kubuntu-theme | ldm-lubuntu-theme | ldm-xubuntu-theme | ldm-themes,
  ltsp-client (>= 5.4.0),
  ltsp-docs,
- ltsp-server-standalone (>= 5.4.0) | ltsp-server (>= 5.4.0)
+ ltsp-server-standalone (>= 5.4.0) | ltsp-server (>= 5.4.0),
 Suggests: ident2,
- squid
+ squid,
 Description: Easy administration of LTSP-based computer labs
  It depends on a set of packages suitable for configuring LTSP in small
  computer labs, and it provides a GUI for managing user accounts, running
