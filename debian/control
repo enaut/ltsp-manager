@@ -14,6 +14,7 @@ Architecture: all
 Depends: ${misc:Depends},
  iputils-arping,
  librsvg2-common,
+ lsb-base (>= 3.0-6),
  policykit-1,
  python (>= 2.6),
  python-gtk2
