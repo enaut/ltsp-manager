@@ -367,7 +367,7 @@ In templates, you may use the following variables:
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">•</property>
-                    <property name="text" translatable="yes">a1 a2 b1 b2 c1 c2</property>
+                    <property name="text">a1 a2 b1 b2 c1 c2</property>
                     <signal name="changed" handler="on_template_changed" swapped="no"/>
                   </object>
                   <packing>
@@ -568,7 +568,7 @@ In templates, you may use the following variables:
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">•</property>
-                    <property name="text" translatable="yes">{c}-{0i}</property>
+                    <property name="text">{c}-{0i}</property>
                     <signal name="changed" handler="on_template_changed" swapped="no"/>
                   </object>
                   <packing>
@@ -625,7 +625,7 @@ In templates, you may use the following variables:
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
-                <property name="text" translatable="yes">{c}-{0i}</property>
+                <property name="text">{c}-{0i}</property>
                 <signal name="changed" handler="on_template_changed" swapped="no"/>
               </object>
               <packing>
@@ -678,7 +678,7 @@ In templates, you may use the following variables:
               <object class="GtkLabel" id="label9">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">   </property>
+                <property name="label">   </property>
               </object>
               <packing>
                 <property name="expand">False</property>

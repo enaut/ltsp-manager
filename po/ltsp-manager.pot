@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-22 17:22+0300\n"
+"POT-Creation-Date: 2017-08-06 16:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,10 +52,6 @@ msgstr ""
 
 #: share/ltsp-manager/about_dialog.ui:17
 msgid "Easy maintenance of LTSP computer labs."
-msgstr ""
-
-#: share/ltsp-manager/about_dialog.ui:19
-msgid "http://ltsp.org"
 msgstr ""
 
 #: share/ltsp-manager/common.py:21
@@ -145,10 +141,6 @@ msgstr ""
 msgid "Number of accounts per group:"
 msgstr ""
 
-#: share/ltsp-manager/create_users.ui:370
-msgid "a1 a2 b1 b2 c1 c2"
-msgstr ""
-
 #: share/ltsp-manager/create_users.ui:418
 msgid "Create shared folders:"
 msgstr ""
@@ -177,17 +169,8 @@ msgstr ""
 msgid "Member of groups:"
 msgstr ""
 
-#: share/ltsp-manager/create_users.ui:571
-#: share/ltsp-manager/create_users.ui:628
-msgid "{c}-{0i}"
-msgstr ""
-
 #: share/ltsp-manager/create_users.ui:615
 msgid "User {c}-{0i}"
-msgstr ""
-
-#: share/ltsp-manager/create_users.ui:681
-msgid "   "
 msgstr ""
 
 #: share/ltsp-manager/create_users.ui:705
@@ -1081,10 +1064,6 @@ msgid ""
 "User signup requests show up here as soon as they send them.\n"
 "You can continuously edit, delete and apply signup requests as long as this "
 "dialog stays open."
-msgstr ""
-
-#: share/ltsp-manager/signup_server.ui:79
-msgid "  "
 msgstr ""
 
 #: share/ltsp-manager/signup_server.ui:87

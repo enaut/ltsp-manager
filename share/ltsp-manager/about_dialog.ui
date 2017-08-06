@@ -16,7 +16,7 @@
     <property name="copyright" translatable="yes">Copyright © 2017 LTSP Manager developers</property>
     <property name="comments" translatable="yes">Easy maintenance of LTSP computer labs.</property>
     <property name="website">http://ltsp.org</property>
-    <property name="website_label" translatable="yes">http://ltsp.org</property>
+    <property name="website_label">http://ltsp.org</property>
     <property name="authors">Alkis Georgopoulos &lt;alkisg@gmail.com&gt;
 Fotis Tsiamis &lt;ftsamis@gmail.com&gt;
 Lefteris Nikoltsios &lt;lefteris.nikoltsios@gmail.com&gt;</property>

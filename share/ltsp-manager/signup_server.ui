@@ -76,7 +76,7 @@ You can continuously edit, delete and apply signup requests as long as this dial
                     <child>
                       <object class="GtkTreeViewColumn" id="treeviewcolumn6">
                         <property name="visible">False</property>
-                        <property name="title" translatable="yes">  </property>
+                        <property name="title">  </property>
                         <child>
                           <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf1"/>
                         </child>
