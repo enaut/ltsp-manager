@@ -3,7 +3,9 @@ Section: admin
 Priority: extra
 Maintainer: LTSP Developers <ltsp-developer@lists.sourceforge.net>
 Uploaders: Alkis Georgopoulos <alkisg@gmail.com>, Vagrant Cascadian <vagrant@debian.org>
-Build-Depends: debhelper (>= 9), dpkg-dev (>= 1.16.1)
+Build-Depends: debhelper (>= 9),
+ dpkg-dev (>= 1.16.1),
+ python-distutils-extra,
 Standards-Version: 4.0.0
 Vcs-Git: https://git.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
 Vcs-Browser: https://code.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
@@ -12,6 +14,7 @@ Homepage: http://ltsp.org
 Package: ltsp-manager
 Architecture: all
 Depends: ${misc:Depends},
+ bindfs,
  iputils-arping,
  librsvg2-common,
  lsb-base (>= 3.0-6),
@@ -19,7 +22,6 @@ Depends: ${misc:Depends},
  python (>= 2.6),
  python-gtk2,
 Recommends: apturl,
- bindfs,
  dnsmasq,
  epoptes,
  ethtool,
