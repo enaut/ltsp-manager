@@ -1,8 +1,17 @@
 #-*- coding: utf-8 -*-
 
-import subprocess
 import datetime
+import gettext
+import locale
 import re
+import subprocess
+
+try:
+    gettext.install('ltsp-manager', unicode=True)
+except:
+    print("Installing gettext without unicode")
+    gettext.install('ltsp-manager')
+locale.textdomain('ltsp-manager')
 
 def run_command(cmd, poll=False):
     # Runs a command and returns either True, on successful

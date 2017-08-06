@@ -29,7 +29,6 @@ class NewUsersDialog:
         self.groups = []
         
         self.glade.get_object('computers_number_spin').set_value(12)
-        print "self.roles=", self.roles
         for group in self.roles["student"].split(","):
             if group in self.system.groups:
                 self.groups.append(group)   

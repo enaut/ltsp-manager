@@ -17,14 +17,6 @@ from twisted.internet import gtk3reactor
 gtk3reactor.install()
 from twisted.internet import reactor, defer
 
-import gettext
-
-try:
-    gettext.install('ltsp-manager', unicode=True)
-except:
-    print("Installing gettext without unicode")
-    gettext.install('ltsp-manager')
-
 import about_dialog
 import common
 import config
