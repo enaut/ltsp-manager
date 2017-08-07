@@ -1,4 +1,4 @@
-# Greek translation for ltsp-manager
+# Czech translation for ltsp-manager
 # Copyright (c) 2017 Rosetta Contributors and Canonical Ltd 2017
 # This file is distributed under the same license as the ltsp-manager package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: ltsp-manager\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2017-08-06 16:23+0300\n"
-"PO-Revision-Date: 2017-08-06 16:51+0000\n"
-"Last-Translator: fottsia <Unknown>\n"
-"Language-Team: Greek <el@li.org>\n"
+"PO-Revision-Date: 2017-08-06 18:09+0000\n"
+"Last-Translator: Pavel Borecki <Unknown>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,81 +19,83 @@ msgstr ""
 
 #: etc/xdg/autostart/ltsp-shared-folders.desktop:3
 msgid "LTSP shared folders"
-msgstr "Κοινόχρηστοι φάκελοι LTSP"
+msgstr "LTSP sdílené složky"
 
 #: etc/xdg/autostart/ltsp-shared-folders.desktop:5
 msgid ""
 "Creates shared folders symlinks for the groups the user is a member of"
-msgstr "Δημιουργεί συντομεύσεις για κοινόχρηστους φακέλους"
+msgstr ""
+"Vytvoří symbolické odkazy na sdílené složky pro skupiny kterých je uživatel "
+"členem"
 
 #: etc/xdg/autostart/ltsp-shared-folders.desktop:8
 msgid "folders-publicshare"
-msgstr ""
+msgstr "folders-publicshare"
 
 #: share/applications/ltsp-manager.desktop:3
 #: share/ltsp-manager/ltsp-manager.ui:67
 msgid "LTSP Manager"
-msgstr ""
+msgstr "LTSP Manager"
 
 #: share/applications/ltsp-manager.desktop:4
 msgid "Easy administration of LTSP-based computer labs"
-msgstr ""
+msgstr "Snadná správa počítačových laboratoří založených na LTSP"
 
 #: share/applications/ltsp-manager.desktop:7
 msgid "ltsp-manager"
-msgstr ""
+msgstr "ltsp-manager"
 
 #: share/ltsp-manager/about_dialog.ui:8
 msgid "About LTSP Manager"
-msgstr ""
+msgstr "O aplikaci LTSP Manager"
 
 #: share/ltsp-manager/about_dialog.ui:16
 msgid "Copyright © 2017 LTSP Manager developers"
-msgstr "Copyright © 2017 ομάδα ανάπτυξης του LTSP Manager"
+msgstr "Copyright © vývojáři 2017 LTSP Manager"
 
 #: share/ltsp-manager/about_dialog.ui:17
 msgid "Easy maintenance of LTSP computer labs."
-msgstr ""
+msgstr "Snadná správa počítačových učeben používajích LTSP."
 
 #: share/ltsp-manager/common.py:21
 msgid "Error while executing command:"
-msgstr "Σφάλμα κατά την εκτέλεση εντολής:"
+msgstr "Chyba při spouštění příkazu:"
 
 #: share/ltsp-manager/config.py:22
 msgid "Administrator"
-msgstr "Διαχειριστής"
+msgstr "Správce"
 
 #: share/ltsp-manager/config.py:23
 msgid "Staff"
-msgstr "Προσωπικό"
+msgstr "Personál"
 
 #: share/ltsp-manager/config.py:24
 msgid "Student"
-msgstr "Μαθητής"
+msgstr "Student"
 
 #: share/ltsp-manager/config.py:25
 msgid "Teacher"
-msgstr ""
+msgstr "Lektor"
 
 #: share/ltsp-manager/create_users.py:100
 #: share/ltsp-manager/create_users.ui:660
 #, python-format
 msgid "The following %d accounts will be created"
-msgstr ""
+msgstr "Těchto %d účtů bude vytvořeno"
 
 #: share/ltsp-manager/create_users.py:131
 #, python-format
 msgid "Creating group %(current)d of %(total)d..."
-msgstr ""
+msgstr "Vytváření skupiny %(current)d z %(total)d…"
 
 #: share/ltsp-manager/create_users.py:165
 #, python-format
 msgid "Creating user %(current)d of %(total)d..."
-msgstr ""
+msgstr "Vytváření uživatele %(current)d z %(total)d…"
 
 #: share/ltsp-manager/create_users.ui:13
 msgid "User account creation help"
-msgstr ""
+msgstr "Nápověda pro vytváření uživatele"
 
 #: share/ltsp-manager/create_users.ui:18
 #, python-brace-format
@@ -109,149 +111,158 @@ msgid ""
 "{i}: the account index for this group, e.g. 1, 2, 3, ...\n"
 "{i0}: the account index with 0 prefixed, e.g. 01, 02, 03, ..."
 msgstr ""
+"Pokud si přejete vytvořit pouze jednoho uživatele na každé ze stanic, "
+"zadejte pouze jednu skupinu – „pocitac“.\n"
+"\n"
+"Počet účtů v jednotlivých skupinách se obvykle shoduje s počtem stanic v "
+"učebně.\n"
+"\n"
+"V šablonách je možné použít následující proměnné:\n"
+"{c}: skupina – např. a1, a2, b1, …\n"
+"{i}: index účtu pro tuto skupinu – např. 1, 2, 3, …\n"
+"{i0}: index účtu začínající na 0 (nula) – např. 01, 02, 03, …"
 
 #: share/ltsp-manager/create_users.ui:54
 msgid "User account creation progress"
-msgstr "Πρόοδος δημιουργίας χρηστών"
+msgstr "Průběh vytváření uživatelského účtu"
 
 #: share/ltsp-manager/create_users.ui:99
 msgid "Progress:"
-msgstr "Πρόοδος:"
+msgstr "Průběh:"
 
 #: share/ltsp-manager/create_users.ui:142
 msgid "An error has occured:"
-msgstr "Προέκυψε σφάλμα:"
+msgstr "Došlo k chybě:"
 
 #: share/ltsp-manager/create_users.ui:189
 msgid "The accounts were successfully created!"
-msgstr "Επιτυχής δημιουργία χρηστών!"
+msgstr "Účty byly úspěšně vytvořeny!"
 
 #: share/ltsp-manager/create_users.ui:225
 msgid "Create accounts per workstation"
-msgstr "Δημιουργία χρηστών ανά υπολογιστή"
+msgstr "Vytvořit účty na jednotlivých stanicích"
 
 #: share/ltsp-manager/create_users.ui:309
 msgid "Mandatory information"
-msgstr "Βασικές πληροφορίες"
+msgstr "Povinný údaj"
 
 #: share/ltsp-manager/create_users.ui:326
 msgid "Group names:"
-msgstr "Τμήματα:"
+msgstr "Názvy skupin:"
 
 #: share/ltsp-manager/create_users.ui:340
 msgid "Number of accounts per group:"
-msgstr "Λογαριασμοί ανά τμήμα:"
+msgstr "Počet účtů v jednotlivých skupinách:"
 
 #: share/ltsp-manager/create_users.ui:418
 msgid "Create shared folders:"
-msgstr "Δημιουργία κοινόχρηστων φακέλων:"
+msgstr "Vytvořit sdílené složky:"
 
 #: share/ltsp-manager/create_users.ui:450
 msgid "Add teachers to those groups:"
-msgstr "Εισαγωγή όλων των καθηγητών σε αυτά τα τμήματα:"
+msgstr "Přidat lektory do těchto skupin:"
 
 #: share/ltsp-manager/create_users.ui:494
 msgid "Account templates (optional)"
-msgstr ""
+msgstr "Šablony účtů (volitelné)"
 
 #: share/ltsp-manager/create_users.ui:511
 msgid "Username template:"
-msgstr "Πρότυπα λογαριασμών (προαιρετικό)"
+msgstr "Šablona uživatelského jména:"
 
 #: share/ltsp-manager/create_users.ui:525
 msgid "Real name template:"
-msgstr "Πρότυπο πραγματικού ονόματος:"
+msgstr "Šablona skutečného jména:"
 
 #: share/ltsp-manager/create_users.ui:539
 msgid "Password template:"
-msgstr "Πρότυπο κωδικού πρόσβασης:"
+msgstr "Šablona hesla:"
 
 #: share/ltsp-manager/create_users.ui:553 share/ltsp-manager/user_form.ui:734
 msgid "Member of groups:"
-msgstr "Μέλος ομάδων:"
+msgstr "Členem skupin:"
 
 #: share/ltsp-manager/create_users.ui:615
 msgid "User {c}-{0i}"
-msgstr "Χρήστης {c}-{0i}"
+msgstr "Uživatel {c}-{0i}"
 
 #: share/ltsp-manager/create_users.ui:705
 #: share/ltsp-manager/import_dialog.py:523
 #: share/ltsp-manager/ltsp-manager.ui:717
 #: share/ltsp-manager/signup_server.ui:120
 msgid "Username"
-msgstr "Όνομα χρήστη"
+msgstr "Uživatelské jméno"
 
 #: share/ltsp-manager/create_users.ui:719
 #: share/ltsp-manager/ltsp-manager.ui:749
 #: share/ltsp-manager/signup_server.ui:109
 msgid "Real name"
-msgstr "Ονοματεπώνυμο"
+msgstr "Skutečné jméno"
 
 #: share/ltsp-manager/create_users.ui:733
 msgid "Home"
-msgstr "Κατάλογος"
+msgstr "Domovská složka"
 
 #: share/ltsp-manager/create_users.ui:747
 msgid "Password"
-msgstr "Κωδικός πρόσβασης"
+msgstr "Heslo"
 
 #: share/ltsp-manager/create_users.ui:778
 msgid ""
 "<small><i>(Only the first 300 accounts are shown in the table "
 "above)</i></small>"
 msgstr ""
-"<small><i>(Στον παραπάνω πίνακα εμφανίζονται μόνο οι 300 πρώτοι "
-"λογαριασμοί)</i></small>"
+"<small><i>(Ve výše uvedené tabulce je zobrazeno pouze první 300 "
+"účtů)</i></small>"
 
 #: share/ltsp-manager/export_dialog.py:12
 msgid "Enter the name for the exported file"
-msgstr "Επιλέξτε όνομα αρχείου για εξαγωγή"
+msgstr "Zadejte název pro exportovaný soubor"
 
 #: share/ltsp-manager/group_form.ui:26
 msgid "Group properties"
-msgstr "Πληροφορίες ομάδας"
+msgstr "Vlastnosti skupiny"
 
 #: share/ltsp-manager/group_form.ui:99
 msgid "Description"
-msgstr "Περιγραφή"
+msgstr "Popis"
 
 #: share/ltsp-manager/group_form.ui:148 share/ltsp-manager/ltsp-manager.ui:624
 #: share/ltsp-manager/signup_form.ui:368
 msgid "Group name"
-msgstr "Όνομα ομάδας"
+msgstr "Název skupiny"
 
 #: share/ltsp-manager/group_form.ui:160 share/ltsp-manager/ltsp-manager.ui:609
 msgid "GID"
-msgstr ""
+msgstr "Identifikátor skupiny (GID)"
 
 #: share/ltsp-manager/group_form.ui:239
 msgid "Members"
-msgstr "Μέλη"
+msgstr "Členové"
 
 #: share/ltsp-manager/group_form.ui:268
 msgid "Show system users"
-msgstr "Εμφάνιση χρηστών συστήματος"
+msgstr "Zobrazit systémové uživatele"
 
 #: share/ltsp-manager/group_form.ui:291
 msgid "<b>General</b>"
-msgstr "Γενικά"
+msgstr "<b>Obecné</b>"
 
 #: share/ltsp-manager/group_form.ui:322
 msgid "Create shared folders for this group"
-msgstr "Δημιουργία κοινόχρηστων καταλόγων για αυτήν την ομάδα"
+msgstr "Vytvořit sdílené složky pro tuto skupinu"
 
 #: share/ltsp-manager/group_form.ui:340
 msgid ""
 "Warning: if users have open files in shared folders, they\n"
 "won't be able to save them if you disable folder sharing."
 msgstr ""
-"Προσοχή: Εάν οι μαθητές έχουν ανοιχτά αρχεία στον κοινόχρηστο\n"
-"-κατάλογο δεν θα μπορέσουν να τα αποθηκεύσουν εφόσον\n"
-"-απενεργοποιήσετε την κοινή χρήση."
+"Varování: pokud uživatelé mají ve sdílené složce otevřené soubory,\n"
+"pak pokud vypnete sdílení složky, nebudou je moci uložit."
 
 #: share/ltsp-manager/group_form.ui:364
 msgid "<b>Shared folders</b>"
-msgstr "<b>Κοινόχρηστοι κατάλογοι</b>"
+msgstr "<b>Sdílené složky</b>"
 
 #: share/ltsp-manager/import_dialog.py:141
 #, python-format
@@ -259,176 +270,168 @@ msgid ""
 "The following %s user accounts already exist on the system, with identical "
 "information."
 msgstr ""
-"Βρέθηκαν στο σύστημα οι ακόλουθοι %s χρήστες αυτής της λίστας με τα ίδια "
-"ακριβώς πεδία."
+"Tento uživatelský účet %s už v systému existuje a obsahuje stejné údaje."
 
 #: share/ltsp-manager/import_dialog.py:143
 msgid ""
 "Would you like to remove those accounts from the list, to avoid trying to "
 "create them again?"
 msgstr ""
-"Επιθυμείτε να διαγραφούν από αυτή τη λίστα οι πανομοιότυποι χρήστες και να "
-"μη γίνει εισαγωγή τους;"
+"Přejete si odebrat tyto účty ze seznamu a zabránit tak pokusu o jejich "
+"duplicitní vytvoření?"
 
 #: share/ltsp-manager/import_dialog.py:145
 msgid "Identical existing accounts were found"
-msgstr "Βρέθηκαν πανομοιότυποι χρήστες"
+msgstr "Byly nalezeny identické existující účty"
 
 #: share/ltsp-manager/import_dialog.py:378
 #, python-format
 msgid "The UID of user \"%(user)s\" was changed from %(old)s to %(new)s."
-msgstr ""
+msgstr "UID uživatele „%(user)s“ bylo změněno z %(old)s na %(new)s."
 
 #: share/ltsp-manager/import_dialog.py:380
 #, python-format
 msgid "The GID of user \"%(user)s\" was changed from %(old)s to %(new)s."
-msgstr ""
+msgstr "GID uživatele „%(user)s“ bylo změněno z %(old)s na %(new)s."
 
 #: share/ltsp-manager/import_dialog.py:382
 #, python-format
 msgid ""
 "The home directory of user \"%(user)s\" was changed from %(old)s to %(new)s."
 msgstr ""
+"Domovská složka uživatele „%(user)s“ byla změněna z %(old)s na %(new)s."
 
 #: share/ltsp-manager/import_dialog.py:384
 #, python-format
 msgid ""
 "The primary group name of user \"%(user)s\" was changed from %(old)s to "
 "%(new)s."
-msgstr ""
+msgstr "Hlavní skupina uživatele „%(user)s“ z %(old)s na %(new)s."
 
 #: share/ltsp-manager/import_dialog.py:456
 msgid "Some issues remain that could not be resolved automatically"
-msgstr "Δεν ήταν δυνατή η αυτόματη επίλυση κάποιου προβλήματος"
+msgstr "Zbývají nějaké problémy které nelze vyřešit automaticky"
 
 #: share/ltsp-manager/import_dialog.py:464
 msgid "Create the following users?"
-msgstr "Να δημιουργηθούν οι νέοι χρήστες;"
+msgstr "Vytvořit uvedené uživatele?"
 
 #: share/ltsp-manager/import_dialog.py:524
 msgid "This username already exists in the system"
-msgstr "Αυτό το όνομα χρήστη υπάρχει ήδη στο σύστημα"
+msgstr "Toto uživatelské jméno už v systému existuje"
 
 #: share/ltsp-manager/import_dialog.py:526
 msgid "This is not a valid username"
-msgstr "Αυτό το όνομα χρήστη δεν είναι αποδεκτό"
+msgstr "Toto není platné uživatelské jméno"
 
 #: share/ltsp-manager/import_dialog.py:528
 msgid "This UID already exists in the system"
-msgstr "Αυτό το UID υπάρχει ήδη στο σύστημα"
+msgstr "Tento identifikátor uživatele (UID) už v systému existuje"
 
 #: share/ltsp-manager/import_dialog.py:530
 msgid "This UID already exists in this list"
-msgstr "Αυτό το UID υπάρχει ήδη σε αυτή τη λίστα"
+msgstr "Tento identifikátor uživatele (UID) už na seznamu existuje"
 
 #: share/ltsp-manager/import_dialog.py:532
 msgid "This UID does not match the home directory UID"
-msgstr "Αυτό το UID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε"
+msgstr "Toto UID se neshoduje s UID na domovské složce"
 
 #: share/ltsp-manager/import_dialog.py:534
 msgid "This GID does not match the home directory GID"
-msgstr ""
-"\"Αυτό το GID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε"
+msgstr "Toto GID se neshoduje s na GID domovské složce"
 
 #: share/ltsp-manager/import_dialog.py:536
 msgid "This directory is in use by another user in the system"
-msgstr ""
-"Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη του συστήματος"
+msgstr "Složka je používána jiným uživatelem systému"
 
 #: share/ltsp-manager/import_dialog.py:538
 msgid "This directory is in use by another user in the list"
-msgstr ""
-"Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη σε αυτή τη λίστα"
+msgstr "Složka je používána jiným uživatelem ze seznamu"
 
 #: share/ltsp-manager/import_dialog.py:540
 msgid ""
 "This directory already exists in the system but with a different UID/GID"
-msgstr ""
-"Αυτός ο κατάλογος υπάρχει στο σύστημα αλλά με διαφορετικά UID ή/και GID από "
-"αυτά που δώσατε"
+msgstr "Tato složka už v systému existuje ale má jiné UID/GID"
 
 #: share/ltsp-manager/import_dialog.py:542
 #, python-format
 msgid "This GID does not belong to the group %s"
-msgstr "Αυτό το GID δεν ανήκει στην ομάδα %s"
+msgstr "Toto GID nepatří do skupiny %s"
 
 #: share/ltsp-manager/import_dialog.py:544
 #, python-format
 msgid "The GID for this group is not %s"
-msgstr "Το GID αυτής της ομάδας δεν είναι %s"
+msgstr "GID pro tuto skupinu není %s"
 
 #: share/ltsp-manager/import_dialog.ui:13
 msgid "Please select a csv file to import"
-msgstr ""
+msgstr "Zvolte csv soubor který importovat"
 
 #: share/ltsp-manager/import_dialog.ui:79
 msgid "Import user accounts"
-msgstr "Αναθεώρηση χρηστών"
+msgstr "Importovat uživatelské účty"
 
 #: share/ltsp-manager/import_dialog.ui:145
 msgid "Users"
-msgstr "Χρήστες"
+msgstr "Uživatelé"
 
 #: share/ltsp-manager/import_dialog.ui:195
 msgid "Automatically resolve issues"
-msgstr "Αυτόματη επίλυση προβλημάτων"
+msgstr "Řešit problémy automaticky"
 
 #: share/ltsp-manager/import_dialog.ui:200
 msgid ""
 "Try to automatically resolve any conflicts that exist with the user accounts "
 "to be imported"
 msgstr ""
-"Επίλυση των προβλημάτων, όπου αυτό είναι δυνατό, για όλους τους νέους χρήστες"
+"Pokusit se automaticky vyřešit konflikty které mohou nastat při importu "
+"uživatelských účtů"
 
 #: share/ltsp-manager/import_dialog.ui:299
 msgid "Remove the selected users from the list"
-msgstr "Διαγραφή των επιλεγμένων χρηστών από τη λίστα"
+msgstr "Odebrat označené uživatele ze seznamu"
 
 #: share/ltsp-manager/import_dialog.ui:300
 msgid "Remove"
-msgstr "Διαγραφή"
+msgstr "Odebrat"
 
 #: share/ltsp-manager/ip_dialog.py:21
 #, python-brace-format
 msgid ""
 "The address {0} is already is use by another workstation. Please enter "
 "another one."
-msgstr ""
-"Η διεύθυνση {0} χρησιμοποιείται ήδη από άλλον υπολογιστή. Παρακαλώ δώστε μια "
-"διαφορετική."
+msgstr "Adresa {0} je už používána jinou stanicí – zadejte jinou."
 
 #: share/ltsp-manager/ip_dialog.py:22
 #, python-brace-format
 msgid ""
 "The address {0} is already in use as the default gateway. Please enter "
 "another one."
-msgstr ""
-"Η διεύθυνση {0} χρησιμοποιείται ήδη σαν προεπιλεγμένη διαδρομή. Παρακαλώ "
-"δώστε μια διαφορετική."
+msgstr "Adresa {0} je už používána jako výchozí brána – zadejte jinou."
 
 #: share/ltsp-manager/ip_dialog.py:23
 msgid ""
 "Invalid IP address. It must be in the form x.y.z.w, where x, y, z, w are "
 "between 1 and 255."
 msgstr ""
-"Μη-έγκυρη διεύθυνση IP. Θα πρέπει να είναι της μορφής x.y.z.w όπου x, y, z, "
-"w παίρνουν τιμές μεταξύ του 1 και 254."
+"Neplatná IP adresa. Je třeba aby měla podobu x.y.z.w, kde x, y, z, w "
+"nabývají hodnot 1 až 255."
 
 #: share/ltsp-manager/ip_dialog.py:24
 msgid "Could not connect to Network Manager"
-msgstr "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου."
+msgstr "Nedaří se spojit se součástí Network Manager"
 
 #: share/ltsp-manager/ip_dialog.py:25
 msgid "No device available"
-msgstr "Δεν υπάρχει διαθέσιμη διεπαφή."
+msgstr "Není k dispozici žádné zařízení"
 
 #: share/ltsp-manager/ip_dialog.py:26
 msgid "No wired devices available"
-msgstr "Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή."
+msgstr "Není k dispozici žádné kabelové zařízení"
 
 #: share/ltsp-manager/ip_dialog.py:27
 msgid "The subnet has changed."
-msgstr "Το υποδίκτυο έχει αλλάξει."
+msgstr "Maska sítě se změnila."
 
 #: share/ltsp-manager/ip_dialog.py:28
 #, python-brace-format
@@ -436,8 +439,8 @@ msgid ""
 "The subnet has changed for device <b>{0}</b>. The dialog will suggest a new "
 "method according to the new values that were received from the router."
 msgstr ""
-"Το υποδίκτυο έχει αλλάξει για την <b>{0}</b>. Ο διάλογος θα προτείνει μια "
-"νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router."
+"U zařízení <b>{0}</b> se změnila maska sítě. Dialog doporučí novou metodu "
+"dle nových hodnot které byly obdrženy ze směrovače."
 
 #: share/ltsp-manager/ip_dialog.py:29
 #, python-brace-format
@@ -445,266 +448,268 @@ msgid ""
 "The subnet has changed for devices <b>{0}</b>. The dialog will suggest a new "
 "method according to the new values that were received from the router."
 msgstr ""
-"Το υποδίκτυο έχει αλλάξει για τις <b>{0}</b>. Ο διάλογος θα προτείνει μια "
-"νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router."
+"U zařízení <b>{0}</b> se změnila maska sítě. Dialog doporučí novou metodu "
+"dle nových hodnot které byly obdrženy ze směrovače."
 
 #: share/ltsp-manager/ip_dialog.py:30
 msgid "The connections were successfully created."
-msgstr "Η δημιουργία των συνδέσεων έγινε επιτυχώς."
+msgstr "Připojení byla úspěšně vytvořena."
 
 #: share/ltsp-manager/ip_dialog.py:31
 msgid "Failure while restarting dnsmasq."
-msgstr "Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq απέτυχε."
+msgstr "Něco se nepodařilo při restartování dnsmasq."
 
 #: share/ltsp-manager/ip_dialog.py:32
 #, python-brace-format
 msgid "It is suggested to change your hostname to <b>{0}</b>"
-msgstr "Προτείνεται να μετονομάσετε τον υπολογιστή σας σε <b>{0}</b>\\n\\n"
+msgstr "Je doporučeno změnit název stroje na <b>{0}</b>"
 
 #: share/ltsp-manager/ip_dialog.py:33
 msgid "Successfully created network connections and restarted dnsmasq."
-msgstr ""
-"Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του αρχείου ρυθμίσεων "
-"του dnsmasq έγινε επιτυχώς."
+msgstr "Vytvoření síťového připojení a restart dnsmaq úspěšné."
 
 #: share/ltsp-manager/ip_dialog.py:34
 msgid ""
 "Successfully created network connections, but failed while restarting "
 "dnsmasq because the connections were not activated."
 msgstr ""
-"Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου "
-"dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν."
+"Síťové připojení úspěšně vytvořeno, ale něco se nepodařilo při restartu "
+"dnsmasq, protože připojení nebyla aktivována."
 
 #: share/ltsp-manager/ip_dialog.py:35
 msgid ""
 "Successfully created network connections, but failed while restarting "
 "dnsmasq."
 msgstr ""
-"Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου "
-"ρυθμίσεων του dnsmasq απέτυχε."
+"Úspěšně vytvořeno síťové připojení ale něco se nezdařilo při restartování "
+"dnsmasq."
 
 #: share/ltsp-manager/ip_dialog.py:37 share/ltsp-manager/ltsp-manager.py:299
 #: share/ltsp-manager/ltsp-manager.py:322 share/ltsp-manager/signup.py:89
 msgid "Error"
-msgstr "Σφάλμα"
+msgstr "Chyba"
 
 #: share/ltsp-manager/ip_dialog.py:38
 msgid "Information"
-msgstr "Πληροφορία"
+msgstr "Informace"
 
 #: share/ltsp-manager/ip_dialog.py:39 share/ltsp-manager/signup.py:231
 msgid "Success"
-msgstr "Επιτυχία"
+msgstr "Úspěch"
 
 #: share/ltsp-manager/ip_dialog.py:180
 msgid "Unknown"
-msgstr "Άγνωστη"
+msgstr "Neznámé"
 
 #: share/ltsp-manager/ip_dialog.py:244 share/ltsp-manager/ip_dialog.py:633
 #: share/ltsp-manager/ip_dialog.py:714
 msgid "No address found"
-msgstr "Δεν βρέθηκε διεύθυνση"
+msgstr "Nenalezena žádná adresa"
 
 #: share/ltsp-manager/ip_dialog.py:833
 msgid "Are you sure you want to continue?"
-msgstr "Είστε σίγουροι ότι θέλετε να συνεχίσετε;"
+msgstr "Opravdu chcete pokračovat?"
 
 #: share/ltsp-manager/ip_dialog.py:838
 msgid "You're about to create the connection:"
-msgstr "Πρόκειται να δημιουργήσετε τη σύνδεση:"
+msgstr "Chystáte se vytvořit toto připojení:"
 
 #: share/ltsp-manager/ip_dialog.py:840
 msgid "You're about to create the connections:"
-msgstr "Πρόκειται να δημιουργήσετε τις συνδέσεις:"
+msgstr "Chystáte se vytvořit tato připojení:"
 
 #: share/ltsp-manager/ip_dialog.py:854
 msgid "You're about to update the connection:"
-msgstr "Πρόκειται να ενημερώσετε τη σύνδεση:"
+msgstr "Chystáte se aktualizovat toto připojení:"
 
 #: share/ltsp-manager/ip_dialog.py:856
 msgid "You're about to update the connections:"
-msgstr "Πρόκειται να ενημερώσετε τις συνδέσεις:"
+msgstr "Chystáte se aktualizovat tato připojení:"
 
 #: share/ltsp-manager/ip_dialog.py:867
 msgid "and to recreate the dnsmasq configuration file."
-msgstr "και να επαναδημιουργήσετε το αρχείο ρυθμίσεων του dnsmasq."
+msgstr "a znovu vytvořit soubor s nastaveními pro dnsmasq"
 
 #: share/ltsp-manager/ip_dialog.py:869
 msgid ""
 "<b>Warning:</b> Recreating the dnsmasq configuration file is impossible "
 "because no network cable is attached to any of the available devices."
 msgstr ""
-"<b>Προσοχή: </b> Η  επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq δεν "
-"είναι δυνατή καθώς σε καμία διεπαφή δεν είναι συνδεδεμένο το καλώδιο."
+"<b>Varování:</b> Opětovné vytvoření souboru s nastaveními pro dnsmasq není "
+"možné protože síťový kabel je připojený ke všem dostupným zařízením."
 
 #: share/ltsp-manager/ip_dialog.py:871 share/ltsp-manager/signup_server.py:289
 msgid "Confirmation"
-msgstr "Επιβεβαίωση"
+msgstr "Potvrzení"
 
 #: share/ltsp-manager/ip_dialog.ui:13
 msgid "Please wait until the DHCP request has finished..."
-msgstr "Παρακάλω περιμένετε μέχρι να τελειώσει το DHCP Request..."
+msgstr "Čekejte než bude DHCP požadavek vyřízen…"
 
 #: share/ltsp-manager/ip_dialog.ui:36 share/ltsp-manager/ip_dialog.ui:114
 #: share/ltsp-manager/ltsp-manager.ui:171
 msgid "Configure network connection"
-msgstr "Ρύθμιση σύνδεσης δικτύου"
+msgstr "Nastavit síťové připojení"
 
 #: share/ltsp-manager/ip_dialog.ui:162
 msgid "Automatic (DHCP)"
-msgstr "Αυτόματα (DHCP)"
+msgstr "Automaticky (DHCP)"
 
 #: share/ltsp-manager/ip_dialog.ui:166
 msgid "Automatic (DHCP) addresses only"
-msgstr "Μόνο αυτόματες διευθύνσεις (DHCP)"
+msgstr "Automaticky (DHCP) pouze adresy"
 
 #: share/ltsp-manager/ip_dialog.ui:170
 msgid "Manual"
-msgstr "Χειροκίνητα"
+msgstr "Ručně"
 
 #: share/ltsp-manager/ip_dialog.ui:174
 msgid "LTSP (requires 2 network adapters)"
-msgstr "LTSP (προϋποθέτει 2 κάρτες δικτύου)"
+msgstr "LTSP (vyžaduje dvě síťová rozhraní)"
 
 #: share/ltsp-manager/ip_dialog.ui:178
 msgid "Do not configure a connection"
-msgstr "Να μη δημιουργηθεί σύνδεση"
+msgstr "Nenastavovat připojení"
 
 #: share/ltsp-manager/ip_dialog.ui:193
 msgid "Method:"
-msgstr "Μέθοδος"
+msgstr "Metoda:"
 
 #: share/ltsp-manager/ip_dialog.ui:206
 msgid "General"
-msgstr "Γενικά"
+msgstr "Obecné"
 
 #: share/ltsp-manager/ip_dialog.ui:222
 msgid "Name:"
-msgstr "Όνομα:"
+msgstr "Název:"
 
 #: share/ltsp-manager/ip_dialog.ui:234
 msgid "Device:"
-msgstr "Διεπαφή:"
+msgstr "Zařízení:"
 
 #: share/ltsp-manager/ip_dialog.ui:246
 msgid "MAC address:"
-msgstr "Διεύθυνση υλικού:"
+msgstr "MAC adresa:"
 
 #: share/ltsp-manager/ip_dialog.ui:258
 msgid "Driver:"
-msgstr "Οδηγός:"
+msgstr "Ovladač:"
 
 #: share/ltsp-manager/ip_dialog.ui:270
 msgid "Speed:"
-msgstr "Ταχύτητα:"
+msgstr "Rychlost:"
 
 #: share/ltsp-manager/ip_dialog.ui:283
 msgid "IPv4"
-msgstr ""
+msgstr "IPv4"
 
 #: share/ltsp-manager/ip_dialog.ui:299
 msgid "Address:"
-msgstr "Διεύθυνση IP:"
+msgstr "Adresa:"
 
 #: share/ltsp-manager/ip_dialog.ui:311
 msgid "Netmask:"
-msgstr "Μάσκα υποδικτύου:"
+msgstr "Síťová maska:"
 
 #: share/ltsp-manager/ip_dialog.ui:323
 msgid "Gateway:"
-msgstr ""
+msgstr "Brána:"
 
 #: share/ltsp-manager/ip_dialog.ui:335
 msgid "Primary DNS:"
-msgstr ""
+msgstr "První DNS:"
 
 #: share/ltsp-manager/ip_dialog.ui:347
 msgid "Secondary DNS:"
-msgstr ""
+msgstr "Druhá DNS:"
 
 #: share/ltsp-manager/ip_dialog.ui:359
 msgid "Tertiary DNS:"
-msgstr ""
+msgstr "Třetí DNS:"
 
 #: share/ltsp-manager/ip_dialog.ui:369
 msgid "Automatically connect to this network when it is available"
-msgstr ""
+msgstr "Když je dostupná, automaticky se připojit k této síti"
 
 #: share/ltsp-manager/ip_dialog.ui:375
 msgid ""
 "Activate this connection automatically. Also, disable the automatic "
 "activation of all other connections available for this adapter."
 msgstr ""
+"Aktivovat toto připojení automaticky. Také vypnout automatickou aktivaci "
+"všech ostatních připojení, dostupných pro toto rozhraní."
 
 #: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
 msgid "LTSP information"
-msgstr ""
+msgstr "Informace o LTSP"
 
 #: share/ltsp-manager/ltsp-manager.py:183
 #: share/ltsp-manager/ltsp-manager.ui:362
 msgid "Edit group..."
-msgstr ""
+msgstr "Upravit skupinu…"
 
 #: share/ltsp-manager/ltsp-manager.py:184
 #: share/ltsp-manager/ltsp-manager.ui:373
 msgid "Delete group..."
-msgstr ""
+msgstr "Smazat skupinu…"
 
 #: share/ltsp-manager/ltsp-manager.py:188
 msgid "Delete groups..."
-msgstr ""
+msgstr "Smazat skupiny…"
 
 #: share/ltsp-manager/ltsp-manager.py:210
 #: share/ltsp-manager/ltsp-manager.ui:408
 msgid "Edit user..."
-msgstr ""
+msgstr "Upravit uživatele…"
 
 #: share/ltsp-manager/ltsp-manager.py:211
 #: share/ltsp-manager/ltsp-manager.ui:419
 msgid "Delete user..."
-msgstr ""
+msgstr "Smazat uživatele…"
 
 #: share/ltsp-manager/ltsp-manager.py:214
 msgid "Delete users..."
-msgstr ""
+msgstr "Smazat uživatele…"
 
 #: share/ltsp-manager/ltsp-manager.py:277
 msgid "Select the passwd file to import"
-msgstr ""
+msgstr "Vyberte passwd soubor který importovat"
 
 #: share/ltsp-manager/ltsp-manager.py:298
 #: share/ltsp-manager/ltsp-manager.py:321
 #, python-format
 msgid "The file \"%s\" contains no data."
-msgstr ""
+msgstr "Soubor „%s“ neobsahuje žádná data."
 
 #: share/ltsp-manager/ltsp-manager.py:307
 msgid "Select the CSV file to import"
-msgstr ""
+msgstr "Vyberte CSV soubor který importovat"
 
 #: share/ltsp-manager/ltsp-manager.py:344
 msgid "Are you sure you want to update the LTSP image?"
-msgstr ""
+msgstr "Opravdu chcete aktualizovat LTSP obraz?"
 
 #: share/ltsp-manager/ltsp-manager.py:345
 msgid ""
 "Depending on the CPU speed and image size, this may need about 10 minutes. "
 "After that, (re)boot your workstations."
 msgstr ""
+"V závislosti na rychlosti procesoru a velikosti obrazu může toto trvat "
+"přibližně 10 minut. Poté re/nastartujte stanice."
 
 #: share/ltsp-manager/ltsp-manager.py:353
 msgid ""
 "Are you sure you want to revert to the previous version of the LTSP image?"
-msgstr ""
+msgstr "Opravdu se chcete vrátit k předchozí verzi LTSP obrazu?"
 
 #: share/ltsp-manager/ltsp-manager.py:402
 #, python-format
 msgid "Are you sure you want to delete user \"%s\"?"
-msgstr ""
+msgstr "Opravdu chcete odstranit uživatele „%s“?"
 
 #: share/ltsp-manager/ltsp-manager.py:403
 msgid "Also delete the user's home directory."
-msgstr ""
+msgstr "Smazat také domovskou složku uživatele."
 
 #: share/ltsp-manager/ltsp-manager.py:404
 msgid ""
@@ -712,15 +717,18 @@ msgid ""
 "files will be deleted, along with the user's e-mail at /var/mail, if it "
 "exists"
 msgstr ""
+"VAROVÁNÍ: když zaškrtnete tuto předvolbu, domovská složka uživatele (a tím i "
+"veškeré jeho soubory) bude smazána, dále také e-maily uživatele ve /var/mail "
+"(pokud existují)"
 
 #: share/ltsp-manager/ltsp-manager.py:406
 #, python-format
 msgid "Are you sure you want to delete the following %d users?"
-msgstr ""
+msgstr "Opravdu chcete smazat těchto %d uživatelů?"
 
 #: share/ltsp-manager/ltsp-manager.py:408
 msgid "Also delete the users' home directories."
-msgstr ""
+msgstr "Smazat také domovské složky uživatelů."
 
 #: share/ltsp-manager/ltsp-manager.py:409
 msgid ""
@@ -728,10 +736,13 @@ msgid ""
 "their files will be deleted, along with the users' e-mails at /var/mail, if "
 "they exist"
 msgstr ""
+"VAROVÁNÍ: když zaškrtnete tuto předvolbu, domovské složky uživatelů (a tím i "
+"veškeré jejich soubory) bude smazány, dále také e-maily uživatelů ve "
+"/var/mail (pokud existují)"
 
 #: share/ltsp-manager/ltsp-manager.py:410
 msgid "This action can't be undone."
-msgstr ""
+msgstr "Tuto akci nelze vzít zpět."
 
 #: share/ltsp-manager/ltsp-manager.py:430
 #, python-format
@@ -739,6 +750,7 @@ msgid ""
 "Are you sure you want to remove user %(user)s from the selected groups "
 "(%(groups)s)?"
 msgstr ""
+"Opravdu chcete odebrat uživatele %(user)s z označených skupin (%(groups)s)?"
 
 #: share/ltsp-manager/ltsp-manager.py:432
 #, python-format
@@ -746,16 +758,18 @@ msgid ""
 "Are you sure you want to remove the following %(count)d users from the "
 "selected groups (%(groups)s)?"
 msgstr ""
+"Opravdu chcete odebrat těchto %(count)d uživatelů z označených skupin "
+"(%(groups)s)?"
 
 #: share/ltsp-manager/ltsp-manager.py:452
 #, python-format
 msgid "Are you sure you want to delete group %s?"
-msgstr ""
+msgstr "Opravdu chcete smazat skupinu %s?"
 
 #: share/ltsp-manager/ltsp-manager.py:454
 #, python-format
 msgid "Are you sure you want to delete the following %d groups?"
-msgstr ""
+msgstr "Opravdu chcete smazat těchto %d skupin?"
 
 #: share/ltsp-manager/ltsp-manager.py:509
 msgid ""
@@ -771,6 +785,18 @@ msgid ""
 "\n"
 "Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager."
 msgstr ""
+"Použití: ltsp-manager [PŘEDVOLBY]\n"
+"\n"
+"Závisí na sadě balíčků použitelných pro nastavování LTSP v malé\n"
+"počítačové učebně a poskytuje grafické rozhraní pro správu uživatelských "
+"účtů,\n"
+"údržbu, atd.\n"
+"\n"
+"Předvolby:\n"
+"    -h, --help     Zobrazit tuto nápovědu a skončit.\n"
+"    -v, --version  Vypsat a skončit.\n"
+"\n"
+"Chyby je možné hlásit na https://bugs.launchpad.net/ltsp-manager."
 
 #: share/ltsp-manager/ltsp-manager.py:523
 #, python-format
@@ -784,316 +810,325 @@ msgid ""
 "Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis "
 "<ftsamis@gmail.com>."
 msgstr ""
+"ltsp-manager %s\n"
+"Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis "
+"<ftsamis@gmail.com>.\n"
+"Licence GPLv3+: GNU GPL version 3 nebo novější "
+"<http://gnu.org/licenses/gpl.html>.\n"
+"\n"
+"Autoři: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis "
+"<ftsamis@gmail.com>."
 
 #: share/ltsp-manager/ltsp-manager.ui:87
 msgid "_File"
-msgstr "_Αρχείο"
+msgstr "_Soubor"
 
 #: share/ltsp-manager/ltsp-manager.ui:98
 msgid "Opens a dialog which handles user signup requests"
-msgstr ""
-"Ανοίγει μία φόρμα η οποία δέχεται αιτήσεις ανοίγματος λογαριασμών από τους "
-"χρήστες"
+msgstr "Otevře dialog který obsluhuje požadavky uživatelů na registraci"
 
 #: share/ltsp-manager/ltsp-manager.ui:99
 msgid "Allow user sign ups..."
-msgstr "Ενεργοποίηση εγγραφών χρηστών..."
+msgstr "Umožnit uživateli se přihlašovat…"
 
 #: share/ltsp-manager/ltsp-manager.ui:109
 msgid "Create users per workstation..."
-msgstr "Δημιουργία χρηστών ανά υπολογιστή..."
+msgstr "Vytvořit uživatele na jednotlivých stanicích…"
 
 #: share/ltsp-manager/ltsp-manager.ui:126
 msgid "Import from passwd..."
-msgstr ""
+msgstr "Importovat z databáze hesel passwd…"
 
 #: share/ltsp-manager/ltsp-manager.ui:136
 msgid "Import from csv..."
-msgstr ""
+msgstr "Importovat z csv…"
 
 #: share/ltsp-manager/ltsp-manager.ui:146
 msgid "Export to csv..."
-msgstr ""
+msgstr "Exportovat do csv…"
 
 #: share/ltsp-manager/ltsp-manager.ui:160
 msgid "_Server"
-msgstr ""
+msgstr "_Server"
 
 #: share/ltsp-manager/ltsp-manager.ui:181
 msgid "LTSP image"
-msgstr ""
+msgstr "LTSP obraz"
 
 #: share/ltsp-manager/ltsp-manager.ui:192
 msgid ""
 "Publishes a clone of the server installation for the clients to boot from it"
-msgstr ""
+msgstr "Vydá klon instalace serveru, ze kterého mohou klienti zavádět sytém"
 
 #: share/ltsp-manager/ltsp-manager.ui:193
 msgid "Update..."
-msgstr ""
+msgstr "Aktualizovat…"
 
 #: share/ltsp-manager/ltsp-manager.ui:203
 msgid "Reverts the LTSP image to its previous version"
-msgstr ""
+msgstr "Vrátit LTSP obraz do předchozí verze"
 
 #: share/ltsp-manager/ltsp-manager.ui:204
 msgid "Revert..."
-msgstr ""
+msgstr "Vrátit zpět…"
 
 #: share/ltsp-manager/ltsp-manager.ui:218
 msgid "Configuration files"
-msgstr ""
+msgstr "Soubory s nastaveními"
 
 #: share/ltsp-manager/ltsp-manager.ui:228
 msgid "Edit lts.conf"
-msgstr ""
+msgstr "Upravit lts.conf"
 
 #: share/ltsp-manager/ltsp-manager.ui:237
 msgid "Edit LTSP shared folder settings"
-msgstr ""
+msgstr "Upravit nastavení LTSP sdílené složky"
 
 #: share/ltsp-manager/ltsp-manager.ui:246
 msgid "Edit dnsmasq settings"
-msgstr ""
+msgstr "Upravit nastavení dnsmasq"
 
 #: share/ltsp-manager/ltsp-manager.ui:255
 msgid "Edit PXELinux settings"
-msgstr ""
+msgstr "Upravit nastavení PXELinux"
 
 #: share/ltsp-manager/ltsp-manager.ui:273
 msgid "_View"
-msgstr ""
+msgstr "_Zobrazit"
 
 #: share/ltsp-manager/ltsp-manager.ui:284
 msgid "Columns"
-msgstr ""
+msgstr "Sloupce"
 
 #: share/ltsp-manager/ltsp-manager.ui:299 share/ltsp-manager/user_form.ui:785
 msgid "Show system groups"
-msgstr ""
+msgstr "Zobrazit systémové skupiny"
 
 #: share/ltsp-manager/ltsp-manager.ui:309
 msgid "Show private groups"
-msgstr ""
+msgstr "Zobrazit soukromé skupiny"
 
 #: share/ltsp-manager/ltsp-manager.ui:326
 msgid "Refresh"
-msgstr ""
+msgstr "Znovu načíst"
 
 #: share/ltsp-manager/ltsp-manager.ui:340
 msgid "_Groups"
-msgstr ""
+msgstr "_Skupiny"
 
 #: share/ltsp-manager/ltsp-manager.ui:351
 msgid "New group..."
-msgstr ""
+msgstr "Nová skupina…"
 
 #: share/ltsp-manager/ltsp-manager.ui:386
 msgid "_Users"
-msgstr ""
+msgstr "_Uživatelé"
 
 #: share/ltsp-manager/ltsp-manager.ui:397
 msgid "New user..."
-msgstr ""
+msgstr "Nový uživatel…"
 
 #: share/ltsp-manager/ltsp-manager.ui:430
 msgid "Remove user from selected groups"
-msgstr ""
+msgstr "Odebrat uživatele z označených skupin"
 
 #: share/ltsp-manager/ltsp-manager.ui:444
 msgid "_Help"
-msgstr ""
+msgstr "_Nápověda"
 
 #: share/ltsp-manager/ltsp-manager.ui:455
 msgid "Online documentation"
-msgstr ""
+msgstr "Dokumentace na webových stránkách projektu"
 
 #: share/ltsp-manager/ltsp-manager.ui:465
 msgid "Report bug"
-msgstr ""
+msgstr "Nahlásit chybu"
 
 #: share/ltsp-manager/ltsp-manager.ui:475
 msgid "Ask question"
-msgstr ""
+msgstr "Položit dotaz"
 
 #: share/ltsp-manager/ltsp-manager.ui:485
 msgid "File a helpdesk issue"
-msgstr ""
+msgstr "Zadat problém pro technickou podporu"
 
 #: share/ltsp-manager/ltsp-manager.ui:495
 msgid "Live chat (IRC)"
-msgstr ""
+msgstr "spustit chat (IRC)"
 
 #: share/ltsp-manager/ltsp-manager.ui:505
 msgid "Discussion forum"
-msgstr ""
+msgstr "Diskuzní forum"
 
 #: share/ltsp-manager/ltsp-manager.ui:522
 msgid "LTSP installations map"
-msgstr ""
+msgstr "Mapa LTSP instalací"
 
 #: share/ltsp-manager/ltsp-manager.ui:532
 msgid "Man page of lts.conf"
-msgstr ""
+msgstr "Manuálová stránka lts.conf"
 
 #: share/ltsp-manager/ltsp-manager.ui:542
 msgid "Display LTSP version information, useful for reporting bugs"
-msgstr ""
+msgstr "Zobrazit verzi LTSP – užitečné pro hlášení chyb"
 
 #: share/ltsp-manager/ltsp-manager.ui:543
 msgid "Local LTSP information"
-msgstr ""
+msgstr "Místní LTSP informace"
 
 #: share/ltsp-manager/ltsp-manager.ui:560
 msgid "About"
-msgstr ""
+msgstr "O aplikaci"
 
 #: share/ltsp-manager/ltsp-manager.ui:651
 msgid "Unselect all"
-msgstr ""
+msgstr "Zrušit výběr"
 
 #: share/ltsp-manager/ltsp-manager.ui:701
 msgid "UID"
-msgstr ""
+msgstr "Identifikátor uživatele (UID)"
 
 #: share/ltsp-manager/ltsp-manager.ui:733
 msgid "Primary group"
-msgstr ""
+msgstr "Hlavní skupina"
 
 #: share/ltsp-manager/ltsp-manager.ui:765
 msgid "Office"
-msgstr ""
+msgstr "Kancelář"
 
 #: share/ltsp-manager/ltsp-manager.ui:781
 msgid "Office phone"
-msgstr ""
+msgstr "Telefon do kanceláře"
 
 #: share/ltsp-manager/ltsp-manager.ui:797
 msgid "Home phone"
-msgstr ""
+msgstr "Telefon domů"
 
 #: share/ltsp-manager/ltsp-manager.ui:813
 msgid "Other"
-msgstr ""
+msgstr "Ostatní"
 
 #: share/ltsp-manager/ltsp-manager.ui:829
 msgid "Directory"
-msgstr ""
+msgstr "Složka"
 
 #: share/ltsp-manager/ltsp-manager.ui:845
 msgid "Shell"
-msgstr ""
+msgstr "Shell"
 
 #: share/ltsp-manager/ltsp-manager.ui:861
 msgid "Last password change"
-msgstr ""
+msgstr "Heslo bylo naposledy změněno"
 
 #: share/ltsp-manager/ltsp-manager.ui:877
 msgid "Minimum password age"
-msgstr ""
+msgstr "Minimální životnost hesla"
 
 #: share/ltsp-manager/ltsp-manager.ui:893
 msgid "Maximum password age"
-msgstr ""
+msgstr "Maximální životnost hesla"
 
 #: share/ltsp-manager/ltsp-manager.ui:909
 msgid "Warning period"
-msgstr ""
+msgstr "Období varování"
 
 #: share/ltsp-manager/ltsp-manager.ui:925
 msgid "Inactive"
-msgstr ""
+msgstr "Nečinné"
 
 #: share/ltsp-manager/ltsp-manager.ui:941
 msgid "Expired"
-msgstr ""
+msgstr "Platnost skončila"
 
 #: share/ltsp-manager/signup_form.ui:26
 msgid "Request user account"
-msgstr ""
+msgstr "Požadovat uživatelský účet"
 
 #: share/ltsp-manager/signup_form.ui:107
 msgid "Fill the following fields in order to request a user account"
-msgstr ""
+msgstr "Do žádosti o uživatelský účet vyplňte následující kolonky"
 
 #: share/ltsp-manager/signup_form.ui:135 share/ltsp-manager/user_form.ui:187
 msgid "Username:"
-msgstr ""
+msgstr "Uživatelské jméno:"
 
 #: share/ltsp-manager/signup_form.ui:147 share/ltsp-manager/user_form.ui:212
 msgid "Password:"
-msgstr ""
+msgstr "Heslo:"
 
 #: share/ltsp-manager/signup_form.ui:181 share/ltsp-manager/user_form.ui:331
 msgid "Real name:"
-msgstr ""
+msgstr "Skutečné jméno:"
 
 #: share/ltsp-manager/signup_form.ui:218
 msgid "Role:"
-msgstr ""
+msgstr "Role:"
 
 #: share/ltsp-manager/signup_form.ui:240 share/ltsp-manager/user_form.ui:270
 msgid "Confirm password:"
-msgstr ""
+msgstr "Potvrzení hesla:"
 
 #: share/ltsp-manager/signup_form.ui:323
 msgid "Check the groups that you are a member of"
-msgstr ""
+msgstr "Zaškrtňete skupiny kterých jste členy"
 
 #: share/ltsp-manager/signup.py:87
 msgid "The sysadmin might not have activated sign ups."
-msgstr ""
+msgstr "Správce systému nejspíš neaktivoval registrace."
 
 #: share/ltsp-manager/signup.py:88
 msgid "Possible networking issue."
-msgstr ""
+msgstr "Možný problém se sítí."
 
 #: share/ltsp-manager/signup.py:93
 msgid "Connection error"
-msgstr ""
+msgstr "Chyba spojení"
 
 #: share/ltsp-manager/signup.py:225
 msgid "Your request was successfully delivered for review."
-msgstr ""
+msgstr "Váš požadavek byl úšpěšně doručen k posouzení."
 
 #: share/ltsp-manager/signup.py:233
 msgid ""
 "Your request was not delivered successfully. Ask for help from your sysadmin."
 msgstr ""
+"Váš požadavek nebyl v pořádku doručen. Požádejte o pomoc správce systému."
 
 #: share/ltsp-manager/signup.py:239
 msgid "Failure"
-msgstr ""
+msgstr "Nezdařilo se"
 
 #: share/ltsp-manager/signup_server.py:251
 msgid "Are you sure you want to remove the following requests from the list?"
-msgstr ""
+msgstr "Opravdu chcete odebrat následující žádosti ze seznamu?"
 
 #: share/ltsp-manager/signup_server.py:253
 msgid "Reject requests"
-msgstr ""
+msgstr "Zamítnout žádosti"
 
 #: share/ltsp-manager/signup_server.py:270
 msgid "The following user accounts will be created:"
-msgstr ""
+msgstr "Následující uživatelské účty budou vytvořeny:"
 
 #: share/ltsp-manager/signup_server.py:271
 msgid "Proceed?"
-msgstr ""
+msgstr "Pokračovat?"
 
 #: share/ltsp-manager/signup_server.py:272
 msgid "Create user accounts"
-msgstr ""
+msgstr "Vytvořit uživatelské účty"
 
 #: share/ltsp-manager/signup_server.py:288
 msgid ""
 "Are you sure you want to close the sign up server? All pending requests will "
 "be lost."
 msgstr ""
+"Opravdu chcete uzavřít registrační server? Veškeré čekající žádosti budou "
+"ztraceny."
 
 #: share/ltsp-manager/signup_server.ui:26
 msgid "User signup requests"
-msgstr ""
+msgstr "Žádosti uživatelů o registraci"
 
 #: share/ltsp-manager/signup_server.ui:41
 msgid ""
@@ -1101,49 +1136,53 @@ msgid ""
 "You can continuously edit, delete and apply signup requests as long as this "
 "dialog stays open."
 msgstr ""
+"V okamžiku kdy je pošlou, žádosti uživatelů o registraci se zobrazí zde.\n"
+"Můžete je upravovat, mazat a používat dokud je tento dialog otevřený."
 
 #: share/ltsp-manager/signup_server.ui:87
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: share/ltsp-manager/signup_server.ui:98
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #: share/ltsp-manager/signup_server.ui:131
 #: share/ltsp-manager/signup_settings.ui:160
 msgid "Role"
-msgstr ""
+msgstr "Role"
 
 #: share/ltsp-manager/signup_server.ui:142
 msgid "Groups"
-msgstr ""
+msgstr "Skupiny"
 
 #: share/ltsp-manager/signup_server.ui:171
 msgid "Edit the selected signup request"
-msgstr ""
+msgstr "Upravit označený požadavek o registraci"
 
 #: share/ltsp-manager/signup_server.ui:172
 msgid "Edit request"
-msgstr ""
+msgstr "Upravit požadavek"
 
 #: share/ltsp-manager/signup_server.ui:188
 msgid "Reject the selected request, and remove it from the list"
-msgstr ""
+msgstr "Zamítnout označený požadavek a odebrat ho ze seznamu"
 
 #: share/ltsp-manager/signup_server.ui:189
 msgid "Reject request"
-msgstr ""
+msgstr "Odmítnout požadavek"
 
 #: share/ltsp-manager/signup_server.ui:240
 msgid ""
 "Accept all the signup requests listed, creating a user account for each one "
 "of them"
 msgstr ""
+"Přijmout všechny žádosti o registraci uvedené na seznamu – pro každou "
+"vytvořit uživatelský účet"
 
 #: share/ltsp-manager/signup_settings.ui:74
 msgid "Open the dialog that receives signup requests"
-msgstr ""
+msgstr "Otevřít dialog do kterého přicházejí žádosti o registraci"
 
 #: share/ltsp-manager/signup_settings.ui:101
 msgid ""
@@ -1151,108 +1190,111 @@ msgid ""
 "requests.\n"
 "After you click [Next], a dialog that receives signup requests will open."
 msgstr ""
+"Vyberte role a skupiny které chcete zpřístupnit pro žádosti uživatelů o "
+"registraci.\n"
+"Poté klikněte na [Další] a otevře se dialog pro příjem žádostí."
 
 #: share/ltsp-manager/signup_settings.ui:119
 msgid "Roles that will be available"
-msgstr ""
+msgstr "Role které budou k dispozici"
 
 #: share/ltsp-manager/signup_settings.ui:194
 msgid "Groups that will be available"
-msgstr ""
+msgstr "Skupiny které budou k dispozici"
 
 #: share/ltsp-manager/signup_settings.ui:235
 msgid "Group"
-msgstr ""
+msgstr "Skupina"
 
 #: share/ltsp-manager/user_form.py:231
 #, python-format
 msgid "This directory belongs to UID %(uid)d and to GID %(gid)d"
-msgstr ""
+msgstr "Tato složka náleži UID %(uid)d a GID %(gid)d"
 
 #: share/ltsp-manager/user_form.ui:150
 msgid "Input the user information"
-msgstr ""
+msgstr "Zadejte údaje o uživateli"
 
 #: share/ltsp-manager/user_form.ui:282
 msgid "UID:"
-msgstr ""
+msgstr "UID:"
 
 #: share/ltsp-manager/user_form.ui:294
 msgid "Home directory:"
-msgstr ""
+msgstr "Domovská složka:"
 
 #: share/ltsp-manager/user_form.ui:319
 msgid "Shell:"
-msgstr ""
+msgstr "Shell:"
 
 #: share/ltsp-manager/user_form.ui:343
 msgid "Office:"
-msgstr ""
+msgstr "Kancelář:"
 
 #: share/ltsp-manager/user_form.ui:355
 msgid "Office phone:"
-msgstr ""
+msgstr "Telefon do kanceláře:"
 
 #: share/ltsp-manager/user_form.ui:367
 msgid "Home phone:"
-msgstr ""
+msgstr "Telefon domů:"
 
 #: share/ltsp-manager/user_form.ui:499
 msgid "Other:"
-msgstr ""
+msgstr "Ostatní:"
 
 #: share/ltsp-manager/user_form.ui:581
 msgid "User information"
-msgstr ""
+msgstr "Informace o uživateli"
 
 #: share/ltsp-manager/user_form.ui:604
 msgid "Primary group name:"
-msgstr ""
+msgstr "Název hlavní skupiny"
 
 #: share/ltsp-manager/user_form.ui:616
 msgid "Primary group GID:"
-msgstr ""
+msgstr "Identifikátor hlavní skupiny (GID)"
 
 #: share/ltsp-manager/user_form.ui:686
 msgid "User role:"
-msgstr ""
+msgstr "Role uživatele:"
 
 #: share/ltsp-manager/user_form.ui:768
 msgid "Set as primary"
-msgstr ""
+msgstr "Nastavit jako hlavní"
 
 #: share/ltsp-manager/user_form.ui:816
 msgid "Group options"
-msgstr ""
+msgstr "Předvolby skupiny"
 
 #: share/ltsp-manager/user_form.ui:839
 msgid "Last change:"
-msgstr ""
+msgstr "Minulá změna:"
 
 #: share/ltsp-manager/user_form.ui:851
 msgid "Minimum age:"
-msgstr ""
+msgstr "Minimální stáří:"
 
 #: share/ltsp-manager/user_form.ui:863
 msgid "Maximum age:"
-msgstr ""
+msgstr "Maximální stáří:"
 
 #: share/ltsp-manager/user_form.ui:875
 msgid "Warning period:"
-msgstr ""
+msgstr "Období varování:"
 
 #: share/ltsp-manager/user_form.ui:887
 msgid "Inactive:"
-msgstr ""
+msgstr "Neaktivní:"
 
 #: share/ltsp-manager/user_form.ui:899
 msgid "Expired:"
-msgstr ""
+msgstr "Platnost skončila:"
 
 #: share/ltsp-manager/user_form.ui:911
 msgid "Locked:"
-msgstr ""
+msgstr "Uzamčeno:"
 
 #: share/ltsp-manager/user_form.ui:1030
 msgid "Password options"
-msgstr ""
+msgstr "Předvolby hesla"
