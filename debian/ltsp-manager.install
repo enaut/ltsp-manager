@@ -1,5 +1,3 @@
 etc/*                   etc/
 share/*                 usr/share/
 sbin/*                  usr/sbin/
-build/mo/el/LC_MESSAGES/ltsp-manager.mo usr/share/locale/el/LC_MESSAGES/
-build/mo/cs/LC_MESSAGES/ltsp-manager.mo usr/share/locale/cs/LC_MESSAGES/
