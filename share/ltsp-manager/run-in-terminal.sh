@@ -1,0 +1,72 @@
+#!/bin/sh
+# Copyright (C) 2012-2017 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+. /usr/share/ltsp-manager/common.sh
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS] [COMMAND]
+
+It runs the specified COMMAND in a terminal, either the current if one
+is open, or in a new one if run e.g. with Alt+F2.
+In the end it shows a failure or success message.
+
+Options:
+    -s, --source  COMMAND is assumed to be a shell script which is sourced in
+                  order for it to have access to some common shell functions.
+EOF
+}
+
+pause_exit() {
+    local dummy
+
+    if [ "$SPAWNED_TERM" = true ]; then
+        read -p "`gettext "Press [Enter] to close the current window."`" dummy
+    fi
+    exit "$@"
+}
+
+# First check if we need to spawn an x-terminal-emulator
+if [ "$SPAWNED_TERM" != true ] && { [ ! -t 0 ] || [ ! -t 1 ] ;} &&
+    xmodmap -n >/dev/null 2>&1
+then
+    title=${1##*/}
+    case "$title" in
+        -s|--source) title=${2##*/} ;;
+        '') title=${0##*/} ;;
+    esac
+    SPAWNED_TERM=true exec x-terminal-emulator -T "$title" -e sh "$0" "$@"
+fi
+
+set -e
+# Analyze the command line, set "$title" for exit messages, and run the command
+case "$1" in
+    -s|--source)
+        script="$2"
+        shift 2
+        test -f "$script" || die "Script not found: " "$script"
+        title=${script##*/}
+        bold "`gettext "Executing command:"`" "$title $*"
+        . "$script"
+        ;;
+    '')
+        usage >&2
+        pause_exit 1
+        ;;
+    *)
+        # If we didn't spawn a terminal, just exec the command
+        test "$SPAWNED_TERM" != true && exec "$@"
+        title=${1##*/}
+        bold "`gettext "Executing command:"`" "$*"
+        "$@"
+        ;;
+esac
+ret=$?
+printf "\n"
+if [ $ret -eq 0 ]; then
+    bold "`gettext "Command '%s' successfully completed." "$title"`"
+else
+    bold "`gettext "Command '%s' failed with error code %s." "$title" "$ret"`"
+fi
+pause_exit $ret

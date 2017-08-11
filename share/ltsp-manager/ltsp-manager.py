@@ -339,14 +339,14 @@ class Gui:
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:        
-            subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--cleanup', '/'])
+            subprocess.Popen(['./run-in-terminal.sh', 'ltsp-update-image', '--cleanup', '/'])
 
     def on_mi_ltsp_revert_image_activate(self, widget):
         message = _("Are you sure you want to revert to the previous version of the LTSP image?")
         dlg = dialogs.AskDialog(message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES: 
-            subprocess.Popen(['./run-in-terminal', 'ltsp-update-image', '--revert', '/'])
+            subprocess.Popen(['./run-in-terminal.sh', 'ltsp-update-image', '--revert', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
         # TODO: replace i386 with either ARCH or *
