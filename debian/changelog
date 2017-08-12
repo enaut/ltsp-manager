@@ -1,5 +1,5 @@
-ltsp-manager (17.06) UNRELEASED; urgency=low
+ltsp-manager (17.08) UNRELEASED; urgency=low
 
-  * Delete Greek changelog.
+  * Initial release under the LTSP Manager name.
 
- -- Alkis Georgopoulos <alkisg@gmail.com>  Fri, 02 Jun 2017 09:16:02 +0300
+ -- Alkis Georgopoulos <alkisg@gmail.com>  Sat, 12 Aug 2017 18:47:46 +0300
