@@ -1,3 +1,4 @@
+#!/bin/sh
 # Contains some actions that the sysadmin should run after installation.
 # Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
