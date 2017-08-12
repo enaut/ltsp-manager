@@ -1,0 +1,11 @@
+[Unit]
+Description=LTSP shared folders service
+After=home.mount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/ltsp-shared-folders mount
+ExecStop=/usr/share/ltsp-shared-folders unmount
+
+[Install]
+WantedBy=multi-user.target

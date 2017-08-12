@@ -8,6 +8,3 @@ include /usr/share/dpkg/pkg-info.mk
 override_dh_install:
 	dh_install
 	echo "__version__='$(DEB_VERSION)'" > "$(CURDIR)/debian/ltsp-manager/usr/share/ltsp-manager/version.py"
-
-override_dh_installinit:
-	dh_installinit --name=ltsp-shared-folders
