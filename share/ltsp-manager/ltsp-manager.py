@@ -329,6 +329,9 @@ class Gui:
 
 ## Server menu
 
+    def on_mi_initial_setup_activate(self, widget):
+        subprocess.Popen(['./run-in-terminal.sh', './initial-setup.sh'])
+
     def on_mi_configuration_network_activate(self, widget):
         ip_dialog.Ip_Dialog(self.main_window)
 

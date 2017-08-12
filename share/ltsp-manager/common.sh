@@ -6,6 +6,8 @@
 # Always call this gettext function like this:
 # echo "`gettext "Translated message with various %s params" "params go here"`"
 gettext() {
+    local text
+
     text="$1"
     shift
     if [ -x "/usr/bin/gettext" ]; then
@@ -13,6 +15,11 @@ gettext() {
     else
         printf "$text" "$@"
     fi
+}
+
+# Print all parameters, followed by a newline.
+printfn() {
+    printf "%s\n" "$*"
 }
 
 bold() {
@@ -58,3 +65,27 @@ confirm() {
         pause_exit 2
     fi
 }
+
+# $search must be ready for sed, e.g. '^whole line$'.
+# Return 0 if a replacement was made, 1 otherwise.
+search_and_replace() {
+    local search replace file migrate old_search 
+    search=$1
+    replace=$2
+    file=$3
+    migrate=$4
+
+    if grep -qs "$search" "$file"; then
+        sed "s/$search/$replace # Commented by ltsp-manager: &/" -i "$file"
+        return 0
+    elif [ "$migrate" = true ] && grep -qs "^${replace}$" "$file"; then
+        # strip ^$ from the search string, we'll use it in the replacement
+        old_search=${search#^}
+        old_search=${old_search%$}
+        sed "s/^${replace}$/& # Commented by ltsp-manager: $old_search/" -i "$file"
+        return 0
+    fi
+    return 1
+}
+
+test -f "common.sh" || cd /usr/share/ltsp-manager

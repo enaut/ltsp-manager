@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>
+# Copyright (C) 2009-2015 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
 set -e
@@ -15,17 +15,67 @@ set -e
 # <new-postrm> abort-install <old-version>
 # <new-postrm> abort-upgrade <old-version>
 
-purge() {
-    test -f /etc/default/ltsp-shared-folders && . /etc/default/ltsp-shared-folders
-    if [ -n "$TEACHERS" ]; then
-        if getent group "$TEACHERS" >/dev/null; then
-            delgroup "$TEACHERS"
-        fi
+# Restore "# Commented by ltsp-manager:" lines to their original values
+restore_config() {
+    local file
+    file=$1
+
+    if grep -qs "# Commented by ltsp-manager:" "$file"; then
+        sed "s/.*# Commented by ltsp-manager:[[:space:]]*//" -i "$file"
     fi
+}
+
+remove() {
+    local - link
+
+    set +e
+    for link in /usr/local/bin/gnome-panel \
+        /usr/local/bin/tuxtype \
+        /usr/local/bin/unzip \
+        /usr/lib/firefox/defaults/pref/ltsp-manager.js \
+        /usr/local/share/applications/mimeapps.list
+    do
+        if [ -h "$link" ]; then
+            rm -f "$link"
+        fi
+    done
+}
+
+purge() {
+    local - examples temp file
+
+    set +e
+    remove
+    # Restore all the files that were diverted by ltsp-manager
+    dpkg-divert --list ltsp-manager \
+    | while read temp temp file temp; do
+        dpkg-divert --package ltsp-manager --rename --remove "$file"
+    done
+
+    examples="
+        /etc/dnsmasq.d/ltsp-server-dnsmasq.conf
+    "
+    configs="
+        /etc/NetworkManager/NetworkManager.conf
+        /etc/ssh/sshd_config
+        /etc/default/rcS
+        /etc/default/im-config
+    "
+    # Don't purge the examples, move them to /tmp to give a chance for recovery.
+    temp=$(mktemp -d --tmpdir ltsp-manager-purged.XXXXXX)
+    for file in $examples; do
+        if [ -f "$file" ]; then
+            mv -b "$file" "$temp"
+        fi
+    done
+    for file in $configs; do
+        restore_config "$file"
+    done
 }
 
 case "$1" in
     remove)
+        remove
         ;;
 
     purge)
