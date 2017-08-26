@@ -1,0 +1,73 @@
+#!/bin/sh
+# Disable flow control and enable NAT for the internal LTSP subnet.
+# https://help.ubuntu.com/community/UbuntuLTSP/FlowControl
+# Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Don't do anything for the lo interface
+test "$IFACE" != lo || exit 0
+
+# Only run from ifup
+test "$MODE" = start || exit 0
+
+# Only care about inet, inet6 and NetworkManager
+case "$ADDRFAM" in
+    inet|inet6|NetworkManager)
+        ;;
+    *)
+        exit 0
+esac
+
+if [ -x /usr/bin/logger ]; then
+    logger=logger
+else
+    logger=true
+fi
+
+# If this IFACE supports ethtool
+if [ -x /sbin/ethtool ] && output=$(ethtool --show-pause "$IFACE")
+then
+    # If flow control is enabled
+    if echo "$output" | grep -q '^RX:.*on'; then
+        # Some NICs like Intel [8086:10d3] require "autoneg off rx off",
+        # while other like Marvel [11ab:4320] require "autoneg on rx off".
+        # So we actually need to call ethtool again to check if it worked.
+        msg="Failed to disable flow control for $IFACE using ethtool"
+        for neg in off on; do
+            ethtool --pause "$IFACE" autoneg "$neg" rx off || true
+            if ethtool --show-pause "$IFACE" | grep -q '^RX:.*off'; then
+                msg="Disabled flow control (autoneg $neg, rx off) for $IFACE using ethtool"
+                break
+            fi
+        done
+    else
+        msg="Flow control was already disabled for $IFACE using ethtool"
+    fi
+    $logger -t ltsp-manager -p syslog.info "$msg"
+# If this IFACE supports mii-tool
+elif [ -x /sbin/mii-tool ] && output=$(mii-tool -v "$IFACE")
+then
+    # If flow control is enabled
+    if echo "$output" | grep -q 'advertising:.*flow-control'; then
+        capabilities=$(echo "$output" | sed -n 's/.*capabilities: *//p')
+        if mii-tool -A "$capabilities" "$IFACE"; then
+            msg="Disabled flow control for $IFACE using mii-tool"
+        else
+            msg="Failed to disable flow control for $IFACE using mii-tool"
+        fi
+    else
+        msg="Flow control was already disabled for $IFACE using mii-tool"
+    fi
+    $logger -t ltsp-manager -p syslog.info "$msg"
+fi >/dev/null 2>&1
+
+read dummy dummy dummy ip dummy <<EOF
+$(ip -oneline -family inet addr show dev "$IFACE" 2>/dev/null || true)
+EOF
+if [ "$ip" = "192.168.67.1/24" ]; then
+    sysctl net.ipv4.ip_forward=1
+    iptables -s 192.168.67.0/24 -t nat -A POSTROUTING -j MASQUERADE
+    $logger -t ltsp-manager -p syslog.info "Enabled IP forwarding/masquerading for interface $IFACE"
+fi

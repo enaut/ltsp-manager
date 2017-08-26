@@ -36,6 +36,11 @@ for f in /var/lib/tftpboot/ltsp/*/lts.conf; do
     fi
 done
 
+# Install our if-up.sh script that disables flow control
+if [ -d /etc/network/if-up.d ] && [ ! -f /etc/network/if-up.d/ltsp-manager ]; then
+    ln -rsf /usr/share/ltsp-manager/if-up.sh /etc/network/if-up.d/ltsp-manager
+fi
+
 # Ensure that "server" is resolvable by DNS.
 if ! getent hosts server >/dev/null; then
     search_and_replace "^127.0.0.1[[:space:]]*localhost$" "& server" \
