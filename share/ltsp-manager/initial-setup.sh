@@ -63,15 +63,14 @@ fi
 # Remove the local resolver (LP: #959037), we want a real DNS server.
 if search_and_replace "^dns=dnsmasq" "" /etc/NetworkManager/NetworkManager.conf; then
     printfn "`gettext "Restarting network-manager to remove its spawned dnsmasq..."`" >&2
-    service network-manager restart
+    service network-manager stop
+    pkill -f "dnsmasq --no-resolv"
+    service network-manager start
 fi
 
 # Install the dnsmasq configuration file and restart dnsmasq.
 if [ ! -f /etc/dnsmasq.d/ltsp-server-dnsmasq.conf ]; then
     ltsp-config dnsmasq
-    # TODO: better way?
-    sed 's/^port=0/#port=0/' -i /etc/dnsmasq.d/ltsp-server-dnsmasq.conf
-    service dnsmasq restart
 fi
 
 # Allow more simultaneous SSH connections from the local network.
