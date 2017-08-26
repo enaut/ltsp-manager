@@ -251,7 +251,8 @@ class Gui:
         self.conf.set('GUI', 'show_private_groups', str(self.show_private_groups))
         self.conf.set('GUI', 'show_system_groups', str(self.show_system_groups))
         visible_cols = [col.get_title() for col in self.users_tree.get_columns() if col.get_visible()]
-        self.conf.set('GUI', 'visible_user_columns', ','.join(visible_cols))
+        # TODO: restore this when LP: #1710416 is fixed
+        self.conf.set('GUI', 'visible_user_columns', 'all')
         config.save()
         exit()
 
