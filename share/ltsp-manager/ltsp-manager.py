@@ -57,6 +57,10 @@ class Gui:
         self.show_system_groups = False
         self.builder.get_object('mi_show_private_groups').set_active(self.conf.getboolean('GUI', 'show_private_groups'))
         self.builder.get_object('mi_show_system_groups').set_active(self.conf.getboolean('GUI', 'show_system_groups'))
+        if locale.getdefaultlocale()[0] != "el_GR":
+            self.builder.get_object("mn_server").remove(self.builder.get_object('mi_configuration_network'))
+            self.builder.get_object("mn_help").remove(self.builder.get_object('mi_helpdesk_ticket'))
+            self.builder.get_object("mn_help").remove(self.builder.get_object('mi_forum'))
 
         self.users_filter.set_visible_func(self.set_user_visibility)
         self.groups_filter.set_visible_func(self.set_group_visibility)
@@ -459,8 +463,10 @@ class Gui:
 ## Help menu
 
     def on_mi_home_activate(self, widget):
-        # TODO: localize URLs
-        self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
+        if locale.getdefaultlocale()[0] != "el_GR":
+            self.open_link('http://wiki.ltsp.org/wiki/Ltsp-manager')
+        else:
+            self.open_link('http://ts.sch.gr/wiki/Linux/LTSP')
 
     def on_mi_report_bug_activate(self, widget):
         self.open_link('https://bugs.launchpad.net/ltsp-manager')
@@ -487,7 +493,11 @@ class Gui:
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
 
     def on_mi_map_activate(self, widget):
-        self.open_link('http://ts.sch.gr/wiki/Linux/LTSP/Προχωρημένα/Χάρτης')
+        print(locale.getdefaultlocale()[0])
+        if locale.getdefaultlocale()[0] != "el_GR":
+            self.open_link('http://www.ltsp.org/stories/worldmap/')
+        else:
+            self.open_link('http://ts.sch.gr/wiki/Linux/LTSP/Προχωρημένα/Χάρτης')
 
     def on_mi_lts_conf_manpage_activate(self, widget):
         self.open_link('http://manpages.ubuntu.com/lts.conf')
