@@ -71,7 +71,7 @@ class ImportDialog:
         
         # Make the columns in the preview treeview
         # First of all append the icon
-        col_pixbuf = Gtk.TreeViewColumn("Κατάσταση", Gtk.CellRendererPixbuf(), stock_id=60)
+        col_pixbuf = Gtk.TreeViewColumn(_("Status"), Gtk.CellRendererPixbuf(), stock_id=60)
         col_pixbuf.set_resizable(True)
         col_pixbuf.set_sort_column_id(60)
         self.tree.append_column(col_pixbuf)
@@ -142,7 +142,7 @@ class ImportDialog:
         msg += "\n\n%s\n\n"
         msg += _("Would you like to remove those accounts from the list, to avoid trying to create them again?")
         msg = msg % (len(identical), ', '.join(self.list[iter_][0] for iter_ in identical))
-        resp = dialogs.AskDialog(msg, _("Identical existing accounts were found").showup())
+        resp = dialogs.AskDialog(msg, _("Identical existing accounts were found")).showup()
         if resp == Gtk.ResponseType.YES:
             for iter_ in identical:
                 self.RemoveRow(iter_)
