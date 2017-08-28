@@ -330,7 +330,7 @@ class Gui:
                 users = self.system.users.values()
             else:
                 users = [u for u in self.system.users.values() if not u.is_system_user()]
-        export_dialog.ExportDialog(self.system, users)
+        export_dialog.ExportDialog(self.main_window, self.system, users)
 
 ## Server menu
 

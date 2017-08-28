@@ -7,7 +7,7 @@ import parsers
 import common
 
 class ExportDialog:
-    def __init__(self, system, users):
+    def __init__(self, main_window, system, users):
         self.csv = parsers.CSV()
         chooser = Gtk.FileChooserDialog(title=_("Enter the name for the exported file"), 
                                         action=Gtk.FileChooserAction.SAVE,
@@ -25,6 +25,7 @@ class ExportDialog:
             filename = 'users_%s_%s.%d.csv' % (os.uname()[1], common.date(), i)
             i += 1
         chooser.set_current_name(filename)
+        chooser.set_transient_for(main_window)
         resp = chooser.run()
         if resp == Gtk.ResponseType.OK:
             filename = chooser.get_filename()

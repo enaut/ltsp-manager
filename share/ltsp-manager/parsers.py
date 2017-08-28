@@ -72,15 +72,15 @@ class CSV:
         writer.writerow(dict((n,n) for n in libuser.CSV_USER_FIELDS))
         for user in users:
             u_dict = dict( (key, user.__dict__[o_key] if user.__dict__[o_key] is not None else '') for key, o_key in self.fields_map.iteritems())
-            u_dict['Κωδικός'] = '' # We don't have the plain password
-            u_dict['Ομάδες'] = list(u_dict['Ομάδες'])
+            u_dict['Password'] = '' # We don't have the plain password
+            u_dict['Groups'] = list(u_dict['Groups'])
             # Convert the groups value to a proper gname:gid pairs formatted string
-            final_groups = u_dict['Ομάδες']
-            final_groups.remove(u_dict['Όνομα κύριας ομάδας'])
+            final_groups = u_dict['Groups']
+            final_groups.remove(u_dict['Primary group'])
             for i, gname in enumerate(final_groups):
                 gid = system.groups[gname].gid
                 final_groups[i] = ':'.join((final_groups[i], str(gid)))
-            u_dict['Ομάδες'] = ','.join(final_groups)
+            u_dict['Groups'] = ','.join(final_groups)
             
             writer.writerow(u_dict)
         f.close()
