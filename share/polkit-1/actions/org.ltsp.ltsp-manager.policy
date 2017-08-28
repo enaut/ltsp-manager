@@ -4,7 +4,7 @@
  "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
 <policyconfig>
   <vendor>LTSP Developers</vendor>
-  <vendor_url>http://ltsp.org</vendor_url>
+  <vendor_url>http://wiki.ltsp.org/wiki/Ltsp-manager</vendor_url>
   <icon_name>ltsp-manager</icon_name>
 
   <action id="org.ltsp.ltsp-manager">

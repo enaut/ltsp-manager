@@ -588,7 +588,7 @@
             <property name="relief">none</property>
             <property name="xalign">0</property>
             <property name="image_position">bottom</property>
-            <property name="uri">http://ltsp.org/TODO</property>
+            <property name="uri">http://wiki.ltsp.org/wiki/Ltsp-manager</property>
             <child>
               <object class="GtkImage" id="method_help_image">
                 <property name="visible">True</property>

@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 9),
 Standards-Version: 4.0.0
 Vcs-Git: https://git.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
 Vcs-Browser: https://code.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
-Homepage: http://ltsp.org
+Homepage: http://wiki.ltsp.org/wiki/Ltsp-manager
 
 Package: ltsp-manager
 Architecture: all

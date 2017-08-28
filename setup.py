@@ -53,7 +53,7 @@ DistUtilsExtra.auto.setup(
     name='ltsp-manager',
     version = changelog_version(),
     description = '/usr/share/applications/ltsp-manager.desktop',
-    url = 'http://ltsp.org',
+    url = 'http://wiki.ltsp.org/wiki/Ltsp-manager',
     license = 'GNU GPL v3',
     author = 'Alkis Georgopoulos',
     author_email = 'alkisg@gmail.com',
