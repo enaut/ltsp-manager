@@ -3,11 +3,39 @@
 # Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
+# Initial-setup will automatically prompt to run again if it detects that it
+# was last ran before the following version. MANUALLY UPDATE THIS:
+PROMPT_AFTER="17.06"
+
 . /usr/share/ltsp-manager/common.sh
 
-printfn "`gettext "This will perform an initial setup to ensure that LTSP runs optimally."`"
-printf "%s " "`gettext "Press [Enter] to continue or Ctrl+C to abort:"`"
-read dummy
+setupconf=/var/lib/ltsp-manager/initial-setup
+
+if [ "$1" = "--check" ]; then
+    test -f "$setupconf" && . "$setupconf"
+    printf "Last version=$last_version, current version=$version, rerun after version=$PROMPT_AFTER: "
+    if [ "$(printf "%s\n%s\n" "$PROMPT_AFTER" "$last_version" | sort -V | tail -n 1)" != "$PROMPT_AFTER" ]; then
+        printf "needs to be executed.\n"
+        exit 1
+    else
+        printf "doesn't need to be executed.\n"
+        exit 0
+    fi
+fi
+
+if [ "$1" != "--no-prompt" ]; then
+    printfn "`gettext "This will perform an initial setup to ensure that LTSP runs optimally."`"
+    printf "%s " "`gettext "Press [Enter] to continue or Ctrl+C to abort:"`"
+    read dummy
+fi
+
+mkdir -p /var/lib/ltsp-manager
+printf "%s" \
+"# This file is regenerated when /usr/share/ltsp-manager/initial-setup.sh runs.
+
+# Remember the last version ran, to answer the --check parameter:
+last_version=$version
+">"$setupconf"
 
 # Create "teachers" group and add the current user to epoptes,teachers groups
 test -f /etc/default/ltsp-shared-folders && . /etc/default/ltsp-shared-folders

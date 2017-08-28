@@ -5,6 +5,7 @@ import gettext
 import locale
 import re
 import subprocess
+import sys
 
 try:
     gettext.install('ltsp-manager', unicode=True)
@@ -27,11 +28,11 @@ def run_command(cmd, poll=False):
         if res == 0:
             return (True, p.stdout.read())
         else:
-            print _("Error while executing command:")
-            print " $ %s" % ' '.join(cmdline)
-            print p.stdout.read()
+            sys.stderr.write("Error while executing command:\n" +
+                " $ %s" % ' '.join(cmdline) + "\n")
+            sys.stderr.write(p.stdout.read())
             err = p.stderr.read()
-            print err
+            sys.stderr.write(err)
             if err == '':
                 err = "\n"
             return (False, err)

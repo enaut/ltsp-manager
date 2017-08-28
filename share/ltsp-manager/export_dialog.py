@@ -1,9 +1,14 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
+# 2017, Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-import os
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+import os
 import parsers
+
 import common
 
 class ExportDialog:

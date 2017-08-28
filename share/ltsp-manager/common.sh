@@ -89,3 +89,4 @@ search_and_replace() {
 }
 
 test -f "common.sh" || cd /usr/share/ltsp-manager
+version=$(. /usr/share/ltsp-manager/version.py >/dev/null && printf "%s\n" "$__version__")

@@ -12,7 +12,7 @@ exec_input() {
     old_ifs=$IFS
     while read -r cmd; do
         IFS=$tab
-        set $cmd
+        set -- $cmd
         IFS="$old_ifs"
         if [ "$1" = "EXECUTE:" ]; then
             shift

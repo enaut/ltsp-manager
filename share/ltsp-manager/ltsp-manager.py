@@ -85,6 +85,7 @@ class Gui:
         self.queue = []
         self.system.connect_event(self.on_libuser_changed)
         self.main_window.show_all()
+        self.check_initial_setup()
 
 ## General helper functions
 
@@ -333,6 +334,18 @@ class Gui:
         export_dialog.ExportDialog(self.main_window, self.system, users)
 
 ## Server menu
+
+    def check_initial_setup(self):
+        if common.run_command(['./run-in-terminal.sh', './initial-setup.sh', '--check'])[0]:
+            return
+        message = "You need to run the initial LTSP setup actions."
+        second_message = _("LTSP Manager has detected that you either haven't yet run the initial LTSP setup, or that you upgraded to a new version and you need to run it again.") + \
+            "\n\n" + _("Should LTSP Manager run initial-setup?")
+        dlg = dialogs.AskDialog(message, title="Initial LTSP setup")
+        dlg.format_secondary_text(second_message)
+        response = dlg.showup()
+        if response == Gtk.ResponseType.YES:
+            subprocess.Popen(['./run-in-terminal.sh', './initial-setup.sh', '--no-prompt'])
 
     def on_mi_initial_setup_activate(self, widget):
         subprocess.Popen(['./run-in-terminal.sh', './initial-setup.sh'])
