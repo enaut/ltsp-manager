@@ -4,8 +4,10 @@ After=home.mount
 
 [Service]
 Type=oneshot
-ExecStart=/usr/share/ltsp-shared-folders mount
-ExecStop=/usr/share/ltsp-shared-folders unmount
+RemainAfterExit=yes
+KillMode=process
+ExecStart=/usr/sbin/ltsp-shared-folders mount
+ExecStop=/usr/sbin/ltsp-shared-folders unmount
 
 [Install]
 WantedBy=multi-user.target
