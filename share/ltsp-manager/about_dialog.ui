@@ -12,7 +12,6 @@
     <property name="type_hint">normal</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="program_name">LTSP Manager</property>
-    <property name="version">17.08</property>
     <property name="copyright" translatable="yes">Copyright © 2017 LTSP Manager developers</property>
     <property name="comments" translatable="yes">Easy maintenance of LTSP computer labs.</property>
     <property name="website">http://ltsp.org</property>
