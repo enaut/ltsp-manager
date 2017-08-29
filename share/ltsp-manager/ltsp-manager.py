@@ -336,7 +336,7 @@ class Gui:
 ## Server menu
 
     def check_initial_setup(self):
-        if common.run_command(['./run-in-terminal.sh', './initial-setup.sh', '--check'])[0]:
+        if common.run_command(['./initial-setup.sh', '--check'])[0]:
             return
         message = "You need to run the initial LTSP setup actions."
         second_message = _("LTSP Manager has detected that you either haven't yet run the initial LTSP setup, or that you upgraded to a new version and you need to run it again.") + \

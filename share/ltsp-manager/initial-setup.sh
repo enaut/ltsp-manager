@@ -14,7 +14,7 @@ setupconf=/var/lib/ltsp-manager/initial-setup
 if [ "$1" = "--check" ]; then
     test -f "$setupconf" && . "$setupconf"
     printf "Last version=$last_version, current version=$version, rerun after version=$PROMPT_AFTER: "
-    if [ "$(printf "%s\n%s\n" "$PROMPT_AFTER" "$last_version" | sort -V | tail -n 1)" != "$PROMPT_AFTER" ]; then
+    if [ "$(printf "%s\n%s\n" "$PROMPT_AFTER" "$last_version" | sort -V | tail -n 1)" = "$PROMPT_AFTER" ]; then
         printf "needs to be executed.\n"
         exit 1
     else
