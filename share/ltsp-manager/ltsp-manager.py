@@ -8,6 +8,7 @@ import getpass
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+import glob
 import locale
 import os
 import socket
@@ -92,6 +93,7 @@ class Gui:
     def edit_file(self, filename):
         subprocess.Popen(['xdg-open', filename], stdin=open(os.devnull))
         # TODO: Maybe throw an error message if not os.path.isfile(filename)
+        # TODO: ltsp-manager doesn't exit until the spawned FDs are closed
 
     def run_as_sudo_user(self, cmd):
         print('EXECUTE:\t' + '\t'.join(cmd))
@@ -370,12 +372,12 @@ class Gui:
             subprocess.Popen(['./run-in-terminal.sh', 'ltsp-update-image', '--revert', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
-        # TODO: replace i386 with either ARCH or *
-        self.edit_file('/var/lib/tftpboot/ltsp/i386/lts.conf')
+        for f in glob.glob('/var/lib/tftpboot/ltsp/*/lts.conf'):
+            self.edit_file(f)
 
     def on_mi_edit_pxelinux_cfg_activate(self, widget):
-        # TODO: replace i386 with either ARCH or *
-        self.edit_file('/var/lib/tftpboot/ltsp/i386/pxelinux.cfg/default')
+        for f in glob.glob('/var/lib/tftpboot/ltsp/*/pxelinux.cfg/default'):
+            self.edit_file(f)
 
     def on_mi_edit_ltsp_shared_folders_activate(self, widget):
         self.edit_file('/etc/default/ltsp-shared-folders')
