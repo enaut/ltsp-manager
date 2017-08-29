@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-06 16:23+0300\n"
+"POT-Creation-Date: 2017-08-29 20:51+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,33 +29,16 @@ msgstr ""
 msgid "folders-publicshare"
 msgstr ""
 
-#: share/applications/ltsp-manager.desktop:3
-#: share/ltsp-manager/ltsp-manager.ui:67
-msgid "LTSP Manager"
-msgstr ""
-
-#: share/applications/ltsp-manager.desktop:4
-msgid "Easy administration of LTSP-based computer labs"
-msgstr ""
-
-#: share/applications/ltsp-manager.desktop:7
-msgid "ltsp-manager"
-msgstr ""
-
 #: share/ltsp-manager/about_dialog.ui:8
 msgid "About LTSP Manager"
 msgstr ""
 
-#: share/ltsp-manager/about_dialog.ui:16
+#: share/ltsp-manager/about_dialog.ui:15
 msgid "Copyright © 2017 LTSP Manager developers"
 msgstr ""
 
-#: share/ltsp-manager/about_dialog.ui:17
+#: share/ltsp-manager/about_dialog.ui:16
 msgid "Easy maintenance of LTSP computer labs."
-msgstr ""
-
-#: share/ltsp-manager/common.py:21
-msgid "Error while executing command:"
 msgstr ""
 
 #: share/ltsp-manager/config.py:22
@@ -74,18 +57,17 @@ msgstr ""
 msgid "Teacher"
 msgstr ""
 
-#: share/ltsp-manager/create_users.py:100
-#: share/ltsp-manager/create_users.ui:660
+#: share/ltsp-manager/create_users.py:99 share/ltsp-manager/create_users.ui:660
 #, python-format
 msgid "The following %d accounts will be created"
 msgstr ""
 
-#: share/ltsp-manager/create_users.py:131
+#: share/ltsp-manager/create_users.py:130
 #, python-format
 msgid "Creating group %(current)d of %(total)d..."
 msgstr ""
 
-#: share/ltsp-manager/create_users.py:165
+#: share/ltsp-manager/create_users.py:164
 #, python-format
 msgid "Creating user %(current)d of %(total)d..."
 msgstr ""
@@ -175,13 +157,13 @@ msgstr ""
 
 #: share/ltsp-manager/create_users.ui:705
 #: share/ltsp-manager/import_dialog.py:523
-#: share/ltsp-manager/ltsp-manager.ui:717
+#: share/ltsp-manager/ltsp-manager.ui:726
 #: share/ltsp-manager/signup_server.ui:120
 msgid "Username"
 msgstr ""
 
 #: share/ltsp-manager/create_users.ui:719
-#: share/ltsp-manager/ltsp-manager.ui:749
+#: share/ltsp-manager/ltsp-manager.ui:758
 #: share/ltsp-manager/signup_server.ui:109
 msgid "Real name"
 msgstr ""
@@ -200,7 +182,7 @@ msgid ""
 "small>"
 msgstr ""
 
-#: share/ltsp-manager/export_dialog.py:12
+#: share/ltsp-manager/export_dialog.py:17
 msgid "Enter the name for the exported file"
 msgstr ""
 
@@ -212,12 +194,12 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: share/ltsp-manager/group_form.ui:148 share/ltsp-manager/ltsp-manager.ui:624
+#: share/ltsp-manager/group_form.ui:148 share/ltsp-manager/ltsp-manager.ui:633
 #: share/ltsp-manager/signup_form.ui:368
 msgid "Group name"
 msgstr ""
 
-#: share/ltsp-manager/group_form.ui:160 share/ltsp-manager/ltsp-manager.ui:609
+#: share/ltsp-manager/group_form.ui:160 share/ltsp-manager/ltsp-manager.ui:618
 msgid "GID"
 msgstr ""
 
@@ -245,6 +227,10 @@ msgstr ""
 
 #: share/ltsp-manager/group_form.ui:364
 msgid "<b>Shared folders</b>"
+msgstr ""
+
+#: share/ltsp-manager/import_dialog.py:74
+msgid "Status"
 msgstr ""
 
 #: share/ltsp-manager/import_dialog.py:141
@@ -512,7 +498,7 @@ msgid "Please wait until the DHCP request has finished..."
 msgstr ""
 
 #: share/ltsp-manager/ip_dialog.ui:36 share/ltsp-manager/ip_dialog.ui:114
-#: share/ltsp-manager/ltsp-manager.ui:171
+#: share/ltsp-manager/ltsp-manager.ui:180
 msgid "Configure network connection"
 msgstr ""
 
@@ -606,31 +592,31 @@ msgstr ""
 msgid "LTSP information"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:183
-#: share/ltsp-manager/ltsp-manager.ui:362
+#: share/ltsp-manager/ltsp-manager.py:182
+#: share/ltsp-manager/ltsp-manager.ui:371
 msgid "Edit group..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:184
-#: share/ltsp-manager/ltsp-manager.ui:373
+#: share/ltsp-manager/ltsp-manager.py:183
+#: share/ltsp-manager/ltsp-manager.ui:382
 msgid "Delete group..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:188
+#: share/ltsp-manager/ltsp-manager.py:187
 msgid "Delete groups..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:210
-#: share/ltsp-manager/ltsp-manager.ui:408
+#: share/ltsp-manager/ltsp-manager.py:209
+#: share/ltsp-manager/ltsp-manager.ui:417
 msgid "Edit user..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:211
-#: share/ltsp-manager/ltsp-manager.ui:419
+#: share/ltsp-manager/ltsp-manager.py:210
+#: share/ltsp-manager/ltsp-manager.ui:428
 msgid "Delete user..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:214
+#: share/ltsp-manager/ltsp-manager.py:213
 msgid "Delete users..."
 msgstr ""
 
@@ -649,81 +635,91 @@ msgid "Select the CSV file to import"
 msgstr ""
 
 #: share/ltsp-manager/ltsp-manager.py:344
-msgid "Are you sure you want to update the LTSP image?"
+msgid ""
+"LTSP Manager has detected that you either haven't yet run the initial LTSP "
+"setup, or that you upgraded to a new version and you need to run it again."
 msgstr ""
 
 #: share/ltsp-manager/ltsp-manager.py:345
+msgid "Should LTSP Manager run initial-setup?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:359
+msgid "Are you sure you want to update the LTSP image?"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.py:360
 msgid ""
 "Depending on the CPU speed and image size, this may need about 10 minutes. "
 "After that, (re)boot your workstations."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:353
+#: share/ltsp-manager/ltsp-manager.py:368
 msgid ""
 "Are you sure you want to revert to the previous version of the LTSP image?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:402
+#: share/ltsp-manager/ltsp-manager.py:417
 #, python-format
 msgid "Are you sure you want to delete user \"%s\"?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:403
+#: share/ltsp-manager/ltsp-manager.py:418
 msgid "Also delete the user's home directory."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:404
+#: share/ltsp-manager/ltsp-manager.py:419
 msgid ""
 "WARNING: if you enable this option, the user's home directory with all its "
 "files will be deleted, along with the user's e-mail at /var/mail, if it "
 "exists"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:406
+#: share/ltsp-manager/ltsp-manager.py:421
 #, python-format
 msgid "Are you sure you want to delete the following %d users?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:408
+#: share/ltsp-manager/ltsp-manager.py:423
 msgid "Also delete the users' home directories."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:409
+#: share/ltsp-manager/ltsp-manager.py:424
 msgid ""
 "WARNING: if you enable this option, the users' home directories with all "
 "their files will be deleted, along with the users' e-mails at /var/mail, if "
 "they exist"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:410
+#: share/ltsp-manager/ltsp-manager.py:425
 msgid "This action can't be undone."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:430
+#: share/ltsp-manager/ltsp-manager.py:445
 #, python-format
 msgid ""
 "Are you sure you want to remove user %(user)s from the selected groups "
 "(%(groups)s)?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:432
+#: share/ltsp-manager/ltsp-manager.py:447
 #, python-format
 msgid ""
 "Are you sure you want to remove the following %(count)d users from the "
 "selected groups (%(groups)s)?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:452
+#: share/ltsp-manager/ltsp-manager.py:467
 #, python-format
 msgid "Are you sure you want to delete group %s?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:454
+#: share/ltsp-manager/ltsp-manager.py:469
 #, python-format
 msgid "Are you sure you want to delete the following %d groups?"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:509
+#: share/ltsp-manager/ltsp-manager.py:530
 msgid ""
 "Usage: ltsp-manager [OPTIONS]\n"
 "\n"
@@ -738,7 +734,7 @@ msgid ""
 "Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.py:523
+#: share/ltsp-manager/ltsp-manager.py:544
 #, python-format
 msgid ""
 "ltsp-manager %s\n"
@@ -749,6 +745,10 @@ msgid ""
 "\n"
 "Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail."
 "com>."
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:67
+msgid "LTSP Manager"
 msgstr ""
 
 #: share/ltsp-manager/ltsp-manager.ui:87
@@ -783,192 +783,196 @@ msgstr ""
 msgid "_Server"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:181
+#: share/ltsp-manager/ltsp-manager.ui:171
+msgid "Initial setup"
+msgstr ""
+
+#: share/ltsp-manager/ltsp-manager.ui:190
 msgid "LTSP image"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:192
+#: share/ltsp-manager/ltsp-manager.ui:201
 msgid ""
 "Publishes a clone of the server installation for the clients to boot from it"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:193
+#: share/ltsp-manager/ltsp-manager.ui:202
 msgid "Update..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:203
+#: share/ltsp-manager/ltsp-manager.ui:212
 msgid "Reverts the LTSP image to its previous version"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:204
+#: share/ltsp-manager/ltsp-manager.ui:213
 msgid "Revert..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:218
+#: share/ltsp-manager/ltsp-manager.ui:227
 msgid "Configuration files"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:228
+#: share/ltsp-manager/ltsp-manager.ui:237
 msgid "Edit lts.conf"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:237
+#: share/ltsp-manager/ltsp-manager.ui:246
 msgid "Edit LTSP shared folder settings"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:246
+#: share/ltsp-manager/ltsp-manager.ui:255
 msgid "Edit dnsmasq settings"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:255
+#: share/ltsp-manager/ltsp-manager.ui:264
 msgid "Edit PXELinux settings"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:273
+#: share/ltsp-manager/ltsp-manager.ui:282
 msgid "_View"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:284
+#: share/ltsp-manager/ltsp-manager.ui:293
 msgid "Columns"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:299 share/ltsp-manager/user_form.ui:785
+#: share/ltsp-manager/ltsp-manager.ui:308 share/ltsp-manager/user_form.ui:785
 msgid "Show system groups"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:309
+#: share/ltsp-manager/ltsp-manager.ui:318
 msgid "Show private groups"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:326
+#: share/ltsp-manager/ltsp-manager.ui:335
 msgid "Refresh"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:340
+#: share/ltsp-manager/ltsp-manager.ui:349
 msgid "_Groups"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:351
+#: share/ltsp-manager/ltsp-manager.ui:360
 msgid "New group..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:386
+#: share/ltsp-manager/ltsp-manager.ui:395
 msgid "_Users"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:397
+#: share/ltsp-manager/ltsp-manager.ui:406
 msgid "New user..."
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:430
+#: share/ltsp-manager/ltsp-manager.ui:439
 msgid "Remove user from selected groups"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:444
+#: share/ltsp-manager/ltsp-manager.ui:453
 msgid "_Help"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:455
+#: share/ltsp-manager/ltsp-manager.ui:464
 msgid "Online documentation"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:465
+#: share/ltsp-manager/ltsp-manager.ui:474
 msgid "Report bug"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:475
+#: share/ltsp-manager/ltsp-manager.ui:484
 msgid "Ask question"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:485
+#: share/ltsp-manager/ltsp-manager.ui:494
 msgid "File a helpdesk issue"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:495
+#: share/ltsp-manager/ltsp-manager.ui:504
 msgid "Live chat (IRC)"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:505
+#: share/ltsp-manager/ltsp-manager.ui:514
 msgid "Discussion forum"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:522
+#: share/ltsp-manager/ltsp-manager.ui:531
 msgid "LTSP installations map"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:532
+#: share/ltsp-manager/ltsp-manager.ui:541
 msgid "Man page of lts.conf"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:542
+#: share/ltsp-manager/ltsp-manager.ui:551
 msgid "Display LTSP version information, useful for reporting bugs"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:543
+#: share/ltsp-manager/ltsp-manager.ui:552
 msgid "Local LTSP information"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:560
+#: share/ltsp-manager/ltsp-manager.ui:569
 msgid "About"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:651
+#: share/ltsp-manager/ltsp-manager.ui:660
 msgid "Unselect all"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:701
+#: share/ltsp-manager/ltsp-manager.ui:710
 msgid "UID"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:733
+#: share/ltsp-manager/ltsp-manager.ui:742
 msgid "Primary group"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:765
+#: share/ltsp-manager/ltsp-manager.ui:774
 msgid "Office"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:781
+#: share/ltsp-manager/ltsp-manager.ui:790
 msgid "Office phone"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:797
+#: share/ltsp-manager/ltsp-manager.ui:806
 msgid "Home phone"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:813
+#: share/ltsp-manager/ltsp-manager.ui:822
 msgid "Other"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:829
+#: share/ltsp-manager/ltsp-manager.ui:838
 msgid "Directory"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:845
+#: share/ltsp-manager/ltsp-manager.ui:854
 msgid "Shell"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:861
+#: share/ltsp-manager/ltsp-manager.ui:870
 msgid "Last password change"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:877
+#: share/ltsp-manager/ltsp-manager.ui:886
 msgid "Minimum password age"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:893
+#: share/ltsp-manager/ltsp-manager.ui:902
 msgid "Maximum password age"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:909
+#: share/ltsp-manager/ltsp-manager.ui:918
 msgid "Warning period"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:925
+#: share/ltsp-manager/ltsp-manager.ui:934
 msgid "Inactive"
 msgstr ""
 
-#: share/ltsp-manager/ltsp-manager.ui:941
+#: share/ltsp-manager/ltsp-manager.ui:950
 msgid "Expired"
 msgstr ""
 
