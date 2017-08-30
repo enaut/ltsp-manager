@@ -1,5 +1,10 @@
-ltsp-manager (17.08) UNRELEASED; urgency=low
+ltsp-manager (17.08) experimental; urgency=low
 
+  [ Alkis Georgopoulos ]
   * Initial release under the LTSP Manager name.
 
- -- Alkis Georgopoulos <alkisg@gmail.com>  Sat, 12 Aug 2017 18:47:46 +0300
+  [ Foteini Tsiami ]
+  * Translations from Greek to English and back to Greek.
+    Thanks to Outreachy.org for sponsoring the work!
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Wed, 30 Aug 2017 11:41:20 -0700
