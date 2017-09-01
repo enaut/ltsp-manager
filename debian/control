@@ -7,8 +7,8 @@ Build-Depends: debhelper (>= 9),
  dpkg-dev (>= 1.16.1),
  python-distutils-extra,
 Standards-Version: 4.0.0
-Vcs-Git: https://git.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
-Vcs-Browser: https://code.launchpad.net/~ltsp-upstream/ltsp/+git/ltsp-manager
+Vcs-Git: https://git.launchpad.net/ltsp-manager
+Vcs-Browser: https://git.launchpad.net/ltsp-manager
 Homepage: http://wiki.ltsp.org/wiki/Ltsp-manager
 
 Package: ltsp-manager
