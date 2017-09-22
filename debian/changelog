@@ -3,7 +3,7 @@ ltsp-manager (17.08) experimental; urgency=low
   [ Alkis Georgopoulos ]
   * Initial release under the LTSP Manager name.
 
-  [ Foteini Tsiami ]
+  [ fottsia ]
   * Translations from Greek to English and back to Greek.
     Thanks to Outreachy.org for sponsoring the work!
 
