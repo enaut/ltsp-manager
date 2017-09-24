@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: ltsp-manager\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2017-08-29 20:51+0300\n"
-"PO-Revision-Date: 2017-08-06 18:09+0000\n"
+"PO-Revision-Date: 2017-08-30 11:33+0000\n"
 "Last-Translator: Pavel Borecki <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-08-30 04:32+0000\n"
+"X-Launchpad-Export-Date: 2017-08-31 04:32+0000\n"
 "X-Generator: Launchpad (build 18446)\n"
 
 #: etc/xdg/autostart/ltsp-shared-folders.desktop:3
@@ -248,7 +248,7 @@ msgstr "<b>Sdílené složky</b>"
 
 #: share/ltsp-manager/import_dialog.py:74
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #: share/ltsp-manager/import_dialog.py:141
 #, python-format
@@ -676,10 +676,12 @@ msgid ""
 "LTSP Manager has detected that you either haven't yet run the initial LTSP "
 "setup, or that you upgraded to a new version and you need to run it again."
 msgstr ""
+"LTSP Manager zjistil že jste buď doposud nespustili úvodní nastavení LTSP, "
+"nebo jste přešli na novější verzi a je třeba tuto proceduru vykonat znovu."
 
 #: share/ltsp-manager/ltsp-manager.py:345
 msgid "Should LTSP Manager run initial-setup?"
-msgstr ""
+msgstr "Má LTSP Manager spustit initial-setup?"
 
 #: share/ltsp-manager/ltsp-manager.py:359
 msgid "Are you sure you want to update the LTSP image?"
@@ -853,7 +855,7 @@ msgstr "_Server"
 
 #: share/ltsp-manager/ltsp-manager.ui:171
 msgid "Initial setup"
-msgstr ""
+msgstr "Úvodní nastavení"
 
 #: share/ltsp-manager/ltsp-manager.ui:190
 msgid "LTSP image"
