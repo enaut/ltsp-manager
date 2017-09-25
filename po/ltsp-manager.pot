@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 20:51+0300\n"
+"POT-Creation-Date: 2017-09-25 10:31-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -588,10 +588,6 @@ msgid ""
 "activation of all other connections available for this adapter."
 msgstr ""
 
-#: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
-msgid "LTSP information"
-msgstr ""
-
 #: share/ltsp-manager/ltsp-manager.py:182
 #: share/ltsp-manager/ltsp-manager.ui:371
 msgid "Edit group..."
@@ -976,6 +972,35 @@ msgstr ""
 msgid "Expired"
 msgstr ""
 
+#: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
+msgid "LTSP information"
+msgstr ""
+
+#: share/ltsp-manager/signup.py:87
+msgid "The sysadmin might not have activated sign ups."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:88
+msgid "Possible networking issue."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:93
+msgid "Connection error"
+msgstr ""
+
+#: share/ltsp-manager/signup.py:225
+msgid "Your request was successfully delivered for review."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:233
+msgid ""
+"Your request was not delivered successfully. Ask for help from your sysadmin."
+msgstr ""
+
+#: share/ltsp-manager/signup.py:239
+msgid "Failure"
+msgstr ""
+
 #: share/ltsp-manager/signup_form.ui:26
 msgid "Request user account"
 msgstr ""
@@ -1006,31 +1031,6 @@ msgstr ""
 
 #: share/ltsp-manager/signup_form.ui:323
 msgid "Check the groups that you are a member of"
-msgstr ""
-
-#: share/ltsp-manager/signup.py:87
-msgid "The sysadmin might not have activated sign ups."
-msgstr ""
-
-#: share/ltsp-manager/signup.py:88
-msgid "Possible networking issue."
-msgstr ""
-
-#: share/ltsp-manager/signup.py:93
-msgid "Connection error"
-msgstr ""
-
-#: share/ltsp-manager/signup.py:225
-msgid "Your request was successfully delivered for review."
-msgstr ""
-
-#: share/ltsp-manager/signup.py:233
-msgid ""
-"Your request was not delivered successfully. Ask for help from your sysadmin."
-msgstr ""
-
-#: share/ltsp-manager/signup.py:239
-msgid "Failure"
 msgstr ""
 
 #: share/ltsp-manager/signup_server.py:251
