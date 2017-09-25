@@ -7,4 +7,4 @@
 
 cd $(dirname "$0")/..
 
-xgettext -o po/ltsp-manager.pot $(file $(find etc sbin share -type f) | egrep '.desktop|Python|.py|.ui' | sed 's/:.*//' | sort)
+xgettext -o po/ltsp-manager.pot $(file $(find etc sbin share -type f) | egrep '.desktop|Python|.py|.ui' | sed 's/:.*//' | LC_ALL=C sort)
