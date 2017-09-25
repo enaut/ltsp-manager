@@ -9,7 +9,7 @@ Copyright: 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>
  2017 LTSP Manager developers
 License: GPL-3+
 
-Files: po/*
+Files: po/*.po
 Copyright: 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>
  2009-2017 Fotis Tsamis <ftsamis@gmail.com>
  2017 Rosetta Contributors and Canonical Ltd
