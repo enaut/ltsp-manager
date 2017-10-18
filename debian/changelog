@@ -1,3 +1,14 @@
+ltsp-manager (17.08.1) experimental; urgency=medium
+
+  * Updated debian/copyright with missing entries.
+  * debian/control:
+    - Update Vcs-* URLs.
+    - Update Standards-Version to 4.1.1:
+	  + set priority to optional.
+  * po/update-pot: Always sort using the C locale.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Wed, 18 Oct 2017 11:51:07 -0700
+
 ltsp-manager (17.08) experimental; urgency=low
 
   [ Alkis Georgopoulos ]
