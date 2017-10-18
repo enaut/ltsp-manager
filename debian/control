@@ -1,6 +1,6 @@
 Source: ltsp-manager
 Section: admin
-Priority: extra
+Priority: optional
 Maintainer: LTSP Debian Maintainers <pkg-ltsp-devel@lists.alioth.debian.org>
 Uploaders: Alkis Georgopoulos <alkisg@gmail.com>, Vagrant Cascadian <vagrant@debian.org>
 Build-Depends: debhelper (>= 9),
