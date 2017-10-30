@@ -30,6 +30,7 @@ Recommends: apturl,
  ltsp-client (>= 5.4.0),
  ltsp-docs,
  ltsp-server-standalone (>= 5.4.0) | ltsp-server (>= 5.4.0),
+ xdg-utils,
 Suggests: ident2,
  squid,
 Description: Easy administration of LTSP-based computer labs
