@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ltsp-manager\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2017-08-29 20:51+0300\n"
+"POT-Creation-Date: 2017-09-25 10:31-0700\n"
 "PO-Revision-Date: 2017-09-12 08:01+0000\n"
 "Last-Translator: kadkarol <kadkarol@poczta.onet.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-09-13 04:32+0000\n"
-"X-Generator: Launchpad (build 18449)\n"
+"X-Launchpad-Export-Date: 2017-09-26 04:30+0000\n"
+"X-Generator: Launchpad (build 18463)\n"
 
 #: etc/xdg/autostart/ltsp-shared-folders.desktop:3
 msgid "LTSP shared folders"
@@ -622,10 +622,6 @@ msgstr ""
 "Automatycznie włącz to połączenie. Ponadto wyłącz automatyczną aktywację dla "
 "wszystkich innych połączeń dostępnych dla tego adaptera."
 
-#: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
-msgid "LTSP information"
-msgstr "Infoirmacje LTSP"
-
 #: share/ltsp-manager/ltsp-manager.py:182
 #: share/ltsp-manager/ltsp-manager.ui:371
 msgid "Edit group..."
@@ -1026,6 +1022,37 @@ msgstr "Nieaktywny"
 msgid "Expired"
 msgstr "Przedawnione"
 
+#: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
+msgid "LTSP information"
+msgstr "Infoirmacje LTSP"
+
+#: share/ltsp-manager/signup.py:87
+msgid "The sysadmin might not have activated sign ups."
+msgstr "Administrator może nie aktywować rejestracji"
+
+#: share/ltsp-manager/signup.py:88
+msgid "Possible networking issue."
+msgstr "Możliwe problemy z siecią."
+
+#: share/ltsp-manager/signup.py:93
+msgid "Connection error"
+msgstr "Błąd połączenia"
+
+#: share/ltsp-manager/signup.py:225
+msgid "Your request was successfully delivered for review."
+msgstr "Twoja prośba została pomyślnie dostarczona do sprawdzenia."
+
+#: share/ltsp-manager/signup.py:233
+msgid ""
+"Your request was not delivered successfully. Ask for help from your sysadmin."
+msgstr ""
+"Żądanie nie zostało zrealizowane pomyślnie. Poproś o pomoc swojego "
+"administratora."
+
+#: share/ltsp-manager/signup.py:239
+msgid "Failure"
+msgstr "Niepowodzenie"
+
 #: share/ltsp-manager/signup_form.ui:26
 msgid "Request user account"
 msgstr "Zażądaj konta użytkownika"
@@ -1057,33 +1084,6 @@ msgstr "Potwierdź hasło:"
 #: share/ltsp-manager/signup_form.ui:323
 msgid "Check the groups that you are a member of"
 msgstr "Sprawdź grupy członkowskie"
-
-#: share/ltsp-manager/signup.py:87
-msgid "The sysadmin might not have activated sign ups."
-msgstr "Administrator może nie aktywować rejestracji"
-
-#: share/ltsp-manager/signup.py:88
-msgid "Possible networking issue."
-msgstr "Możliwe problemy z siecią."
-
-#: share/ltsp-manager/signup.py:93
-msgid "Connection error"
-msgstr "Błąd połączenia"
-
-#: share/ltsp-manager/signup.py:225
-msgid "Your request was successfully delivered for review."
-msgstr "Twoja prośba została pomyślnie dostarczona do sprawdzenia."
-
-#: share/ltsp-manager/signup.py:233
-msgid ""
-"Your request was not delivered successfully. Ask for help from your sysadmin."
-msgstr ""
-"Żądanie nie zostało zrealizowane pomyślnie. Poproś o pomoc swojego "
-"administratora."
-
-#: share/ltsp-manager/signup.py:239
-msgid "Failure"
-msgstr "Niepowodzenie"
 
 #: share/ltsp-manager/signup_server.py:251
 msgid "Are you sure you want to remove the following requests from the list?"
