@@ -8,3 +8,6 @@ lockPref("network.protocol-handler.external.apt+http",true);
 
 // Disable internal PDF viewer
 lockPref("pdfjs.disabled",true);
+
+// Enable flash on file:// URLs
+lockPref("plugins.http_https_only",false);
