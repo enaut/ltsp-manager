@@ -15,6 +15,7 @@ Package: ltsp-manager
 Architecture: all
 Depends: ${python3:Depends}, ${misc:Depends},
  iputils-arping,
+ libgtk-3-0,
  librsvg2-common,
  policykit-1,
  python3-gi
@@ -31,6 +32,7 @@ Recommends: apturl,
  xdg-utils,
 Suggests: ident2,
  squid,
+ x2goserver
 Description: Easy administration of LTSP-based computer labs
  It depends on a set of packages suitable for configuring LTSP in small
  computer labs, and it provides a GUI for managing user accounts, running
