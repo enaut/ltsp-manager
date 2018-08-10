@@ -23,7 +23,7 @@ roles_translations = {
     "student": _("Student"),
     "teacher": _("Teacher") }
 
-parser = configparser.SafeConfigParser()
+parser = configparser.ConfigParser()
 
 def save():
     f = open(settings_f, 'w')
@@ -38,15 +38,15 @@ def setdefaults(overwrite=False):
         if overwrite or not parser.has_option('GUI', k):
             parser.set('GUI', k, str(v))
             
-    if not parser.has_section('Roles'):
-        parser.add_section('Roles')
+    if not parser.has_section('roles'):
+        parser.add_section('roles')
     
     for k, v in roles_defaults.items():
         # TODO: new ltsp-manager versions are not able to append groups like
         # 'fuse' to the saved user Roles, so don't read the user settings
         # at all until we reapproach the issue.
         # if overwrite or not parser.has_option('Roles', k):
-            parser.set('Roles', k, str(v))
+            parser.set('roles', k, str(v))
     
     
     save()
