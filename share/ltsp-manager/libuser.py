@@ -133,7 +133,7 @@ class Set(object):
             raise ValueError("Group '%s' exists" % group.name)
         self.groups[group.name] = group
         
-        for user_obj in list(group.members.values()):
+        for user_obj in group.members.values():
             if user_obj.name not in self.users:
                 self.add_user(user_obj)
             if group.name not in user_obj.groups:
@@ -145,7 +145,7 @@ class Set(object):
         This will also remove the group from the User objects and remove from
         the Set all the Users which have this group as primary.
         """
-        for user_obj in list(self.users.values()):
+        for user_obj in self.users.values():
             if group.name in user_obj.groups:
                 if len(user_obj.groups) == 1:
                     del self.users[user_obj.name]
@@ -154,13 +154,13 @@ class Set(object):
         del self.groups[group.name]
     
     def uid_is_free(self, uid):
-        return uid not in [user.uid for user in list(self.users.values())]
+        return uid not in [user.uid for user in self.users.values()]
     
     def gid_is_free(self, gid):
-        return gid not in [group.gid for group in list(self.groups.values())]
+        return gid not in [group.gid for group in self.groups.values()]
         
     def get_free_uid(self, start=FIRST_UID, end=LAST_UID, reverse=False, ignore=None, exclude=None):
-        used_uids = [user.uid for user in list(self.users.values())]
+        used_uids = [user.uid for user in self.users.values()]
         if exclude is not None:
             used_uids.extend(exclude)
         xr = range(start, end+1)
@@ -176,7 +176,7 @@ class Set(object):
         return uid
     
     def get_free_gid(self, start=FIRST_UID, end=LAST_UID, reverse=False, ignore=None, exclude=None):
-        used_gids = [group.gid for group in list(self.groups.values())]
+        used_gids = [group.gid for group in self.groups.values()]
         if exclude is not None:
             used_gids.extend(exclude)
         xr = range(start, end+1)
@@ -226,15 +226,15 @@ class System(Set):
 
     def add_group(self, group):
         common.run_command(['groupadd', '-g', str(group.gid), group.name])
-        for user in list(group.members.values()):
-            if user in list(self.users.values()):
+        for user in group.members.values():
+            if user in self.users.values():
                 common.run_command(['usermod', '-a', '-G', group.name, user.name])
             else:
                 self.add_user(user)
     
     def edit_group(self, groupname, group):
         common.run_command(['groupmod', '-g', str(group.gid), '-n', group.name, groupname])
-        for user in list(group.members.values()):
+        for user in group.members.values():
             common.run_command(['usermod', '-a', '-G', group.name, user.name])
     
     def delete_group(self, group):
@@ -356,7 +356,7 @@ class System(Set):
             
             self.groups[group.gr_name] = g
         
-        for user in list(self.users.values()):
+        for user in self.users.values():
             primary_group = grp.getgrgid(user.gid).gr_name
             if primary_group in self.groups:
                 self.groups[primary_group].members[user.name] = user
@@ -384,13 +384,13 @@ class System(Set):
         return gid >= FIRST_SYSTEM_GID and gid <= LAST_GID
     
     def uid_is_free(self, uid):
-        return self.uid_is_valid(uid) and uid not in [user.uid for user in list(self.users.values())]
+        return self.uid_is_valid(uid) and uid not in [user.uid for user in self.users.values()]
     
     def gid_is_free(self, gid):
-        return self.gid_is_valid(gid) and gid not in [group.gid for group in list(self.groups.values())]
+        return self.gid_is_valid(gid) and gid not in [group.gid for group in self.groups.values()]
     
     def get_free_uids(self, starting=FIRST_UID, ending=LAST_UID):
-        used_uids = [user.uid for user in list(self.users.values())]
+        used_uids = [user.uid for user in self.users.values()]
         
         free_uids = list(range(FIRST_UID, LAST_UID+1))
         for uid in used_uids:
@@ -440,12 +440,12 @@ if __name__ == '__main__':
     
     def analytical():
         print("System users:")
-        for user in list(system.users.values()):
+        for user in system.users.values():
             print(" ", user.name)
             print("   ", ", ".join(user.groups))
         print("\nSystem groups:")
-        for group in list(system.groups.values()):
+        for group in system.groups.values():
             print(" ", group.name)
-            print("   ", ", ".join(list(group.members.keys())))
+            print("   ", ", ".join(group.members.keys()))
     
     analytical()

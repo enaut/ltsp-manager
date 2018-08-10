@@ -333,7 +333,7 @@ class SettingsDialog:
     
     def populate_groups(self):
         check_list = config.parser.get('GUI', 'requests_checked_groups').split(',')
-        for group in list(self.system.groups.values()):
+        for group in self.system.groups.values():
             if group.is_user_group() and not group.is_private():
                 check = group.name in check_list
                 self.groups_list.append([check, group.name])

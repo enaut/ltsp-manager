@@ -143,7 +143,7 @@ class passwd():
                     new_set.add_group(g)
                     gids_map[g.gid] = g.name
                 
-                for u in list(new_set.users.values()):
+                for u in new_set.users.values():
                     u.primary_group = gids_map[u.gid]
                     if u.primary_group in u.groups:
                         u.groups.remove(u.primary_group)
@@ -194,7 +194,7 @@ class DHCP():
         except configparser.NoOptionError:
             dns2 = None
 
-        dnss = sorted([value for key, value in list(locals().items()) if key.startswith('dns') and value and value != '0.0.0.0'])
+        dnss = sorted([value for key, value in locals().items() if key.startswith('dns') and value and value != '0.0.0.0'])
 
         self.dhcp_info.update(ip=ip,mask=mask,route=route,dnss=dnss)
 

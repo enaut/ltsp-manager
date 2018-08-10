@@ -156,8 +156,8 @@ class EditGroupDialog(GroupForm):
         self.system.edit_group(old_name, self.group)
         
         # Remove the group from users that are no more members of this group
-        for user in list(old_members.values()):
-            if user not in list(self.group.members.values()):
+        for user in old_members.values():
+            if user not in self.group.members.values():
                 self.system.remove_user_from_groups(user, [self.group])
         if self.shared_state and not self.has_shared.get_active():
             # Shared folders were active but now they are not
