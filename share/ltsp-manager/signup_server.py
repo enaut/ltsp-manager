@@ -38,10 +38,10 @@ class Registrations(LineReceiver):
         self.ip = self.transport.getPeer().host
         self.port = self.transport.getPeer().port
         self.connections.append(self)
-        print "New connection from %s:%s" % (self.ip, self.port)
+        print("New connection from %s:%s" % (self.ip, self.port))
         
     def connectionLost(self, reason):
-        print "Connection with %s:%s was closed." % (self.ip, self.port)
+        print("Connection with %s:%s was closed." % (self.ip, self.port))
         if self in self.connections:
             del self.connections[self.connections.index(self)]
     
@@ -63,12 +63,12 @@ class Registrations(LineReceiver):
             if cmd == 'ID':
                 self.identify(data)
             else:
-                print "Error: Expected ID command from %s:%s but instead got %s. Closing connection" % (self.ip, self.port, cmd)
+                print("Error: Expected ID command from %s:%s but instead got %s. Closing connection" % (self.ip, self.port, cmd))
                 self.transport.loseConnection()
             return
             
         if line == 'BYE':
-            print "%s:%s sent BYE." % (self.ip, self.port)
+            print("%s:%s sent BYE." % (self.ip, self.port))
             self.transport.loseConnection()
         elif cmd == "USER_EXISTS":
             self.sendLine(self.booltr(data in self.system.users))
@@ -105,11 +105,11 @@ class Registrations(LineReceiver):
                 self.requests.append(req)
                 self.sendLine("YES")
             except Exception as e:
-                print e
+                print(e)
                 self.sendLine("NO")
-                print "Error receiving data."
+                print("Error receiving data.")
         else:
-            print "Received invalid command %s from %s:%s" % (cmd, self.ip, self.port)
+            print("Received invalid command %s from %s:%s" % (cmd, self.ip, self.port))
             
     def identify(self, line):
         self.id_hostname = line
@@ -331,7 +331,7 @@ class SettingsDialog:
     
     def populate_groups(self):
         check_list = config.parser.get('GUI', 'requests_checked_groups').split(',')
-        for group in self.system.groups.values():
+        for group in list(self.system.groups.values()):
             if group.is_user_group() and not group.is_private():
                 check = group.name in check_list
                 self.groups_list.append([check, group.name])

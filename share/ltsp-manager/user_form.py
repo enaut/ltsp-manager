@@ -54,7 +54,7 @@ class UserForm(object):
         
         # Fill the groups treeview
         # object, name, active, activatable, font weight, actually active, gid
-        for group, group_obj in system.groups.iteritems():
+        for group, group_obj in system.groups.items():
             self.groups_store.append([group_obj, group, False, True, 400, False, group_obj.gid])
             
         # Fill the shells combobox
@@ -62,7 +62,7 @@ class UserForm(object):
             self.shells_combo.append_text(shell)
             
         # Fill the roles combobox
-        for role, groups in self.roles.iteritems():
+        for role, groups in self.roles.items():
             self.role_combo.append_text(role)
     
     def groups_visible_func(self, model, itr, x):

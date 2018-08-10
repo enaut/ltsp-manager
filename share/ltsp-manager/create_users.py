@@ -142,7 +142,7 @@ class NewUsersDialog:
                 
                 # Add teachers to group
                 if self.glade.get_object('teachers_checkbutton').get_active():
-                    for user in self.system.users.values():
+                    for user in list(self.system.users.values()):
                         if 'teachers' in user.groups and classn not in user.groups:
                             user.groups.append(classn)
                             self.system.update_user(user.name, user)

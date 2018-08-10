@@ -96,7 +96,7 @@ class Gui:
         # TODO: ltsp-manager doesn't exit until the spawned FDs are closed
 
     def run_as_sudo_user(self, cmd):
-        print('EXECUTE:\t' + '\t'.join(cmd))
+        print(('EXECUTE:\t' + '\t'.join(cmd)))
         sys.stdout.flush()
 
     def open_link(self, link):
@@ -131,9 +131,9 @@ class Gui:
 
     def populate_treeviews(self):
         """Fill the users and groups treeviews from the system"""
-        for user in self.system.users.values():
+        for user in list(self.system.users.values()):
             self.users_model.append([user, user.uid, user.name, user.primary_group, user.rname, user.office, user.wphone, user.hphone, user.other, user.directory, user.shell, user.lstchg, user.min, user.max, user.warn, user.inact, user.expire])
-        for group in self.system.groups.values():
+        for group in list(self.system.groups.values()):
             self.groups_model.append([group, group.gid, group.name])
 
     def repopulate_treeviews(self):
@@ -163,7 +163,7 @@ class Gui:
         selected = self.get_selected_groups()
         # FIXME: The list comprehension here costs
         return (len(selected) == 0 and (self.show_system_groups or not user.is_system_user())) \
-                or user in [u for g in selected for u in g.members.values()]
+                or user in [u for g in selected for u in list(g.members.values())]
 
     def set_group_visibility(self, model, rowiter, options):
         group = model[rowiter][0]
@@ -330,9 +330,9 @@ class Gui:
         users = self.get_selected_users()
         if len(users) == 0:
             if self.show_system_groups:
-                users = self.system.users.values()
+                users = list(self.system.users.values())
             else:
-                users = [u for u in self.system.users.values() if not u.is_system_user()]
+                users = [u for u in list(self.system.users.values()) if not u.is_system_user()]
         export_dialog.ExportDialog(self.main_window, self.system, users)
 
 ## Server menu
@@ -508,7 +508,7 @@ class Gui:
         self.open_link('http://alkisg.mysch.gr/steki/index.php?board=67.0')
 
     def on_mi_map_activate(self, widget):
-        print(locale.getdefaultlocale()[0])
+        print((locale.getdefaultlocale()[0]))
         if locale.getdefaultlocale()[0] != "el_GR":
             self.open_link('http://www.ltsp.org/stories/worldmap/')
         else:
@@ -527,7 +527,7 @@ class Gui:
 # To export a man page:
 # help2man -L el -s 8 -o ltsp-manager.8 -N ./ltsp-manager && man ./ltsp-manager.8
 def usage():
-    print _("""Usage: ltsp-manager [OPTIONS]
+    print(_("""Usage: ltsp-manager [OPTIONS]
 
 It depends on a set of packages suitable for configuring LTSP in small
 computer labs, and it provides a GUI for managing user accounts, running
@@ -537,15 +537,15 @@ Options:
     -h, --help     Display this help and exit.
     -v, --version  Output version information and exit.
 
-Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager.""")
+Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager."""))
 
 
 def print_version():
-    print _("""ltsp-manager %s
+    print(_("""ltsp-manager %s
 Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.
 License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>.
 
-Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__
+Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__)
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and (sys.argv[1] == '-v' or sys.argv[1] == '--version'):

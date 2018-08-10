@@ -23,7 +23,7 @@ class ImportDialog:
     def __init__(self, new_set):
         self.set = new_set
         # Remove the system users from the set
-        for u in self.set.users.values():
+        for u in list(self.set.users.values()):
             if u.uid is not None and u.is_system_user():
                 self.set.remove_user(u)
         
@@ -88,7 +88,7 @@ class ImportDialog:
     
     def FillTree(self, new_set):
         """Fill the preview popup dialog with new users."""
-        for u in new_set.users.values():
+        for u in list(new_set.users.values()):
             self.AutoComplete(u)
             data = [u.name, u.uid, u.gid, u.primary_group, u.rname, u.office, 
                     u.wphone, u.hphone, u.other, u.directory, u.shell, 
@@ -158,11 +158,11 @@ class ImportDialog:
         if user.directory in [None, '']:
             user.directory = os.path.join(libuser.HOME_PREFIX, user.name)
         if user.uid in [None, '']:
-            set_uids = [user.uid for u in self.set.users.values()]
+            set_uids = [user.uid for u in list(self.set.users.values())]
             user.uid = libuser.system.get_free_uid(exclude=set_uids)
         
-        set_gids = [u.gid for u in self.set.users.values()]
-        sys_gids = {g.gid : g for g in self.set.groups.values()}
+        set_gids = [u.gid for u in list(self.set.users.values())]
+        sys_gids = {g.gid : g for g in list(self.set.groups.values())}
         if user.gid in [None, '']:
             if user.primary_group in [None, '']:
                 user.primary_group = user.name
@@ -177,8 +177,8 @@ class ImportDialog:
                 else:
                     user.primary_group = user.name
         if user.primary_group in [None, '']:
-            allgroups = self.set.groups.values()[:]
-            allgroups.extend(libuser.system.groups.values())
+            allgroups = list(self.set.groups.values())[:]
+            allgroups.extend(list(libuser.system.groups.values()))
             for gr_obj in allgroups:
                 if gr_obj.gid == user.gid:
                     user.primary_group = gr_obj.name
@@ -236,14 +236,14 @@ class ImportDialog:
         """
         # All the system users
         sys_users = {'uids' : [], 'gids' : [], 'dirs' : []}
-        sys_users['uids'] = [user.uid for user in libuser.system.users.values()]
-        sys_users['gids'] = [user.gid for user in libuser.system.users.values()]
-        sys_users['dirs'] = [user.directory for user in libuser.system.users.values()]
+        sys_users['uids'] = [user.uid for user in list(libuser.system.users.values())]
+        sys_users['gids'] = [user.gid for user in list(libuser.system.users.values())]
+        sys_users['dirs'] = [user.directory for user in list(libuser.system.users.values())]
         # All the users in the new Set
         new_users = {'uids' : [], 'gids' : [], 'dirs' : []}
-        new_users['uids'] = [user.uid for user in self.set.users.values()]
-        new_users['gids'] = [user.gid for user in self.set.users.values()]
-        new_users['dirs'] = [user.directory for user in self.set.users.values()]
+        new_users['uids'] = [user.uid for user in list(self.set.users.values())]
+        new_users['gids'] = [user.gid for user in list(self.set.users.values())]
+        new_users['dirs'] = [user.directory for user in list(self.set.users.values())]
         
         passed_users = {'names' : [], 'uids' : [], 'gids' : [], 'dirs' : []}
         errors_found = False
@@ -323,7 +323,7 @@ class ImportDialog:
             else:
                 if u.gid in sys_users['gids']:
                     should_be = None
-                    for g in libuser.system.groups.values():
+                    for g in list(libuser.system.groups.values()):
                         if u.gid == g.gid:
                             should_be = g.name
                             break
@@ -361,14 +361,14 @@ class ImportDialog:
     def ResolveConflicts(self, widget=None):
         # All the system users
         sys_users = {'uids' : [], 'gids' : [], 'dirs' : []}
-        sys_users['uids'] = [user.uid for user in libuser.system.users.values()]
-        sys_users['gids'] = [user.gid for user in libuser.system.users.values()]
-        sys_users['dirs'] = [user.directory for user in libuser.system.users.values()]
+        sys_users['uids'] = [user.uid for user in list(libuser.system.users.values())]
+        sys_users['gids'] = [user.gid for user in list(libuser.system.users.values())]
+        sys_users['dirs'] = [user.directory for user in list(libuser.system.users.values())]
         # All the users in the new Set
         new_users = {'uids' : [], 'gids' : [], 'dirs' : []}
-        new_users['uids'] = [user.uid for user in self.set.users.values()]
-        new_users['gids'] = [user.gid for user in self.set.users.values()]
-        new_users['dirs'] = [user.directory for user in self.set.users.values()]
+        new_users['uids'] = [user.uid for user in list(self.set.users.values())]
+        new_users['gids'] = [user.gid for user in list(self.set.users.values())]
+        new_users['dirs'] = [user.directory for user in list(self.set.users.values())]
         
         log = []
         def log_msg(txt):
@@ -436,7 +436,7 @@ class ImportDialog:
                     self.set.groups[new_gname] = libuser.Group(new_gname, u.gid)
                     self.set.groups[new_gname].members[u.name] = u
                 if u.primary_group in self.set.groups:
-                    if self.set.groups[u.primary_group].members.keys() == [u.name]:
+                    if list(self.set.groups[u.primary_group].members.keys()) == [u.name]:
                         del self.set.groups[u.primary_group]
                     else:
                         del self.set.groups[u.primary_group].members[u.name]
@@ -465,16 +465,16 @@ class ImportDialog:
         response = dialogs.AskDialog(text, "Confirm").showup()
         if response == Gtk.ResponseType.YES:
             new_groups = {}
-            new_gids = [u.gid for u in self.set.users.values()]
-            sys_gids = [g.gid for g in libuser.system.groups.values()]
-            for u in self.set.users.values():
+            new_gids = [u.gid for u in list(self.set.users.values())]
+            sys_gids = [g.gid for g in list(libuser.system.groups.values())]
+            for u in list(self.set.users.values()):
                 if u.primary_group not in libuser.system.groups:
                    if u.primary_group not in new_groups:
                         g_obj = libuser.Group(u.primary_group, u.gid)
                         new_groups[u.primary_group] = g_obj
                    new_groups[u.primary_group].members[u.name] = u
             
-            for u in self.set.users.values():
+            for u in list(self.set.users.values()):
                 for g in u.groups:
                     if g not in libuser.system.groups:
                         if g not in new_groups:
@@ -487,13 +487,13 @@ class ImportDialog:
                             new_groups[g] = g_obj
                         new_groups[g].members[u.name] = u
             
-            for gr in new_groups.values():
+            for gr in list(new_groups.values()):
                 gr_tmp = libuser.Group(gr.name, gr.gid)
                 libuser.system.add_group(gr_tmp)
-            for u in self.set.users.values():
+            for u in list(self.set.users.values()):
                 libuser.system.add_user(u)
-            for gr in new_groups.values():
-                for u in gr.members.values():
+            for gr in list(new_groups.values()):
+                for u in list(gr.members.values()):
                     libuser.system.add_user_to_groups(u, [gr])
             
         else:

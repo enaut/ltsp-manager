@@ -11,36 +11,36 @@ import unicodedata
 
                
 _mapping_letters = {
-u'α' : 'a', u'ά' : 'á', u'β' : 'v', u'γ' : 'g', u'δ' : 'd', u'ε' : 'e',
-u'έ' : 'é', u'ζ' : 'z', u'η' : 'i', u'ή' : 'í', u'θ' :'th', u'ι' : 'i',
-u'ί' : 'í', u'ϊ' : 'ï', u'ΐ' : 'ḯ', u'κ' : 'k', u'λ' : 'l', u'μ' : 'm',
-u'ν' : 'n', u'ξ' : 'x', u'ο' : 'o', u'ό' : 'ó', u'π' : 'p', u'ρ' : 'r',
-u'σ' : 's', u'ς' : 's', u'τ' : 't', u'υ' : 'y', u'ύ' : 'ý', u'ϋ' : 'ÿ',
-u'ΰ' : 'ÿ́', u'φ' : 'f', u'χ' :'ch', u'ψ' :'ps', u'ω' : 'o', u'ώ' : 'ó'}
+'α' : 'a', 'ά' : 'á', 'β' : 'v', 'γ' : 'g', 'δ' : 'd', 'ε' : 'e',
+'έ' : 'é', 'ζ' : 'z', 'η' : 'i', 'ή' : 'í', 'θ' :'th', 'ι' : 'i',
+'ί' : 'í', 'ϊ' : 'ï', 'ΐ' : 'ḯ', 'κ' : 'k', 'λ' : 'l', 'μ' : 'm',
+'ν' : 'n', 'ξ' : 'x', 'ο' : 'o', 'ό' : 'ó', 'π' : 'p', 'ρ' : 'r',
+'σ' : 's', 'ς' : 's', 'τ' : 't', 'υ' : 'y', 'ύ' : 'ý', 'ϋ' : 'ÿ',
+'ΰ' : 'ÿ́', 'φ' : 'f', 'χ' :'ch', 'ψ' :'ps', 'ω' : 'o', 'ώ' : 'ó'}
 
 
 _mapping_compine_letters = {
-u'γγ':'ng', u'γξ':'nx', u'γχ':'nch'}
+'γγ':'ng', 'γξ':'nx', 'γχ':'nch'}
 
 
-_re_reg1 = u'α|ε|η'
-_re_reg2 = u'υ|ύ'
-_re_reg3 = u'β|γ|δ|ζ|λ|μ|ν|ρ|α|ά|ε|έ|η|ή|ι|ί|ϊ|ΐ|ο|ό|υ|ύ|ϋ|ΰ|ω|ώ'
-_re_reg4 = u'θ|κ|ξ|π|σ|τ|φ|χ|ψ'
-_re_reg5 = u'α|ά|ε|έ|ο|ό'
-_re_reg6 = u'υ|ύ|ϋ|ΰ'
-_re_reg7 = u'ο'
-_re_reg8 = u'ύ|υ'
+_re_reg1 = 'α|ε|η'
+_re_reg2 = 'υ|ύ'
+_re_reg3 = 'β|γ|δ|ζ|λ|μ|ν|ρ|α|ά|ε|έ|η|ή|ι|ί|ϊ|ΐ|ο|ό|υ|ύ|ϋ|ΰ|ω|ώ'
+_re_reg4 = 'θ|κ|ξ|π|σ|τ|φ|χ|ψ'
+_re_reg5 = 'α|ά|ε|έ|ο|ό'
+_re_reg6 = 'υ|ύ|ϋ|ΰ'
+_re_reg7 = 'ο'
+_re_reg8 = 'ύ|υ'
 
 _reg1 = '('+_re_reg1.lower()+'|'+_re_reg1.upper()+')('+_re_reg2.lower()+'|'+_re_reg2.upper()+')('+_re_reg3.lower()+'|'+_re_reg3.upper()+')'
 
 _reg2 = '('+_re_reg1.lower()+'|'+_re_reg1.upper()+')('+_re_reg2.lower()+'|'+_re_reg2.upper()+')('+_re_reg4.lower()+'|'+_re_reg4.upper()+')'
 
-_reg3 = u'^μπ|^Μπ|^ΜΠ|^μΠ|μπ$|Μπ$|ΜΠ$|μΠ$'
+_reg3 = '^μπ|^Μπ|^ΜΠ|^μΠ|μπ$|Μπ$|ΜΠ$|μΠ$'
 
 _reg4 = '^PS|^TH|^CH'
 
-_reg5 = u'(γ|Γ)(γ|ξ|χ|Γ|Ξ|Χ)'
+_reg5 = '(γ|Γ)(γ|ξ|χ|Γ|Ξ|Χ)'
 
 _reg6 = '('+_re_reg5.lower()+'|'+_re_reg5.upper()+')('+_re_reg6.lower()+'|'+_re_reg6.upper()+')'
 
@@ -49,7 +49,7 @@ _reg7 = '('+_re_reg7.lower()+'|'+_re_reg7.upper()+')('+_re_reg8.lower()+'|'+_re_
         
 
 def transcript(string, accents=True):
-    if not isinstance(string, unicode):
+    if not isinstance(string, str):
         string = string.decode('utf-8')
     
     string = re.sub(_reg1, replace_v, string)
@@ -82,7 +82,7 @@ def transcript(string, accents=True):
        
 
 def transliterate(string, accents=True):
-    if not isinstance(string, unicode):
+    if not isinstance(string, str):
         string = string.decode('utf-8')
 
     string = re.sub(_reg6, replace_ou, string)
@@ -112,19 +112,19 @@ def transliterate(string, accents=True):
 
 def replace_v(m):
     response = m.group(0)
-    if m.group(2) == u'ύ' or m.group(2) == u'Ύ':
-        if m.group(1) == u'α':
-            response = response.replace(m.group(1), u'ά')
-        elif m.group(1) == u'Α':
-            response = response.replace(m.group(1), u'Ά')
-        elif m.group(1) == u'ε':
-            response = response.replace(m.group(1), u'έ')
-        elif m.group(1) == u'Ε':
-            response = response.replace(m.group(1), u'Έ')
-        elif m.group(1) == u'η':
-            response = response.replace(m.group(1), u'ή')
-        elif m.group(1) == u'Η':
-            response = response.replace(m.group(1), u'Ή')
+    if m.group(2) == 'ύ' or m.group(2) == 'Ύ':
+        if m.group(1) == 'α':
+            response = response.replace(m.group(1), 'ά')
+        elif m.group(1) == 'Α':
+            response = response.replace(m.group(1), 'Ά')
+        elif m.group(1) == 'ε':
+            response = response.replace(m.group(1), 'έ')
+        elif m.group(1) == 'Ε':
+            response = response.replace(m.group(1), 'Έ')
+        elif m.group(1) == 'η':
+            response = response.replace(m.group(1), 'ή')
+        elif m.group(1) == 'Η':
+            response = response.replace(m.group(1), 'Ή')
         
     if m.group(2).islower():
         response = response.replace(m.group(2),'v')
@@ -135,19 +135,19 @@ def replace_v(m):
 
 def replace_f(m):
     response = m.group(0)
-    if m.group(2) == u'ύ' or m.group(2) == u'Ύ':
-        if m.group(1) == u'α':
-            response = response.replace(m.group(1), u'ά')
-        elif m.group(1) == u'Α':
-            response = response.replace(m.group(1), u'Ά')
-        elif m.group(1) == u'ε':
-            response = response.replace(m.group(1), u'έ')
-        elif m.group(1) == u'Ε':
-            response = response.replace(m.group(1), u'Έ')
-        elif m.group(1) == u'η':
-            response = response.replace(m.group(1), u'ή')
-        elif m.group(1) == u'Η':
-            response = response.replace(m.group(1), u'Ή')
+    if m.group(2) == 'ύ' or m.group(2) == 'Ύ':
+        if m.group(1) == 'α':
+            response = response.replace(m.group(1), 'ά')
+        elif m.group(1) == 'Α':
+            response = response.replace(m.group(1), 'Ά')
+        elif m.group(1) == 'ε':
+            response = response.replace(m.group(1), 'έ')
+        elif m.group(1) == 'Ε':
+            response = response.replace(m.group(1), 'Έ')
+        elif m.group(1) == 'η':
+            response = response.replace(m.group(1), 'ή')
+        elif m.group(1) == 'Η':
+            response = response.replace(m.group(1), 'Ή')
     
     if m.group(2).islower():
         response = response.replace(m.group(2),'f')
@@ -180,15 +180,15 @@ def replace_g(m):
 def replace_ou(m):
     response = m.group(0)   
     if m.group(0)[1].islower(): 
-        if m.group(0)[1] == u'ύ':
-            response = response.replace(m.group(0)[1], u'ú')
+        if m.group(0)[1] == 'ύ':
+            response = response.replace(m.group(0)[1], 'ú')
             return response
         else:
             response = response.replace(m.group(0)[1], 'u')
             return response
     
     else:
-        response = response.replace(m.group(0)[1],u'U')
+        response = response.replace(m.group(0)[1],'U')
         return response
 
 

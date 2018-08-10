@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 try:
-    gettext.install('ltsp-manager', unicode=True)
+    gettext.install('ltsp-manager')
 except:
     print("Installing gettext without unicode")
     gettext.install('ltsp-manager')

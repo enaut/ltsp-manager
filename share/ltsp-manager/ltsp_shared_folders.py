@@ -94,14 +94,14 @@ class SharedFolders():
         # This might actually be the first time to mount anything,
         # so ensure that all the dirs/symlinks are there.
         adm_uid=int(self.config["ADM_UID"])
-        self.ensure_dir(self.config["SHARE_DIR"], 0711,
+        self.ensure_dir(self.config["SHARE_DIR"], 0o711,
             adm_uid, int(self.config["ADM_GID"]))
-        self.ensure_dir(self.config["SHARE_DIR/"] + ".symlinks", 0731,
+        self.ensure_dir(self.config["SHARE_DIR/"] + ".symlinks", 0o731,
             adm_uid, self.system.groups[self.config["TEACHERS"]].gid)
         for group in groups:
             dir=self.config["SHARE_DIR/"] + group
             group_gid=self.system.groups[group].gid
-            self.ensure_dir(dir, 0770, adm_uid, group_gid)
+            self.ensure_dir(dir, 0o770, adm_uid, group_gid)
             subprocess.call(["bindfs",
                 "-u", str(adm_uid),
                 "--create-for-user=%s" % adm_uid,
@@ -218,7 +218,7 @@ specified, then the command is applied to all the shared groups.
 if __name__ == '__main__':
     if (len(sys.argv) <= 1) or (len(sys.argv) == 2
       and (sys.argv[1] == '-h' or sys.argv[1] == '--help')):
-        print usage()
+        print(usage())
         sys.exit(0)
     sf=SharedFolders()
     cmd=sys.argv[1]
@@ -229,9 +229,9 @@ if __name__ == '__main__':
             sys.exit(1)
         sf.add(groups)
     elif cmd == "list-mounted":
-        print ' '.join(sf.list_mounted(groups))
+        print(' '.join(sf.list_mounted(groups)))
     elif cmd == "list-shared":
-        print ' '.join(sf.list_shared(groups))
+        print(' '.join(sf.list_shared(groups)))
     elif cmd == "mount":
         sf.mount(groups)
     elif cmd == "rename":

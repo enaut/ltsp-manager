@@ -64,7 +64,7 @@ def bits_to_subnet(bits):
             raise Exception
     except:
         return "255.255.255.255"
-    num = ((1L<<bits)-1L)<<(32L-bits)
+    num = ((1<<bits)-1)<<(32-bits)
     return socket.inet_ntoa(struct.pack("!I",num))
 
 

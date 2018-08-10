@@ -33,7 +33,7 @@ class GroupForm(object):
         self.users_sort.set_sort_column_id(2, Gtk.SortType.ASCENDING)
         
         # Fill the users (member selection) treeview
-        for user, user_obj in system.users.iteritems():
+        for user, user_obj in system.users.items():
             if self.mode == 'edit' and user_obj.gid == self.group.gid:
                 activatable = False
             else:
@@ -159,8 +159,8 @@ class EditGroupDialog(GroupForm):
         self.system.edit_group(old_name, self.group)
         
         # Remove the group from users that are no more members of this group
-        for user in old_members.values():
-            if user not in self.group.members.values():
+        for user in list(old_members.values()):
+            if user not in list(self.group.members.values()):
                 self.system.remove_user_from_groups(user, [self.group])
         if self.shared_state and not self.has_shared.get_active():
             # Shared folders were active but now they are not

@@ -3,7 +3,7 @@
 import csv
 import libuser
 import os
-import ConfigParser
+import configparser
 from io import StringIO, BytesIO
 
 # The field names are also defined in ltsp-manager.ui.
@@ -21,7 +21,7 @@ class CSV:
         for user_d in users_dict:
             user = libuser.User()
             
-            for key, value in user_d.iteritems():
+            for key, value in user_d.items():
                 try:
                     user.__dict__[self.fields_map[key]] = value # FIXME: Here we lose the datatype
                 except:
@@ -71,7 +71,7 @@ class CSV:
         writer = csv.DictWriter(f, fieldnames=libuser.CSV_USER_FIELDS)
         writer.writerow(dict((n,n) for n in libuser.CSV_USER_FIELDS))
         for user in users:
-            u_dict = dict( (key, user.__dict__[o_key] if user.__dict__[o_key] is not None else '') for key, o_key in self.fields_map.iteritems())
+            u_dict = dict( (key, user.__dict__[o_key] if user.__dict__[o_key] is not None else '') for key, o_key in self.fields_map.items())
             u_dict['Password'] = '' # We don't have the plain password
             u_dict['Groups'] = list(u_dict['Groups'])
             # Convert the groups value to a proper gname:gid pairs formatted string
@@ -145,7 +145,7 @@ class passwd():
                     new_set.add_group(g)
                     gids_map[g.gid] = g.name
                 
-                for u in new_set.users.values():
+                for u in list(new_set.users.values()):
                     u.primary_group = gids_map[u.gid]
                     if u.primary_group in u.groups:
                         u.groups.remove(u.primary_group)
@@ -170,12 +170,12 @@ class DHCP():
         if not config_file:
             return
 
-        vconfig_file = StringIO(u'[Root]\n%s' % open(config_file).read())
-        config = ConfigParser.ConfigParser(allow_no_value=True)
+        vconfig_file = StringIO('[Root]\n%s' % open(config_file).read())
+        config = configparser.ConfigParser(allow_no_value=True)
         config.readfp(vconfig_file)
         try:
             ip = config.get('Root', 'ipv4addr').strip("'")
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             return
 
         mask = config.get('Root', 'ipv4netmask').strip("'")
@@ -183,20 +183,20 @@ class DHCP():
 
         try:
             dns0 = config.get('Root', 'ipv4dns0').strip("'")
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             dns0 = None
 
         try:
             dns1 = config.get('Root', 'ipv4dns1').strip("'")
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             dns1 = None
 
         try:
             dns2 = config.get('Root', 'ipv4dns2').strip("'")
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             dns2 = None
 
-        dnss = sorted([value for key, value in locals().items() if key.startswith('dns') and value and value != '0.0.0.0'])
+        dnss = sorted([value for key, value in list(locals().items()) if key.startswith('dns') and value and value != '0.0.0.0'])
 
         self.dhcp_info.update(ip=ip,mask=mask,route=route,dnss=dnss)
 
