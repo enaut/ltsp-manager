@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 # Copyright (C) 2012-2017 Alkis Georgopoulos <alkisg@gmail.com>
 # 2012-2015, Fotis Tsamis <ftsamis@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>

@@ -1,8 +1,10 @@
-#-*- coding: utf-8 -*-
+#! /usr/bin/env python3
 # Copyright (C) 2012 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 # http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf
-# Transliterate and transcript made according iso843
+
+# Transliterate and transcript made according iso843:
+# http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf
 # TODO: transform this library into a more generic one,
 # that additionally checks the locale before doing any transliterations.
 

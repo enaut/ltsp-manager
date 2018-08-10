@@ -1,5 +1,3 @@
-#!/usr/bin/python
-#-*- coding: utf-8 -*-
 # 2017, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 

@@ -1,9 +1,11 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 # Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
 # 2012-2014, Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
 # 2012-2017, Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+"""
+Client side signup logic and form.
+"""
 
 import crypt
 import gi

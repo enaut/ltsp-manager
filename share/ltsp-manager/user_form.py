@@ -1,6 +1,6 @@
-#!/usr/bin/python
-#-*- coding: utf-8 -*-
-
+"""
+New user form.
+"""
 from gi.repository import Gtk, Gdk
 import dialogs
 import os

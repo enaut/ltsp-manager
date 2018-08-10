@@ -1,5 +1,3 @@
-#-*- coding: utf-8 -*-
-
 import datetime
 import gettext
 import locale
@@ -30,8 +28,8 @@ def run_command(cmd, poll=False):
         else:
             sys.stderr.write("Error while executing command:\n" +
                 " $ %s" % ' '.join(cmdline) + "\n")
-            sys.stderr.write(p.stdout.read())
-            err = p.stderr.read()
+            sys.stderr.write(p.stdout.read().decode('ascii'))
+            err = p.stderr.read().decode('ascii')
             sys.stderr.write(err)
             if err == '':
                 err = "\n"

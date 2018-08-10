@@ -1,4 +1,7 @@
-#-*- coding: utf-8 -*-
+#!/usr/bin/env python3
+"""
+User handling classes and functions.
+"""
 from twisted.internet import inotify
 from twisted.python import filepath
 import pwd
