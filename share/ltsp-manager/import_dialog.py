@@ -21,7 +21,7 @@ class ImportDialog:
     def __init__(self, new_set):
         self.set = new_set
         # Remove the system users from the set
-        for u in self.set.users.values():
+        for u in list(self.set.users.values()):
             if u.uid is not None and u.is_system_user():
                 self.set.remove_user(u)
         
