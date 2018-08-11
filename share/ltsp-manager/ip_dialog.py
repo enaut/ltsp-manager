@@ -543,7 +543,7 @@ class Ip_Dialog:
                 break_bool = False
         
         if break_bool:
-            p = common.run_command(['sh', '-c', 'ltsp-config dnsmasq --overwrite'], True)
+            p = common.run_command(['sh', '-c', 'ltsp-config dnsmasq  --enable-dns --overwrite'], True)
             while p.poll() is None:
                 while Gtk.events_pending():
                     Gtk.main_iteration()
