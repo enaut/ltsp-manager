@@ -24,16 +24,16 @@ def run_command(cmd, poll=False):
     if not poll:
         res = p.wait()
         if res == 0:
-            return (True, p.stdout.read())
+            return True, p.stdout.read().decode('utf-8')
         else:
             sys.stderr.write("Error while executing command:\n" +
                 " $ %s" % ' '.join(cmdline) + "\n")
-            sys.stderr.write(p.stdout.read().decode('ascii'))
-            err = p.stderr.read().decode('ascii')
+            sys.stderr.write(p.stdout.read().decode('utf-8'))
+            err = p.stderr.read().decode('utf-8')
             sys.stderr.write(err)
             if err == '':
                 err = "\n"
-            return (False, err)
+            return False, err
     else:
         return p
     
@@ -43,4 +43,3 @@ def days_since_epoch():
 
 def date():
     return datetime.date.today()
-
