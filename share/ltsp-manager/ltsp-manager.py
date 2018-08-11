@@ -13,6 +13,8 @@ import os
 import socket
 import subprocess
 import sys
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
 from twisted.internet import gtk3reactor
 gtk3reactor.install()
 from twisted.internet import reactor, defer
