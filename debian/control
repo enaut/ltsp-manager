@@ -3,9 +3,9 @@ Section: admin
 Priority: optional
 Maintainer: Debian LTSP Maintainers <team+ltsp@tracker.debian.org>
 Uploaders: Alkis Georgopoulos <alkisg@gmail.com>, Vagrant Cascadian <vagrant@debian.org>
-Build-Depends: debhelper
+Build-Depends: debhelper,
  dpkg-dev (>= 1.16.1),
- python-distutils-extra,
+ python-distutils-extra
 Standards-Version: 4.1.5
 Vcs-Git: https://git.launchpad.net/ltsp-manager
 Vcs-Browser: https://git.launchpad.net/ltsp-manager
@@ -13,12 +13,13 @@ Homepage: http://wiki.ltsp.org/wiki/Ltsp-manager
 
 Package: ltsp-manager
 Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends},
+Depends: ${misc:Depends},
  iputils-arping,
  libgtk-3-0,
  librsvg2-common,
  policykit-1,
- python3-gi
+ python3-gi,
+ python3-twisted
 Recommends: apturl,
  bindfs,
  dnsmasq,
@@ -29,7 +30,7 @@ Recommends: apturl,
  ltsp-client,
  ltsp-docs,
  ltsp-server-standalone | ltsp-server,
- xdg-utils,
+ xdg-utils
 Suggests: ident2,
  squid,
  x2goserver
