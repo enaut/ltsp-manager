@@ -128,21 +128,22 @@ class SharedFolders():
     def parse_mounts(self):
         """Return a list of all bindfs mounts unset /home/Shared."""
         mounts=[]
-        for line in file("/proc/mounts").readlines():
-            items=line.split()
-            if items[0] != "bindfs"  or items[2] != "fuse.bindfs" \
-              or not items[1].startswith(self.config["SHARE_DIR/"]):
-                continue
-            mount={}
-            mount['point']=items[1]
-            mount['group']=mount['point'].partition(
-                self.config["SHARE_DIR/"])[2]
-            if mount['group'] not in self.system.share_groups:
-                continue
-            stat=os.stat(mount['point'])
-            mount['uid']=stat.st_uid
-            mount['gid']=stat.st_gid
-            mounts.append(mount)
+        with open("/proc/mounts", "r") as f:
+            for line in f.readlines():
+                items=line.split()
+                if items[0] != "bindfs"  or items[2] != "fuse.bindfs" \
+                  or not items[1].startswith(self.config["SHARE_DIR/"]):
+                    continue
+                mount={}
+                mount['point']=items[1]
+                mount['group']=mount['point'].partition(
+                    self.config["SHARE_DIR/"])[2]
+                if mount['group'] not in self.system.share_groups:
+                    continue
+                stat=os.stat(mount['point'])
+                mount['uid']=stat.st_uid
+                mount['gid']=stat.st_gid
+                mounts.append(mount)
         return mounts
 
     def remove(self, groups=None):
