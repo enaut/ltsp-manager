@@ -17,6 +17,7 @@ import re
 import socket
 import sys
 
+import common
 import iso843
 
 class Connection:
@@ -38,8 +39,8 @@ class Connection:
     def _send(self, data):
         if not data.endswith('\r\n'):
             data += '\r\n'
-        self.sock.send(data)
-        return self.sock.recv(4096).strip()
+        self.sock.send(data.encode("utf-8"))
+        return self.sock.recv(4096).strip().decode("utf-8")
     
     def close(self):
         self._send("BYE")
@@ -145,7 +146,7 @@ class UserForm(object):
         return Gtk.STOCK_DIALOG_ERROR
     
     def to_alpha(self, s):
-        return ''.join(c for c in s.decode('utf-8') if c.isalpha())
+        return ''.join(c for c in s if c.isalpha())
 
     def get_suggestions(self, name):       
         tokens = []
@@ -168,11 +169,13 @@ class UserForm(object):
     
     def on_realname_entry_changed(self, widget):
         name = widget.get_text()
-        icon = self.get_icon(re.match(self.connection.realname_regex(), name.decode('utf-8'), re.UNICODE))
+        icon = self.get_icon(re.match(self.connection.realname_regex(), name))
         self.username_combo.remove_all()
         self.username_entry.set_text('')
         sug = self.get_suggestions(name)
-        sug = [s for s in sug if re.match(self.connection.username_regex(), s.decode('utf-8'), re.UNICODE) and not self.connection.user_exists(s)]
+        print(sug)
+        print(self.connection.username_regex())
+        sug = [s for s in sug if re.match(self.connection.username_regex(), s) and not self.connection.user_exists(s)]
         if sug:
             self.username_entry.set_text(sug[0])
             for s in sug:
@@ -186,7 +189,7 @@ class UserForm(object):
         icon = self.get_icon(password == password_repeat)
         self.builder.get_object('retype_password_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         
-        icon = self.get_icon(re.match(self.connection.password_regex(), password.decode('utf-8'), re.UNICODE))
+        icon = self.get_icon(re.match(self.connection.password_regex(), password))
         self.builder.get_object('password_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
     
@@ -199,7 +202,7 @@ class UserForm(object):
     
     def on_username_entry_changed(self, widget):
         username = self.username_entry.get_text()
-        valid_name = re.match(self.connection.username_regex(), username.decode('utf-8'), re.UNICODE)
+        valid_name = re.match(self.connection.username_regex(), username)
         free_name = not self.connection.user_exists(username)
         icon = self.get_icon(valid_name and free_name)
         self.builder.get_object('username_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
