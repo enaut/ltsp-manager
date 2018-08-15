@@ -36,6 +36,9 @@ class Registrations(LineReceiver):
         self.port = None
         self.id_hostname = None
     
+    def send(self, line):
+        self.sendLine(line.encode("utf-8"))
+
     def connectionMade(self):
         self.ip = self.transport.getPeer().host
         self.port = self.transport.getPeer().port
@@ -49,8 +52,8 @@ class Registrations(LineReceiver):
     
     def booltr(self, b):
         if b:
-            return b"YES"
-        return b"NO"
+            return "YES"
+        return "NO"
     
     def lineReceived(self, line):
         #print line # DEBUGGING
@@ -74,17 +77,17 @@ class Registrations(LineReceiver):
             print("%s:%s sent BYE." % (self.ip, self.port))
             self.transport.loseConnection()
         elif cmd == "USER_EXISTS":
-            self.sendLine(self.booltr(data in self.system.users))
+            self.send(self.booltr(data in self.system.users))
         elif cmd == "REALNAME_REGEX":
-            self.sendLine(b".+")
+            self.send(".+")
         elif cmd == "USER_REGEX":
-            self.sendLine(libuser.NAME_REGEX.encode())
+            self.send(libuser.NAME_REGEX)
         elif cmd == "PASS_REGEX":
-            self.sendLine(b".+")
+            self.send(".+")
         elif cmd == "GET_ROLES":
-            self.sendLine(b','.join(self.roles).encode())
+            self.send(','.join(self.roles))
         elif cmd == "GET_GROUPS":
-            self.sendLine(b','.join(self.groups).encode())
+            self.send(','.join(self.groups))
         elif cmd == "SEND_DATA":
             try:
                 data = data.split('\t')
@@ -106,10 +109,10 @@ class Registrations(LineReceiver):
                 self.gui.add_request(req)
                 
                 self.requests.append(req)
-                self.sendLine(b"YES")
+                self.send("YES")
             except Exception as e:
                 print(e)
-                self.sendLine(b"NO")
+                self.send("NO")
                 print("Error receiving data.")
         else:
             print("Received invalid command %s from %s:%s" % (cmd, self.ip, self.port))
@@ -117,7 +120,7 @@ class Registrations(LineReceiver):
     def identify(self, line):
         self.id_hostname = line
         self.state = 'listen'
-        self.sendLine(b"YES")
+        self.send("YES")
 
 
 class RegistrationsFactory(Factory):

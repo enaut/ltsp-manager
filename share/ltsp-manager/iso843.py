@@ -76,9 +76,9 @@ def transcript(string, accents=True):
         string = string.replace(string[1], string[1].lower())
     
     if accents:
-        return string.encode("utf-8")
+        return string
     else:
-        return strip_accents(string).encode("utf-8")
+        return strip_accents(string)
         
     
        
@@ -106,9 +106,9 @@ def transliterate(string, accents=True):
         string = string.replace(string[1], string[1].lower())
     
     if accents:
-        return string.encode("utf-8")
+        return string
     else:
-        return strip_accents(string).encode("utf-8")
+        return strip_accents(string)
 
 
 
