@@ -2,7 +2,7 @@ Source: ltsp-manager
 Section: admin
 Priority: optional
 Maintainer: Debian LTSP Maintainers <team+ltsp@tracker.debian.org>
-Uploaders: Alkis Georgopoulos <alkisg@gmail.com>, Vagrant Cascadian <vagrant@debian.org>
+Uploaders: Alkis Georgopoulos <alkisg@gmail.com>, Vagrant Cascadian <vagrant@debian.org>, Franz Dietrich <dietrich@teilgedanken.de>
 Build-Depends: debhelper,
  dpkg-dev (>= 1.16.1),
  python-distutils-extra
@@ -18,6 +18,7 @@ Depends: ${misc:Depends},
  libgtk-3-0,
  librsvg2-common,
  policykit-1,
+ python3,
  python3-gi,
  python3-twisted
 Recommends: apturl,

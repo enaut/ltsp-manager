@@ -1,3 +1,13 @@
+ltsp-manager (18.04.1ppa1) bionic; urgency=medium
+
+  * Update to Python3
+  * Update to gtk3
+  * Sync with sch-scripts
+  * debian/control
+  * 
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Wed, 15 Aug 2018 09:09:32 +0200
+
 ltsp-manager (17.08.1) experimental; urgency=medium
 
   * Updated debian/copyright with missing entries.
