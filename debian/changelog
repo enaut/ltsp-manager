@@ -1,3 +1,9 @@
+ltsp-manager (18.04.1ppa2) bionic; urgency=medium
+
+  * fix roles & test
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Wed, 15 Aug 2018 12:33:51 +0200
+
 ltsp-manager (18.04.1ppa1) bionic; urgency=medium
 
   * Update to Python3

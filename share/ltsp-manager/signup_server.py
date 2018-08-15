@@ -165,7 +165,7 @@ class UI:
         self.reject_tb = self.builder.get_object('reject_tb')
         self.review_tb = self.builder.get_object('review_tb')
         self.selection = self.builder.get_object('treeview-selection')
-        self.roles = {i : config.parser.get('Roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('Roles')}
+        self.roles = {i : config.parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
         self.window.show()
     
     def strtime(self, t):
@@ -327,7 +327,7 @@ class SettingsDialog:
    
     def populate_roles(self):
          check_list = config.parser.get('GUI', 'requests_checked_roles').split(',')
-         for role in config.parser.options('Roles'):
+         for role in config.parser.options('roles'):
             check = role in check_list
             self.roles_list.append([check, role])
          self.set_header_checkbutton(self.check_all_roles, self.roles_list)
