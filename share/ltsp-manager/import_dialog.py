@@ -92,12 +92,11 @@ class ImportDialog:
                     u.wphone, u.hphone, u.other, u.directory, u.shell, 
                     ",".join(u.groups), u.lstchg, u.min, u.max, u.warn, 
                     u.inact, u.expire, u.password, u.plainpw]
+            numitems = len(data)
             # Fill the cells with default values
-            for i in range(20):    
-                data.append("black") # cell's foreground color
-            for i in range(20):
-                data.append('') # cell's problem or ''
-            data.append(self.states['ok']) # row's status
+            data.extend(["black"]*numitems)   # cell's foreground color
+            data.extend(['']*numitems)        # cell's problem or ''
+            data.append(self.states['ok'])    # row's status
             row = self.list[self.list.append(data)]
             self.SetRowFromObject(row)
         self.DetectConflicts()
@@ -425,6 +424,7 @@ class ImportDialog:
                 self.SetRowProps(row, 2, '')
                 
             if 'mismatch' in row[3+ofs]:
+                print(row[3+ofs])
                 new_gname = row[3+ofs].split()[1]
                 log_group(u.name, u.primary_group, new_gname)
                 if new_gname in self.set.groups:
@@ -504,7 +504,8 @@ class ImportDialog:
 
     def Cancel(self, widget):
         parent = ((widget.get_parent()).get_parent()).get_parent()
-        parent.destroy()
+        widget.destroy()
+        self.dialog.destroy()
 
     def Exit(self, widget, event):
         widget.destroy()

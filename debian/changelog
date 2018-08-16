@@ -1,3 +1,16 @@
+ltsp-manager (18.04.1ppa4) bionic; urgency=medium
+
+  * fixes for imports
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Thu, 16 Aug 2018 08:32:51 +0200
+
+ltsp-manager (18.04.1ppa3) bionic; urgency=medium
+
+  * fix signup_server (issues with str vs. bytes)
+  * fix signup
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Wed, 15 Aug 2018 14:00:33 +0200
+
 ltsp-manager (18.04.1ppa2) bionic; urgency=medium
 
   * fix roles & test
