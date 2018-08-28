@@ -3,13 +3,14 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 class AskDialog(Gtk.MessageDialog):
-    def __init__(self, message, title=""):
+    def __init__(self, message, title="", parent=None):
         super(AskDialog, self).__init__(type = Gtk.MessageType.WARNING,
                                           flags = Gtk.DialogFlags.MODAL,
                                           buttons = Gtk.ButtonsType.YES_NO,
                                           message_format = message)
         self.set_title(title)
         self.set_default_response(Gtk.ResponseType.NO)
+        self.set_transient_for(parent)
     
     def showup(self):
         response = self.run()

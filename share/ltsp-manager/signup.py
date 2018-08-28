@@ -84,6 +84,11 @@ class Connection:
 
 class UserForm(object):
     def __init__(self, host='server', port=790):
+
+        self.builder = Gtk.Builder()
+        self.builder.add_from_file('signup_form.ui')
+        self.window = self.builder.get_object('signup_window')
+
         try:
             self.connection = Connection(host, port)
         except socket.error as e:
@@ -92,15 +97,12 @@ class UserForm(object):
             msg = _("Error") + "%d: %s\n\n%s" % (e.errno, e.strerror, msg1 if e.errno == 111 else msg2)
             dlg = Gtk.MessageDialog(type = Gtk.MessageType.ERROR,
                                     buttons = Gtk.ButtonsType.CLOSE,
-                                    message_format = msg)
+                                    message_format = msg,
+                                    parent=self.window)
             dlg.set_title(_("Connection error"))
             dlg.run()
             dlg.destroy()
             sys.exit(1)
-        
-        self.builder = Gtk.Builder()
-        self.builder.add_from_file('signup_form.ui')  
-        self.dialog = self.builder.get_object('dialog')
         self.username_combo = self.builder.get_object('username_combo')
         self.username_entry = self.username_combo.get_child()
         self.password = self.builder.get_object('password_entry')
@@ -135,7 +137,7 @@ class UserForm(object):
             self.role_combo.hide()
             self.builder.get_object('role_label').hide()
             
-        self.dialog.show()
+        self.window.show()
     
     def on_group_toggled(self, widget, path):
         self.groups_store[path][0] = not self.groups_store[path][0]
@@ -214,13 +216,13 @@ class UserForm(object):
         
         self.builder.get_object('apply_button').set_sensitive(s)
 
-    def on_dialog_delete_event(self, widget, event):
+    def on_signup_window_delete_event(self, widget, event):
         self.quit()
     
-    def on_cancel_clicked(self, widget):
+    def on_cancel_button_clicked(self, widget):
         self.quit()
     
-    def on_apply_clicked(self, widget):
+    def on_apply_button_clicked(self, widget):
         realname = self.realname.get_text()
         username = self.username_entry.get_text()
         password = self.encrypt(self.password.get_text())
@@ -228,7 +230,7 @@ class UserForm(object):
         groups = [g[1] for g in self.groups_store if g[0]]
         if self.connection.send_data(realname, username, password, role, groups):
             msg = _("Your request was successfully delivered for review.")
-            dlg = Gtk.MessageDialog(parent = self.dialog,
+            dlg = Gtk.MessageDialog(parent = self.window,
                                     type = Gtk.MessageType.INFO,
                                     flags = Gtk.DialogFlags.MODAL,
                                     buttons = Gtk.ButtonsType.CLOSE,
@@ -236,7 +238,7 @@ class UserForm(object):
             dlg.set_title(_("Success"))
         else:
             msg = _("Your request was not delivered successfully. Ask for help from your sysadmin.")
-            dlg = Gtk.MessageDialog(parent = self.dialog,
+            dlg = Gtk.MessageDialog(parent = self.window,
                                     type = Gtk.MessageType.ERROR,
                                     flags = Gtk.DialogFlags.MODAL,
                                     buttons = Gtk.ButtonsType.CLOSE,
@@ -255,10 +257,10 @@ class UserForm(object):
         return crypt.crypt(pwd, "$6$%s$" % salt)
     
     def quit(self):
-        self.dialog.destroy()
+        self.window.destroy()
         if self.connection:
             self.connection.close()
-        sys.exit()
+        Gtk.main_quit()
     
 if __name__ == '__main__':
     if len(sys.argv) > 2:

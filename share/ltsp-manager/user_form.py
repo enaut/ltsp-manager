@@ -10,7 +10,7 @@ import libuser
 import config
 
 class UserForm(object):
-    def __init__(self, system):
+    def __init__(self, system, parent):
         self.system = system
         self.mode = None
         self.builder = Gtk.Builder()
@@ -20,6 +20,7 @@ class UserForm(object):
         self.selected_role = None
         
         self.dialog = self.builder.get_object('dialog')
+        self.dialog.set_transient_for(parent)
         self.username = self.builder.get_object('username_entry')
         self.password = self.builder.get_object('password_entry')
         self.password_repeat = self.builder.get_object('password_repeat_entry')
@@ -311,8 +312,8 @@ class UserForm(object):
         self.dialog.destroy()
          
 class NewUserDialog(UserForm):
-    def __init__(self, system):
-        super(NewUserDialog, self).__init__(system)
+    def __init__(self, system, parent=None):
+        super(NewUserDialog, self).__init__(system, parent=parent)
         self.mode = 'new'
         self.builder.connect_signals(self)
         
@@ -355,8 +356,8 @@ class NewUserDialog(UserForm):
         self.dialog.destroy()
     
 class EditUserDialog(UserForm):
-    def __init__(self, system, user):
-        super(EditUserDialog, self).__init__(system)
+    def __init__(self, system, user, parent=None):
+        super(EditUserDialog, self).__init__(system, parent=parent)
         self.mode = 'edit'
         self.user = user
         self.builder.connect_signals(self)
@@ -427,8 +428,8 @@ class EditUserDialog(UserForm):
         self.dialog.destroy()
         
 class ReviewUserDialog(UserForm):
-    def __init__(self, system, user, role='', callback=None):
-        super(ReviewUserDialog, self).__init__(system)
+    def __init__(self, system, user, role='', callback=None, parent=None):
+        super(ReviewUserDialog, self).__init__(system, parent=parent)
         self.callback = callback
         self.mode = 'new'
         self.user = user

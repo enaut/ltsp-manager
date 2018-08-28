@@ -124,16 +124,15 @@ class Registrations(LineReceiver):
 
 
 class RegistrationsFactory(Factory):
-    def __init__(self, gui, system, groups, roles):
+    def __init__(self, gui, groups, roles):
         self.connections = []
         self.requests = []
         self.gui = gui
-        self.system = system
         self.groups = groups
         self.roles = roles
 
     def buildProtocol(self, addr):
-        return Registrations(self.connections, self.requests, self.gui, self.system, self.groups, self.roles)
+        return Registrations(self.connections, self.requests, self.gui, self.gui.system, self.groups, self.roles)
 
 
 class Applicant(object):
@@ -157,7 +156,7 @@ class Request(object):
         self.status = status
 
 
-class UI:
+class SignupServerWindow:
     def __init__(self, system):
         self.system = system
         self.builder = Gtk.Builder()
@@ -170,6 +169,7 @@ class UI:
         self.selection = self.builder.get_object('treeview-selection')
         self.roles = {i : config.parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
         self.window.show()
+        self.setup = SettingsDialog(system, self)
     
     def strtime(self, t):
         return time.strftime("%d/%m/%Y %T", t)
@@ -256,7 +256,7 @@ class UI:
         selected = self.get_selected_rows()
         msg = _("Are you sure you want to remove the following requests from the list?") \
             + "\n\n" + ', '.join([row[4] for row in selected])
-        r = dialogs.AskDialog(msg, _("Reject requests")).showup()
+        r = dialogs.AskDialog(msg, _("Reject requests"), parent=self.window).showup()
         if r == Gtk.ResponseType.YES:
             for row in selected:
                 self.requests_list.remove(row.iter)
@@ -267,7 +267,7 @@ class UI:
         row = self.get_selected_rows()[0] # It should always be only one
         request = row[0]
         cb = lambda role: self.update_row(row, role)
-        user_form.ReviewUserDialog(self.system, request.user, request.role, cb)
+        user_form.ReviewUserDialog(self.system, request.user, request.role, cb, parent=self.window)
     
     def on_apply_button_clicked(self, widget):
         requests = [row[0] for row in self.requests_list]
@@ -275,7 +275,7 @@ class UI:
         usernames = ', '.join([u.name for u in users])
         r=dialogs.AskDialog(_("The following user accounts will be created:") \
             + "\n%s\n\n" % usernames + _("Proceed?"),
-            _("Create user accounts")).showup()
+            _("Create user accounts"), parent=self.window).showup()
         if r == Gtk.ResponseType.YES:
             for user in users:
                 if user.primary_group not in self.system.groups:
@@ -292,29 +292,41 @@ class UI:
     def on_close_button_clicked(self, widget):    
         if len(self.requests_list):
             r=dialogs.AskDialog(_("Are you sure you want to close the sign up server? All pending requests will be lost."),
-                _("Confirmation")).showup()
+                _("Confirmation"), parent=self.window).showup()
             if r == Gtk.ResponseType.YES:
                 reactor.stop()
+            Gtk.main_quit()
         else:
-            reactor.stop()
+            try:
+                reactor.stop()
+            except:
+                pass
+            Gtk.main_quit()
     
     def on_window_delete_event(self, widget, event):
-        reactor.stop()
+        try:
+            reactor.stop()
+        except:
+            pass
+        Gtk.main_quit()
     
-
-def startServer(system, groups, roles):   
-    gui = UI(system)
-    reactor.listenTCP(790, RegistrationsFactory(gui, system, groups, roles))
-    reactor.run()
+    def startServer(self, groups, roles):
+        reactor.listenTCP(790, RegistrationsFactory(self, groups, roles))
+        reactor.run()
+        Gtk.main()
+        print("Main end")
 
 
 class SettingsDialog:
-    def __init__(self, system):
+    def __init__(self, system, parent):
         self.system = system
+        self.parent = parent
         self.builder = Gtk.Builder()
         self.builder.add_from_file('signup_settings.ui')
         self.builder.connect_signals(self)
         self.dlg = self.builder.get_object('dialog')
+        self.dlg.set_transient_for(self.parent.window)
+        self.dlg.set_modal(parent)
         self.groups_list = self.builder.get_object('groups_store')
         self.groups_list.set_sort_column_id(1, Gtk.SortType.ASCENDING)
         self.roles_list = self.builder.get_object('roles_store')
@@ -392,7 +404,7 @@ class SettingsDialog:
         config.parser.set('GUI', 'requests_checked_groups', ','.join([r[1] for r in self.groups_list if r[0]]))
         config.parser.set('GUI', 'requests_checked_roles', ','.join([r[1] for r in self.roles_list if r[0]]))
         config.save()
-        startServer(self.system, self.get_selected_groups(), self.get_selected_roles())
+        self.parent.startServer(self.get_selected_groups(), self.get_selected_roles())
     
     def on_cancel_clicked(self, widget):
         self.dlg.destroy()
@@ -400,4 +412,6 @@ class SettingsDialog:
     
 if __name__ == '__main__':
     import libuser
-    SettingsDialog(libuser.system)
+    print(_("Starting Signup Server"))
+    window = SignupServerWindow(libuser.system)
+    
