@@ -12,14 +12,16 @@ import libuser
 import ltsp_shared_folders
 
 class NewUsersDialog:
-    def __init__(self, system, sf):
+    def __init__(self, system, sf, parent):
         self.system = system
+        self.parent = parent
         self.sf = sf
-        
+
         self.glade = Gtk.Builder()
         self.glade.add_from_file('create_users.ui')
         self.glade.connect_signals(self)
         self.dialog = self.glade.get_object('create_users_dialog')
+        self.dialog.set_transient_for(self.parent)
         self.user_tree = self.glade.get_object('user_treeview')
         self.user_store = self.glade.get_object('user_liststore')
         
@@ -32,6 +34,8 @@ class NewUsersDialog:
                 self.groups.append(group)   
         self.glade.get_object('groups_template_entry').set_text("{c} "+" ".join(self.groups))
         self.dialog.show()
+
+        self.help_dialog = self.glade.get_object('help_dialog')
 
     def on_template_changed(self, widget=None):
         classes_str = self.glade.get_object('classes_entry').get_text().strip()
@@ -198,12 +202,16 @@ class NewUsersDialog:
 
     def on_progress_button_close_clicked(self, widget):
         self.dialog.destroy()
+        self.help_dialog.destroy()
 
     def on_button_cancel_clicked(self, widget):
         self.dialog.destroy()
+        self.help_dialog.destroy()
 
     def on_button_help_clicked(self, widget):
-        dialog = self.glade.get_object('help_dialog')
-        dialog.run()
-        dialog.hide()
+        self.help_dialog.show()
+
+    def on_help_close_clicked(self, widget, dummy=None):
+        self.help_dialog.hide()
+        return True
 

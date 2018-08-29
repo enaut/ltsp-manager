@@ -314,7 +314,7 @@ class SignupServerWindow:
         reactor.listenTCP(790, RegistrationsFactory(self, groups, roles))
         reactor.run()
         Gtk.main()
-        print("Main end")
+        print("Stopping Signup Server")
 
 
 class SettingsDialog:

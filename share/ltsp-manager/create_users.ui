@@ -1,43 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
+  <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="lower">1</property>
     <property name="upper">99</property>
     <property name="step_increment">1</property>
   </object>
-  <object class="GtkMessageDialog" id="help_dialog">
+  <object class="GtkWindow" id="help_dialog">
     <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">User account creation help</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="type_hint">dialog</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="buttons">close</property>
-    <property name="text" translatable="yes">If you'd like to create only one user per workstation, specify only one group, for example "pc".
+    <signal name="delete-event" handler="on_help_close_clicked" swapped="no"/>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="margin_left">15</property>
+        <property name="margin_right">15</property>
+        <property name="margin_top">15</property>
+        <property name="margin_bottom">15</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="valign">start</property>
+            <property name="margin_bottom">30</property>
+            <property name="label" translatable="yes">If you'd like to create only one user per workstation, specify only one group, for example "pc".
 
 The number of accounts per group usually matches the number of workstations in the classroom.
 
-In templates, you may use the following variables:
-{c}: the group, e.g. a1, a2, b1, ...
-{i}: the account index for this group, e.g. 1, 2, 3, ...
-{i0}: the account index with 0 prefixed, e.g. 01, 02, 03, ...</property>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="dialog-vbox2">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="dialog-action_area2">
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+In templates, you may use the following variables enclosed in curly brackets({}):
+	c:	the group, e.g. a1, a2, b1, ...
+	i:	the account index for this group, e.g. 1, 2, 3, ...
+	0i:	the account index with 0 prefixed, e.g. 01, 02, 03, ...
+
+Example: To have the group and account number in the username you would enter "{c}-{i}"</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
             <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButtonBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_help_close_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
@@ -58,6 +90,9 @@ In templates, you may use the following variables:
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
+    <child>
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox3">
         <property name="can_focus">False</property>
@@ -228,6 +263,9 @@ In templates, you may use the following variables:
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
+    <child>
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -507,10 +545,9 @@ In templates, you may use the following variables:
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Username template:</property>
                 <property name="use_underline">True</property>
-                <property name="xalign">0</property>
+                <property name="xalign">0.20000000298023224</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -521,10 +558,9 @@ In templates, you may use the following variables:
               <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Real name template:</property>
                 <property name="use_underline">True</property>
-                <property name="xalign">0</property>
+                <property name="xalign">0.20000000298023224</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -535,10 +571,9 @@ In templates, you may use the following variables:
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Password template:</property>
                 <property name="use_underline">True</property>
-                <property name="xalign">0</property>
+                <property name="xalign">0.20000000298023224</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -549,9 +584,8 @@ In templates, you may use the following variables:
               <object class="GtkLabel" id="label6">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Member of groups:</property>
-                <property name="xalign">0</property>
+                <property name="xalign">0.20000000298023224</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>

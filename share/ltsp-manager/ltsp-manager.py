@@ -272,7 +272,7 @@ class Gui:
     #FIXME: Maybe use notify /etc/group then self.populate_treeviews not need to 
     #update user groups for shared folder library
     def on_mi_new_users_activate(self, widget):
-        create_users.NewUsersDialog(self.system, self.sf)
+        create_users.NewUsersDialog(self.system, self.sf, self.main_window)
     
     def on_mi_import_passwd_activate(self, widget):
         chooser = Gtk.FileChooserDialog(title=_("Select the passwd file to import"), 
@@ -344,7 +344,7 @@ class Gui:
         message = "You need to run the initial LTSP setup actions."
         second_message = _("LTSP Manager has detected that you either haven't yet run the initial LTSP setup, or that you upgraded to a new version and you need to run it again.") + \
             "\n\n" + _("Should LTSP Manager run initial-setup?")
-        dlg = dialogs.AskDialog(message, title="Initial LTSP setup")
+        dlg = dialogs.AskDialog(message, title="Initial LTSP setup", parent=self.main_window)
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:
