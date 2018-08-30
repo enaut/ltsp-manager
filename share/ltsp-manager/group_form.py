@@ -6,8 +6,9 @@ import libuser
 import ltsp_shared_folders
 
 class GroupForm(object):
-    def __init__(self, system, sf):
+    def __init__(self, system, sf, parent):
         self.system = system
+        self.parent = parent
         self.sf = sf
         #self.mode = None
         self.builder = Gtk.Builder()
@@ -26,6 +27,8 @@ class GroupForm(object):
         self.has_shared = self.builder.get_object('ltsp_shared_folders_check')
         self.show_sys_users = False
         
+        self.dialog.set_transient_for(parent)
+
         self.users_filter.set_visible_func(self.users_visible_func)
         self.users_sort.set_sort_column_id(2, Gtk.SortType.ASCENDING)
         
@@ -93,9 +96,9 @@ class GroupForm(object):
         self.dialog.destroy()
     
 class NewGroupDialog(GroupForm):
-    def __init__(self, system, sf):
+    def __init__(self, system, sf, parent):
         self.mode = 'new'
-        super(NewGroupDialog, self).__init__(system, sf)
+        super(NewGroupDialog, self).__init__(system, sf, parent)
         self.builder.connect_signals(self)
         
         self.gid_entry.set_text(str(system.get_free_gid()))
@@ -113,10 +116,10 @@ class NewGroupDialog(GroupForm):
         self.dialog.destroy()
 
 class EditGroupDialog(GroupForm):
-    def __init__(self, system, sf, group):
+    def __init__(self, system, sf, group, parent):
         self.mode = 'edit'
         self.group = group
-        super(EditGroupDialog, self).__init__(system, sf)
+        super(EditGroupDialog, self).__init__(system, sf, parent)
         self.builder.connect_signals(self)
         
         self.groupname.set_text(group.name)

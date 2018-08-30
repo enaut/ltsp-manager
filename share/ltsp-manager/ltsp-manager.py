@@ -247,10 +247,10 @@ class Gui:
             return True
 
     def on_users_treeview_row_activated(self, widget, path, column):
-        user_form.EditUserDialog(self.system, widget.get_model()[path][0])
+        user_form.EditUserDialog(self.system, widget.get_model()[path][0], parent=self.main_window)
 
     def on_groups_treeview_row_activated(self, widget, path, column):
-        group_form.EditGroupDialog(self.system, self.sf, widget.get_model()[path][0])
+        group_form.EditGroupDialog(self.system, self.sf, widget.get_model()[path][0], parent=self.main_window)
     
     def on_unselect_all_groups_clicked(self, widget):
         self.groups_tree.get_selection().unselect_all()
@@ -279,8 +279,8 @@ class Gui:
                                         action=Gtk.FileChooserAction.OPEN,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
-        
-        chooser.set_icon_from_file('/usr/share/pixmaps/ltsp-manager.svg')        
+        chooser.set_transient_for(self.main_window)
+        chooser.set_icon_from_file('../pixmaps/ltsp-manager.svg')
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -300,7 +300,7 @@ class Gui:
                 dialogs.ErrorDialog(text, _("Error")).showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users)
+            import_dialog.ImportDialog(new_users,parent=self.main_window)
         else:
             chooser.destroy()
     
@@ -359,7 +359,7 @@ class Gui:
     def on_mi_ltsp_update_image_activate(self, widget):
         message = _("Are you sure you want to update the LTSP image?")
         second_message = _("Depending on the CPU speed and image size, this may need about 10 minutes. After that, (re)boot your workstations.")
-        dlg = dialogs.AskDialog(message)
+        dlg = dialogs.AskDialog(message, parent=self.main_window)
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:        
@@ -367,7 +367,7 @@ class Gui:
 
     def on_mi_ltsp_revert_image_activate(self, widget):
         message = _("Are you sure you want to revert to the previous version of the LTSP image?")
-        dlg = dialogs.AskDialog(message)
+        dlg = dialogs.AskDialog(message, parent=self.main_window)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES: 
             subprocess.Popen(['./run-in-terminal.sh', 'ltsp-update-image', '--revert', '/'])
@@ -406,10 +406,10 @@ class Gui:
 ## Users menu
 
     def on_mi_new_user_activate(self, widget):
-        user_form.NewUserDialog(self.system)
+        user_form.NewUserDialog(self.system, parent=self.main_window)
 
     def on_mi_edit_user_activate(self, widget):
-        user_form.EditUserDialog(self.system, self.get_selected_users()[0])
+        user_form.EditUserDialog(self.system, self.get_selected_users()[0], parent=self.main_window)
 
     def on_mi_delete_user_activate(self, widget):
         users = self.get_selected_users()
@@ -425,7 +425,7 @@ class Gui:
             homes_warn = _("WARNING: if you enable this option, the users' home directories with all their files will be deleted, along with the users' e-mails at /var/mail, if they exist")
         homes_warn += "\n\n" + _("This action can't be undone.")
         
-        dlg = dialogs.AskDialog(message)
+        dlg = dialogs.AskDialog(message, parent=self.main_window)
         vbox = dlg.get_message_area()
         rm_homes_check = Gtk.CheckButton(homes_message)
         rm_homes_check.get_child().set_tooltip_text(homes_warn) 
@@ -448,7 +448,7 @@ class Gui:
             message = _("Are you sure you want to remove the following %(count)d users from the selected groups (%(groups)s)?") % {"count":users_n, "groups":group_names}
             message += "\n" + ', '.join([user.name for user in users])
 
-        response = dialogs.AskDialog(message).showup()
+        response = dialogs.AskDialog(message, parent=self.main_window).showup()
         if response == Gtk.ResponseType.YES:
             for user in self.get_selected_users():
                 self.system.remove_user_from_groups(user, groups)
@@ -456,10 +456,10 @@ class Gui:
 ## Groups menu
 
     def on_mi_new_group_activate(self, widget):
-        group_form.NewGroupDialog(self.system, self.sf)
+        group_form.NewGroupDialog(self.system, self.sf, parent=self.main_window)
 
     def on_mi_edit_group_activate(self, widget):
-        group_form.EditGroupDialog(self.system, self.sf, self.get_selected_groups()[0])
+        group_form.EditGroupDialog(self.system, self.sf, self.get_selected_groups()[0], parent=self.main_window)
 
     def on_mi_delete_group_activate(self, widget):
         groups = self.get_selected_groups()
@@ -470,7 +470,7 @@ class Gui:
             message = _("Are you sure you want to delete the following %d groups?") % groups_n
             message += "\n" + ', '.join([group.name for group in groups])
 
-        response = dialogs.AskDialog(message).showup()
+        response = dialogs.AskDialog(message, parent=self.main_window).showup()
         if response == Gtk.ResponseType.YES:
             self.sf.remove(groups)
             for group in groups:

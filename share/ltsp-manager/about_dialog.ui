@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
+  <requires lib="gtk+" version="3.18"/>
   <object class="GtkAboutDialog" id="aboutdialog1">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -19,8 +19,11 @@
     <property name="authors">Alkis Georgopoulos &lt;alkisg@gmail.com&gt;
 Fotis Tsiamis &lt;ftsamis@gmail.com&gt;
 Lefteris Nikoltsios &lt;lefteris.nikoltsios@gmail.com&gt;</property>
-    <property name="logo">/usr/share/pixmaps/ltsp-manager.svg</property>
+    <property name="logo">usr/share/pixmaps/ltsp-manager.svg</property>
     <property name="license_type">gpl-3-0</property>
+    <child>
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
         <property name="can_focus">False</property>

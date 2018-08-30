@@ -19,12 +19,13 @@ class AskDialog(Gtk.MessageDialog):
 
 
 class InfoDialog(Gtk.MessageDialog):
-    def __init__(self, message, title=""):
+    def __init__(self, message, title="", parent=None):
         super(InfoDialog, self).__init__(type = Gtk.MessageType.INFO,
                                           flags = Gtk.DialogFlags.MODAL,
                                           buttons = Gtk.ButtonsType.CLOSE,
                                           message_format = message)
         self.set_title(title)
+        self.set_transient_for(parent)
     
     def showup(self):
         response = self.run()
@@ -32,12 +33,13 @@ class InfoDialog(Gtk.MessageDialog):
         return response
 
 class WarningDialog(Gtk.MessageDialog):
-    def __init__(self, message, title=""):
+    def __init__(self, message, title="", parent=None):
         super(WarningDialog, self).__init__(type = Gtk.MessageType.WARNING,
                                           flags = Gtk.DialogFlags.MODAL,
                                           buttons = Gtk.ButtonsType.CLOSE,
                                           message_format = message)
         self.set_title(title)
+        self.set_transient_for(parent)
     
     def showup(self):
         response = self.run()
@@ -45,12 +47,13 @@ class WarningDialog(Gtk.MessageDialog):
         return response
 
 class ErrorDialog(Gtk.MessageDialog):
-    def __init__(self, message, title=""):
+    def __init__(self, message, title="", parent=None):
         super(ErrorDialog, self).__init__(type = Gtk.MessageType.ERROR,
                                           flags = Gtk.DialogFlags.MODAL,
                                           buttons = Gtk.ButtonsType.CLOSE,
                                           message_format = message)
         self.set_title(title)
+        self.set_transient_for(parent)
     
     def showup(self):
         response = self.run()

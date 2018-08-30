@@ -18,8 +18,9 @@ import user_form
 
 # NOTE: User.plainpw overrides the User.password if it's set
 class ImportDialog:
-    def __init__(self, new_set):
+    def __init__(self, new_set, parent=None):
         self.set = new_set
+        self.parent = parent
         # Remove the system users from the set
         for u in list(self.set.users.values()):
             if u.uid is not None and u.is_system_user():
@@ -36,7 +37,8 @@ class ImportDialog:
                "on_delete_users_activate" : self.on_delete_users_activate,
                "on_cancel" : self.Cancel}
         
-        self.builder.connect_signals(dic) 
+        self.builder.connect_signals(dic)
+        self.dialog.set_transient_for(self.parent)
         
         self.tree = self.builder.get_object("users_tree")
         self.apply = self.builder.get_object("apply_button")
@@ -139,7 +141,7 @@ class ImportDialog:
         msg += "\n\n%s\n\n"
         msg += _("Would you like to remove those accounts from the list, to avoid trying to create them again?")
         msg = msg % (len(identical), ', '.join(self.list[iter_][0] for iter_ in identical))
-        resp = dialogs.AskDialog(msg, _("Identical existing accounts were found")).showup()
+        resp = dialogs.AskDialog(msg, _("Identical existing accounts were found"), parent=self.dialog).showup()
         if resp == Gtk.ResponseType.YES:
             for iter_ in identical:
                 self.RemoveRow(iter_)
@@ -451,7 +453,7 @@ class ImportDialog:
             log_dlg.hide()
             self.DetectConflicts()
         else:
-            dialogs.WarningDialog(_("Some issues remain that could not be resolved automatically")).showup()
+            dialogs.WarningDialog(_("Some issues remain that could not be resolved automatically"), parent=self.dialog).showup()
     
     def Edit(self, widget, user):
         form = user_form.ReviewUserDialog(libuser.system, user, role='')
@@ -460,7 +462,7 @@ class ImportDialog:
     
     def Apply(self, widget):
         text = _("Create the following users?")
-        response = dialogs.AskDialog(text, "Confirm").showup()
+        response = dialogs.AskDialog(text, "Confirm", parent=self.dialog).showup()
         if response == Gtk.ResponseType.YES:
             new_groups = {}
             new_gids = [u.gid for u in self.set.users.values()]

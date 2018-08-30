@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
-  <requires lib="gtk+" version="3.2"/>
+  <requires lib="gtk+" version="3.18"/>
   <object class="GtkListStore" id="groups_store">
     <columns>
       <!-- column-name instance -->
@@ -68,8 +68,11 @@
     <property name="window_position">center</property>
     <property name="default_width">600</property>
     <property name="default_height">350</property>
-    <property name="icon">/usr/share/pixmaps/ltsp-manager.svg</property>
+    <property name="icon">usr/share/pixmaps/ltsp-manager.svg</property>
     <signal name="delete-event" handler="on_main_window_delete_event" swapped="no"/>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
@@ -81,7 +84,6 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkMenuItem" id="mi_file">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_File</property>
@@ -92,7 +94,6 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkMenuItem" id="mi_signup">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Opens a dialog which handles user signup requests</property>
@@ -103,7 +104,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_new_users">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Create users per workstation...</property>
@@ -113,14 +113,12 @@
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="mi_seperator1">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem2">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Import from passwd...</property>
@@ -130,7 +128,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_import_from_csv">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Import from csv...</property>
@@ -140,7 +137,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_export_csv">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Export to csv...</property>
@@ -154,7 +150,6 @@
             </child>
             <child>
               <object class="GtkMenuItem" id="mi_server">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Server</property>
@@ -165,7 +160,6 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkMenuItem" id="mi_initial_setup">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Initial setup</property>
@@ -174,7 +168,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_configuration_network">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Configure network connection</property>
@@ -184,7 +177,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_ltsp_image">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">LTSP image</property>
@@ -195,7 +187,6 @@
                             <property name="can_focus">False</property>
                             <child>
                               <object class="GtkMenuItem" id="mi_ltsp_update_image">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Publishes a clone of the server installation for the clients to boot from it</property>
@@ -206,7 +197,6 @@
                             </child>
                             <child>
                               <object class="GtkMenuItem" id="mi_ltsp_revert_image">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Reverts the LTSP image to its previous version</property>
@@ -221,7 +211,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_configuration_files">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Configuration files</property>
@@ -231,7 +220,6 @@
                             <property name="can_focus">False</property>
                             <child>
                               <object class="GtkMenuItem" id="mi_edit_lts_conf">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Edit lts.conf</property>
@@ -240,7 +228,6 @@
                             </child>
                             <child>
                               <object class="GtkMenuItem" id="mi_edit_ltsp_shared_folders">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Edit LTSP shared folder settings</property>
@@ -249,7 +236,6 @@
                             </child>
                             <child>
                               <object class="GtkMenuItem" id="mi_edit_dnsmasq_conf">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Edit dnsmasq settings</property>
@@ -258,7 +244,6 @@
                             </child>
                             <child>
                               <object class="GtkMenuItem" id="mi_edit_pxelinux_cfg">
-                                <property name="use_action_appearance">False</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Edit PXELinux settings</property>
@@ -276,7 +261,6 @@
             </child>
             <child>
               <object class="GtkMenuItem" id="mi_view">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_View</property>
@@ -287,7 +271,6 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkMenuItem" id="mn_columns">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Columns</property>
@@ -302,7 +285,6 @@
                     </child>
                     <child>
                       <object class="GtkCheckMenuItem" id="mi_show_system_groups">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show system groups</property>
@@ -312,7 +294,6 @@
                     </child>
                     <child>
                       <object class="GtkCheckMenuItem" id="mi_show_private_groups">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Show private groups</property>
@@ -322,14 +303,12 @@
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="mi_separator2">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_refresh">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Refresh</property>
@@ -343,7 +322,6 @@
             </child>
             <child>
               <object class="GtkMenuItem" id="mi_groups">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Groups</property>
@@ -354,7 +332,6 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkMenuItem" id="mi_new_group">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">New group...</property>
@@ -364,7 +341,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_edit_group">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
@@ -375,7 +351,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_delete_group">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
@@ -389,7 +364,6 @@
             </child>
             <child>
               <object class="GtkMenuItem" id="mi_users">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Users</property>
@@ -400,7 +374,6 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkMenuItem" id="mi_new_user">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">New user...</property>
@@ -410,7 +383,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_edit_user">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
@@ -421,7 +393,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_delete_user">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
@@ -432,7 +403,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_remove_user">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
@@ -447,7 +417,6 @@
             </child>
             <child>
               <object class="GtkMenuItem" id="mi_help">
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Help</property>
@@ -458,7 +427,6 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkMenuItem" id="mi_home">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Online documentation</property>
@@ -468,7 +436,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_report_bug">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Report bug</property>
@@ -478,7 +445,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_ask_question">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Ask question</property>
@@ -488,7 +454,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_helpdesk_ticket">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">File a helpdesk issue</property>
@@ -498,7 +463,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_irc">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Live chat (IRC)</property>
@@ -508,7 +472,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_forum">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Discussion forum</property>
@@ -518,14 +481,12 @@
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="mi_separator3">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_map">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">LTSP installations map</property>
@@ -535,7 +496,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_lts_conf_manpage">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Man page of lts.conf</property>
@@ -545,7 +505,6 @@
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_ltsp_info">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Display LTSP version information, useful for reporting bugs</property>
@@ -556,14 +515,12 @@
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="mi_separator4">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="mi_about">
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">About</property>
@@ -658,7 +615,6 @@
                     <child>
                       <object class="GtkButton" id="unselect_all_groups">
                         <property name="label" translatable="yes">Unselect all</property>
-                        <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
