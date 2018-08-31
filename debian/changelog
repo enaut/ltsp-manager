@@ -1,3 +1,17 @@
+ltsp-manager (18.04.2ubuntu2) bionic; urgency=medium
+
+  * logo relative path
+  * fix transient warnings
+  * fix deprecated use of options
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Fri, 31 Aug 2018 16:06:27 +0200
+
+ltsp-manager (18.04.2ubuntu1) bionic; urgency=medium
+
+  * many fixes
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Fri, 31 Aug 2018 15:39:07 +0200
+
 ltsp-manager (18.04.1ppa4) bionic; urgency=medium
 
   * fixes for imports
