@@ -17,7 +17,7 @@ class ExportDialog:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
 
-        chooser.set_icon_from_file('/usr/share/pixmaps/ltsp-manager.svg') 
+        chooser.set_icon_from_file('../pixmaps/ltsp-manager.svg')
         chooser.set_default_response(Gtk.ResponseType.OK)
         chooser.set_do_overwrite_confirmation(True)
         homepath = os.path.expanduser('~')

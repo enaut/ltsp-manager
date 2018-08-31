@@ -19,7 +19,7 @@
     <property name="authors">Alkis Georgopoulos &lt;alkisg@gmail.com&gt;
 Fotis Tsiamis &lt;ftsamis@gmail.com&gt;
 Lefteris Nikoltsios &lt;lefteris.nikoltsios@gmail.com&gt;</property>
-    <property name="logo">usr/share/pixmaps/ltsp-manager.svg</property>
+    <property name="logo">../pixmaps/ltsp-manager.svg</property>
     <property name="license_type">gpl-3-0</property>
     <child>
       <placeholder/>
