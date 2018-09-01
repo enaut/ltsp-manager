@@ -454,6 +454,8 @@ class ImportDialog:
                 u.primary_group = new_gname
                 self.SetRowProps(row, 3, '')
             self.SetRowFromObject(row)
+
+        print(log)
         
         num = len(log)
         if num > 0:
@@ -464,7 +466,19 @@ class ImportDialog:
             log_dlg.hide()
             self.DetectConflicts()
         else:
-            dialogs.WarningDialog(_("Some issues remain that could not be resolved automatically"), parent=self.dialog).showup()
+            issues = False
+            problemusers = []
+            for row in self.list:
+                if any(row[40:60]):
+                    print(row[40:60])
+                    print(list(row))
+                    problemusers.append(row[0])
+                    issues = True
+
+            if issues:
+                dialogs.WarningDialog(_("Some issues remain that could not be resolved automatically\n\t" + "\n\t".join(problemusers)), parent=self.dialog).showup()
+            else:
+                dialogs.InfoDialog(_("No issues detected"), parent=self.dialog).showup()
     
     def Edit(self, widget, user):
         form = user_form.ReviewUserDialog(libuser.system, user, role='')
@@ -472,7 +486,7 @@ class ImportDialog:
         form.dialog.set_modal(True)
     
     def Apply(self, widget):
-        text = _("Create the following users?")
+        text = _("Create the following users?\n\n" + ', '.join([u.name for u in self.set.users.values()]))
         response = dialogs.AskDialog(text, "Confirm", parent=self.dialog).showup()
         if response == Gtk.ResponseType.YES:
             new_groups = {}
@@ -497,25 +511,30 @@ class ImportDialog:
                                 new_gids.append(g_obj.gid)
                             new_groups[g] = g_obj
                         new_groups[g].members[u.name] = u
-            import dialogs
             operations = len(new_groups) + len(self.set.users)
-            for gr in new_groups:
+            for gr in new_groups.values():
                 operations += len(gr.members)
             progress = dialogs.ProgressDialog(_("Creating all users"), operations, self.dialog)
+            def wait_gtk():
+                while Gtk.events_pending():
+                    Gtk.main_iteration()
             for gr in new_groups.values():
-                print("adding group" , gr)
-                progress.set_message(_("Adding group {group}").format(group=gr))
+                wait_gtk()
+                progress.set_message(_("Adding group {group}").format(group=gr.name))
                 gr_tmp = libuser.Group(gr.name, gr.gid)
                 libuser.system.add_group(gr_tmp)
                 progress.inc()
             for u in self.set.users.values():
-                print("adding user" , u)
-                progress.set_message(_("Adding user {user}").format(user=u))
+                wait_gtk()
+                progress.set_message(_("Adding user {user}").format(user=u.name))
                 libuser.system.add_user(u)
+                progress.inc()
             for gr in new_groups.values():
                 for u in gr.members.values():
-                    progress.set_message(_("Adding user {user} to group {group}").format(user=u, group=gr))
+                    wait_gtk()
+                    progress.set_message(_("Adding user {user} to group {group}").format(user=u.name, group=gr.name))
                     libuser.system.add_user_to_groups(u, [gr])
+                    progress.inc()
             
         else:
             return False
