@@ -314,22 +314,24 @@ class ImportDialog:
                 self.SetRowProps(row, 0, 'con')
             if u.uid in sys_users['uids']:
                 self.SetRowProps(row, 1, 'con')
-            # Check if the given GID belongs to the given group name
+            # Check if the given group matches the gid on the system
             if u.primary_group in libuser.system.groups:
+                # Get the existing groupid
                 should_be = libuser.system.groups[u.primary_group].gid
                 if u.gid != should_be:
                     self.SetRowProps(row, 2, 'mismatch %s' % should_be)
-            else:
-                if u.gid in sys_users['gids']:
-                    should_be = None
-                    for g in libuser.system.groups.values():
-                        if u.gid == g.gid:
-                            should_be = g.name
-                            break
-                    if should_be != u.primary_group:
-                        self.SetRowProps(row, 3, 'mismatch %s' % should_be)
-            #if u.gid in sys_users['gids']: # We don't care for > 1 users having the same primary group
-            #    self.SetRowProps(row, 2, 'con')
+            # Check if the given gid matches the groupname
+            if u.gid in sys_users['gids']:
+                should_be = None
+                # iterate through groups to find name
+                for g in libuser.system.groups.values():
+                    if u.gid == g.gid:
+                        should_be = g.name
+                        break
+                # set the missmatch
+                if should_be != u.primary_group:
+                    print("missmatch for ", u, should_be)
+                    self.SetRowProps(row, 3, 'mismatch %s' % should_be)
             if u.directory in sys_users['dirs']:
                 self.SetRowProps(row, 9, 'con')
             else:
@@ -409,7 +411,16 @@ class ImportDialog:
             #    u.uid = new_uid
             #    self.SetRowProps(row, 2, '')
             
+            if 'missmatch' in row[2+ofs] and 'missmatch' in row[3+ofs]:
+                new_gid = libuser.system.get_free_gid(exclude=new_users['gids'])
+                new_gname = row[3+ofs].split()[1] + '_imported'
+                log_gid(u.name, u.gid, new_gid)
+                log_group(u.name, u.group, new_gname)
+                self.SetRowProps(row, 2, '')
+                self.SetRowProps(row, 3, '')
+
             if 'mismatch' in row[2+ofs]:
+                # conflict in gid
                 new_gid = int(row[2+ofs].split()[1])
                 new_users['gids'].append(new_gid)
                 log_gid(u.name, u.gid, new_gid)
@@ -426,7 +437,7 @@ class ImportDialog:
                 self.SetRowProps(row, 2, '')
                 
             if 'mismatch' in row[3+ofs]:
-                print(row[3+ofs])
+                # conflict in groupname
                 new_gname = row[3+ofs].split()[1]
                 log_group(u.name, u.primary_group, new_gname)
                 if new_gname in self.set.groups:
@@ -486,31 +497,39 @@ class ImportDialog:
                                 new_gids.append(g_obj.gid)
                             new_groups[g] = g_obj
                         new_groups[g].members[u.name] = u
-            
+            import dialogs
+            operations = len(new_groups) + len(self.set.users)
+            for gr in new_groups:
+                operations += len(gr.members)
+            progress = dialogs.ProgressDialog(_("Creating all users"), operations, self.dialog)
             for gr in new_groups.values():
+                print("adding group" , gr)
+                progress.set_message(_("Adding group {group}").format(group=gr))
                 gr_tmp = libuser.Group(gr.name, gr.gid)
                 libuser.system.add_group(gr_tmp)
+                progress.inc()
             for u in self.set.users.values():
+                print("adding user" , u)
+                progress.set_message(_("Adding user {user}").format(user=u))
                 libuser.system.add_user(u)
             for gr in new_groups.values():
                 for u in gr.members.values():
+                    progress.set_message(_("Adding user {user} to group {group}").format(user=u, group=gr))
                     libuser.system.add_user_to_groups(u, [gr])
             
         else:
             return False
             
         
-        parent = ((widget.get_parent()).get_parent()).get_parent()
-        parent.destroy()
+        self.dialog.destroy()
 
 
     def Cancel(self, widget):
-        parent = ((widget.get_parent()).get_parent()).get_parent()
         widget.destroy()
         self.dialog.destroy()
 
     def Exit(self, widget, event):
-        widget.destroy()
+        self.dialog.destroy()
     
     def Tooltip(self, widget, x, y, keyboard_tip, tooltip):
         if not widget.get_tooltip_context(x, y, keyboard_tip):

@@ -300,7 +300,7 @@ class Gui:
                 dialogs.ErrorDialog(text, _("Error")).showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users,parent=self.main_window)
+            import_dialog.ImportDialog(new_users, parent=self.main_window)
         else:
             chooser.destroy()
     
@@ -309,7 +309,7 @@ class Gui:
                                         action=Gtk.FileChooserAction.OPEN,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
-        
+        chooser.set_transient_for(self.main_window)
         chooser.set_icon_from_file('../pixmaps/ltsp-manager.svg')
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
@@ -323,7 +323,7 @@ class Gui:
                 dialogs.ErrorDialog(text, _("Error")).showup()
                 return False
             chooser.destroy()
-            import_dialog.ImportDialog(new_users)
+            import_dialog.ImportDialog(new_users, parent=self.main_window)
         else:
             chooser.destroy()
     

@@ -61,3 +61,44 @@ class ErrorDialog(Gtk.MessageDialog):
         return response
         
 
+class ProgressDialog():
+    def __init__(self, title, amount_of_operations, parent_widget):
+        self.parent = parent_widget
+        self.total = amount_of_operations
+
+        self.glade = Gtk.Builder()
+        self.glade.add_from_file('dialogs.ui')
+        self.glade.connect_signals(self)
+
+        self.progress_dialog = self.glade.get_object('progress_dialog')
+        self.progress_dialog.set_transient_for(self.parent)
+        self.progress_dialog.set_title(title)
+        self.progress_dialog.set_modal(True)
+        self.progress_dialog.show()
+        self.progressbar = self.glade.get_object('users_progressbar')
+        self.num = 1
+
+    def set_message(self, message):
+        self.progressbar.set_text(message)
+
+    def set_error(self, message):
+        self.glade.get_object('error_label').set_text(message)
+        self.glade.get_object('error_hbox').show()
+        button_close = self.glade.get_object('button_close')
+        button_close.set_sensitive(True)
+
+    def set_progress(self, num):
+        self.num = num
+        self.progressbar.set_fraction(float(num) / float(self.total))
+        if num == self.total:
+            self.progressbar.set_text("done")
+            self.glade.get_object('success_hbox').show()
+            button_close = self.glade.get_object('button_close')
+            button_close.set_sensitive(True)
+
+    def inc(self):
+        self.set_progress(self.num + 1)
+
+    def on_progress_button_close_clicked(self, widget):
+        print("destroying")
+        self.progress_dialog.destroy()
