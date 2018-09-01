@@ -438,11 +438,11 @@ class Gui:
                 progress = dialogs.ProgressDialog("Deleting Users", users_n, self.main_window)
                 for user in self.get_selected_users():
                     dialogs.wait_gtk()
-                    progress.set_message("Delete user: {user}".format(user=user))
+                    progress.set_message("Delete user: {user}".format(user=user.name))
                     progress.inc()
                     self.system.delete_user(user, rm_homes)
             else:
-                self.system.delete_user(user,rm_homes)
+                self.system.delete_user(users[0],rm_homes)
             
     def on_mi_remove_user_activate(self, widget):
         users = self.get_selected_users()
