@@ -487,7 +487,7 @@ class Gui:
         response = dialogs.AskDialog(message, parent=self.main_window).showup()
         if response == Gtk.ResponseType.YES:
             self.sf.remove(groups)
-            progress = dialogs.ProgressDialog("Deleting Groups", users_n, self.main_window)
+            progress = dialogs.ProgressDialog("Deleting Groups", len(groups), self.main_window)
             for group in groups:
                 dialogs.wait_gtk()
                 progress.set_message("Deleting group {group}".format(group=group.name))
