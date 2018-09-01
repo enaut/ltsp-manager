@@ -434,8 +434,15 @@ class Gui:
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:
             rm_homes = rm_homes_check.get_active()
-            for user in self.get_selected_users():
-                self.system.delete_user(user, rm_homes)
+            if users_n > 1:
+                progress = dialogs.ProgressDialog("Deleting Users", users_n, self.main_window)
+                for user in self.get_selected_users():
+                    dialogs.wait_gtk()
+                    progress.set_message("Delete user: {user}".format(user=user))
+                    progress.inc()
+                    self.system.delete_user(user, rm_homes)
+            else:
+                self.system.delete_user(user,rm_homes)
             
     def on_mi_remove_user_activate(self, widget):
         users = self.get_selected_users()

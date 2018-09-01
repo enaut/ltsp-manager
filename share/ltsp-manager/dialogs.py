@@ -102,3 +102,7 @@ class ProgressDialog():
     def on_progress_button_close_clicked(self, widget):
         print("destroying")
         self.progress_dialog.destroy()
+
+def wait_gtk():
+    while Gtk.events_pending():
+        Gtk.main_iteration()
