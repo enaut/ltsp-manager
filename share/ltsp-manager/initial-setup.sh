@@ -7,7 +7,7 @@
 # was last ran before the following version. MANUALLY UPDATE THIS:
 PROMPT_AFTER="17.06"
 
-. /usr/share/ltsp-manager/common.sh
+. ./common.sh
 
 setupconf=/var/lib/ltsp-manager/initial-setup
 

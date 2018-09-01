@@ -107,44 +107,45 @@ class NewUsersDialog:
             get_text()
         button_close = self.glade.get_object('button_close')
 
-        progress_dialog = self.glade.get_object('progress_dialog')
-        progress_dialog.set_transient_for(self.dialog)
-        progress_dialog.show()
-        progressbar = self.glade.get_object('users_progressbar')
         total_users = self.computers * len(self.classes)
         total_groups = len(self.classes)
+
+        progress = dialogs.ProgressDialog(_("Creating all users"), total_users + total_groups, self.dialog)
         users_created = 0
         groups_created = 0
         set_gids = []
         set_uids = []
-        while Gtk.events_pending():
-            Gtk.main_iteration()
+
+        def wait_gtk():
+            while Gtk.events_pending():
+                Gtk.main_iteration()
         
         # Create groups for all the listed classes
         if self.classes != ['']:
             for classn in self.classes:
-                while Gtk.events_pending():
-                    Gtk.main_iteration()
+                wait_gtk()
                 if classn not in self.system.groups:
                     tmp_gid = self.system.get_free_gid(exclude=set_gids)
                     set_gids.append(tmp_gid)
                     cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
-                    progressbar.set_text(_("Creating group %(current)d of %(total)d...")
+                    progress.set_message(_("Creating group %(current)d of %(total)d...")
                         % {"current":groups_created+1, "total":total_groups})
-                    #TODO expect returned value from add_group
-                    if False and cmd_error != "":
-                        self.glade.get_object('error_label').set_text(cmd_error)
+                    if cmd_error[0] and cmd_error[1] != "":
+                        self.glade.get_object('error_label').set_text(cmd_error[1])
                         self.glade.get_object('error_hbox').show() 
                         button_close.set_sensitive(True)
                         return
                     groups_created += 1
-                    progressbar.set_fraction(float(groups_created) / float(total_groups))
+                    progress.set_progress(groups_created)
                 else:
                     tmp_gid=self.system.groups[classn].gid
+                    groups_created += 1
                 
                 # Add teachers to group
                 if self.glade.get_object('teachers_checkbutton').get_active():
+                    progress.set_message(_("Adding teachers to group {group}").format(group=classn))
                     for user in self.system.users.values():
+                        wait_gtk()
                         if 'teachers' in user.groups and classn not in user.groups:
                             user.groups.append(classn)
                             self.system.update_user(user.name, user)
@@ -152,18 +153,17 @@ class NewUsersDialog:
             # Create shared folders
             if self.glade.get_object('shared_checkbutton').get_active():
                 for classn in self.classes:
-                    while Gtk.events_pending():
-                        Gtk.main_iteration()
+                    progress.set_message(_("Adding shares for {group}").format(group=classn))
+                    wait_gtk()
                     self.sf.add([classn])
                 
 
         # And finally, create the users
-        cmd_error = str()
+        cmd_error = (False, '')
         for classn in self.classes:
             for compn in range(1, self.computers+1):
-                while Gtk.events_pending():
-                    Gtk.main_iteration()
-                progressbar.set_text(_("Creating user %(current)d of %(total)d...")
+                wait_gtk()
+                progress.set_message(_("Creating user %(current)d of %(total)d...")
                     % {"current":users_created+1, "total":total_users})
 
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
@@ -183,26 +183,14 @@ class NewUsersDialog:
                     lstchg = (datetime.datetime.today() - epoch).days,
                     groups=[classn],
                     password=self.system.encrypt(tmp_password))
-                self.system.add_user(u)
+                cmd_error = self.system.add_user(u)
                 self.system.load()
                 users_created += 1
-                progressbar.set_fraction(float(users_created) / float(total_users))
+                progress.set_progress(groups_created + users_created)
 
-        #TODO expect returned value from add_user
-        if False and cmd_error != "":
-            self.glade.get_object('error_label').set_text(cmd_error.strip())
-            self.glade.get_object('error_hbox').show()
-            button_close.set_sensitive(True)
+        if cmd_error[0] and cmd_error[1] != "":
+            self.progress.set_error(cmd_error.strip())
             return
-
-        # Display a success message and make the Close button sensitive
-        #TODO self.glade.get_object('success_hbox').show()
-        progressbar.set_text("The operation completed successfully.")
-        button_close.set_sensitive(True)
-
-    def on_progress_button_close_clicked(self, widget):
-        self.dialog.destroy()
-        self.help_dialog.destroy()
 
     def on_button_cancel_clicked(self, widget):
         self.dialog.destroy()

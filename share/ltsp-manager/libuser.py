@@ -225,20 +225,22 @@ class System(Set):
         self.notifier._addWatch(self.shadow_fp, self.mask, False, [self.on_fd_changed])
 
     def add_group(self, group):
-        common.run_command(['groupadd', '-g', str(group.gid), group.name])
+        res = common.run_command(['groupadd', '-g', str(group.gid), group.name])
         for user in group.members.values():
             if user in self.users.values():
                 common.run_command(['usermod', '-a', '-G', group.name, user.name])
             else:
                 self.add_user(user)
+        return res
     
     def edit_group(self, groupname, group):
-        common.run_command(['groupmod', '-g', str(group.gid), '-n', group.name, groupname])
+        res = common.run_command(['groupmod', '-g', str(group.gid), '-n', group.name, groupname])
         for user in group.members.values():
             common.run_command(['usermod', '-a', '-G', group.name, user.name])
+        return res
     
     def delete_group(self, group):
-        common.run_command(['groupdel', group.name])
+        return common.run_command(['groupdel', group.name])
     
     def add_user(self, user, create_home=True):
         cmd = ["useradd"]
@@ -246,8 +248,9 @@ class System(Set):
             cmd.extend(['-m', '-d', user.directory])
         cmd.extend(['-g', str(user.gid)])
         cmd.append(user.name)
-        common.run_command(cmd)
+        res = common.run_command(cmd)
         self.update_user(user.name, user)
+        return res
         
     def _strcnv(self, t):
         return [str(i) for i in t]
@@ -267,9 +270,10 @@ class System(Set):
         
         # Execute usermod
         cmd = self._strcnv(cmd)
-        common.run_command(cmd)
+        res = common.run_command(cmd)
         self.user_set_gecos(user)
         self.user_set_pass_options(user)
+        return res
     
     def user_set_gecos(self, user):
         cmd = ['chfn']
@@ -281,7 +285,7 @@ class System(Set):
         cmd.append(user.name)
         #Execute chfn
         cmd = self._strcnv(cmd)
-        common.run_command(cmd)
+        return common.run_command(cmd)
     
     def user_set_pass_options(self, user):
         cmd = ['chage']
@@ -294,30 +298,30 @@ class System(Set):
         cmd.append(user.name)
         # Execute chage
         cmd = self._strcnv(cmd)
-        common.run_command(cmd)
+        return common.run_command(cmd)
     
     def delete_user(self, user, remove_home=False):
         cmd = ['userdel']
         if remove_home:
             cmd.append('-r')
         cmd.append(user.name)
-        common.run_command(cmd)
+        return common.run_command(cmd)
     
     def add_user_to_groups(self, user, groups):
         groups = ','.join([gr.name for gr in groups])
-        common.run_command(['usermod', '-a', '-G', groups, user.name])
+        return common.run_command(['usermod', '-a', '-G', groups, user.name])
     
     def remove_user_from_groups(self, user, groups):
         groups = [gr.name for gr in groups]
         new_groups = [group for group in user.groups if group not in groups]
         new_groups_str = ','.join(new_groups)
-        common.run_command(['usermod', '-G', new_groups_str, user.name])
+        return common.run_command(['usermod', '-G', new_groups_str, user.name])
     
     def lock_user(self, user):
-        common.run_command(['usermod', '-L', user.name])
+        return common.run_command(['usermod', '-L', user.name])
     
     def unlock_user(self, user):
-        common.run_command(['usermod', '-U', user.name])
+        return common.run_command(['usermod', '-U', user.name])
         
     def user_is_locked(self, user):
         return user.password is None or user.password[0] in "!*"
