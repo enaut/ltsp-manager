@@ -10,6 +10,7 @@ from gi.repository import Gtk
 import config
 import libuser
 import ltsp_shared_folders
+import dialogs
 
 class NewUsersDialog:
     def __init__(self, system, sf, parent):

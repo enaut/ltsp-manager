@@ -161,20 +161,24 @@ class ImportDialog:
             user.uid = libuser.system.get_free_uid(exclude=set_uids)
         
         set_gids = [u.gid for u in self.set.users.values()]
-        sys_gids = {g.gid : g for g in self.set.groups.values()}
+        sys_gids = {g.gid : g for g in libuser.system.groups.values()}
         if user.gid in [None, '']:
+            # print("user has no gid", user.name)
             if user.primary_group in [None, '']:
                 user.primary_group = user.name
             if user.name in libuser.system.groups:
                 user.gid = libuser.system.groups[user.name].gid
             else:
                 user.gid = libuser.system.get_free_gid(exclude=set_gids)
+            # print("gid found : ", user.gid)
         else:
+            #print("User has no primary group but a gid:  ", user.gid)
             if user.primary_group in [None, '']:
                 if user.gid in sys_gids:
                     user.primary_group = sys_gids[user.gid].name
                 else:
                     user.primary_group = user.name
+            #print("primary group found: ", user.primary_group, " for ", user.name)
         if user.primary_group in [None, '']:
             allgroups = self.set.groups.values()[:]
             allgroups.extend(libuser.system.groups.values())
