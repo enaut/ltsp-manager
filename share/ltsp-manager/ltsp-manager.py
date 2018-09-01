@@ -439,8 +439,8 @@ class Gui:
                 for user in self.get_selected_users():
                     dialogs.wait_gtk()
                     progress.set_message("Delete user: {user}".format(user=user.name))
-                    progress.inc()
                     self.system.delete_user(user, rm_homes)
+                    progress.inc()
             else:
                 self.system.delete_user(users[0],rm_homes)
             
@@ -457,8 +457,15 @@ class Gui:
 
         response = dialogs.AskDialog(message, parent=self.main_window).showup()
         if response == Gtk.ResponseType.YES:
-            for user in self.get_selected_users():
-                self.system.remove_user_from_groups(user, groups)
+            if users_n > 1:
+                progress = dialogs.ProgressDialog("Remove users from groups", users_n, self.main_window)
+                for user in self.get_selected_users():
+                    dialogs.wait_gtk()
+                    progress.set_message("remove user {user} from groups {groups}".format(user=user.name, groups=', '.join([g.name for g in groups])))
+                    self.system.remove_user_from_groups(user, groups)
+                    progress.inc()
+            else:
+                self.system.remove_user_from_groups(users[0], groups)
 
 ## Groups menu
 
@@ -480,8 +487,12 @@ class Gui:
         response = dialogs.AskDialog(message, parent=self.main_window).showup()
         if response == Gtk.ResponseType.YES:
             self.sf.remove(groups)
+            progress = dialogs.ProgressDialog("Deleting Groups", users_n, self.main_window)
             for group in groups:
+                dialogs.wait_gtk()
+                progress.set_message("Deleting group {group}".format(group=group.name))
                 self.system.delete_group(group)
+                progress.inc()
 
 ## Help menu
 
