@@ -1,3 +1,10 @@
+ltsp-manager (18.04.2ubuntu3) bionic; urgency=medium
+
+  * adding progress dialogs to longer tasks
+  * fixing bug in user autocomplete
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Sat, 01 Sep 2018 14:05:55 +0200
+
 ltsp-manager (18.04.2ubuntu2) bionic; urgency=medium
 
   * logo relative path
