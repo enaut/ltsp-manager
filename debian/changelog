@@ -1,3 +1,9 @@
+ltsp-manager (18.04.2ubuntu4) bionic; urgency=medium
+
+  * Fix create user dialog not closing after creation
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Wed, 05 Sep 2018 20:45:07 +0200
+
 ltsp-manager (18.04.2ubuntu3) bionic; urgency=medium
 
   * adding progress dialogs to longer tasks

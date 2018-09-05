@@ -102,7 +102,7 @@ class ProgressDialog():
         self.set_progress(self.num + 1)
 
     def on_progress_button_close_clicked(self, widget):
-        if self.on_close:
+        if self.on_close and (self.num >= self.total):
             self.on_close()
         self.progress_dialog.destroy()
 
