@@ -62,7 +62,7 @@ class ErrorDialog(Gtk.MessageDialog):
         
 
 class ProgressDialog():
-    def __init__(self, title, amount_of_operations, parent_widget):
+    def __init__(self, title, amount_of_operations, parent_widget, on_close=None):
         self.parent = parent_widget
         self.total = amount_of_operations
 
@@ -77,6 +77,8 @@ class ProgressDialog():
         self.progress_dialog.show()
         self.progressbar = self.glade.get_object('users_progressbar')
         self.num = 1
+
+        self.on_close = on_close
 
     def set_message(self, message):
         self.progressbar.set_text(message)
@@ -100,7 +102,8 @@ class ProgressDialog():
         self.set_progress(self.num + 1)
 
     def on_progress_button_close_clicked(self, widget):
-        print("destroying")
+        if self.on_close:
+            self.on_close()
         self.progress_dialog.destroy()
 
 def wait_gtk():

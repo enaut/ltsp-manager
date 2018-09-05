@@ -111,20 +111,17 @@ class NewUsersDialog:
         total_users = self.computers * len(self.classes)
         total_groups = len(self.classes)
 
-        progress = dialogs.ProgressDialog(_("Creating all users"), total_users + total_groups, self.dialog)
+        progress = dialogs.ProgressDialog(_("Creating all users"), total_users + total_groups, self.dialog, on_close=self.on_button_cancel_clicked)
+
         users_created = 0
         groups_created = 0
         set_gids = []
         set_uids = []
 
-        def wait_gtk():
-            while Gtk.events_pending():
-                Gtk.main_iteration()
-        
         # Create groups for all the listed classes
         if self.classes != ['']:
             for classn in self.classes:
-                wait_gtk()
+                dialogs.wait_gtk()
                 if classn not in self.system.groups:
                     tmp_gid = self.system.get_free_gid(exclude=set_gids)
                     set_gids.append(tmp_gid)
@@ -146,7 +143,7 @@ class NewUsersDialog:
                 if self.glade.get_object('teachers_checkbutton').get_active():
                     progress.set_message(_("Adding teachers to group {group}").format(group=classn))
                     for user in self.system.users.values():
-                        wait_gtk()
+                        dialogs.wait_gtk()
                         if 'teachers' in user.groups and classn not in user.groups:
                             user.groups.append(classn)
                             self.system.update_user(user.name, user)
@@ -155,7 +152,7 @@ class NewUsersDialog:
             if self.glade.get_object('shared_checkbutton').get_active():
                 for classn in self.classes:
                     progress.set_message(_("Adding shares for {group}").format(group=classn))
-                    wait_gtk()
+                    dialogs.wait_gtk()
                     self.sf.add([classn])
                 
 
@@ -163,7 +160,7 @@ class NewUsersDialog:
         cmd_error = (False, '')
         for classn in self.classes:
             for compn in range(1, self.computers+1):
-                wait_gtk()
+                dialogs.wait_gtk()
                 progress.set_message(_("Creating user %(current)d of %(total)d...")
                     % {"current":users_created+1, "total":total_users})
 
@@ -193,7 +190,7 @@ class NewUsersDialog:
             self.progress.set_error(cmd_error.strip())
             return
 
-    def on_button_cancel_clicked(self, widget):
+    def on_button_cancel_clicked(self, widget=None):
         self.dialog.destroy()
         self.help_dialog.destroy()
 
