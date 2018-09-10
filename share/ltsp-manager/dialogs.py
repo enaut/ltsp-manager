@@ -1,3 +1,10 @@
+# This File is part of the ltsp-manager.
+#
+# Copyright 2012-2018 by it's authors.
+#
+# Licensed under GNU General Public License 3.0 or later.
+# Some rights reserved. See COPYING, AUTHORS.
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk

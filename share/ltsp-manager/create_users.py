@@ -1,6 +1,9 @@
-# Copyright (C) 2012 Fotis Tsamis <ftsamis@gmail.com>
-# 2017, Alkis Georgopoulos <alkisg@gmail.com>
-# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+# This File is part of the ltsp-manager.
+#
+# Copyright 2012-2018 by it's authors.
+#
+# Licensed under GNU General Public License 3.0 or later.
+# Some rights reserved. See COPYING, AUTHORS.
 
 import datetime
 import gi

@@ -1,7 +1,10 @@
 #! /usr/bin/env python3
-# Copyright (C) 2012 Lefteris Nikoltsios <lefteris.nikoltsios@gmail.com>
-# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
-# http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf
+# This File is part of the ltsp-manager.
+#
+# Copyright 2012-2018 by it's authors.
+#
+# Licensed under GNU General Public License 3.0 or later.
+# Some rights reserved. See COPYING, AUTHORS.
 
 # Transliterate and transcript made according iso843:
 # http://www.sete.gr/files/Media/Egkyklioi/040707Latin-Greek.pdf

@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+
+# This File is part of the ltsp-manager.
+#
+# Copyright 2012-2018 by it's authors.
+#
+# Licensed under GNU General Public License 3.0 or later.
+# Some rights reserved. See COPYING, AUTHORS.
+
 """
 User handling classes and functions.
 """
