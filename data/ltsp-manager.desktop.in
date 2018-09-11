@@ -1,12 +1,11 @@
 [Desktop Entry]
 Name=LTSP Manager
-Name[el]=Διαχείριση ΣΕΠΕΗΥ
-_Comment=Easy administration of LTSP-based computer labs
+Comment=Easy administration of LTSP-based computer labs
 TryExec=/usr/sbin/ltsp-manager
 Exec=/usr/sbin/ltsp-manager
 Icon=ltsp-manager
 Terminal=false
 Type=Application
-Categories=Settings;System;
+Categories=System;
 X-KDE-SubstituteUID=true
 X-Ubuntu-Gettext-Domain=ltsp-manager
