@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Workflow:
+# Run update-pot on StringFreeze and commit the resulting .pot file.
+# Launchpad will pick it up after a few hours.
+# Before release, pull the updated .po files from launchpad.
+
+cd $(dirname "$0")/..
+
+xgettext -o po/ltsp-manager.pot $(file $(find etc sbin share -type f) | egrep '.desktop|Python|.py|.ui' | sed 's/:.*//' | LC_ALL=C sort)
