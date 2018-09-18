@@ -46,7 +46,7 @@ class Gui:
         self.conf = config.parser
 
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('ltsp-manager.ui')
+        self.builder.add_from_resource(('org/ltsp/ltsp-manager/ltsp-manager.ui')
         self.builder.connect_signals(self)
 
         self.icontheme = Gtk.IconTheme.get_default()
