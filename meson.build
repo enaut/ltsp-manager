@@ -1,6 +1,6 @@
 project('ltsp-manager',
   version: '18.04.2',
-  meson_version: '>= 0.46.0',
+  meson_version: '>= 0.45.1',
 )
 i18n = import('i18n')
 python = import('python3')

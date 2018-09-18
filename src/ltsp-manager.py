@@ -10,7 +10,7 @@
 import getpass
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gio
 import glob
 import locale
 import os
@@ -39,16 +39,17 @@ import ltsp_shared_folders
 import user_form
 import version
 
-class Gui():
+class Gui:
     def __init__(self):
         self.system = libuser.system
         self.sf=ltsp_shared_folders.SharedFolders(self.system)
         self.conf = config.parser
+
         resource = Gio.resource_load('ltsp-manager.gresource')
         Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()
-        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ltsp-manager.ui')
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/ltsp-manager.ui')
         self.builder.connect_signals(self)
 
         self.icontheme = Gtk.IconTheme.get_default()
@@ -584,6 +585,5 @@ if __name__ == '__main__':
     elif len(sys.argv) >= 2:
         usage()
         sys.exit(1)
-    ltsp_manager = Gui()
-    return ltsp_manager.run(sys.argv)
+    Gui()
     reactor.run()
