@@ -49,6 +49,8 @@ class Gui:
         self.builder.add_from_file('ltsp-manager.ui')
         self.builder.connect_signals(self)
 
+        self.icontheme = Gtk.IconTheme.get_default()
+
         self.main_window = self.builder.get_object('main_window')
         self.users_tree = self.builder.get_object('users_treeview')
         self.groups_tree = self.builder.get_object('groups_treeview')
@@ -284,7 +286,7 @@ class Gui:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
         chooser.set_transient_for(self.main_window)
-        chooser.set_icon_from_file('../pixmaps/ltsp-manager.svg')
+        chooser.set_icon(self.icontheme.load_icon('ltsp-manager', 128, 0))
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -314,7 +316,7 @@ class Gui:
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
         chooser.set_transient_for(self.main_window)
-        chooser.set_icon_from_file('../pixmaps/ltsp-manager.svg')
+        chooser.set_icon(self.icontheme.load_icon('ltsp-manager', 128, 0))
         chooser.set_default_response(Gtk.ResponseType.OK)
         homepath = os.path.expanduser('~')
         chooser.set_current_folder(homepath)
@@ -343,7 +345,7 @@ class Gui:
 ## Server menu
 
     def check_initial_setup(self):
-        if common.run_command(['./initial-setup.sh', '--check'])[0]:
+        if common.run_command(['scripts/initial-setup.sh', '--check'])[0]:
             return
         message = "You need to run the initial LTSP setup actions."
         second_message = _("LTSP Manager has detected that you either haven't yet run the initial LTSP setup, or that you upgraded to a new version and you need to run it again.") + \
@@ -352,10 +354,10 @@ class Gui:
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:
-            subprocess.Popen(['./run-in-terminal.sh', './initial-setup.sh', '--no-prompt'])
+            subprocess.Popen(['scripts/run-in-terminal.sh', 'scripts/initial-setup.sh', '--no-prompt'])
 
     def on_mi_initial_setup_activate(self, widget):
-        subprocess.Popen(['./run-in-terminal.sh', './initial-setup.sh'])
+        subprocess.Popen(['scripts/run-in-terminal.sh', 'scripts/initial-setup.sh'])
 
     def on_mi_configuration_network_activate(self, widget):
         ip_dialog.Ip_Dialog(self.main_window)
@@ -367,14 +369,14 @@ class Gui:
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:        
-            subprocess.Popen(['./run-in-terminal.sh', 'ltsp-update-image', '--cleanup', '/'])
+            subprocess.Popen(['scripts/run-in-terminal.sh', 'ltsp-update-image', '--cleanup', '/'])
 
     def on_mi_ltsp_revert_image_activate(self, widget):
         message = _("Are you sure you want to revert to the previous version of the LTSP image?")
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES: 
-            subprocess.Popen(['./run-in-terminal.sh', 'ltsp-update-image', '--revert', '/'])
+            subprocess.Popen(['scripts/run-in-terminal.sh', 'ltsp-update-image', '--revert', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
         for f in glob.glob('/var/lib/tftpboot/ltsp/*/lts.conf'):

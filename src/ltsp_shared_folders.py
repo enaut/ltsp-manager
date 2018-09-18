@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # This File is part of the ltsp-manager.
 #
@@ -13,6 +13,7 @@ import stat
 import sys
 import subprocess
 import libuser
+import version
 
 # TODO: after the workshop, let's move the ltsp_shared_folders ui into its own
 # dialog, and only disable editing groups that have shares in group_form.py
@@ -190,8 +191,8 @@ SHARE_GROUPS="%s"
             groups=self.system.share_groups
         return list(set(self.system.groups) & set(groups))
 
-def usage():
-    return """Usage: ltsp-shared-folders [COMMANDS]
+def gen_usage():
+    return _("""Usage: ltsp-shared-folders [COMMANDS]
 
 Manage shared folders for specific user groups, with the help of bindfs.
 
@@ -199,31 +200,48 @@ COMMANDS
     add <groups>
         Create folders for the specified groups, if they don't already exist,
         and mount them using bindfs.
+
     list-mounted <groups>
         List which of the specified groups have mounted folders.
+
     list-shared <groups>
         List which of the specified groups have shared folders.
+
     mount <groups>
         Remount the shared folders for the specified groups, where the name
         or GID have changed, or where the folders are not already mounted.
+
     rename <old group> <new group>
         Rename a folder from the old to the new group name, which must already
         exist. If the folder is already mounted, then unmount it, rename it,
         and mount it again.
+
     remove <groups>
         Unmount and remove the sharing for the specified groups. The folders
         are not removed from the file system.
+
     unmount <groups>
         Unmount the shared folders for the specified groups.
 
 In all the aforementioend commands, except for add and rename, if no groups are
 specified, then the command is applied to all the shared groups.
-"""
+""")
+
+def gen_version():
+    return _("""ltsp-manager %s
+Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.
+License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>.
+
+Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__
 
 if __name__ == '__main__':
     if (len(sys.argv) <= 1) or (len(sys.argv) == 2
       and (sys.argv[1] == '-h' or sys.argv[1] == '--help')):
-        print(usage())
+        print(gen_usage())
+        sys.exit(0)
+    if (len(sys.argv) <= 1) or (len(sys.argv) == 2
+      and (sys.argv[1] == '-v' or sys.argv[1] == '--version')):
+        print(gen_version())
         sys.exit(0)
     sf=SharedFolders()
     cmd=sys.argv[1]

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/Pigle">
-    <file>icons/ltsp-manager.svg</file>
     <file>ui/about_dialog.ui</file>
     <file>ui/create_users.ui</file>
     <file>ui/dialogs.ui</file>

@@ -443,8 +443,12 @@ class System(Set):
         self.notifier.ignore(filename)
         self.notifier._addWatch(filename, self.mask, False, [self.on_fd_changed])
         self.system_event.notify(filename.path)
-    
-system = System()
+
+system = None
+def get_system():
+    if not system:
+        system = System()
+    return system
 
 if __name__ == '__main__':
     print("System users:", ', '.join(system.users))

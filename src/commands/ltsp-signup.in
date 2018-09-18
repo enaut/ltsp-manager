@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd @pkgdatadir@
+exec @PYTHON@ ./signup.py

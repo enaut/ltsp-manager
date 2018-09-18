@@ -1,22 +1,33 @@
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'ltsp-manager')
 gnome = import('gnome')
 
 python3 = import('python3')
 
-conf = configuration_data()
-conf.set('PYTHON', python3.find_python().path())
-conf.set('VERSION', meson.project_version())
-conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
-conf.set('pkgdatadir', pkgdatadir)
+subdir('scripts')
 
-#configure_file(
-#  input: 'pigle.in',
-#  output: 'pigle',
-#  configuration: conf,
-#  install: true,
-#  install_dir: get_option('bindir')
-#)
+configure_file(
+  input: 'commands/ltsp-manager.in',
+  output: 'ltsp-manager',
+  configuration: conf,
+  install: true,
+  install_dir: get_option('bindir')
+)
+
+configure_file(
+  input: 'commands/ltsp-shared-folders.in',
+  output: 'ltsp-shared-folders',
+  configuration: conf,
+  install: true,
+  install_dir: get_option('bindir')
+)
+
+configure_file(
+  input: 'commands/ltsp-signup.in',
+  output: 'ltsp-signup',
+  configuration: conf,
+  install: true,
+  install_dir: get_option('bindir')
+)
 
 ltsp_manager_sources = [
   'version.py',
@@ -41,4 +52,4 @@ ltsp_manager_sources = [
 ]
 
 
-install_data(ltsp_manager_sources, install_dir: moduledir)
+install_data(ltsp_manager_sources, install_dir: pkgdatadir)

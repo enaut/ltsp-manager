@@ -1,0 +1,62 @@
+#!/bin/sh
+# Wrapper to execute ltsp-manager as root.
+# Copyright (C) 2012-2013 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+# Read a tab-separated command from stdin and execute it
+# but only if it starts from EXECUTE:
+exec_input() {
+    local tab old_ifs cmd
+
+    tab=$(printf '\t')
+    old_ifs=$IFS
+    while read -r cmd; do
+        IFS=$tab
+        set -- $cmd
+        IFS="$old_ifs"
+        if [ "$1" = "EXECUTE:" ]; then
+            shift
+            "$@" &
+        else
+            printf "Ignoring input: %s\n" "$*" >&2
+        fi
+    done
+}
+
+if [ ! -x @pkgdatadir@/ltsp-manager.py ]; then
+    echo "@pkgdatadir@/ltsp-manager.py not found" >&2
+    exit 1
+fi
+
+cd @pkgdatadir@
+case "$1" in
+    # help and version need to run without root
+    -h|--help|-v|--version)
+        exec @PYTHON@ ltsp-manager.py "$@"
+        ;;
+    *)
+        if [ "$(id -u)" -ne 0 ]; then
+            pkexec @bindir@/ltsp-manager "$@" | exec_input
+# The above unfortunately wastes one extra shell.
+# mkfifo works but it makes the code a bit complicated.
+# This doesn't work, it waits until ltsp-manager is closed to evaluate its output
+#            exec_input <<EOF
+#$(pkexec /usr/sbin/ltsp-manager "$@")
+#EOF
+        else
+            # ltsp-manager rely on some SUDO* variables, set them if unset
+            if [ -n "$PKEXEC_UID" ] && [ -z "$SUDO_USER" ]; then
+                IFS=":" read SUDO_USER dummy SUDO_UID SUDO_GID dummy <<EOF
+$(getent passwd "$PKEXEC_UID")
+EOF
+                export SUDO_USER SUDO_UID SUDO_GID
+            fi
+            if [ -n "$PKEXEC_UID" ]; then
+                exec @PYTHON@ ltsp-manager.py "$@"
+            else
+                # This means that the user ran sudo ltsp-manager without pkexec
+                @PYTHON@ ltsp-manager.py "$@" | exec_input
+            fi
+        fi
+        ;;
+esac

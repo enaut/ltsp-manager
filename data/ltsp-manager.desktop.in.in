@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=LTSP Manager
+Comment=Easy administration of LTSP-based computer labs
+TryExec=@bindir@/ltsp-manager
+Exec=@bindir@/ltsp-manager
+Icon=ltsp-manager
+Terminal=false
+Type=Application
+Categories=System;
+X-KDE-SubstituteUID=true
+X-Ubuntu-Gettext-Domain=ltsp-manager

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=LTSP shared folders
+Comment=Creates shared folders symlinks for the groups the user is a member of
+Exec=@pkgdatadir@/scripts/create-symlinks.sh
+Icon=folders-publicshare
+Terminal=false
+Type=Application
+Categories=Settings;

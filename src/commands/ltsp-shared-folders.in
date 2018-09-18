@@ -1,0 +1,10 @@
+#!/bin/sh
+# Copyright (C) 2012 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+if [ ! -x @pkgdatadir@/ltsp_shared_folders.py ]; then
+    echo "@pkgdatadir@/ltsp_shared_folders.py not found!" >&2
+    exit 1
+fi
+cd @pkgdatadir@
+exec @PYTHON@ ./ltsp_shared_folders.py "$@"
