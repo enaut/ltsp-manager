@@ -23,7 +23,7 @@ class UserForm(object):
         self.builder = Gtk.Builder()
         self.builder.add_from_file('user_form.ui')
         
-        self.roles = {i : config.parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
+        self.roles = {i : config.get_config().parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
         self.selected_role = None
         
         self.dialog = self.builder.get_object('dialog')
@@ -76,7 +76,7 @@ class UserForm(object):
     def groups_visible_func(self, model, itr, x):
         primary_group = not model[itr][3] or self.username.get_text() in model[itr][0].members
         show_user_group = self.show_sys_groups or model[itr][0].is_user_group()
-        show_private_group = config.parser.getboolean('GUI', 'show_private_groups') or not model[itr][0].is_private()
+        show_private_group = config.get_config().parser.getboolean('GUI', 'show_private_groups') or not model[itr][0].is_private()
         return (show_user_group and show_private_group) or primary_group
     
     def on_show_sys_groups_toggled(self, widget):

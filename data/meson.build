@@ -80,7 +80,7 @@ if help2man.found()
   ]
   lmfile = files('../src/ltsp-manager.py')
   custom_target('man-ltsp-manager',
-                output: 'ltsp-manager',
+                output: 'ltsp-manager.8',
                 command: [
                   help2man, help2man_opts, '--output=@OUTPUT@', '--name=LTSP-Manager', lmfile
                 ],
@@ -89,7 +89,7 @@ if help2man.found()
 
   lsfile = files('../src/ltsp_shared_folders.py')
   custom_target('man-ltsp-shared-folders',
-                output: 'ltsp-shared-folders',
+                output: 'ltsp-shared-folders.8',
                 command: [
                   help2man, help2man_opts, '--output=@OUTPUT@', '--name=LTSP-Shared-Folders', lsfile
                 ],

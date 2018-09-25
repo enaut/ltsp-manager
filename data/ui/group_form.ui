@@ -26,6 +26,7 @@
     <property name="title" translatable="yes">Group properties</property>
     <property name="default_width">350</property>
     <property name="default_height">400</property>
+    <property name="icon_name">ltsp-manager</property>
     <property name="type_hint">dialog</property>
     <child>
       <placeholder/>

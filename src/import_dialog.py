@@ -115,13 +115,14 @@ class ImportDialog:
         for i in range(len(data)):
             row[i] = data[i]
     
-    def CheckIdenticalUsers(self, other=libuser.system):
+    def CheckIdenticalUsers(self, other=None):
         """Check if there are users in the list that are identical to 
         a user in the system and ask for removal."""
         attrs = ['name', 'uid', 'gid', 'primary_group', 'rname', 'office',
                  'wphone', 'hphone', 'other', 'directory', 'shell', 'min',
                  'max', 'warn', 'inact', 'expire', 'password']
-        
+        if not other:
+            other = libuser.get_system()
         identical = []
         for row in self.list:
             name = row[0]
@@ -160,18 +161,18 @@ class ImportDialog:
             user.directory = os.path.join(libuser.HOME_PREFIX, user.name)
         if user.uid in [None, '']:
             set_uids = [user.uid for u in self.set.users.values()]
-            user.uid = libuser.system.get_free_uid(exclude=set_uids)
+            user.uid = libuser.get_system().get_free_uid(exclude=set_uids)
         
         set_gids = [u.gid for u in self.set.users.values()]
-        sys_gids = {g.gid : g for g in libuser.system.groups.values()}
+        sys_gids = {g.gid : g for g in libuser.get_system().groups.values()}
         if user.gid in [None, '']:
             # print("user has no gid", user.name)
             if user.primary_group in [None, '']:
                 user.primary_group = user.name
-            if user.name in libuser.system.groups:
-                user.gid = libuser.system.groups[user.name].gid
+            if user.name in libuser.get_system().groups:
+                user.gid = libuser.get_system().groups[user.name].gid
             else:
-                user.gid = libuser.system.get_free_gid(exclude=set_gids)
+                user.gid = libuser.get_system().get_free_gid(exclude=set_gids)
             # print("gid found : ", user.gid)
         else:
             #print("User has no primary group but a gid:  ", user.gid)
@@ -183,7 +184,7 @@ class ImportDialog:
             #print("primary group found: ", user.primary_group, " for ", user.name)
         if user.primary_group in [None, '']:
             allgroups = self.set.groups.values()[:]
-            allgroups.extend(libuser.system.groups.values())
+            allgroups.extend(libuser.get_system().groups.values())
             for gr_obj in allgroups:
                 if gr_obj.gid == user.gid:
                     user.primary_group = gr_obj.name
@@ -241,9 +242,9 @@ class ImportDialog:
         """
         # All the system users
         sys_users = {'uids' : [], 'gids' : [], 'dirs' : []}
-        sys_users['uids'] = [user.uid for user in libuser.system.users.values()]
-        sys_users['gids'] = [user.gid for user in libuser.system.users.values()]
-        sys_users['dirs'] = [user.directory for user in libuser.system.users.values()]
+        sys_users['uids'] = [user.uid for user in libuser.get_system().users.values()]
+        sys_users['gids'] = [user.gid for user in libuser.get_system().users.values()]
+        sys_users['dirs'] = [user.directory for user in libuser.get_system().users.values()]
         # All the users in the new Set
         new_users = {'uids' : [], 'gids' : [], 'dirs' : []}
         new_users['uids'] = [user.uid for user in self.set.users.values()]
@@ -275,29 +276,29 @@ class ImportDialog:
                                      #the edit dialog won't allow illegal input
             def invalidate(n):
                 self.SetRowProps(row, n, 'char')
-            if not libuser.system.name_is_valid(u.name):
+            if not libuser.get_system().name_is_valid(u.name):
                 invalidate(0)
-            if not libuser.system.uid_is_valid(u.uid):
+            if not libuser.get_system().uid_is_valid(u.uid):
                 invalidate(1)
-            if not libuser.system.gid_is_valid(u.gid):
+            if not libuser.get_system().gid_is_valid(u.gid):
                 invalidate(2)
-            if not libuser.system.name_is_valid(u.primary_group):
+            if not libuser.get_system().name_is_valid(u.primary_group):
                 invalidate(3)
-            if not libuser.system.gecos_is_valid(u.rname):
+            if not libuser.get_system().gecos_is_valid(u.rname):
                 invalidate(4)
-            if not libuser.system.gecos_is_valid(u.office):
+            if not libuser.get_system().gecos_is_valid(u.office):
                 invalidate(5)
-            if not libuser.system.gecos_is_valid(u.wphone):
+            if not libuser.get_system().gecos_is_valid(u.wphone):
                 invalidate(6)
-            if not libuser.system.gecos_is_valid(u.hphone):
+            if not libuser.get_system().gecos_is_valid(u.hphone):
                 invalidate(7)
-            if not libuser.system.gecos_is_valid(u.other):
+            if not libuser.get_system().gecos_is_valid(u.other):
                 invalidate(8)
             # Not checking homedir validity
-            if not libuser.system.shell_is_valid(u.shell):
+            if not libuser.get_system().shell_is_valid(u.shell):
                 invalidate(10)
             for group in u.groups:
-                if not libuser.system.name_is_valid(group):
+                if not libuser.get_system().name_is_valid(group):
                     invalidate(11)
                     break
             chage = [u.lstchg, u.min, u.max, u.warn, u.inact, u.expire]
@@ -316,21 +317,21 @@ class ImportDialog:
                 self.SetRowProps(row, 9, 'dup')
             
             # Conflict checking (Existing system users)
-            if u.name in libuser.system.users:
+            if u.name in libuser.get_system().users:
                 self.SetRowProps(row, 0, 'con')
             if u.uid in sys_users['uids']:
                 self.SetRowProps(row, 1, 'con')
             # Check if the given group matches the gid on the system
-            if u.primary_group in libuser.system.groups:
+            if u.primary_group in libuser.get_system().groups:
                 # Get the existing groupid
-                should_be = libuser.system.groups[u.primary_group].gid
+                should_be = libuser.get_system().groups[u.primary_group].gid
                 if u.gid != should_be:
                     self.SetRowProps(row, 2, 'mismatch %s' % should_be)
             # Check if the given gid matches the groupname
             if u.gid in sys_users['gids']:
                 should_be = None
                 # iterate through groups to find name
-                for g in libuser.system.groups.values():
+                for g in libuser.get_system().groups.values():
                     if u.gid == g.gid:
                         should_be = g.name
                         break
@@ -368,9 +369,9 @@ class ImportDialog:
     def ResolveConflicts(self, widget=None):
         # All the system users
         sys_users = {'uids' : [], 'gids' : [], 'dirs' : []}
-        sys_users['uids'] = [user.uid for user in libuser.system.users.values()]
-        sys_users['gids'] = [user.gid for user in libuser.system.users.values()]
-        sys_users['dirs'] = [user.directory for user in libuser.system.users.values()]
+        sys_users['uids'] = [user.uid for user in libuser.get_system().users.values()]
+        sys_users['gids'] = [user.gid for user in libuser.get_system().users.values()]
+        sys_users['dirs'] = [user.directory for user in libuser.get_system().users.values()]
         # All the users in the new Set
         new_users = {'uids' : [], 'gids' : [], 'dirs' : []}
         new_users['uids'] = [user.uid for user in self.set.users.values()]
@@ -397,7 +398,7 @@ class ImportDialog:
             ofs = 40
             
             if row[1+ofs] in ['dup', 'con']:
-                new_uid = libuser.system.get_free_uid(exclude=new_users['uids'])
+                new_uid = libuser.get_system().get_free_uid(exclude=new_users['uids'])
                 new_users['uids'].append(new_uid)
                 log_uid(u.name, u.uid, new_uid)
                 u.uid = new_uid
@@ -411,14 +412,14 @@ class ImportDialog:
                 self.SetRowProps(row, 1, '')
                 
             #if row[2+ofs] in ['dup', 'con']:
-            #    new_gid = libuser.system.get_free_gid(exclude=new_users['gids'])
+            #    new_gid = libuser.get_system().get_free_gid(exclude=new_users['gids'])
             #    new_users['gids'].append(new_gid)
             #    log_gid(u.name, u.gid, new_gid)
             #    u.uid = new_uid
             #    self.SetRowProps(row, 2, '')
             
             if 'missmatch' in row[2+ofs] and 'missmatch' in row[3+ofs]:
-                new_gid = libuser.system.get_free_gid(exclude=new_users['gids'])
+                new_gid = libuser.get_system().get_free_gid(exclude=new_users['gids'])
                 new_gname = row[3+ofs].split()[1] + '_imported'
                 log_gid(u.name, u.gid, new_gid)
                 log_group(u.name, u.group, new_gname)
@@ -487,7 +488,7 @@ class ImportDialog:
                 dialogs.InfoDialog(_("No issues detected"), parent=self.dialog).showup()
     
     def Edit(self, widget, user):
-        form = user_form.ReviewUserDialog(libuser.system, user, role='')
+        form = user_form.ReviewUserDialog(libuser.get_system(), user, role='')
         form.dialog.set_transient_for(self.dialog)
         form.dialog.set_modal(True)
     
@@ -497,9 +498,9 @@ class ImportDialog:
         if response == Gtk.ResponseType.YES:
             new_groups = {}
             new_gids = [u.gid for u in self.set.users.values()]
-            sys_gids = [g.gid for g in libuser.system.groups.values()]
+            sys_gids = [g.gid for g in libuser.get_system().groups.values()]
             for u in self.set.users.values():
-                if u.primary_group not in libuser.system.groups:
+                if u.primary_group not in libuser.get_system().groups:
                    if u.primary_group not in new_groups:
                         g_obj = libuser.Group(u.primary_group, u.gid)
                         new_groups[u.primary_group] = g_obj
@@ -507,13 +508,13 @@ class ImportDialog:
             
             for u in self.set.users.values():
                 for g in u.groups:
-                    if g not in libuser.system.groups:
+                    if g not in libuser.get_system().groups:
                         if g not in new_groups:
                             g_obj = libuser.Group(g)
                             if g in self.set.groups:
                                 g_obj.gid = self.set.groups[g].gid
                             if g_obj.gid in new_gids+sys_gids or g_obj.gid is None:
-                                g_obj.gid = libuser.system.get_free_gid(exclude=new_gids)
+                                g_obj.gid = libuser.get_system().get_free_gid(exclude=new_gids)
                                 new_gids.append(g_obj.gid)
                             new_groups[g] = g_obj
                         new_groups[g].members[u.name] = u
@@ -528,18 +529,18 @@ class ImportDialog:
                 wait_gtk()
                 progress.set_message(_("Adding group {group}").format(group=gr.name))
                 gr_tmp = libuser.Group(gr.name, gr.gid)
-                libuser.system.add_group(gr_tmp)
+                libuser.get_system().add_group(gr_tmp)
                 progress.inc()
             for u in self.set.users.values():
                 wait_gtk()
                 progress.set_message(_("Adding user {user}").format(user=u.name))
-                libuser.system.add_user(u)
+                libuser.get_system().add_user(u)
                 progress.inc()
             for gr in new_groups.values():
                 for u in gr.members.values():
                     wait_gtk()
                     progress.set_message(_("Adding user {user} to group {group}").format(user=u.name, group=gr.name))
-                    libuser.system.add_user_to_groups(u, [gr])
+                    libuser.get_system().add_user_to_groups(u, [gr])
                     progress.inc()
             
         else:
@@ -641,7 +642,7 @@ class ImportDialog:
             elif col == 19:
                 # Set user.password from plainpw
                 u.plainpw = new_text
-                u.password = libuser.system.encrypt(u.plainpw)
+                u.password = libuser.get_system().encrypt(u.plainpw)
             else:
                 u.__dict__[attrs[col]] = new_text
         self.SetRowFromObject(model[path])

@@ -169,7 +169,7 @@ class SignupServerWindow:
         self.reject_tb = self.builder.get_object('reject_tb')
         self.review_tb = self.builder.get_object('review_tb')
         self.selection = self.builder.get_object('treeview-selection')
-        self.roles = {i : config.parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
+        self.roles = {i : config.get_config().parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
         self.window.show()
         self.setup = SettingsDialog(system, self)
     
@@ -181,10 +181,10 @@ class SignupServerWindow:
             user.directory = os.path.join(libuser.HOME_PREFIX, user.name)
         if user.uid in [None, '']:
             set_uids = [r[0].user.uid for r in self.requests_list]
-            user.uid = libuser.system.get_free_uid(exclude=set_uids)
+            user.uid = libuser.get_system().get_free_uid(exclude=set_uids)
         if user.gid in [None, '']:
             set_gids = [r[0].user.gid for r in self.requests_list]
-            user.gid = libuser.system.get_free_gid(exclude=set_gids)
+            user.gid = libuser.get_system().get_free_gid(exclude=set_gids)
         if user.primary_group in [None, '']:
             user.primary_group = user.name
         if user.shell in [None, '']:
@@ -217,7 +217,7 @@ class SignupServerWindow:
         else:
             groups = []
         for gr in groups:
-            if gr and gr not in request.user.groups and gr in libuser.system.groups:
+            if gr and gr not in request.user.groups and gr in libuser.get_system().groups:
                 request.user.groups.append(gr)
         self.builder.get_object('apply_button').set_sensitive(True)
     
@@ -283,7 +283,7 @@ class SignupServerWindow:
                 if user.primary_group not in self.system.groups:
                     self.system.add_group(libuser.Group(user.primary_group, user.gid, {}))
                 self.system.add_user(user)
-                libuser.system.reload()
+                libuser.get_system().reload()
                 # FIXME: ltsp-manager trees won't update
                 for counter, row in enumerate(self.requests_list):
                     if row[0].user.name == user.name:
@@ -343,14 +343,14 @@ class SettingsDialog:
         self.dlg.destroy()
    
     def populate_roles(self):
-         check_list = config.parser.get('GUI', 'requests_checked_roles').split(',')
-         for role in config.parser.options('roles'):
+         check_list = config.get_config().parser.get('GUI', 'requests_checked_roles').split(',')
+         for role in config.get_config().parser.options('roles'):
             check = role in check_list
             self.roles_list.append([check, role])
          self.set_header_checkbutton(self.check_all_roles, self.roles_list)
     
     def populate_groups(self):
-        check_list = config.parser.get('GUI', 'requests_checked_groups').split(',')
+        check_list = config.get_config().parser.get('GUI', 'requests_checked_groups').split(',')
         for group in self.system.groups.values():
             if group.is_user_group() and not group.is_private():
                 check = group.name in check_list
@@ -403,9 +403,9 @@ class SettingsDialog:
     
     def on_continue_clicked(self, widget):
         self.dlg.hide()
-        config.parser.set('GUI', 'requests_checked_groups', ','.join([r[1] for r in self.groups_list if r[0]]))
-        config.parser.set('GUI', 'requests_checked_roles', ','.join([r[1] for r in self.roles_list if r[0]]))
-        config.save()
+        config.get_config().parser.set('GUI', 'requests_checked_groups', ','.join([r[1] for r in self.groups_list if r[0]]))
+        config.get_config().parser.set('GUI', 'requests_checked_roles', ','.join([r[1] for r in self.roles_list if r[0]]))
+        config.get_config().save()
         self.parent.startServer(self.get_selected_groups(), self.get_selected_roles())
     
     def on_cancel_clicked(self, widget):
@@ -415,5 +415,5 @@ class SettingsDialog:
 if __name__ == '__main__':
     import libuser
     print(_("Starting Signup Server"))
-    window = SignupServerWindow(libuser.system)
+    window = SignupServerWindow(libuser.get_system())
     

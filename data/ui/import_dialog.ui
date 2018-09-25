@@ -162,6 +162,7 @@
     <property name="default_width">500</property>
     <property name="default_height">400</property>
     <property name="destroy_with_parent">True</property>
+    <property name="icon_name">ltsp-manager</property>
     <property name="type_hint">dialog</property>
     <property name="transient_for">import_dialog</property>
     <child>

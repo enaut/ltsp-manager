@@ -29,7 +29,7 @@ class NewUsersDialog:
         self.user_tree = self.glade.get_object('user_treeview')
         self.user_store = self.glade.get_object('user_liststore')
         
-        self.roles = {i : config.parser.get('roles', i) for i in config.parser.options('roles')}
+        self.roles = {i : config.get_config().parser.get('roles', i) for i in config.get_config().parser.options('roles')}
         self.groups = []
         
         self.glade.get_object('computers_number_spin').set_value(12)

@@ -45,7 +45,7 @@ class CSV:
 
                 # If plainpw is set, override and update password
                 if user.plainpw:
-                    user.password = libuser.system.encrypt(user.plainpw)
+                    user.password = libuser.get_system().encrypt(user.plainpw)
 
                 # Convert groups string to groups object
                 if user.name:

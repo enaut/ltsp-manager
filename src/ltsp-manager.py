@@ -19,8 +19,8 @@ import subprocess
 import sys
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
-from twisted.internet import gtk3reactor
-gtk3reactor.install()
+from twisted.internet import gireactor
+gireactor.install()
 from twisted.internet import reactor, defer
 
 import about_dialog
@@ -31,7 +31,7 @@ import dialogs
 import export_dialog
 import group_form
 import import_dialog
-import ip_dialog
+#import ip_dialog
 import libuser
 import ltsp_info
 import parsers
@@ -41,9 +41,9 @@ import version
 
 class Gui:
     def __init__(self):
-        self.system = libuser.system
+        self.system = libuser.get_system()
         self.sf=ltsp_shared_folders.SharedFolders(self.system)
-        self.conf = config.parser
+        self.conf = config.get_config()
 
         resource = Gio.resource_load('ltsp-manager.gresource')
         Gio.Resource._register(resource)
@@ -66,8 +66,8 @@ class Gui:
 
         self.show_private_groups = False
         self.show_system_groups = False
-        self.builder.get_object('mi_show_private_groups').set_active(self.conf.getboolean('GUI', 'show_private_groups'))
-        self.builder.get_object('mi_show_system_groups').set_active(self.conf.getboolean('GUI', 'show_system_groups'))
+        self.builder.get_object('mi_show_private_groups').set_active(self.conf.parser.getboolean('GUI', 'show_private_groups'))
+        self.builder.get_object('mi_show_system_groups').set_active(self.conf.parser.getboolean('GUI', 'show_system_groups'))
         if locale.getdefaultlocale()[0] != "el_GR":
             self.builder.get_object("mn_server").remove(self.builder.get_object('mi_configuration_network'))
             self.builder.get_object("mn_help").remove(self.builder.get_object('mi_helpdesk_ticket'))
@@ -80,7 +80,7 @@ class Gui:
         mn_view_columns = self.builder.get_object('mn_view_columns')
         users_columns = self.users_tree.get_columns()
 
-        visible = self.conf.get('GUI', 'visible_user_columns')
+        visible = self.conf.parser.get('GUI', 'visible_user_columns')
         if visible == 'all':
             visible = [c.get_title() for c in users_columns]
         else:
@@ -265,12 +265,12 @@ class Gui:
         self.groups_tree.get_selection().unselect_all()
     
     def on_main_window_delete_event(self, widget, event):
-        self.conf.set('GUI', 'show_private_groups', str(self.show_private_groups))
-        self.conf.set('GUI', 'show_system_groups', str(self.show_system_groups))
+        self.conf.parser.set('GUI', 'show_private_groups', str(self.show_private_groups))
+        self.conf.parser.set('GUI', 'show_system_groups', str(self.show_system_groups))
         visible_cols = [col.get_title() for col in self.users_tree.get_columns() if col.get_visible()]
         # TODO: restore this when LP: #1710416 is fixed
-        self.conf.set('GUI', 'visible_user_columns', 'all')
-        config.save()
+        self.conf.parser.set('GUI', 'visible_user_columns', 'all')
+        self.conf.save()
         exit()
 
 ## File menu

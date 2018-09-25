@@ -75,6 +75,7 @@
     <property name="border_width">5</property>
     <property name="default_width">590</property>
     <property name="default_height">640</property>
+    <property name="icon_name">ltsp-manager</property>
     <property name="type_hint">dialog</property>
     <signal name="delete-event" handler="on_dialog_delete_event" swapped="no"/>
     <child>

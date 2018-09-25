@@ -9,6 +9,7 @@
   </object>
   <object class="GtkWindow" id="help_dialog">
     <property name="can_focus">False</property>
+    <property name="icon_name">ltsp-manager</property>
     <signal name="delete-event" handler="on_help_close_clicked" swapped="no"/>
     <child>
       <placeholder/>

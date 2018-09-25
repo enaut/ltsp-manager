@@ -1,7 +1,7 @@
 import('python3')
 
 sysconfdefaultdir = join_paths(sysconfdir, 'default')
-systemddir = join_paths(sysconfdir, 'systemd', 'system')
+systemddir = join_paths('/', 'lib', 'systemd', 'system')
 ldmdir = join_paths(datadir, 'ldm')
 
 install_data('ltsp-shared-folders', install_dir: sysconfdefaultdir)

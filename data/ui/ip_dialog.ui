@@ -36,6 +36,7 @@
     <property name="title" translatable="yes">Configure network connection</property>
     <property name="modal">True</property>
     <property name="default_width">570</property>
+    <property name="icon_name">ltsp-manager</property>
     <property name="type_hint">dialog</property>
     <property name="deletable">False</property>
     <signal name="response" handler="on_ip_dialog_response" swapped="no"/>

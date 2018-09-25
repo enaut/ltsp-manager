@@ -444,11 +444,12 @@ class System(Set):
         self.notifier._addWatch(filename, self.mask, False, [self.on_fd_changed])
         self.system_event.notify(filename.path)
 
-system = None
+_system_ = None
 def get_system():
-    if not system:
-        system = System()
-    return system
+    global _system_
+    if not _system_:
+        _system_ = System()
+    return _system_
 
 if __name__ == '__main__':
     print("System users:", ', '.join(system.users))
