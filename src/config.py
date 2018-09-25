@@ -12,7 +12,7 @@ import sys
 class Config:
     def __init__(self):
         self.path = os.path.expanduser('~/.config/ltsp-manager/')
-        self.settings_file = os.path.join(path, 'settings')
+        self.settings_file = os.path.join(self.path, 'settings')
 
         self.gui_defaults = {
             'show_system_groups' : False,
@@ -35,17 +35,17 @@ class Config:
 
         self.parser = configparser.ConfigParser()
 
-        if not os.path.isdir(path):
-            os.makedirs(path)
+        if not os.path.isdir(self.path):
+            os.makedirs(self.path)
             
-        if not os.path.isfile(settings_f):
-            setdefaults()
+        if not os.path.isfile(self.settings_file):
+            self.setdefaults()
 
         try:
-            parser.read(settings_f)
+            self.parser.read(self.settings_file)
         except:
-            print("could not read config file: ", sys.exc_info()[0])
-        setdefaults()
+            print("could not read config file: ", sys.exc_info())
+        self.setdefaults()
 
     def save(self):
         try:
@@ -76,6 +76,7 @@ class Config:
 
 _config_ = None
 def get_config():
+    global _config_
     if not _config_:
         _config_ = Config()
     return _config_

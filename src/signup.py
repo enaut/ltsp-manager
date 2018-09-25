@@ -14,7 +14,7 @@ Client side signup logic and form.
 import crypt
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gio
 import os
 import random
 import re
@@ -88,6 +88,9 @@ class Connection:
 
 class UserForm(object):
     def __init__(self, host='server', port=790):
+
+        resource = Gio.resource_load('ltsp-manager.gresource')
+        Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()
         self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/signup_form.ui')

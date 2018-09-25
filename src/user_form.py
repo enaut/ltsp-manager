@@ -23,7 +23,7 @@ class UserForm(object):
         self.builder = Gtk.Builder()
         self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/user_form.ui')
         
-        self.roles = {i : config.get_config().parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
+        self.roles = {i : config.get_config().parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.get_config().parser.options('roles')}
         self.selected_role = None
         
         self.dialog = self.builder.get_object('dialog')

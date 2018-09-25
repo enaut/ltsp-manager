@@ -13,7 +13,7 @@ import version
 class AboutDialog:
     def __init__(self, main_window):
         self.builder = Gtk.Builder()
-        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/about_dialog.ui")
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/about_dialog.ui')
         self.dialog = self.builder.get_object("aboutdialog1")
         self.dialog.set_version(version.__version__)
         self.dialog.set_transient_for(main_window)

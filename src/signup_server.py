@@ -11,7 +11,7 @@ Signup server and form.
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gio
 import os
 import time
 from twisted.internet.protocol import Factory
@@ -161,6 +161,10 @@ class Request(object):
 class SignupServerWindow:
     def __init__(self, system):
         self.system = system
+
+        resource = Gio.resource_load('ltsp-manager.gresource')
+        Gio.Resource._register(resource)
+
         self.builder = Gtk.Builder()
         self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/signup_server.ui')
         self.builder.connect_signals(self)
@@ -169,7 +173,7 @@ class SignupServerWindow:
         self.reject_tb = self.builder.get_object('reject_tb')
         self.review_tb = self.builder.get_object('review_tb')
         self.selection = self.builder.get_object('treeview-selection')
-        self.roles = {i : config.get_config().parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.parser.options('roles')}
+        self.roles = {i : config.get_config().parser.get('roles', i).replace('$$teachers', self.system.teachers) for i in config.get_config().parser.options('roles')}
         self.window.show()
         self.setup = SettingsDialog(system, self)
     
