@@ -22,7 +22,7 @@ class NewUsersDialog:
         self.sf = sf
 
         self.glade = Gtk.Builder()
-        self.glade.add_from_file('create_users.ui')
+        self.glade.add_from_resource('/org/ltsp/ltsp-manager/ui/create_users.ui')
         self.glade.connect_signals(self)
         self.dialog = self.glade.get_object('create_users_dialog')
         self.dialog.set_transient_for(self.parent)

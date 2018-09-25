@@ -30,7 +30,7 @@ class ImportDialog:
         
         gladefile = "import_dialog.ui"
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(gladefile)
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/' + gladefile)
         self.dialog = self.builder.get_object('import_dialog')
         
         dic = {"on_dialog_destroy" : self.Exit,

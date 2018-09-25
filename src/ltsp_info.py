@@ -21,7 +21,7 @@ class LtspInfo:
     def __init__(self, main_window):
         gladefile = "ltsp_info.ui"
         self.builder = Gtk.Builder()
-        self.builder.add_from_file(gladefile)
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/' + gladefile)
         self.builder.connect_signals(self)
         self.dialog = self.builder.get_object("dialog1")
         self.dialog.set_transient_for(main_window)

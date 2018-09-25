@@ -74,7 +74,7 @@ class ProgressDialog():
         self.total = amount_of_operations
 
         self.glade = Gtk.Builder()
-        self.glade.add_from_file('dialogs.ui')
+        self.glade.add_from_resource('/org/ltsp/ltsp-manager/ui/dialogs.ui')
         self.glade.connect_signals(self)
 
         self.progress_dialog = self.glade.get_object('progress_dialog')

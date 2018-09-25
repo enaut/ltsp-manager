@@ -90,7 +90,7 @@ class UserForm(object):
     def __init__(self, host='server', port=790):
 
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('signup_form.ui')
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/signup_form.ui')
         self.window = self.builder.get_object('signup_window')
 
         try:

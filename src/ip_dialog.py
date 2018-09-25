@@ -344,7 +344,7 @@ class Interface:
 class Page:
     def __init__(self):
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('ip_dialog.ui')
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/ip_dialog.ui')
         self.grid = self.builder.get_object('grid')
         self.method_lstore = self.builder.get_object('method_lstore')
         self.method_entry = self.builder.get_object('method_entry')
@@ -425,7 +425,7 @@ class Ip_Dialog:
         self.ts_dns = ['127.0.0.1', '194.63.238.4', '8.8.8.8']
         self.ltsp_ips = dict(ip='192.168.67.1', mask='255.255.255.0', route='0.0.0.0')
         self.builder = Gtk.Builder()
-        self.builder.add_from_file('ip_dialog.ui')
+        self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/ip_dialog.ui')
         self.builder.connect_signals(self)
         self.main_dlg = self.builder.get_object('main_dlg')
         self.main_dlg_grid = self.builder.get_object('main_dlg_grid')
