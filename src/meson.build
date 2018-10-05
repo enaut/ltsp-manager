@@ -29,6 +29,14 @@ configure_file(
   install_dir: get_option('bindir')
 )
 
+configure_file(
+  input: 'paths.py.in',
+  output: 'paths.py',
+  configuration: conf,
+  install: true,
+  install_dir: pkgdatadir
+)
+
 ltsp_manager_sources = [
   'version.py',
   'about_dialog.py',

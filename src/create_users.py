@@ -14,12 +14,14 @@ import config
 import libuser
 import ltsp_shared_folders
 import dialogs
+import os
 
 class NewUsersDialog:
     def __init__(self, system, sf, parent):
         self.system = system
         self.parent = parent
         self.sf = sf
+        self.home = os.parent(os.path.expanduser('~'))
 
         self.glade = Gtk.Builder()
         self.glade.add_from_resource('/org/ltsp/ltsp-manager/ui/create_users.ui')
@@ -98,7 +100,7 @@ class NewUsersDialog:
                 ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
                     str(compn)).replace('{0i}', '%02d' %compn)
                 self.user_store.append([ev(self.username_tmpl), ev(self.name_tmpl),
-                    '/home/'+ev(self.username_tmpl),ev(self.password_tmpl)])
+                    self.home + ev(self.username_tmpl),ev(self.password_tmpl)])
 
         users_number = self.computers * len(self.classes)
         self.glade.get_object('users_number_label').set_text(
@@ -180,7 +182,7 @@ class NewUsersDialog:
                 self.system.add_group(g)
                 u=libuser.User(name=uname, uid=tmp_uid,
                     gid=tmp_gid, rname=ev(self.name_tmpl),
-                    directory=('/home/'+ev(self.username_tmpl)),
+                    directory=(self.home + ev(self.username_tmpl)),
                     lstchg = (datetime.datetime.today() - epoch).days,
                     groups=[classn],
                     password=self.system.encrypt(tmp_password))

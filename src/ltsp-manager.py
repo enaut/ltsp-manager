@@ -38,6 +38,7 @@ import parsers
 import ltsp_shared_folders
 import user_form
 import version
+import paths
 
 class Gui:
     def __init__(self):
@@ -45,7 +46,7 @@ class Gui:
         self.sf=ltsp_shared_folders.SharedFolders(self.system)
         self.conf = config.get_config()
 
-        resource = Gio.resource_load('ltsp-manager.gresource')
+        resource = Gio.resource_load(paths.pkgdatadir + 'ltsp-manager.gresource')
         Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()
@@ -276,7 +277,7 @@ class Gui:
 ## File menu
 
     def on_mi_signup_activate(self, widget):
-        subprocess.Popen(['./signup_server.py'])
+        subprocess.Popen([paths.pkgdatadir + 'signup_server.py'])
         
     #FIXME: Maybe use notify /etc/group then self.populate_treeviews not need to 
     #update user groups for shared folder library
@@ -348,7 +349,7 @@ class Gui:
 ## Server menu
 
     def check_initial_setup(self):
-        if common.run_command(['scripts/initial-setup.sh', '--check'])[0]:
+        if common.run_command([paths.pkgdatadir + 'scripts/initial-setup.sh', '--check'])[0]:
             return
         message = "You need to run the initial LTSP setup actions."
         second_message = _("LTSP Manager has detected that you either haven't yet run the initial LTSP setup, or that you upgraded to a new version and you need to run it again.") + \
@@ -357,10 +358,13 @@ class Gui:
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:
-            subprocess.Popen(['scripts/run-in-terminal.sh', 'scripts/initial-setup.sh', '--no-prompt'])
+            subprocess.Popen([paths.pkgdatadir + 'scripts/run-in-terminal.sh',
+                              paths.pkgdatadir + 'scripts/initial-setup.sh',
+                              '--no-prompt'])
 
     def on_mi_initial_setup_activate(self, widget):
-        subprocess.Popen(['scripts/run-in-terminal.sh', 'scripts/initial-setup.sh'])
+        subprocess.Popen([paths.pkgdatadir + 'scripts/run-in-terminal.sh',
+                          paths.pkgdatadir + 'scripts/initial-setup.sh'])
 
     def on_mi_configuration_network_activate(self, widget):
         ip_dialog.Ip_Dialog(self.main_window)
@@ -372,14 +376,16 @@ class Gui:
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:        
-            subprocess.Popen(['scripts/run-in-terminal.sh', 'ltsp-update-image', '--cleanup', '/'])
+            subprocess.Popen([paths.pkgdatadir + 'scripts/run-in-terminal.sh',
+                              'ltsp-update-image', '--cleanup', '/'])
 
     def on_mi_ltsp_revert_image_activate(self, widget):
         message = _("Are you sure you want to revert to the previous version of the LTSP image?")
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES: 
-            subprocess.Popen(['scripts/run-in-terminal.sh', 'ltsp-update-image', '--revert', '/'])
+            subprocess.Popen([paths.pkgdatadir + 'scripts/run-in-terminal.sh',
+                              'ltsp-update-image', '--revert', '/'])
 
     def on_mi_edit_lts_conf_activate(self, widget):
         for f in glob.glob('/var/lib/tftpboot/ltsp/*/lts.conf'):
@@ -390,10 +396,10 @@ class Gui:
             self.edit_file(f)
 
     def on_mi_edit_ltsp_shared_folders_activate(self, widget):
-        self.edit_file('/etc/default/ltsp-shared-folders')
+        self.edit_file(paths.sysconfdir + 'default/ltsp-shared-folders')
 
     def on_mi_edit_dnsmasq_conf_activate(self, widget):
-        self.edit_file('/etc/dnsmasq.d/ltsp-server-dnsmasq.conf')
+        self.edit_file(paths.sysconfdir + 'dnsmasq.d/ltsp-server-dnsmasq.conf')
 
 ## View menu
 

@@ -225,8 +225,8 @@ class System(Set):
         self.libuser_event = Event()
         self.system_event.connect(self.on_system_changed)
         self.mask = inotify.IN_MODIFY
-        self.group_fp = filepath.FilePath('/etc/group')
-        self.shadow_fp = filepath.FilePath('/etc/shadow')
+        self.group_fp = filepath.FilePath(paths.sysconfdir + 'group')
+        self.shadow_fp = filepath.FilePath(paths.sysconfdir + 'shadow')
         self.notifier = inotify.INotify()
         self.notifier.startReading()
         self.notifier._addWatch(self.group_fp, self.mask, False, [self.on_fd_changed])
@@ -381,7 +381,7 @@ class System(Set):
             
     def get_valid_shells(self):
         try:
-            f = open("/etc/shells")
+            f = open(paths.sysconfdir + "shells")
             shells = [line.strip() for line in f.readlines() if line.strip()[0] != '#']
             f.close()
         except:

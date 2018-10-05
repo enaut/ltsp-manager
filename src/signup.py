@@ -23,6 +23,7 @@ import sys
 
 import common
 import iso843
+import paths
 
 class Connection:
     def __init__(self, host, port):
@@ -89,7 +90,7 @@ class Connection:
 class UserForm(object):
     def __init__(self, host='server', port=790):
 
-        resource = Gio.resource_load('ltsp-manager.gresource')
+        resource = Gio.resource_load(paths.pkgdatadir + 'ltsp-manager.gresource')
         Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()

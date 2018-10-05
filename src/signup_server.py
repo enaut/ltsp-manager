@@ -24,6 +24,7 @@ import common
 import config
 import dialogs
 import user_form
+import paths
 
 class Registrations(LineReceiver):
     def __init__(self, connections, requests, gui, system, groups, roles):
@@ -162,7 +163,7 @@ class SignupServerWindow:
     def __init__(self, system):
         self.system = system
 
-        resource = Gio.resource_load('ltsp-manager.gresource')
+        resource = Gio.resource_load(paths.pkgdatadir + 'ltsp-manager.gresource')
         Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()
