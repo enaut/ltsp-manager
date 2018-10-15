@@ -17,4 +17,5 @@ override_dh_auto_install:
 	DESTDIR=$(CURDIR)/debian/ltsp-manager ninja -C build -v install
 
 %:
+	echo dh "$@"
 	dh $@
