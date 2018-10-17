@@ -1,3 +1,4 @@
+# These paths are configured by the install script.
 python = "@PYTHON@/"
 version = "@VERSION@/"
 localedir = "@localedir@/"

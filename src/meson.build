@@ -30,7 +30,7 @@ configure_file(
 )
 
 configure_file(
-  input: 'paths.py.in',
+  input: 'paths.py',
   output: 'paths.py',
   configuration: conf,
   install: true,
