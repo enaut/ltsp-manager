@@ -78,7 +78,7 @@ if help2man.found()
     '--section=8',
     '--help-option=--help',
   ]
-  lmfile = files('../src/ltsp-manager.py')
+  lmfile = join_paths(pkgdatadir, 'ltsp-manager.py')
   custom_target('man-ltsp-manager',
                 output: 'ltsp-manager.8',
                 command: [
@@ -87,7 +87,7 @@ if help2man.found()
                 install: true,
                 install_dir: join_paths(datadir, 'man/man8'))
 
-  lsfile = files('../src/ltsp_shared_folders.py')
+  lsfile = join_paths(pkgdatadir, 'ltsp_shared_folders.py')
   custom_target('man-ltsp-shared-folders',
                 output: 'ltsp-shared-folders.8',
                 command: [
