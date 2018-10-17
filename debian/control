@@ -10,7 +10,8 @@ Build-Depends: debhelper,
  libxml2-utils,
  libglib2.0-dev,
  help2man,
- meson
+ meson,
+ policykit-1
 Standards-Version: 4.1.4
 Vcs-Git: https://git.launchpad.net/ltsp-manager
 Vcs-Browser: https://git.launchpad.net/ltsp-manager

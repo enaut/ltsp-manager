@@ -56,7 +56,7 @@ ltsp_manager_sources = [
   'parsers.py',
   'signup.py',
   'signup_server.py',
-  'user_form.py',
+  'user_form.py'
 ]
 
 
