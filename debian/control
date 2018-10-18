@@ -18,7 +18,9 @@ Build-Depends: debhelper,
  policykit-1,
  python3,
  python3-gi,
- python3-twisted
+ python3-twisted,
+ python3-dbus,
+ gir1.2-gtk-3.0
 Standards-Version: 4.1.4
 Vcs-Git: https://git.launchpad.net/ltsp-manager
 Vcs-Browser: https://git.launchpad.net/ltsp-manager
@@ -33,7 +35,9 @@ Depends: ${misc:Depends},
  policykit-1,
  python3,
  python3-gi,
- python3-twisted
+ python3-twisted,
+ gir1.2-gtk-3.0,
+ python3-dbus
 Recommends: apturl,
  bindfs,
  dnsmasq,
