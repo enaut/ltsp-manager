@@ -163,7 +163,7 @@ class SignupServerWindow:
     def __init__(self, system):
         self.system = system
 
-        resource = Gio.resource_load(paths.pkgdatadir + 'ltsp-manager.gresource')
+        resource = Gio.resource_load(os.path.join(paths.pkgdatadir, 'ltsp-manager.gresource'))
         Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()
@@ -243,8 +243,8 @@ class SignupServerWindow:
         row[6] = ','.join([g for g in request.user.groups if g and g not in role_groups])
     
     def get_selected_rows(self):
-        paths = self.selection.get_selected_rows()[1]
-        selected = [self.requests_list[path] for path in paths]
+        pathlist = self.selection.get_selected_rows()[1]
+        selected = [self.requests_list[path] for path in pathlist]
         return selected
     
     def on_treeview_selection_changed(self, widget):

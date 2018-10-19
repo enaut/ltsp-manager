@@ -14,6 +14,7 @@ import sys
 import subprocess
 import libuser
 import version
+import paths
 
 # TODO: after the workshop, let's move the ltsp_shared_folders ui into its own
 # dialog, and only disable editing groups that have shares in group_form.py
@@ -72,7 +73,7 @@ class SharedFolders():
             "SHARE_GROUPS":"teachers",
             "ADM_UID":"1000",
             "ADM_GID":"1000"}
-        contents=shlex.split(open(paths.sysconfdir + "/default/ltsp-shared-folders").read(), True)
+        contents=shlex.split(open(os.path.join(paths.sysconfdir, "default", "ltsp-shared-folders")).read(), True)
         self.config.update(dict(v.split("=") for v in contents))
         self.config["SHARE_DIR/"]=os.path.join(self.config["SHARE_DIR"], "")
         self.config["SHARE_CONF"]=self.config["SHARE_DIR/"] + ".ltsp-shared-folders"

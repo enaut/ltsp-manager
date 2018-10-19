@@ -132,12 +132,12 @@ class UserForm(object):
         self.builder.get_object('set_primary_button').set_sensitive(len(widget.get_selected_rows()[1]) == 1)
     
     def on_set_primary_button_clicked(self, widget):
-        # The paths list will always contain 1 element, I just use
+        # The pathlist will always contain 1 element, I just use
         # get_selected_rows here instead of get_selected for extra features
         # such as context menu actions which would work with multiple selection
-        model, paths = self.groups_tree.get_selection().get_selected_rows()
+        model, pathlist = self.groups_tree.get_selection().get_selected_rows()
         
-        path = self.groups_sort[paths[0]].path
+        path = self.groups_sort[pathlist[0]].path
         path = self.groups_sort.convert_path_to_child_path(path)
         path = self.groups_filter.convert_path_to_child_path(path)
         row = self.groups_store[path]

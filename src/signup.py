@@ -90,7 +90,7 @@ class Connection:
 class UserForm(object):
     def __init__(self, host='server', port=790):
 
-        resource = Gio.resource_load(paths.pkgdatadir + 'ltsp-manager.gresource')
+        resource = Gio.resource_load(os.path.join(paths.pkgdatadir, 'ltsp-manager.gresource'))
         Gio.Resource._register(resource)
 
         self.builder = Gtk.Builder()

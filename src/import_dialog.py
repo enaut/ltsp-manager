@@ -597,21 +597,21 @@ class ImportDialog:
     def Click(self, treeview, event):
         '''if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             selection = treeview.get_selection()
-            model, paths = selection.get_selected_rows()
-            if len(paths) > 0:
-                user = self.set.users[model[paths[0]][0]]
+            model, pathlist = selection.get_selected_rows()
+            if len(pathlist) > 0:
+                user = self.set.users[model[pathlist[0]][0]]
                 self.Edit(None, user)''' # TODO: Uncomment me when the Dialog editing can be done
         if event.button == 3 and event.type == Gdk.EventType.BUTTON_PRESS:
             selection = treeview.get_selection()
-            model, paths = selection.get_selected_rows()
-            if len(paths) > 0:
+            model, pathlist = selection.get_selected_rows()
+            if len(pathlist) > 0:
                 self.menu.popup(None, None, None, None, event.button, event.time)
                 return True
     
     def on_delete_users_activate(self, widget):
         selection = self.tree.get_selection() 
-        model, paths = selection.get_selected_rows()
-        iters = [model.get_iter(path) for path in paths]
+        model, pathlist = selection.get_selected_rows()
+        iters = [model.get_iter(path) for path in pathlist]
         for i in iters:
             self.RemoveRow(i)
         self.DetectConflicts()
@@ -651,8 +651,8 @@ class ImportDialog:
     def Delete(self, treeview, event):
         if Gdk.keyval_name(event.keyval) == "Delete":
             selection = treeview.get_selection() 
-            model, paths = selection.get_selected_rows()
-            iters = [model.get_iter(path) for path in paths]
+            model, pathlist = selection.get_selected_rows()
+            iters = [model.get_iter(path) for path in pathlist]
             for i in iters:
                 self.RemoveRow(i)
             self.DetectConflicts()

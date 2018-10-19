@@ -1,6 +1,6 @@
 # These paths are configured by the install script.
-python = "@PYTHON@/"
-version = "@VERSION@/"
+python = "@PYTHON@"
+version = "@VERSION@"
 localedir = "@localedir@/"
 datadir = "@datadir@/"
 pkgdatadir = "@pkgdatadir@/"
