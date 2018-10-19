@@ -21,7 +21,7 @@ class NewUsersDialog:
         self.system = system
         self.parent = parent
         self.sf = sf
-        self.home = os.parent(os.path.expanduser('~'))
+        self.home = os.path.dirname(os.path.expanduser('~'))
 
         self.glade = Gtk.Builder()
         self.glade.add_from_resource('/org/ltsp/ltsp-manager/ui/create_users.ui')
@@ -205,4 +205,3 @@ class NewUsersDialog:
     def on_help_close_clicked(self, widget, dummy=None):
         self.help_dialog.hide()
         return True
-
