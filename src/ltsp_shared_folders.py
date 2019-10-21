@@ -15,6 +15,7 @@ import subprocess
 import libuser
 import version
 import paths
+import argparse
 
 # TODO: after the workshop, let's move the ltsp_shared_folders ui into its own
 # dialog, and only disable editing groups that have shares in group_form.py
@@ -116,7 +117,7 @@ class SharedFolders():
                 "-p", "770,af-x", "--chown-deny", "--chgrp-deny",
                 "--chmod-deny", dir, dir])
 
-    def rename(self, src, dst):
+    def rename(self, old_group, new_group):
         """Rename folder src to group dst.
            Call groupmod to rename the group before calling this function."""
         if dst not in self.system.groups:
@@ -192,81 +193,49 @@ SHARE_GROUPS="%s"
             groups=self.system.share_groups
         return list(set(self.system.groups) & set(groups))
 
-def gen_usage():
-    return _("""Usage: ltsp-shared-folders [COMMANDS]
-
-Manage shared folders for specific user groups, with the help of bindfs.
-
-COMMANDS
-    add <groups>
-        Create folders for the specified groups, if they don't already exist,
-        and mount them using bindfs.
-
-    list-mounted <groups>
-        List which of the specified groups have mounted folders.
-
-    list-shared <groups>
-        List which of the specified groups have shared folders.
-
-    mount <groups>
-        Remount the shared folders for the specified groups, where the name
-        or GID have changed, or where the folders are not already mounted.
-
-    rename <old group> <new group>
-        Rename a folder from the old to the new group name, which must already
-        exist. If the folder is already mounted, then unmount it, rename it,
-        and mount it again.
-
-    remove <groups>
-        Unmount and remove the sharing for the specified groups. The folders
-        are not removed from the file system.
-
-    unmount <groups>
-        Unmount the shared folders for the specified groups.
-
-In all the aforementioend commands, except for add and rename, if no groups are
-specified, then the command is applied to all the shared groups.
-""")
-
-def gen_version():
-    return _("""ltsp-manager %s
+def print_version():
+    print(_("""ltsp-manager %s
 Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.
 License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>.
 
-Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__
+Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__)
+
 
 if __name__ == '__main__':
-    if (len(sys.argv) <= 1) or (len(sys.argv) == 2
-      and (sys.argv[1] == '-h' or sys.argv[1] == '--help')):
-        print(gen_usage())
-        sys.exit(0)
-    if (len(sys.argv) <= 1) or (len(sys.argv) == 2
-      and (sys.argv[1] == '-v' or sys.argv[1] == '--version')):
-        print(gen_version())
-        sys.exit(0)
     sf=SharedFolders()
-    cmd=sys.argv[1]
-    groups=sys.argv[2:]
-    if cmd == "add":
-        if len(sys.argv) < 3:
-            sys.stderr.write(usage() + "\n")
-            sys.exit(1)
-        sf.add(groups)
-    elif cmd == "list-mounted":
-        print(' '.join(sf.list_mounted(groups)))
-    elif cmd == "list-shared":
-        print(' '.join(sf.list_shared(groups)))
-    elif cmd == "mount":
-        sf.mount(groups)
-    elif cmd == "rename":
-        if len(sys.argv) != 4:
-            sys.stderr.write(usage() + "\n")
-            sys.exit(1)
-        sf.rename(groups[0], groups[1])
-    elif cmd == "remove":
-        sf.remove(groups)
-    elif cmd == "unmount":
-        sf.unmount(groups)
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument("groups", nargs="*", help="only this subset of groups will be considered")
+    parser = argparse.ArgumentParser(description="Manage shared folders for specific user groups, with the help of bindfs.",
+                                     epilog="""In all the aforementioend commands, except for add and rename, if no groups are specified, then the command is applied to all the shared groups. All commands have their own help option example: ltsp-manager add --help""")
+    parser.add_argument("-v", "--version",
+                        help="Show the version information.",
+                        action='store_true')
+    subparsers = parser.add_subparsers(dest='cmd')
+
+    p_add=subparsers.add_parser("add", help="Create folders for the specified groups, if they don't already exist, and mount them using bindfs.", parents=[parent_parser])
+    p_add.set_defaults(func=sf.add)
+    p_list_shared=subparsers.add_parser("list-shared", help="List which of the specified groups have mounted folders.", parents=[parent_parser])
+    p_list_shared.set_defaults(func=sf.list_shared)
+    p_list_mounted=subparsers.add_parser("list-mounted", help="List which of the specified groups have shared folders.", parents=[parent_parser])
+    p_list_mounted.set_defaults(func=sf.list_mounted)
+    p_mount=subparsers.add_parser("mount", help="Remount the shared folders for the specified groups, where the name or GID have changed, or where the folders are not already mounted.", parents=[parent_parser])
+    p_mount.set_defaults(func=sf.mount)
+    p_rename=subparsers.add_parser("rename",help="Rename a folder from the old to the new group name, which must already exist. If the folder is already mounted, then unmount it, rename it, and mount it again.")
+    p_rename.add_argument("old_group", nargs=1)
+    p_rename.add_argument("new_group", nargs=1)
+    p_rename.set_defaults(func=sf.rename)
+    p_remove=subparsers.add_parser("remove", help="Unmount and remove the sharing for the specified groups. The folders are not removed from the file system.", parents=[parent_parser])
+    p_remove.set_defaults(func=sf.remove)
+    p_unmount=subparsers.add_parser("unmount", help="Unmount the shared folders for the specified groups.", parents=[parent_parser])
+    p_unmount.set_defaults(func=sf.unmount)
+
+    args = parser.parse_args()
+    if args.version:
+        print_version()
+        sys.exit(0)
+
+    if not 'func' in args:
+        print("Error: A command has to be specified.\n")
+        parser.print_help()
     else:
-        sys.stderr.write(usage() + "\n")
-        sys.exit(1)
+        args.func(vars(args))
