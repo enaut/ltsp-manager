@@ -77,6 +77,7 @@ if help2man.found()
     '--no-info',
     '--section=8',
     '--help-option=--help',
+    '--no-discard-stderr',
   ]
   lmfile = files('../src/ltsp-manager.py')
   custom_target('man-ltsp-manager',
