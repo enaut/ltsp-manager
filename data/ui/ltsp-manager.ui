@@ -148,6 +148,7 @@
                 </child>
               </object>
             </child>
+            <!--
             <child>
               <object class="GtkMenuItem" id="mi_server">
                 <property name="visible">True</property>
@@ -258,7 +259,7 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </child> !-->
             <child>
               <object class="GtkMenuItem" id="mi_view">
                 <property name="visible">True</property>

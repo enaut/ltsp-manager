@@ -70,7 +70,7 @@ class Gui:
         self.builder.get_object('mi_show_private_groups').set_active(self.conf.parser.getboolean('GUI', 'show_private_groups'))
         self.builder.get_object('mi_show_system_groups').set_active(self.conf.parser.getboolean('GUI', 'show_system_groups'))
         if locale.getdefaultlocale()[0] != "el_GR":
-            self.builder.get_object("mn_server").remove(self.builder.get_object('mi_configuration_network'))
+            #self.builder.get_object("mn_server").remove(self.builder.get_object('mi_configuration_network'))
             self.builder.get_object("mn_help").remove(self.builder.get_object('mi_helpdesk_ticket'))
             self.builder.get_object("mn_help").remove(self.builder.get_object('mi_forum'))
 
@@ -88,7 +88,7 @@ class Gui:
             visible = visible.split(',')
         for column in users_columns:
             title = column.get_title()
-            menuitem = Gtk.CheckMenuItem(title)
+            menuitem = Gtk.CheckMenuItem(label=title)
             menuitem.connect('toggled', self.on_mi_view_column_toggled, column)
             menuitem.set_active(title in visible)
             mn_view_columns.append(menuitem)
@@ -97,7 +97,7 @@ class Gui:
         self.queue = []
         self.system.connect_event(self.on_libuser_changed)
         self.main_window.show_all()
-        self.check_initial_setup()
+        #self.check_initial_setup()
 
 ## General helper functions
 
@@ -132,12 +132,12 @@ class Gui:
         d = defer.Deferred()
         reactor.callLater(1, d.callback, len(self.queue))
         d.addCallback(self.check_libuser_events)
-            
+
     def check_libuser_events(self, len_queue):
-        if len_queue == len(self.queue): 
+        if len_queue == len(self.queue):
             self.queue = []
             self.repopulate_treeviews()
-    
+
 ## Groups and users treeviews
 
     def populate_treeviews(self):
@@ -261,10 +261,10 @@ class Gui:
 
     def on_groups_treeview_row_activated(self, widget, path, column):
         group_form.EditGroupDialog(self.system, self.sf, widget.get_model()[path][0], parent=self.main_window)
-    
+
     def on_unselect_all_groups_clicked(self, widget):
         self.groups_tree.get_selection().unselect_all()
-    
+
     def on_main_window_delete_event(self, widget, event):
         self.conf.parser.set('GUI', 'show_private_groups', str(self.show_private_groups))
         self.conf.parser.set('GUI', 'show_system_groups', str(self.show_system_groups))
@@ -278,14 +278,14 @@ class Gui:
 
     def on_mi_signup_activate(self, widget):
         subprocess.Popen([os.path.join(paths.pkgdatadir, 'signup_server.py')])
-        
-    #FIXME: Maybe use notify /etc/group then self.populate_treeviews not need to 
+
+    #FIXME: Maybe use notify /etc/group then self.populate_treeviews not need to
     #update user groups for shared folder library
     def on_mi_new_users_activate(self, widget):
         create_users.NewUsersDialog(self.system, self.sf, self.main_window)
-    
+
     def on_mi_import_passwd_activate(self, widget):
-        chooser = Gtk.FileChooserDialog(title=_("Select the passwd file to import"), 
+        chooser = Gtk.FileChooserDialog(title=_("Select the passwd file to import"),
                                         action=Gtk.FileChooserAction.OPEN,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -313,9 +313,9 @@ class Gui:
             import_dialog.ImportDialog(new_users, parent=self.main_window)
         else:
             chooser.destroy()
-    
+
     def on_mi_import_csv_activate(self, widget):
-        chooser = Gtk.FileChooserDialog(title=_("Select the CSV file to import"), 
+        chooser = Gtk.FileChooserDialog(title=_("Select the CSV file to import"),
                                         action=Gtk.FileChooserAction.OPEN,
                                         buttons=(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                                  Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -336,7 +336,7 @@ class Gui:
             import_dialog.ImportDialog(new_users, parent=self.main_window)
         else:
             chooser.destroy()
-    
+
     def on_mi_export_csv_activate(self, widget):
         users = self.get_selected_users()
         if len(users) == 0:
@@ -375,7 +375,7 @@ class Gui:
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
-        if response == Gtk.ResponseType.YES:        
+        if response == Gtk.ResponseType.YES:
             subprocess.Popen([os.path.join(paths.pkgdatadir, 'scripts', 'run-in-terminal.sh'),
                               'ltsp-update-image', '--cleanup', '/'])
 
@@ -383,7 +383,7 @@ class Gui:
         message = _("Are you sure you want to revert to the previous version of the LTSP image?")
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         response = dlg.showup()
-        if response == Gtk.ResponseType.YES: 
+        if response == Gtk.ResponseType.YES:
             subprocess.Popen([os.path.join(paths.pkgdatadir, 'scripts', 'run-in-terminal.sh'),
                               'ltsp-update-image', '--revert', '/'])
 
@@ -439,11 +439,11 @@ class Gui:
             homes_message = _("Also delete the users' home directories.")
             homes_warn = _("WARNING: if you enable this option, the users' home directories with all their files will be deleted, along with the users' e-mails at /var/mail, if they exist")
         homes_warn += "\n\n" + _("This action can't be undone.")
-        
+
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         vbox = dlg.get_message_area()
         rm_homes_check = Gtk.CheckButton(homes_message)
-        rm_homes_check.get_child().set_tooltip_text(homes_warn) 
+        rm_homes_check.get_child().set_tooltip_text(homes_warn)
         rm_homes_check.show()
         vbox.pack_start(rm_homes_check, False, False, 12)
         response = dlg.showup()
@@ -458,7 +458,7 @@ class Gui:
                     progress.inc()
             else:
                 self.system.delete_user(users[0],rm_homes)
-            
+
     def on_mi_remove_user_activate(self, widget):
         users = self.get_selected_users()
         groups = self.get_selected_groups()
@@ -522,10 +522,10 @@ class Gui:
 
     def on_mi_ask_question_activate(self, widget):
         self.open_link('https://answers.launchpad.net/ltsp-manager')
-    
+
     def on_helpdesk_ticket_activate(self, widget):
         self.open_link('http://helpdesk.sch.gr/ticketnew_user.php?category_id=9017')
-    
+
     def on_mi_irc_activate(self, widget):
         host = socket.gethostname()
         user = getpass.getuser()
