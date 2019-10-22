@@ -3,7 +3,7 @@ project('ltsp-manager',
   meson_version: '>= 0.45.0',
 )
 i18n = import('i18n')
-pymod = import('python')
+pymod = import('python3')
 project_id = 'org.ltsp.ltsp-manager'
 
 prefix = get_option('prefix')
@@ -33,8 +33,7 @@ message(mandir)
 message(localedir)
 #message()
 conf = configuration_data()
-python = pymod.find_installation()
-conf.set('PYTHON', python.path())
+conf.set('PYTHON', pymod.find_python().path())
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', localedir)
 conf.set('datadir', datadir)
