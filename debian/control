@@ -44,14 +44,13 @@ Recommends: apturl,
  dnsmasq,
  ethtool,
  iperf,
- epoptes,
  ltsp,
  net-tools,
  nfs-kernel-server,
  openssh-server,
  squashfs-tools,
  xdg-utils
-Suggests:
+Suggests: epoptes
 
 Description: Easy administration of LTSP-based computer labs
  It depends on a set of packages suitable for configuring LTSP in small
