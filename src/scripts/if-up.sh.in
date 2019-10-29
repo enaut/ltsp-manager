@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Disable flow control and enable NAT for the internal LTSP subnet.
 # https://help.ubuntu.com/community/UbuntuLTSP/FlowControl
 # Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
