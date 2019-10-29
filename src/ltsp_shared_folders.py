@@ -138,8 +138,10 @@ class SharedFolders():
         with open("/proc/mounts", "r") as f:
             for line in f.readlines():
                 items=line.split()
-                if items[0] != "bindfs"  or items[2] != "fuse.bindfs" \
-                  or not items[1].startswith(self.config["SHARE_DIR/"]):
+                # In 12.04: bindfs /home/Shared/a1 fuse.bindfs rw,... 0 0
+                # In 18.04: /home/Shared/users /home/Shared/a1 fuse rw,... 0 0
+                if not items[1].startswith(self.config["SHARE_DIR/"]) or \
+                  items[2] not in ["fuse", "fuse.bindfs"]:
                     continue
                 mount={}
                 mount['point']=items[1]

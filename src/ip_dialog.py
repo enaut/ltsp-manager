@@ -104,7 +104,7 @@ class Network_Manager(Network_Manager_DBus):
         self.object_path = '/org/freedesktop/NetworkManager'
         self.interface_name = 'org.freedesktop.NetworkManager'
         super(Network_Manager, self).__init__(self.object_path, self.interface_name)
-    
+
     def get_devices(self):
         """
         Return Device object
@@ -165,7 +165,7 @@ class Device(Network_Manager_DBus):
         device_type = self.properties['DeviceType']
         managed = self.properties['Managed']
         return ip4config_path, interface, driver, device_type, managed
-        
+
 
 class Device_Wired(Network_Manager_DBus):
     def __init__(self, device_name):
@@ -290,7 +290,7 @@ class Interface:
         """
         self.ip4config_path, self.device_path, self.interface, self.driver, self.device_type, self.mac,\
         self.speed, self.carrier = ip4config_path, device_path, interface, driver, device_type, mac, speed, carrier
-        
+
         self.id = '%s,ltsp-manager' % self.interface
         self.interface_connections = []
         self.page = None
@@ -317,7 +317,7 @@ class Interface:
     def _set_ips(self):
         self.existing_info = Info()
         if self.ip4config_path != '/':
-            ip4config = IP4_Config(self.ip4config_path) 
+            ip4config = IP4_Config(self.ip4config_path)
             ip, mask, route, dnss = ip4config.get_properties()
             self.existing_info.set_values({
                 'ip': int32_to_string(ip),
@@ -340,7 +340,7 @@ class Interface:
 
 
 ## Define Page class
-   
+
 class Page:
     def __init__(self):
         self.builder = Gtk.Builder()
@@ -349,31 +349,31 @@ class Page:
         self.method_lstore = self.builder.get_object('method_lstore')
         self.method_entry = self.builder.get_object('method_entry')
         self.method_help_url = self.builder.get_object('method_help_url')
-        self.id_entry = self.builder.get_object('id_entry')  
-        self.interface_entry = self.builder.get_object('interface_entry') 
-        self.mac_entry = self.builder.get_object('mac_entry') 
+        self.id_entry = self.builder.get_object('id_entry')
+        self.interface_entry = self.builder.get_object('interface_entry')
+        self.mac_entry = self.builder.get_object('mac_entry')
         self.driver_entry = self.builder.get_object('driver_entry')
         self.speed_entry = self.builder.get_object('speed_entry')
         self.ip_entry = self.builder.get_object('ip_entry')
-        self.subnet_entry = self.builder.get_object('subnet_entry') 
+        self.subnet_entry = self.builder.get_object('subnet_entry')
         self.route_entry = self.builder.get_object('route_entry')
-        self.dns1_entry = self.builder.get_object('dns1_entry')         
-        self.dns2_entry = self.builder.get_object('dns2_entry') 
-        self.dns3_entry = self.builder.get_object('dns3_entry') 
+        self.dns1_entry = self.builder.get_object('dns1_entry')
+        self.dns2_entry = self.builder.get_object('dns2_entry')
+        self.dns3_entry = self.builder.get_object('dns3_entry')
         self.ip_lbl = self.builder.get_object('ip_lbl')
         self.subnet_lbl = self.builder.get_object('subnet_lbl')
         self.route_lbl = self.builder.get_object('route_lbl')
-        self.dns1_lbl = self.builder.get_object('dns1_lbl') 
-        self.dns2_lbl = self.builder.get_object('dns2_lbl') 
+        self.dns1_lbl = self.builder.get_object('dns1_lbl')
+        self.dns2_lbl = self.builder.get_object('dns2_lbl')
         self.dns3_lbl = self.builder.get_object('dns3_lbl')
         self.auto_checkbutton = self.builder.get_object('auto_checkbutton')
-        
+
     def fill_entries(self, interface, ip=None, mask=None, route=None, dnss=None):
         self.id_entry.set_text(interface.id)
         self.interface_entry.set_text('Ethernet (%s)' % interface.interface)
         self.mac_entry.set_text(interface.mac)
         self.driver_entry.set_text(interface.driver)
-        self.speed_entry.set_text(interface.speed)       
+        self.speed_entry.set_text(interface.speed)
 
         ip = ip if ip else interface.ip
         mask = mask if mask else interface.mask
@@ -404,7 +404,7 @@ class Page:
         else:
             self.dns3_entry.set_visible(False)
             self.dns3_lbl.set_visible(False)
-    
+
         if interface.has_active_connection:
             self.method_entry.get_model()[2][1] = True
         else:
@@ -499,7 +499,7 @@ class Ip_Dialog:
             info_dialog.set_transient_for(self.main_dlg)
             info_dialog.showup()
 
-    def populate_pages(self, interface):       
+    def populate_pages(self, interface):
         page = Page()
         interface.page = page
         page.ip_entry.connect('changed', self.on_ip_entry_changed, interface)
@@ -510,10 +510,10 @@ class Ip_Dialog:
             scrolledwindow.add_with_viewport(page.grid)
             scrolledwindow.show()
             self.main_dlg_notebook.append_page(scrolledwindow, Gtk.Label('Ethernet (%s)' % interface.interface))
-            self.main_dlg_notebook.set_tab_reorderable(scrolledwindow, True) 
+            self.main_dlg_notebook.set_tab_reorderable(scrolledwindow, True)
         else:
             self.main_dlg_notebook.append_page(page.grid, Gtk.Label('Ethernet (%s)' % interface.interface))
-            self.main_dlg_notebook.set_tab_reorderable(page.grid, True) 
+            self.main_dlg_notebook.set_tab_reorderable(page.grid, True)
 
     def set_default(self):
         # By default active is 4, no creation to all interfaces.
@@ -532,21 +532,21 @@ class Ip_Dialog:
             self.main_dlg_notebook.reorder_child(carrier_interfaces[0].page.grid, 0)
 
         self.main_dlg_notebook.set_current_page(0)
-        
+
     def watch_nm(self, interest_interfaces, prefered_hostname):
         self.timeout += 1000
         break_bool = True
         for interface in interest_interfaces:
             if interface.carrier != 1:
                 continue
-            #TODO: Change it (do not create new instances)   
+            #TODO: Change it (do not create new instances)
             device = Device(interface.device_path)
             ip4config_path, interface, driver, device_type, managed = device.get_properties()
             if ip4config_path == '/':
                 break_bool = False
-        
+
         if break_bool:
-            p = common.run_command(['sh', '-c', 'ltsp-config dnsmasq  --enable-dns --overwrite'], True)
+            p = common.run_command(['sh', '-c', 'ltsp dnsmasq'], True)
             while p.poll() is None:
                 while Gtk.events_pending():
                     Gtk.main_iteration()
@@ -627,7 +627,7 @@ class Ip_Dialog:
             success_dialog.set_transient_for(self.main_dlg)
             success_dialog.showup()
             self.main_dlg.destroy()
-        
+
     def check_button(self):
         check_ip = True
         check_method = False
@@ -813,7 +813,7 @@ class Ip_Dialog:
             interface.connection = conn
             new_connections.append(interface)
 
-            connection_settings_paths = self.settings.get_list_connections() 
+            connection_settings_paths = self.settings.get_list_connections()
             for connection_settings_path in connection_settings_paths:
                 connection_settings = Connection_Settings(connection_settings_path)
                 connection_settings_id = connection_settings.get_settings()['connection']['id']
@@ -833,7 +833,7 @@ class Ip_Dialog:
                     continue
                 if interface.mac == connection_settings_mac and interface.id != connection_settings_id and \
                         interface.page.auto_checkbutton.get_active():
-                    interface.interface_connections.append(connection_settings) 
+                    interface.interface_connections.append(connection_settings)
 
         title = _("Are you sure you want to continue?")
         msg = ""
@@ -843,7 +843,7 @@ class Ip_Dialog:
                 msg += _("You're about to create the connection:") + "\n\n"
             else:
                 msg += _("You're about to create the connections:") + "\n\n"
-            
+
             for counter, interface in enumerate(new_connections):
                 if interface.carrier == 1:
                     dnsmasq_via_carrier = True
@@ -859,7 +859,7 @@ class Ip_Dialog:
                 msg += _("You're about to update the connection:") + "\n\n"
             else:
                 msg += _("You're about to update the connections:") + "\n\n"
-        
+
             for interface in replace_connections:
                 if interface.carrier == 1:
                     dnsmasq_via_carrier = True
@@ -872,11 +872,11 @@ class Ip_Dialog:
             msg += "\n" + _("and to recreate the dnsmasq configuration file.")
         elif not dnsmasq_via_carrier and dnsmasq_via_autoconnect:
             msg += "\n" + _("<b>Warning:</b> Recreating the dnsmasq configuration file is impossible because no network cable is attached to any of the available devices.")
-        
+
         ask_dialog = dialogs.AskDialog(title, _("Confirmation"))
         ask_dialog.format_secondary_markup(msg)
         ask_dialog.set_transient_for(self.main_dlg)
-        if ask_dialog.showup() != Gtk.ResponseType.YES:    
+        if ask_dialog.showup() != Gtk.ResponseType.YES:
             return
 
         # Make window sensitive until popup dialog appears

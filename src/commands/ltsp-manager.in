@@ -29,6 +29,8 @@ if [ ! -x @pkgdatadir@/ltsp-manager.py ]; then
 fi
 
 cd @pkgdatadir@
+# Work around LP: #1804373
+export GTK_OVERLAY_SCROLLING=0
 case "$1" in
     # help and version need to run without root
     -h|--help|-v|--version)

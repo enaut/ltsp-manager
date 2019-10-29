@@ -20,15 +20,16 @@ Build-Depends: debhelper,
  python3-gi,
  python3-twisted,
  python3-dbus,
- gir1.2-gtk-3.0
-Standards-Version: 4.1.4
-Vcs-Git: https://git.launchpad.net/ltsp-manager
-Vcs-Browser: https://git.launchpad.net/ltsp-manager
-Homepage: http://wiki.ltsp.org/wiki/Ltsp-manager
+ gir1.2-gtk-3.0,
+ python-distutils-extra
+Standards-Version: 4.4.0.1
+Vcs-Git: https://github.com/enaut/ltsp-manager
+Vcs-Browser: https://github.com/enaut/ltsp-manager
+Homepage: https://github.com/enaut/ltsp-manager
 
 Package: ltsp-manager
 Architecture: all
-Depends: ${misc:Depends},
+Depends: ${python3:Depends}, ${misc:Depends},
  iputils-arping,
  libgtk-3-0,
  librsvg2-common,
@@ -41,17 +42,17 @@ Depends: ${misc:Depends},
 Recommends: apturl,
  bindfs,
  dnsmasq,
- epoptes,
  ethtool,
  iperf,
- ldm-ubuntu-theme | ldm-edubuntu-theme | ldm-kubuntu-theme | ldm-lubuntu-theme | ldm-xubuntu-theme,
- ltsp-client,
- ltsp-docs,
- ltsp-server-standalone | ltsp-server,
+ epoptes,
+ ltsp,
+ net-tools,
+ nfs-kernel-server,
+ openssh-server,
+ squashfs-tools,
  xdg-utils
-Suggests: ident2,
- squid,
- x2goserver
+Suggests:
+
 Description: Easy administration of LTSP-based computer labs
  It depends on a set of packages suitable for configuring LTSP in small
  computer labs, and it provides a GUI for managing user accounts, running

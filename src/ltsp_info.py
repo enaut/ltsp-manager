@@ -6,7 +6,7 @@
 # Some rights reserved. See COPYING, AUTHORS.
 
 """
-Show the output of ltsp-info in a dialog.
+Show the output of `ltsp info` in a dialog.
 """
 
 import gi
@@ -32,6 +32,6 @@ class LtspInfo:
         self.dialog.destroy()
 
     def Fill(self):
-        success, response = common.run_command(['ltsp-info', '-v'])
+        success, response = common.run_command(['ltsp', 'info', '-v'])
         self.buffer.set_text(response)
         self.dialog.show()

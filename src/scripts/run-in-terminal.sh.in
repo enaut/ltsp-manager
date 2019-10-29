@@ -2,7 +2,8 @@
 # Copyright (C) 2012-2017 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
 
-. @scriptsdir@/common.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. ${DIR}/common.sh
 
 usage() {
     cat <<EOF

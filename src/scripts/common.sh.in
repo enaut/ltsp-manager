@@ -66,6 +66,31 @@ confirm() {
     fi
 }
 
+# Try to find the user that ran sudo or su
+detect_administrator() {
+    _ADMINISTRATOR=$(id -un) || true
+    if [ "${_ADMINISTRATOR:-root}" = "root" ]; then
+        _ADMINISTRATOR=$(loginctl user-status | awk '{ print $1; exit 0 }') ||
+            true
+    fi
+    if [ "${_ADMINISTRATOR:-root}" = "root" ]; then
+        _ADMINISTRATOR=${SUDO_USER}
+    fi
+    if [ "${_ADMINISTRATOR:-root}" = "root" ] && [ "${PKEXEC_UID:-0}" != "0" ]
+    then
+        _ADMINISTRATOR=${PKEXEC_UID}
+    fi
+    if [ "${_ADMINISTRATOR:-root}" != "root" ]; then
+        IFS=: read -r _ADMINISTRATOR _dummy _ADMIN_UID _ADMIN_GID _dummy <<EOF
+$(getent passwd "$_ADMINISTRATOR")
+EOF
+    fi
+    if [ "${_ADMINISTRATOR:-root}" = "root" ]; then
+        unset _ADMINISTRATOR _ADMIN_UID _ADMIN_GID
+    fi
+    return 0
+}
+
 # $search must be ready for sed, e.g. '^whole line$'.
 # Return 0 if a replacement was made, 1 otherwise.
 search_and_replace() {

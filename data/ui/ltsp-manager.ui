@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.22.1 -->
 <interface>
-  <requires lib="gtk+" version="3.18"/>
+  <requires lib="gtk+" version="3.2"/>
   <object class="GtkListStore" id="groups_store">
     <columns>
       <!-- column-name instance -->
@@ -148,7 +148,6 @@
                 </child>
               </object>
             </child>
-            <!--
             <child>
               <object class="GtkMenuItem" id="mi_server">
                 <property name="visible">True</property>
@@ -160,50 +159,109 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="mi_initial_setup">
+                      <object class="GtkMenuItem" id="mi_server_actions">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Initial setup</property>
-                        <signal name="activate" handler="on_mi_initial_setup_activate" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="mi_configuration_network">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Configure network connection</property>
+                        <property name="label" translatable="yes">Server actions</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="on_mi_configuration_network_activate" swapped="no"/>
+                        <child type="submenu">
+                          <object class="GtkMenu">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_initial_setup">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Initial setup</property>
+                                <signal name="activate" handler="on_mi_initial_setup_activate" swapped="no"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_configuration_network">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Configure network connection</property>
+                                <property name="use_underline">True</property>
+                                <signal name="activate" handler="on_mi_configuration_network_activate" swapped="no"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="mi_ltsp_image">
+                      <object class="GtkMenuItem" id="mi_ltsp_commands">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">LTSP image</property>
+                        <property name="label" translatable="yes">LTSP</property>
                         <property name="use_underline">True</property>
                         <child type="submenu">
                           <object class="GtkMenu" id="mn_ltsp_image">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkMenuItem" id="mi_ltsp_update_image">
+                              <object class="GtkMenuItem" id="mi_ltsp_image">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Publishes a clone of the server installation for the clients to boot from it</property>
-                                <property name="label" translatable="yes">Update...</property>
+                                <property name="label" translatable="yes">Create image</property>
                                 <property name="use_underline">True</property>
-                                <signal name="activate" handler="on_mi_ltsp_update_image_activate" swapped="no"/>
+                                <signal name="activate" handler="on_mi_ltsp_image_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="mi_ltsp_revert_image">
+                              <object class="GtkMenuItem" id="mi_ltsp_image_revert">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Reverts the LTSP image to its previous version</property>
-                                <property name="label" translatable="yes">Revert...</property>
+                                <property name="label" translatable="yes">Revert the image</property>
                                 <property name="use_underline">True</property>
-                                <signal name="activate" handler="on_mi_ltsp_revert_image_activate" swapped="no"/>
+                                <signal name="activate" handler="on_mi_ltsp_image_revert_activate" swapped="no"/>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_dnsmasq">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Configure dnsmasq for LTSP</property>
+                                <property name="label" translatable="yes">Configure dnsmasq</property>
+                                <property name="use_underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_initrd">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Create the ltsp.img initrd add-on</property>
+                                <property name="label" translatable="yes">Recreate the initramdisk</property>
+                                <property name="use_underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_ipxe">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Install iPXE binaries and configuration in TFTP</property>
+                                <property name="label" translatable="yes">Install ipxe</property>
+                                <property name="use_underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_kernel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Copy the kernel and initrd from an image to TFTP</property>
+                                <property name="label" translatable="yes">Copy kernel</property>
+                                <property name="use_underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="mi_ltsp_nfs">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Configure NFS exports for LTSP</property>
+                                <property name="label" translatable="yes">Configure NFS</property>
+                                <property name="use_underline">True</property>
                               </object>
                             </child>
                           </object>
@@ -220,36 +278,28 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkMenuItem" id="mi_edit_lts_conf">
+                              <object class="GtkMenuItem" id="mi_edit_ltsp_conf">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Edit lts.conf</property>
-                                <signal name="activate" handler="on_mi_edit_lts_conf_activate" swapped="no"/>
+                                <property name="label" translatable="yes">Edit ltsp.conf</property>
+                                <signal name="activate" handler="on_mi_edit_ltsp_conf_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="mi_edit_ltsp_shared_folders">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Edit LTSP shared folder settings</property>
-                                <signal name="activate" handler="on_mi_edit_ltsp_shared_folders_activate" swapped="no"/>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkMenuItem" id="mi_edit_dnsmasq_conf">
+                              <object class="GtkMenuItem" id="mi_edit_ltsp_dnsmasq_conf">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Edit dnsmasq settings</property>
-                                <signal name="activate" handler="on_mi_edit_dnsmasq_conf_activate" swapped="no"/>
+                                <signal name="activate" handler="on_mi_edit_ltsp_dnsmasq_conf_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="mi_edit_pxelinux_cfg">
+                              <object class="GtkMenuItem" id="mi_edit_ltsp_ipxe">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Edit PXELinux settings</property>
                                 <property name="use_underline">True</property>
-                                <signal name="activate" handler="on_mi_edit_pxelinux_cfg_activate" swapped="no"/>
+                                <signal name="activate" handler="on_mi_edit_ltsp_ipxe_activate" swapped="no"/>
                               </object>
                             </child>
                           </object>
@@ -259,7 +309,7 @@
                   </object>
                 </child>
               </object>
-            </child> !-->
+            </child>
             <child>
               <object class="GtkMenuItem" id="mi_view">
                 <property name="visible">True</property>

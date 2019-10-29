@@ -99,12 +99,15 @@ class Gui:
         self.main_window.show_all()
         #self.check_initial_setup()
 
-## General helper functions
+# General helper functions
 
     def edit_file(self, filename):
         subprocess.Popen(['xdg-open', filename], stdin=open(os.devnull))
         # TODO: Maybe throw an error message if not os.path.isfile(filename)
         # TODO: ltsp-manager doesn't exit until the spawned FDs are closed
+
+    def run_term(self, cmd):
+        subprocess.Popen(('./run-in-terminal.sh ' + cmd).split())
 
     def run_as_sudo_user(self, cmd):
         print(('EXECUTE:\t' + '\t'.join(cmd)))
@@ -125,7 +128,7 @@ class Gui:
         selected = [self.groups_sort[path][0] for path in pathlist]
         return selected
 
-## INotify
+# INotify
 
     def on_libuser_changed(self, event):
         self.queue.append(event)
@@ -138,7 +141,7 @@ class Gui:
             self.queue = []
             self.repopulate_treeviews()
 
-## Groups and users treeviews
+# Groups and users treeviews
 
     def populate_treeviews(self):
         """Fill the users and groups treeviews from the system"""
@@ -274,7 +277,7 @@ class Gui:
         self.conf.save()
         exit()
 
-## File menu
+# File menu
 
     def on_mi_signup_activate(self, widget):
         subprocess.Popen([os.path.join(paths.pkgdatadir, 'signup_server.py')])
@@ -346,7 +349,10 @@ class Gui:
                 users = [u for u in self.system.users.values() if not u.is_system_user()]
         export_dialog.ExportDialog(self.main_window, self.system, users)
 
-## Server menu
+# Server menu
+
+    def on_mi_initial_setup_activate(self, widget):
+        self.run_term('./initial-setup.sh')
 
     def check_initial_setup(self):
         if common.run_command([os.path.join(paths.pkgdatadir, 'scripts', 'initial-setup.sh'), '--check'])[0]:
@@ -362,46 +368,53 @@ class Gui:
                               os.path.join(paths.pkgdatadir, 'scripts', 'initial-setup.sh'),
                               '--no-prompt'])
 
-    def on_mi_initial_setup_activate(self, widget):
-        subprocess.Popen([os.path.join(paths.pkgdatadir, 'scripts', 'run-in-terminal.sh'),
-                          os.path.join(paths.pkgdatadir, 'scripts', 'initial-setup.sh')])
-
     def on_mi_configuration_network_activate(self, widget):
         ip_dialog.Ip_Dialog(self.main_window)
 
-    def on_mi_ltsp_update_image_activate(self, widget):
+    def on_mi_ltsp_image_activate(self, widget):
         message = _("Are you sure you want to update the LTSP image?")
         second_message = _("Depending on the CPU speed and image size, this may need about 10 minutes. After that, (re)boot your workstations.")
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         dlg.format_secondary_text(second_message)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:
-            subprocess.Popen([os.path.join(paths.pkgdatadir, 'scripts', 'run-in-terminal.sh'),
-                              'ltsp-update-image', '--cleanup', '/'])
+            self.run_term('ltsp image /')
 
-    def on_mi_ltsp_revert_image_activate(self, widget):
+    def on_mi_ltsp_image_revert_activate(self, widget):
         message = _("Are you sure you want to revert to the previous version of the LTSP image?")
         dlg = dialogs.AskDialog(message, parent=self.main_window)
         response = dlg.showup()
         if response == Gtk.ResponseType.YES:
-            subprocess.Popen([os.path.join(paths.pkgdatadir, 'scripts', 'run-in-terminal.sh'),
-                              'ltsp-update-image', '--revert', '/'])
+            self.run_term('ltsp image --revert /')
 
-    def on_mi_edit_lts_conf_activate(self, widget):
-        for f in glob.glob('/var/lib/tftpboot/ltsp/*/lts.conf'):
-            self.edit_file(f)
+    def on_mi_ltsp_dnsmasq_activate(self, widget):
+        self.run_term('ltsp dnsmasq')
 
-    def on_mi_edit_pxelinux_cfg_activate(self, widget):
-        for f in glob.glob('/var/lib/tftpboot/ltsp/*/pxelinux.cfg/default'):
-            self.edit_file(f)
+    def on_mi_ltsp_info_activate(self, widget):
+        self.run_term('ltsp info')
 
-    def on_mi_edit_ltsp_shared_folders_activate(self, widget):
-        self.edit_file(os.path.join(paths.sysconfdir, 'default', 'ltsp-shared-folders'))
+    def on_mi_ltsp_initrd_activate(self, widget):
+        self.run_term('ltsp initrd')
 
-    def on_mi_edit_dnsmasq_conf_activate(self, widget):
-        self.edit_file(os.path.join(paths.sysconfdir, 'dnsmasq.d', 'ltsp-server-dnsmasq.conf'))
+    def on_mi_ltsp_ipxe_activate(self, widget):
+        self.run_term('ltsp ipxe')
 
-## View menu
+    def on_mi_ltsp_kernel_activate(self, widget):
+        self.run_term('ltsp kernel')
+
+    def on_mi_ltsp_nfs_activate(self, widget):
+        self.run_term('ltsp nfs')
+
+    def on_mi_edit_ltsp_conf_activate(self, widget):
+        self.edit_file('/etc/ltsp/ltsp.conf')
+
+    def on_mi_edit_ltsp_dnsmasq_conf_activate(self, widget):
+        self.edit_file('/etc/dnsmasq.d/ltsp-dnsmasq.conf')
+
+    def on_mi_edit_ltsp_ipxe_activate(self, widget):
+        self.edit_file('/srv/tftp/ltsp/ltsp.ipxe')
+
+# View menu
 
     def on_mi_view_column_toggled(self, checkmenuitem, treeviewcolumn):
         treeviewcolumn.set_visible(checkmenuitem.get_active())
@@ -418,7 +431,7 @@ class Gui:
     def on_mi_refresh_activate(self, widget):
         self.repopulate_treeviews()
 
-## Users menu
+# Users menu
 
     def on_mi_new_user_activate(self, widget):
         user_form.NewUserDialog(self.system, parent=self.main_window)
@@ -482,7 +495,7 @@ class Gui:
             else:
                 self.system.remove_user_from_groups(users[0], groups)
 
-## Groups menu
+# Groups menu
 
     def on_mi_new_group_activate(self, widget):
         group_form.NewGroupDialog(self.system, self.sf, parent=self.main_window)
@@ -509,7 +522,7 @@ class Gui:
                 self.system.delete_group(group)
                 progress.inc()
 
-## Help menu
+# Help menu
 
     def on_mi_home_activate(self, widget):
         if locale.getdefaultlocale()[0] != "el_GR":
@@ -576,7 +589,7 @@ Bug reports can be filed at https://bugs.launchpad.net/ltsp-manager."""))
 
 def print_version():
     print(_("""ltsp-manager %s
-Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.
+Copyright (C) 2009-2019 Franz Dietrich <dietrich@teilgedanken.de>, Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.
 License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>.
 
 Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail.com>.""") % version.__version__)
