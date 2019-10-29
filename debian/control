@@ -51,7 +51,6 @@ Recommends: apturl,
  squashfs-tools,
  xdg-utils
 Suggests: epoptes
-
 Description: Easy administration of LTSP-based computer labs
  It depends on a set of packages suitable for configuring LTSP in small
  computer labs, and it provides a GUI for managing user accounts, running

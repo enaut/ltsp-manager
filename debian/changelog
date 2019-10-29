@@ -1,3 +1,10 @@
+ltsp-manager (19.10.1ubuntu1) UNRELEASED; urgency=medium
+
+  * reintroducing the server menu
+  * adjusting things to ltsp19
+
+ -- Dietrich <dietrich@localhost>  Tue, 29 Oct 2019 10:55:43 +0100
+
 ltsp-manager (18.04.2ubuntu5) bionic; urgency=medium
 
   * changing buildsystem to meson
