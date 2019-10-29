@@ -1,0 +1,14 @@
+[Unit]
+Description=LTSP shared folders service
+After=home.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+KillMode=process
+WorkingDirectory=@pkgdatadir@
+ExecStart=@PYTHON@ @pkgdatadir@/ltsp_shared_folders.py mount
+ExecStop=@PYTHON@ @pkgdatadir@/ltsp_shared_folders.py unmount
+
+[Install]
+WantedBy=multi-user.target

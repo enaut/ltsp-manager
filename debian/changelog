@@ -1,3 +1,10 @@
+ltsp-manager (18.04.2ubuntu5) bionic; urgency=medium
+
+  * changing buildsystem to meson
+  * create a more dynamic packaging
+
+ -- Franz Dietrich <dietrich@teilgedanken.de>  Tue, 18 Sep 2018 20:16:17 +0200
+
 ltsp-manager (18.04.2ubuntu4) bionic; urgency=medium
 
   * Fix create user dialog not closing after creation

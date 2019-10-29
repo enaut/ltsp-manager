@@ -1,10 +1,21 @@
 #!/usr/bin/make -f
 
-include /usr/share/dpkg/pkg-info.mk
+override_dh_auto_clean:
+	rm -fr build
+
+override_dh_auto_configure:
+	mkdir -p build
+	cd build && meson .. --prefix=/usr
+
+override_dh_auto_build:
+	cd build && ninja -v
+
+override_dh_auto_test:
+	cd build && ninja test
+
+override_dh_auto_install:
+	DESTDIR=$(CURDIR)/debian/ltsp-manager ninja -C build -v install
 
 %:
+	echo dh "$@"
 	dh $@
-
-override_dh_install:
-	dh_install
-	echo "__version__='$(DEB_VERSION)'" > "$(CURDIR)/debian/ltsp-manager/usr/share/ltsp-manager/version.py"

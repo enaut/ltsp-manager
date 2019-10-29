@@ -6,79 +6,665 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ltsp-manager\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2017-09-25 10:31-0700\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-14 15:42+0200\n"
 "PO-Revision-Date: 2017-08-29 09:30+0000\n"
 "Last-Translator: fottsia <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2017-09-26 04:30+0000\n"
 "X-Generator: Launchpad (build 18463)\n"
 
-#: etc/xdg/autostart/ltsp-shared-folders.desktop:3
-msgid "LTSP shared folders"
-msgstr "Κοινόχρηστοι φάκελοι LTSP"
+#: data/ui/user_form.ui:151
+msgid "Input the user information"
+msgstr "Εισάγετε τις πληροφορίες χρήστη"
 
-#: etc/xdg/autostart/ltsp-shared-folders.desktop:5
+#: data/ui/user_form.ui:188 data/ui/signup_form.ui:95
+msgid "Username:"
+msgstr "Όνομα χρήστη:"
+
+#: data/ui/user_form.ui:213 data/ui/signup_form.ui:107
+msgid "Password:"
+msgstr "Κωδικός πρόσβασης:"
+
+#: data/ui/user_form.ui:271 data/ui/signup_form.ui:200
+msgid "Confirm password:"
+msgstr "Επαλήθευση κωδικού:"
+
+#: data/ui/user_form.ui:283
+msgid "UID:"
+msgstr "UID"
+
+#: data/ui/user_form.ui:295
+msgid "Home directory:"
+msgstr "Αρχικός κατάλογος"
+
+#: data/ui/user_form.ui:320
+msgid "Shell:"
+msgstr "Κέλυφος:"
+
+#: data/ui/user_form.ui:332 data/ui/signup_form.ui:141
+msgid "Real name:"
+msgstr "Ονοματεπώνυμο:"
+
+#: data/ui/user_form.ui:344
+msgid "Office:"
+msgstr "Γραφείο:"
+
+#: data/ui/user_form.ui:356
+msgid "Office phone:"
+msgstr "Τηλ. γραφείου:"
+
+#: data/ui/user_form.ui:368
+msgid "Home phone:"
+msgstr "Τηλ. οικίας:"
+
+#: data/ui/user_form.ui:500
+msgid "Other:"
+msgstr "Άλλο:"
+
+#: data/ui/user_form.ui:582
+msgid "User information"
+msgstr "Πληροφορίες χρήστη"
+
+#: data/ui/user_form.ui:605
+msgid "Primary group name:"
+msgstr "Όνομα κύριας ομάδας:"
+
+#: data/ui/user_form.ui:617
+msgid "Primary group GID:"
+msgstr "GID κύριας ομάδας:"
+
+#: data/ui/user_form.ui:687
+msgid "User role:"
+msgstr "Ρόλος χρήστη:"
+
+#: data/ui/user_form.ui:735 data/ui/create_users.ui:414
+msgid "Member of groups:"
+msgstr "Μέλος ομάδων:"
+
+#: data/ui/user_form.ui:769
+msgid "Set as primary"
+msgstr "Ορισμός ως κύριας"
+
+#: data/ui/user_form.ui:785 data/ui/ltsp-manager.ui:290
+msgid "Show system groups"
+msgstr "Εμφάνιση ομάδων συστήματος"
+
+#: data/ui/user_form.ui:814
+msgid "Group options"
+msgstr "Επιλογές ομάδων"
+
+#: data/ui/user_form.ui:837
+msgid "Last change:"
+msgstr "Τελευταία αλλαγή:"
+
+#: data/ui/user_form.ui:849
+msgid "Minimum age:"
+msgstr "Τελευταία αλλαγή:"
+
+#: data/ui/user_form.ui:861
+msgid "Maximum age:"
+msgstr "Μέγιστη διάρκεια:"
+
+#: data/ui/user_form.ui:873
+msgid "Warning period:"
+msgstr "Προειδοποίηση:"
+
+#: data/ui/user_form.ui:885
+msgid "Inactive:"
+msgstr "Ανενεργός:"
+
+#: data/ui/user_form.ui:897
+msgid "Expired:"
+msgstr "Λήξη:"
+
+#: data/ui/user_form.ui:909
+msgid "Locked:"
+msgstr "Κλείδωμα κωδικού:"
+
+#: data/ui/user_form.ui:1026
+msgid "Password options"
+msgstr "Επιλογές κωδικού"
+
+#: data/ui/signup_settings.ui:71
+msgid "Open the dialog that receives signup requests"
+msgstr "Άνοιγμα του εξυπηρετητή αιτημάτων με τις επιλεγμένες ρυθμίσεις"
+
+#: data/ui/signup_settings.ui:98
 msgid ""
-"Creates shared folders symlinks for the groups the user is a member of"
-msgstr "Δημιουργεί συντομεύσεις για κοινόχρηστους φακέλους"
+"Select the roles and groups that you want to make available for user signup "
+"requests.\n"
+"After you click [Next], a dialog that receives signup requests will open."
+msgstr ""
+"Εδώ μπορείτε να επιλέξετε τους ρόλους και τις ομάδες που θέλετε να διατεθούν "
+"προς επιλογή στους αιτούντες. Μόλις πατήσετε 'Συνέχεια' θα μπορέσετε να "
+"δεχτείτε αιτήσεις με βάση τις ρυθμίσεις που ορίσατε εδώ."
 
-#: etc/xdg/autostart/ltsp-shared-folders.desktop:8
-msgid "folders-publicshare"
-msgstr "folders-publicshare"
+#: data/ui/signup_settings.ui:116
+msgid "Roles that will be available"
+msgstr "Επιλέξτε παρακάτω τους ρόλους που θα διατεθούν"
 
-#: share/ltsp-manager/about_dialog.ui:8
-msgid "About LTSP Manager"
-msgstr "Περί Διαχείριση ΣΕΠΕΗΥ"
+#: data/ui/signup_settings.ui:157 data/ui/signup_server.ui:134
+msgid "Role"
+msgstr "Ρόλος"
 
-#: share/ltsp-manager/about_dialog.ui:15
-msgid "Copyright © 2017 LTSP Manager developers"
-msgstr "Copyright © 2017 ομάδα ανάπτυξης του LTSP Manager"
+#: data/ui/signup_settings.ui:191
+msgid "Groups that will be available"
+msgstr "Επιλέξτε παρακάτω τις ομάδες που θα διατεθούν"
 
-#: share/ltsp-manager/about_dialog.ui:16
-msgid "Easy maintenance of LTSP computer labs."
-msgstr "Εύκολη διαχείριση εργαστηρίων βασισμένων στο LTSP."
+#: data/ui/signup_settings.ui:232
+msgid "Group"
+msgstr "Ομάδα"
 
-#: share/ltsp-manager/config.py:22
-msgid "Administrator"
-msgstr "Διαχειριστής"
+#: data/ui/signup_server.ui:26
+msgid "User signup requests"
+msgstr "Αιτήματα νέων χρηστών"
 
-#: share/ltsp-manager/config.py:23
-msgid "Staff"
-msgstr "Προσωπικό"
+#: data/ui/signup_server.ui:44
+msgid ""
+"User signup requests show up here as soon as they send them.\n"
+"You can continuously edit, delete and apply signup requests as long as this "
+"dialog stays open."
+msgstr ""
+"Εδώ μπορείτε να βλέπετε τις αιτήσεις των χρηστών αμέσως μόλις αυτές "
+"στέλνονται. Μόλις επεξεργαστείτε ή διαγράψετε αυτές που θέλετε πατήστε "
+"'Εφαρμογή'  για να δημιουργηθούν οι νέοι χρήστες."
 
-#: share/ltsp-manager/config.py:24
-msgid "Student"
-msgstr "Μαθητής"
+#: data/ui/signup_server.ui:90
+msgid "Date"
+msgstr "Ημερομηνία"
 
-#: share/ltsp-manager/config.py:25
-msgid "Teacher"
-msgstr "Καθηγητής"
+#: data/ui/signup_server.ui:101
+msgid "From"
+msgstr "Από"
 
-#: share/ltsp-manager/create_users.py:99 share/ltsp-manager/create_users.ui:660
-#, python-format
-msgid "The following %d accounts will be created"
-msgstr "Θα δημιουργηθούν οι παρακάτω %d λογαριασμοί"
+#: data/ui/signup_server.ui:112 data/ui/ltsp-manager.ui:714
+#: data/ui/create_users.ui:580
+msgid "Real name"
+msgstr "Ονοματεπώνυμο"
 
-#: share/ltsp-manager/create_users.py:130
-#, python-format
-msgid "Creating group %(current)d of %(total)d..."
-msgstr "Δημιουργία ομάδας %(current)d από %(total)d..."
+#: data/ui/signup_server.ui:123 data/ui/ltsp-manager.ui:682
+#: data/ui/create_users.ui:566 src/import_dialog.py:568
+msgid "Username"
+msgstr "Όνομα χρήστη"
 
-#: share/ltsp-manager/create_users.py:164
-#, python-format
-msgid "Creating user %(current)d of %(total)d..."
-msgstr "Δημιουργία χρήστη %(current)d από %(total)d..."
+#: data/ui/signup_server.ui:145
+msgid "Groups"
+msgstr "Ομάδες"
 
-#: share/ltsp-manager/create_users.ui:13
-msgid "User account creation help"
-msgstr "Βοήθεια για τη δημιουργία χρηστών"
+#: data/ui/signup_server.ui:173
+msgid "Edit the selected signup request"
+msgstr "Επεξεργασία του επιλεγμένου αιτήματος"
 
-#: share/ltsp-manager/create_users.ui:18
-#, python-brace-format
+#: data/ui/signup_server.ui:174
+msgid "Edit request"
+msgstr "Αναθεώρηση αιτήματος"
+
+#: data/ui/signup_server.ui:189
+msgid "Reject the selected request, and remove it from the list"
+msgstr "Απόρριψη και αφαίρεση του επιλεγμένου αιτήματος από τη λίστα"
+
+#: data/ui/signup_server.ui:190
+msgid "Reject request"
+msgstr "Απόρριψη αιτήματος"
+
+#: data/ui/signup_server.ui:239
+msgid ""
+"Accept all the signup requests listed, creating a user account for each one "
+"of them"
+msgstr ""
+"Αποδοχή όλων των αιτημάτων της λίστας και δημιουργία λογαριασμού χρήστη για "
+"κάθε ένα από αυτά"
+
+#: data/ui/signup_form.ui:67
+msgid "Fill the following fields in order to request a user account"
+msgstr ""
+"Συμπληρώστε παρακάτω τα στοιχεία σας για να μπορέσετε να αποκτήσετε "
+"λογαριασμό στο σύστημα."
+
+#: data/ui/signup_form.ui:178
+msgid "Role:"
+msgstr "Ρόλος:"
+
+#: data/ui/signup_form.ui:283
+msgid "Check the groups that you are a member of"
+msgstr "Επιλέξτε αν ανήκετε σε κάποια από τις παρακάτω ομάδες:"
+
+#: data/ui/signup_form.ui:328 data/ui/ltsp-manager.ui:590
+#: data/ui/group_form.ui:149
+msgid "Group name"
+msgstr "Όνομα ομάδας"
+
+#: data/ui/ltsp_info.ui:9 data/ui/ltsp_info.ui:77
+msgid "LTSP information"
+msgstr "Πληροφορίες LTSP"
+
+#: data/ui/ltsp-manager.ui:67 data/ltsp-manager.desktop.in.in:3
+msgid "LTSP Manager"
+msgstr "Διαχείριση ΣΕΠΕΗΥ"
+
+#: data/ui/ltsp-manager.ui:89
+msgid "_File"
+msgstr "_Αρχείο"
+
+#: data/ui/ltsp-manager.ui:99
+msgid "Opens a dialog which handles user signup requests"
+msgstr ""
+"Ανοίγει μία φόρμα η οποία δέχεται αιτήσεις ανοίγματος λογαριασμών από τους "
+"χρήστες"
+
+#: data/ui/ltsp-manager.ui:100
+msgid "Allow user sign ups..."
+msgstr "Ενεργοποίηση εγγραφών χρηστών..."
+
+#: data/ui/ltsp-manager.ui:109
+msgid "Create users per workstation..."
+msgstr "Δημιουργία χρηστών ανά υπολογιστή..."
+
+#: data/ui/ltsp-manager.ui:124
+msgid "Import from passwd..."
+msgstr "Εισαγωγή από passwd..."
+
+#: data/ui/ltsp-manager.ui:133
+msgid "Import from csv..."
+msgstr "Εισαγωγή από csv..."
+
+#: data/ui/ltsp-manager.ui:142
+msgid "Export to csv..."
+msgstr "Εξαγωγή σε csv..."
+
+#: data/ui/ltsp-manager.ui:155
+msgid "_Server"
+msgstr "_Εξυπηρετητής"
+
+#: data/ui/ltsp-manager.ui:165
+msgid "Initial setup"
+msgstr "Αρχική ρύθμιση"
+
+#: data/ui/ltsp-manager.ui:173 data/ui/ip_dialog.ui:36 data/ui/ip_dialog.ui:114
+msgid "Configure network connection"
+msgstr "Ρύθμιση σύνδεσης δικτύου"
+
+#: data/ui/ltsp-manager.ui:182
+msgid "LTSP image"
+msgstr "Εικονικός δίσκος"
+
+#: data/ui/ltsp-manager.ui:192
+msgid ""
+"Publishes a clone of the server installation for the clients to boot from it"
+msgstr ""
+"Publishes a clone of the server installation for the clients to boot from it"
+
+#: data/ui/ltsp-manager.ui:193
+msgid "Update..."
+msgstr "Δημοσίευση..."
+
+#: data/ui/ltsp-manager.ui:202
+msgid "Reverts the LTSP image to its previous version"
+msgstr "Επαναφέρει τον εικονικό δίσκο του εξυπηρετητή στην προηγούμενη έκδοση"
+
+#: data/ui/ltsp-manager.ui:203
+msgid "Revert..."
+msgstr "Επαναφορά..."
+
+#: data/ui/ltsp-manager.ui:216
+msgid "Configuration files"
+msgstr "Αρχεία ρυθμίσεων"
+
+#: data/ui/ltsp-manager.ui:225
+msgid "Edit lts.conf"
+msgstr "Επεξεργασία του lts.conf"
+
+#: data/ui/ltsp-manager.ui:233
+msgid "Edit LTSP shared folder settings"
+msgstr "Επεξεργασία ρυθμίσεων κοινόχρηστων φακέλων"
+
+#: data/ui/ltsp-manager.ui:241
+msgid "Edit dnsmasq settings"
+msgstr "Επεξεργασία ρυθμίσεων dnsmasq"
+
+#: data/ui/ltsp-manager.ui:249
+msgid "Edit PXELinux settings"
+msgstr "Επεξεργασία ρυθμίσεων PXELinux"
+
+#: data/ui/ltsp-manager.ui:266
+msgid "_View"
+msgstr "_Προβολή"
+
+#: data/ui/ltsp-manager.ui:276
+msgid "Columns"
+msgstr "Στήλες"
+
+#: data/ui/ltsp-manager.ui:299
+msgid "Show private groups"
+msgstr "Εμφάνιση προσωπικών ομάδων"
+
+#: data/ui/ltsp-manager.ui:314
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#: data/ui/ltsp-manager.ui:327
+msgid "_Groups"
+msgstr "_Ομάδες"
+
+#: data/ui/ltsp-manager.ui:337
+msgid "New group..."
+msgstr "Νέα ομάδα..."
+
+#: data/ui/ltsp-manager.ui:347 src/ltsp-manager.py:187
+msgid "Edit group..."
+msgstr "Επεξεργασία ομάδας..."
+
+#: data/ui/ltsp-manager.ui:357 src/ltsp-manager.py:188
+msgid "Delete group..."
+msgstr "Διαγραφή ομάδας..."
+
+#: data/ui/ltsp-manager.ui:369
+msgid "_Users"
+msgstr "_Χρήστες"
+
+#: data/ui/ltsp-manager.ui:379
+msgid "New user..."
+msgstr "Νέος χρήστης..."
+
+#: data/ui/ltsp-manager.ui:389 src/ltsp-manager.py:214
+msgid "Edit user..."
+msgstr "Επεξεργασία χρήστη..."
+
+#: data/ui/ltsp-manager.ui:399 src/ltsp-manager.py:215
+msgid "Delete user..."
+msgstr "Διαγραφή χρήστη..."
+
+#: data/ui/ltsp-manager.ui:409
+msgid "Remove user from selected groups"
+msgstr "Αφαίρεση από τις επιλεγμένες ομάδες"
+
+#: data/ui/ltsp-manager.ui:422
+msgid "_Help"
+msgstr "_Βοήθεια"
+
+#: data/ui/ltsp-manager.ui:432
+msgid "Online documentation"
+msgstr "Σελίδα τεκμηρίωσης"
+
+#: data/ui/ltsp-manager.ui:441
+msgid "Report bug"
+msgstr "Αναφορά σφάλματος"
+
+#: data/ui/ltsp-manager.ui:450
+msgid "Ask question"
+msgstr "Υποβολή ερώτησης"
+
+#: data/ui/ltsp-manager.ui:459
+msgid "File a helpdesk issue"
+msgstr "Υποβολή αιτήματος στο helpdesk"
+
+#: data/ui/ltsp-manager.ui:468
+msgid "Live chat (IRC)"
+msgstr "Ζωντανή συνομιλία (IRC)"
+
+#: data/ui/ltsp-manager.ui:477
+msgid "Discussion forum"
+msgstr "Φόρουμ συζητήσεων"
+
+#: data/ui/ltsp-manager.ui:492
+msgid "LTSP installations map"
+msgstr "Χάρτης ΣΕΠΕΗΥ με LTSP"
+
+#: data/ui/ltsp-manager.ui:501
+msgid "Man page of lts.conf"
+msgstr "Εγχειρίδιο του lts.conf"
+
+#: data/ui/ltsp-manager.ui:510
+msgid "Display LTSP version information, useful for reporting bugs"
+msgstr "Σε αναφορές σφαλμάτων, συμπεριλάβετε και αυτές τις πληροφορίες"
+
+#: data/ui/ltsp-manager.ui:511
+msgid "Local LTSP information"
+msgstr "Πληροφορίες LTSP"
+
+#: data/ui/ltsp-manager.ui:526
+msgid "About"
+msgstr "Περί"
+
+#: data/ui/ltsp-manager.ui:575 data/ui/group_form.ui:161
+msgid "GID"
+msgstr "GID"
+
+#: data/ui/ltsp-manager.ui:617
+msgid "Unselect all"
+msgstr "Αποεπιλογή όλων"
+
+#: data/ui/ltsp-manager.ui:666
+msgid "UID"
+msgstr "UID"
+
+#: data/ui/ltsp-manager.ui:698
+msgid "Primary group"
+msgstr "Όνομα κύριας ομάδας"
+
+#: data/ui/ltsp-manager.ui:730
+msgid "Office"
+msgstr "Γραφείο"
+
+#: data/ui/ltsp-manager.ui:746
+msgid "Office phone"
+msgstr "Τηλ. γραφείου"
+
+#: data/ui/ltsp-manager.ui:762
+msgid "Home phone"
+msgstr "Τηλ. οικίας"
+
+#: data/ui/ltsp-manager.ui:778
+msgid "Other"
+msgstr "Άλλο"
+
+#: data/ui/ltsp-manager.ui:794
+msgid "Directory"
+msgstr "Κατάλογος"
+
+#: data/ui/ltsp-manager.ui:810
+msgid "Shell"
+msgstr "Κέλυφος"
+
+#: data/ui/ltsp-manager.ui:826
+msgid "Last password change"
+msgstr "Τελευταία αλλαγή κωδικού"
+
+#: data/ui/ltsp-manager.ui:842
+msgid "Minimum password age"
+msgstr "Ελάχιστη διάρκεια"
+
+#: data/ui/ltsp-manager.ui:858
+msgid "Maximum password age"
+msgstr "Μέγιστη διάρκεια"
+
+#: data/ui/ltsp-manager.ui:874
+msgid "Warning period"
+msgstr "Προειδοποίηση"
+
+#: data/ui/ltsp-manager.ui:890
+msgid "Inactive"
+msgstr "Ανενεργός"
+
+#: data/ui/ltsp-manager.ui:906
+msgid "Expired"
+msgstr "Λήξη"
+
+#: data/ui/ip_dialog.ui:13
+msgid "Please wait until the DHCP request has finished..."
+msgstr "Παρακάλω περιμένετε μέχρι να τελειώσει το DHCP Request..."
+
+#: data/ui/ip_dialog.ui:162
+msgid "Automatic (DHCP)"
+msgstr "Αυτόματα (DHCP)"
+
+#: data/ui/ip_dialog.ui:166
+msgid "Automatic (DHCP) addresses only"
+msgstr "Μόνο αυτόματες διευθύνσεις (DHCP)"
+
+#: data/ui/ip_dialog.ui:170
+msgid "Manual"
+msgstr "Χειροκίνητα"
+
+#: data/ui/ip_dialog.ui:174
+msgid "LTSP (requires 2 network adapters)"
+msgstr "LTSP (προϋποθέτει 2 κάρτες δικτύου)"
+
+#: data/ui/ip_dialog.ui:178
+msgid "Do not configure a connection"
+msgstr "Να μη δημιουργηθεί σύνδεση"
+
+#: data/ui/ip_dialog.ui:193
+msgid "Method:"
+msgstr "Μέθοδος"
+
+#: data/ui/ip_dialog.ui:206
+msgid "General"
+msgstr "Γενικά"
+
+#: data/ui/ip_dialog.ui:222
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: data/ui/ip_dialog.ui:234
+msgid "Device:"
+msgstr "Διεπαφή:"
+
+#: data/ui/ip_dialog.ui:246
+msgid "MAC address:"
+msgstr "Διεύθυνση υλικού:"
+
+#: data/ui/ip_dialog.ui:258
+msgid "Driver:"
+msgstr "Οδηγός:"
+
+#: data/ui/ip_dialog.ui:270
+msgid "Speed:"
+msgstr "Ταχύτητα:"
+
+#: data/ui/ip_dialog.ui:283
+msgid "IPv4"
+msgstr "IPv4"
+
+#: data/ui/ip_dialog.ui:299
+msgid "Address:"
+msgstr "Διεύθυνση IP:"
+
+#: data/ui/ip_dialog.ui:311
+msgid "Netmask:"
+msgstr "Μάσκα υποδικτύου:"
+
+#: data/ui/ip_dialog.ui:323
+msgid "Gateway:"
+msgstr "Προεπιλεγμένη διαδρομή:"
+
+#: data/ui/ip_dialog.ui:335
+msgid "Primary DNS:"
+msgstr "Πρωτεύων DNS:"
+
+#: data/ui/ip_dialog.ui:347
+msgid "Secondary DNS:"
+msgstr "Δευτερεύων DNS:"
+
+#: data/ui/ip_dialog.ui:359
+msgid "Tertiary DNS:"
+msgstr "Τριτεύων DNS:"
+
+#: data/ui/ip_dialog.ui:369
+msgid "Automatically connect to this network when it is available"
+msgstr "Αυτόματη ενεργοποίηση της σύνδεσης"
+
+#: data/ui/ip_dialog.ui:374
+msgid ""
+"Activate this connection automatically. Also, disable the automatic "
+"activation of all other connections available for this adapter."
+msgstr ""
+"Ενεργοποιεί την αυτόματη σύνδεση στην σύνδεση και απενεργοποιεί την αυτόματη "
+"σύνδεση στις υπόλοιπες συνδέσεις της διεπαφής."
+
+#: data/ui/import_dialog.ui:80
+msgid "Users"
+msgstr "Χρήστες"
+
+#: data/ui/import_dialog.ui:130
+msgid "Automatically resolve issues"
+msgstr "Αυτόματη επίλυση προβλημάτων"
+
+#: data/ui/import_dialog.ui:134
+msgid ""
+"Try to automatically resolve any conflicts that exist with the user accounts "
+"to be imported"
+msgstr ""
+"Επίλυση των προβλημάτων, όπου αυτό είναι δυνατό, για όλους τους νέους χρήστες"
+
+#: data/ui/import_dialog.ui:234
+msgid "Remove the selected users from the list"
+msgstr "Διαγραφή των επιλεγμένων χρηστών από τη λίστα"
+
+#: data/ui/import_dialog.ui:235
+msgid "Remove"
+msgstr "Διαγραφή"
+
+#: data/ui/group_form.ui:26
+msgid "Group properties"
+msgstr "Πληροφορίες ομάδας"
+
+#: data/ui/group_form.ui:100
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: data/ui/group_form.ui:240
+msgid "Members"
+msgstr "Μέλη"
+
+#: data/ui/group_form.ui:269
+msgid "Show system users"
+msgstr "Εμφάνιση χρηστών συστήματος"
+
+#: data/ui/group_form.ui:291
+msgid "<b>General</b>"
+msgstr "Γενικά"
+
+#: data/ui/group_form.ui:322
+msgid "Create shared folders for this group"
+msgstr "Δημιουργία κοινόχρηστων καταλόγων για αυτήν την ομάδα"
+
+#: data/ui/group_form.ui:338
+msgid ""
+"Warning: if users have open files in shared folders, they\n"
+"won't be able to save them if you disable folder sharing."
+msgstr ""
+"Προσοχή: Εάν οι μαθητές έχουν ανοιχτά αρχεία στον κοινόχρηστο\n"
+"-κατάλογο δεν θα μπορέσουν να τα αποθηκεύσουν εφόσον\n"
+"-απενεργοποιήσετε την κοινή χρήση."
+
+#: data/ui/group_form.ui:362
+msgid "<b>Shared folders</b>"
+msgstr "<b>Κοινόχρηστοι κατάλογοι</b>"
+
+#: data/ui/dialogs.ui:8
+msgid "User account creation progress"
+msgstr "Πρόοδος δημιουργίας χρηστών"
+
+#: data/ui/dialogs.ui:55
+msgid "Progress:"
+msgstr "Πρόοδος:"
+
+#: data/ui/dialogs.ui:98
+msgid "An error has occured:"
+msgstr "Προέκυψε σφάλμα:"
+
+#: data/ui/dialogs.ui:145
+msgid "The accounts were successfully created!"
+msgstr "Επιτυχής δημιουργία χρηστών!"
+
+#: data/ui/create_users.ui:31
+#, fuzzy
 msgid ""
 "If you'd like to create only one user per workstation, specify only one "
 "group, for example \"pc\".\n"
@@ -86,10 +672,14 @@ msgid ""
 "The number of accounts per group usually matches the number of workstations "
 "in the classroom.\n"
 "\n"
-"In templates, you may use the following variables:\n"
-"{c}: the group, e.g. a1, a2, b1, ...\n"
-"{i}: the account index for this group, e.g. 1, 2, 3, ...\n"
-"{i0}: the account index with 0 prefixed, e.g. 01, 02, 03, ..."
+"In templates, you may use the following variables enclosed in curly "
+"brackets({}):\n"
+"\tc:\tthe group, e.g. a1, a2, b1, ...\n"
+"\ti:\tthe account index for this group, e.g. 1, 2, 3, ...\n"
+"\t0i:\tthe account index with 0 prefixed, e.g. 01, 02, 03, ...\n"
+"\n"
+"Example: To have the group and account number in the username you would "
+"enter \"{c}-{i}\""
 msgstr ""
 "Αν θέλετε μόνο ένα χρήστη ανά υπολογιστή, καθορίστε μόνο ένα τμήμα, για "
 "παράδειγμα \"pc\".\n"
@@ -102,583 +692,251 @@ msgstr ""
 "{i}: ο αύξων αριθμός λογαριασμού ανά τμήμα, π.χ. 1, 2, 3, …\n"
 "{i0}: ο αριθμός λογαριασμού με 0 μπροστά, π.χ. 01, 02, 03, …"
 
-#: share/ltsp-manager/create_users.ui:54
-msgid "User account creation progress"
-msgstr "Πρόοδος δημιουργίας χρηστών"
-
-#: share/ltsp-manager/create_users.ui:99
-msgid "Progress:"
-msgstr "Πρόοδος:"
-
-#: share/ltsp-manager/create_users.ui:142
-msgid "An error has occured:"
-msgstr "Προέκυψε σφάλμα:"
-
-#: share/ltsp-manager/create_users.ui:189
-msgid "The accounts were successfully created!"
-msgstr "Επιτυχής δημιουργία χρηστών!"
-
-#: share/ltsp-manager/create_users.ui:225
+#: data/ui/create_users.ui:98
 msgid "Create accounts per workstation"
 msgstr "Δημιουργία χρηστών ανά υπολογιστή"
 
-#: share/ltsp-manager/create_users.ui:309
+#: data/ui/create_users.ui:182
 msgid "Mandatory information"
 msgstr "Βασικές πληροφορίες"
 
-#: share/ltsp-manager/create_users.ui:326
+#: data/ui/create_users.ui:198
 msgid "Group names:"
 msgstr "Τμήματα:"
 
-#: share/ltsp-manager/create_users.ui:340
+#: data/ui/create_users.ui:211
 msgid "Number of accounts per group:"
 msgstr "Λογαριασμοί ανά τμήμα:"
 
-#: share/ltsp-manager/create_users.ui:418
+#: data/ui/create_users.ui:288
 msgid "Create shared folders:"
 msgstr "Δημιουργία κοινόχρηστων φακέλων:"
 
-#: share/ltsp-manager/create_users.ui:450
+#: data/ui/create_users.ui:317
 msgid "Add teachers to those groups:"
 msgstr "Εισαγωγή όλων των καθηγητών σε αυτά τα τμήματα:"
 
-#: share/ltsp-manager/create_users.ui:494
+#: data/ui/create_users.ui:359
 msgid "Account templates (optional)"
 msgstr "Πρότυπα λογαριασμών (προαιρετικό)"
 
-#: share/ltsp-manager/create_users.ui:511
+#: data/ui/create_users.ui:375
 msgid "Username template:"
 msgstr "Πρότυπα λογαριασμών (προαιρετικό)"
 
-#: share/ltsp-manager/create_users.ui:525
+#: data/ui/create_users.ui:388
 msgid "Real name template:"
 msgstr "Πρότυπο πραγματικού ονόματος:"
 
-#: share/ltsp-manager/create_users.ui:539
+#: data/ui/create_users.ui:401
 msgid "Password template:"
 msgstr "Πρότυπο κωδικού πρόσβασης:"
 
-#: share/ltsp-manager/create_users.ui:553 share/ltsp-manager/user_form.ui:734
-msgid "Member of groups:"
-msgstr "Μέλος ομάδων:"
-
-#: share/ltsp-manager/create_users.ui:615
+#: data/ui/create_users.ui:476
 msgid "User {c}-{0i}"
 msgstr "Χρήστης {c}-{0i}"
 
-#: share/ltsp-manager/create_users.ui:705
-#: share/ltsp-manager/import_dialog.py:523
-#: share/ltsp-manager/ltsp-manager.ui:726
-#: share/ltsp-manager/signup_server.ui:120
-msgid "Username"
-msgstr "Όνομα χρήστη"
+#: data/ui/create_users.ui:521 src/create_users.py:105
+#, python-format
+msgid "The following %d accounts will be created"
+msgstr "Θα δημιουργηθούν οι παρακάτω %d λογαριασμοί"
 
-#: share/ltsp-manager/create_users.ui:719
-#: share/ltsp-manager/ltsp-manager.ui:758
-#: share/ltsp-manager/signup_server.ui:109
-msgid "Real name"
-msgstr "Ονοματεπώνυμο"
-
-#: share/ltsp-manager/create_users.ui:733
+#: data/ui/create_users.ui:594
 msgid "Home"
 msgstr "Κατάλογος"
 
-#: share/ltsp-manager/create_users.ui:747
+#: data/ui/create_users.ui:608
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
 
-#: share/ltsp-manager/create_users.ui:778
+#: data/ui/create_users.ui:639
 msgid ""
-"<small><i>(Only the first 300 accounts are shown in the table "
-"above)</i></small>"
+"<small><i>(Only the first 300 accounts are shown in the table above)</i></"
+"small>"
 msgstr ""
 "<small><i>(Στον παραπάνω πίνακα εμφανίζονται μόνο οι 300 πρώτοι "
 "λογαριασμοί)</i></small>"
 
-#: share/ltsp-manager/export_dialog.py:17
-msgid "Enter the name for the exported file"
-msgstr "Επιλέξτε όνομα αρχείου για εξαγωγή"
+#: data/ui/about_dialog.ui:8
+msgid "About LTSP Manager"
+msgstr "Περί Διαχείριση ΣΕΠΕΗΥ"
 
-#: share/ltsp-manager/group_form.ui:26
-msgid "Group properties"
-msgstr "Πληροφορίες ομάδας"
+#: data/ui/about_dialog.ui:15
+msgid "Copyright © 2017 LTSP Manager developers"
+msgstr "Copyright © 2017 ομάδα ανάπτυξης του LTSP Manager"
 
-#: share/ltsp-manager/group_form.ui:99
-msgid "Description"
-msgstr "Περιγραφή"
+#: data/ui/about_dialog.ui:16
+msgid "Easy maintenance of LTSP computer labs."
+msgstr "Εύκολη διαχείριση εργαστηρίων βασισμένων στο LTSP."
 
-#: share/ltsp-manager/group_form.ui:148 share/ltsp-manager/ltsp-manager.ui:633
-#: share/ltsp-manager/signup_form.ui:368
-msgid "Group name"
-msgstr "Όνομα ομάδας"
+#: data/ltsp-manager.desktop.in.in:4
+#, fuzzy
+msgid "Easy administration of LTSP-based computer labs"
+msgstr "Εύκολη διαχείριση εργαστηρίων βασισμένων στο LTSP."
 
-#: share/ltsp-manager/group_form.ui:160 share/ltsp-manager/ltsp-manager.ui:618
-msgid "GID"
-msgstr "GID"
-
-#: share/ltsp-manager/group_form.ui:239
-msgid "Members"
-msgstr "Μέλη"
-
-#: share/ltsp-manager/group_form.ui:268
-msgid "Show system users"
-msgstr "Εμφάνιση χρηστών συστήματος"
-
-#: share/ltsp-manager/group_form.ui:291
-msgid "<b>General</b>"
-msgstr "Γενικά"
-
-#: share/ltsp-manager/group_form.ui:322
-msgid "Create shared folders for this group"
-msgstr "Δημιουργία κοινόχρηστων καταλόγων για αυτήν την ομάδα"
-
-#: share/ltsp-manager/group_form.ui:340
-msgid ""
-"Warning: if users have open files in shared folders, they\n"
-"won't be able to save them if you disable folder sharing."
+#: data/ltsp-manager.desktop.in.in:7
+msgid "ltsp-manager"
 msgstr ""
-"Προσοχή: Εάν οι μαθητές έχουν ανοιχτά αρχεία στον κοινόχρηστο\n"
-"-κατάλογο δεν θα μπορέσουν να τα αποθηκεύσουν εφόσον\n"
-"-απενεργοποιήσετε την κοινή χρήση."
 
-#: share/ltsp-manager/group_form.ui:364
-msgid "<b>Shared folders</b>"
-msgstr "<b>Κοινόχρηστοι κατάλογοι</b>"
+#: data/ltsp-shared-folders.desktop.in.in:3
+msgid "LTSP shared folders"
+msgstr "Κοινόχρηστοι φάκελοι LTSP"
 
-#: share/ltsp-manager/import_dialog.py:74
-msgid "Status"
-msgstr "Κατάσταση"
+#: data/ltsp-shared-folders.desktop.in.in:4
+msgid "Creates shared folders symlinks for the groups the user is a member of"
+msgstr "Δημιουργεί συντομεύσεις για κοινόχρηστους φακέλους"
 
-#: share/ltsp-manager/import_dialog.py:141
+#: data/ltsp-shared-folders.desktop.in.in:6
+msgid "folders-publicshare"
+msgstr "folders-publicshare"
+
+#: data/org.ltsp.ltsp-manager.policy.in.in:11
+msgid "Authentication is required to run LTSP Manager."
+msgstr ""
+
+#: src/scripts/run-in-terminal.sh:25
+msgid "Press [Enter] to close the current window."
+msgstr ""
+
+#: src/scripts/run-in-terminal.sh:50 src/scripts/run-in-terminal.sh:61
+msgid "Executing command:"
+msgstr ""
+
+#: src/scripts/run-in-terminal.sh:68
+msgid "Command '%s' successfully completed."
+msgstr ""
+
+#: src/scripts/run-in-terminal.sh:70
+msgid "Command '%s' failed with error code %s."
+msgstr ""
+
+#: src/scripts/create-symlinks.sh:24
+msgid "-d"
+msgstr ""
+
+#: src/scripts/common.sh:64
+#, fuzzy
+msgid "Cancelled by the user."
+msgstr "Διαγραφή χρήστη..."
+
+#: src/scripts/before-uninstall.sh:7
+msgid "This will undo all the actions that initial-setup did to your system."
+msgstr ""
+
+#: src/scripts/before-uninstall.sh:8 src/scripts/initial-setup.sh:28
+msgid "Press [Enter] to continue or Ctrl+C to abort:"
+msgstr ""
+
+#: src/scripts/initial-setup.sh:27
+msgid "This will perform an initial setup to ensure that LTSP runs optimally."
+msgstr ""
+
+#: src/scripts/initial-setup.sh:54
+msgid "You will need to logout in order for the group changes to take effect!"
+msgstr ""
+
+#: src/scripts/initial-setup.sh:98
+msgid "Restarting network-manager to remove its spawned dnsmasq..."
+msgstr ""
+
+#: src/user_form.py:239
 #, python-format
+msgid "This directory belongs to UID %(uid)d and to GID %(gid)d"
+msgstr "Αυτός ο κατάλογος ανήκει στο UID %(uid)d και στο GID %(gid)d"
+
+#: src/signup_server.py:259
+msgid "Are you sure you want to remove the following requests from the list?"
+msgstr "Θέλετε σίγουρα να διαγραφούν τα παρακάτω αιτήματα από τη λίστα;"
+
+#: src/signup_server.py:261
+msgid "Reject requests"
+msgstr "Διαγραφή αιτημάτων"
+
+#: src/signup_server.py:278
+msgid "The following user accounts will be created:"
+msgstr "Θα δημιουργηθούν οι παρακάτω χρήστες:"
+
+#: src/signup_server.py:279
+msgid "Proceed?"
+msgstr "Συνέχεια;"
+
+#: src/signup_server.py:280
+msgid "Create user accounts"
+msgstr "Δημιουργία χρηστών"
+
+#: src/signup_server.py:296
 msgid ""
-"The following %s user accounts already exist on the system, with identical "
-"information."
+"Are you sure you want to close the sign up server? All pending requests will "
+"be lost."
 msgstr ""
-"Βρέθηκαν στο σύστημα οι ακόλουθοι %s χρήστες αυτής της λίστας με τα ίδια "
-"ακριβώς πεδία."
+"Θέλετε σίγουρα να τερματίσετε την εφαρμογή αιτήσεων; Όλες οι εκκρεμείς "
+"αιτήσεις θα χαθούν."
 
-#: share/ltsp-manager/import_dialog.py:143
-msgid ""
-"Would you like to remove those accounts from the list, to avoid trying to "
-"create them again?"
-msgstr ""
-"Επιθυμείτε να διαγραφούν από αυτή τη λίστα οι πανομοιότυποι χρήστες και να "
-"μη γίνει εισαγωγή τους;"
-
-#: share/ltsp-manager/import_dialog.py:145
-msgid "Identical existing accounts were found"
-msgstr "Βρέθηκαν πανομοιότυποι χρήστες"
-
-#: share/ltsp-manager/import_dialog.py:378
-#, python-format
-msgid "The UID of user \"%(user)s\" was changed from %(old)s to %(new)s."
-msgstr "Αλλάχθηκε το UID του χρήστη \"%(user)s\" από %(old)s σε %(new)s."
-
-#: share/ltsp-manager/import_dialog.py:380
-#, python-format
-msgid "The GID of user \"%(user)s\" was changed from %(old)s to %(new)s."
-msgstr "Αλλάχθηκε το GID του χρήστη \"%(user)s\" από %(old)s σε %(new)s."
-
-#: share/ltsp-manager/import_dialog.py:382
-#, python-format
-msgid ""
-"The home directory of user \"%(user)s\" was changed from %(old)s to %(new)s."
-msgstr ""
-"Ο αρχικός κατάλογος του χρήστη \"%(user)s\" αλλάχθηκε από %(old)s σε %(new)s."
-
-#: share/ltsp-manager/import_dialog.py:384
-#, python-format
-msgid ""
-"The primary group name of user \"%(user)s\" was changed from %(old)s to "
-"%(new)s."
-msgstr ""
-"Η βασική ομάδα του χρήστη \"%(user)s\" αλλάχτηκε από %(old)s σε %(new)s."
-
-#: share/ltsp-manager/import_dialog.py:456
-msgid "Some issues remain that could not be resolved automatically"
-msgstr "Δεν ήταν δυνατή η αυτόματη επίλυση κάποιου προβλήματος"
-
-#: share/ltsp-manager/import_dialog.py:464
-msgid "Create the following users?"
-msgstr "Να δημιουργηθούν οι νέοι χρήστες;"
-
-#: share/ltsp-manager/import_dialog.py:524
-msgid "This username already exists in the system"
-msgstr "Αυτό το όνομα χρήστη υπάρχει ήδη στο σύστημα"
-
-#: share/ltsp-manager/import_dialog.py:526
-msgid "This is not a valid username"
-msgstr "Αυτό το όνομα χρήστη δεν είναι αποδεκτό"
-
-#: share/ltsp-manager/import_dialog.py:528
-msgid "This UID already exists in the system"
-msgstr "Αυτό το UID υπάρχει ήδη στο σύστημα"
-
-#: share/ltsp-manager/import_dialog.py:530
-msgid "This UID already exists in this list"
-msgstr "Αυτό το UID υπάρχει ήδη σε αυτή τη λίστα"
-
-#: share/ltsp-manager/import_dialog.py:532
-msgid "This UID does not match the home directory UID"
-msgstr "Αυτό το UID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε"
-
-#: share/ltsp-manager/import_dialog.py:534
-msgid "This GID does not match the home directory GID"
-msgstr ""
-"\"Αυτό το GID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε"
-
-#: share/ltsp-manager/import_dialog.py:536
-msgid "This directory is in use by another user in the system"
-msgstr ""
-"Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη του συστήματος"
-
-#: share/ltsp-manager/import_dialog.py:538
-msgid "This directory is in use by another user in the list"
-msgstr ""
-"Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη σε αυτή τη λίστα"
-
-#: share/ltsp-manager/import_dialog.py:540
-msgid ""
-"This directory already exists in the system but with a different UID/GID"
-msgstr ""
-"Αυτός ο κατάλογος υπάρχει στο σύστημα αλλά με διαφορετικά UID ή/και GID από "
-"αυτά που δώσατε"
-
-#: share/ltsp-manager/import_dialog.py:542
-#, python-format
-msgid "This GID does not belong to the group %s"
-msgstr "Αυτό το GID δεν ανήκει στην ομάδα %s"
-
-#: share/ltsp-manager/import_dialog.py:544
-#, python-format
-msgid "The GID for this group is not %s"
-msgstr "Το GID αυτής της ομάδας δεν είναι %s"
-
-#: share/ltsp-manager/import_dialog.ui:13
-msgid "Please select a csv file to import"
-msgstr "Επιλέξτε το αρχείο CSV προς εισαγωγή"
-
-#: share/ltsp-manager/import_dialog.ui:79
-msgid "Import user accounts"
-msgstr "Αναθεώρηση χρηστών"
-
-#: share/ltsp-manager/import_dialog.ui:145
-msgid "Users"
-msgstr "Χρήστες"
-
-#: share/ltsp-manager/import_dialog.ui:195
-msgid "Automatically resolve issues"
-msgstr "Αυτόματη επίλυση προβλημάτων"
-
-#: share/ltsp-manager/import_dialog.ui:200
-msgid ""
-"Try to automatically resolve any conflicts that exist with the user accounts "
-"to be imported"
-msgstr ""
-"Επίλυση των προβλημάτων, όπου αυτό είναι δυνατό, για όλους τους νέους χρήστες"
-
-#: share/ltsp-manager/import_dialog.ui:299
-msgid "Remove the selected users from the list"
-msgstr "Διαγραφή των επιλεγμένων χρηστών από τη λίστα"
-
-#: share/ltsp-manager/import_dialog.ui:300
-msgid "Remove"
-msgstr "Διαγραφή"
-
-#: share/ltsp-manager/ip_dialog.py:21
-#, python-brace-format
-msgid ""
-"The address {0} is already is use by another workstation. Please enter "
-"another one."
-msgstr ""
-"Η διεύθυνση {0} χρησιμοποιείται ήδη από άλλον υπολογιστή. Παρακαλώ δώστε μια "
-"διαφορετική."
-
-#: share/ltsp-manager/ip_dialog.py:22
-#, python-brace-format
-msgid ""
-"The address {0} is already in use as the default gateway. Please enter "
-"another one."
-msgstr ""
-"Η διεύθυνση {0} χρησιμοποιείται ήδη σαν προεπιλεγμένη διαδρομή. Παρακαλώ "
-"δώστε μια διαφορετική."
-
-#: share/ltsp-manager/ip_dialog.py:23
-msgid ""
-"Invalid IP address. It must be in the form x.y.z.w, where x, y, z, w are "
-"between 1 and 255."
-msgstr ""
-"Μη-έγκυρη διεύθυνση IP. Θα πρέπει να είναι της μορφής x.y.z.w όπου x, y, z, "
-"w παίρνουν τιμές μεταξύ του 1 και 254."
-
-#: share/ltsp-manager/ip_dialog.py:24
-msgid "Could not connect to Network Manager"
-msgstr "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου."
-
-#: share/ltsp-manager/ip_dialog.py:25
-msgid "No device available"
-msgstr "Δεν υπάρχει διαθέσιμη διεπαφή."
-
-#: share/ltsp-manager/ip_dialog.py:26
-msgid "No wired devices available"
-msgstr "Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή."
-
-#: share/ltsp-manager/ip_dialog.py:27
-msgid "The subnet has changed."
-msgstr "Το υποδίκτυο έχει αλλάξει."
-
-#: share/ltsp-manager/ip_dialog.py:28
-#, python-brace-format
-msgid ""
-"The subnet has changed for device <b>{0}</b>. The dialog will suggest a new "
-"method according to the new values that were received from the router."
-msgstr ""
-"Το υποδίκτυο έχει αλλάξει για την <b>{0}</b>. Ο διάλογος θα προτείνει μια "
-"νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router."
-
-#: share/ltsp-manager/ip_dialog.py:29
-#, python-brace-format
-msgid ""
-"The subnet has changed for devices <b>{0}</b>. The dialog will suggest a new "
-"method according to the new values that were received from the router."
-msgstr ""
-"Το υποδίκτυο έχει αλλάξει για τις <b>{0}</b>. Ο διάλογος θα προτείνει μια "
-"νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router."
-
-#: share/ltsp-manager/ip_dialog.py:30
-msgid "The connections were successfully created."
-msgstr "Η δημιουργία των συνδέσεων έγινε επιτυχώς."
-
-#: share/ltsp-manager/ip_dialog.py:31
-msgid "Failure while restarting dnsmasq."
-msgstr "Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq απέτυχε."
-
-#: share/ltsp-manager/ip_dialog.py:32
-#, python-brace-format
-msgid "It is suggested to change your hostname to <b>{0}</b>"
-msgstr "Προτείνεται να μετονομάσετε τον υπολογιστή σας σε <b>{0}</b>\\n\\n"
-
-#: share/ltsp-manager/ip_dialog.py:33
-msgid "Successfully created network connections and restarted dnsmasq."
-msgstr ""
-"Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του αρχείου ρυθμίσεων "
-"του dnsmasq έγινε επιτυχώς."
-
-#: share/ltsp-manager/ip_dialog.py:34
-msgid ""
-"Successfully created network connections, but failed while restarting "
-"dnsmasq because the connections were not activated."
-msgstr ""
-"Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου "
-"dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν."
-
-#: share/ltsp-manager/ip_dialog.py:35
-msgid ""
-"Successfully created network connections, but failed while restarting "
-"dnsmasq."
-msgstr ""
-"Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου "
-"ρυθμίσεων του dnsmasq απέτυχε."
-
-#: share/ltsp-manager/ip_dialog.py:37 share/ltsp-manager/ltsp-manager.py:299
-#: share/ltsp-manager/ltsp-manager.py:322 share/ltsp-manager/signup.py:89
-msgid "Error"
-msgstr "Σφάλμα"
-
-#: share/ltsp-manager/ip_dialog.py:38
-msgid "Information"
-msgstr "Πληροφορία"
-
-#: share/ltsp-manager/ip_dialog.py:39 share/ltsp-manager/signup.py:231
-msgid "Success"
-msgstr "Επιτυχία"
-
-#: share/ltsp-manager/ip_dialog.py:180
-msgid "Unknown"
-msgstr "Άγνωστη"
-
-#: share/ltsp-manager/ip_dialog.py:244 share/ltsp-manager/ip_dialog.py:633
-#: share/ltsp-manager/ip_dialog.py:714
-msgid "No address found"
-msgstr "Δεν βρέθηκε διεύθυνση"
-
-#: share/ltsp-manager/ip_dialog.py:833
-msgid "Are you sure you want to continue?"
-msgstr "Είστε σίγουροι ότι θέλετε να συνεχίσετε;"
-
-#: share/ltsp-manager/ip_dialog.py:838
-msgid "You're about to create the connection:"
-msgstr "Πρόκειται να δημιουργήσετε τη σύνδεση:"
-
-#: share/ltsp-manager/ip_dialog.py:840
-msgid "You're about to create the connections:"
-msgstr "Πρόκειται να δημιουργήσετε τις συνδέσεις:"
-
-#: share/ltsp-manager/ip_dialog.py:854
-msgid "You're about to update the connection:"
-msgstr "Πρόκειται να ενημερώσετε τη σύνδεση:"
-
-#: share/ltsp-manager/ip_dialog.py:856
-msgid "You're about to update the connections:"
-msgstr "Πρόκειται να ενημερώσετε τις συνδέσεις:"
-
-#: share/ltsp-manager/ip_dialog.py:867
-msgid "and to recreate the dnsmasq configuration file."
-msgstr "και να επαναδημιουργήσετε το αρχείο ρυθμίσεων του dnsmasq."
-
-#: share/ltsp-manager/ip_dialog.py:869
-msgid ""
-"<b>Warning:</b> Recreating the dnsmasq configuration file is impossible "
-"because no network cable is attached to any of the available devices."
-msgstr ""
-"<b>Προσοχή: </b> Η  επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq δεν "
-"είναι δυνατή καθώς σε καμία διεπαφή δεν είναι συνδεδεμένο το καλώδιο."
-
-#: share/ltsp-manager/ip_dialog.py:871 share/ltsp-manager/signup_server.py:289
+#: src/signup_server.py:297 src/ip_dialog.py:876
 msgid "Confirmation"
 msgstr "Επιβεβαίωση"
 
-#: share/ltsp-manager/ip_dialog.ui:13
-msgid "Please wait until the DHCP request has finished..."
-msgstr "Παρακάλω περιμένετε μέχρι να τελειώσει το DHCP Request..."
-
-#: share/ltsp-manager/ip_dialog.ui:36 share/ltsp-manager/ip_dialog.ui:114
-#: share/ltsp-manager/ltsp-manager.ui:180
-msgid "Configure network connection"
-msgstr "Ρύθμιση σύνδεσης δικτύου"
-
-#: share/ltsp-manager/ip_dialog.ui:162
-msgid "Automatic (DHCP)"
-msgstr "Αυτόματα (DHCP)"
-
-#: share/ltsp-manager/ip_dialog.ui:166
-msgid "Automatic (DHCP) addresses only"
-msgstr "Μόνο αυτόματες διευθύνσεις (DHCP)"
-
-#: share/ltsp-manager/ip_dialog.ui:170
-msgid "Manual"
-msgstr "Χειροκίνητα"
-
-#: share/ltsp-manager/ip_dialog.ui:174
-msgid "LTSP (requires 2 network adapters)"
-msgstr "LTSP (προϋποθέτει 2 κάρτες δικτύου)"
-
-#: share/ltsp-manager/ip_dialog.ui:178
-msgid "Do not configure a connection"
-msgstr "Να μη δημιουργηθεί σύνδεση"
-
-#: share/ltsp-manager/ip_dialog.ui:193
-msgid "Method:"
-msgstr "Μέθοδος"
-
-#: share/ltsp-manager/ip_dialog.ui:206
-msgid "General"
-msgstr "Γενικά"
-
-#: share/ltsp-manager/ip_dialog.ui:222
-msgid "Name:"
-msgstr "Όνομα:"
-
-#: share/ltsp-manager/ip_dialog.ui:234
-msgid "Device:"
-msgstr "Διεπαφή:"
-
-#: share/ltsp-manager/ip_dialog.ui:246
-msgid "MAC address:"
-msgstr "Διεύθυνση υλικού:"
-
-#: share/ltsp-manager/ip_dialog.ui:258
-msgid "Driver:"
-msgstr "Οδηγός:"
-
-#: share/ltsp-manager/ip_dialog.ui:270
-msgid "Speed:"
-msgstr "Ταχύτητα:"
-
-#: share/ltsp-manager/ip_dialog.ui:283
-msgid "IPv4"
-msgstr "IPv4"
-
-#: share/ltsp-manager/ip_dialog.ui:299
-msgid "Address:"
-msgstr "Διεύθυνση IP:"
-
-#: share/ltsp-manager/ip_dialog.ui:311
-msgid "Netmask:"
-msgstr "Μάσκα υποδικτύου:"
-
-#: share/ltsp-manager/ip_dialog.ui:323
-msgid "Gateway:"
-msgstr "Προεπιλεγμένη διαδρομή:"
-
-#: share/ltsp-manager/ip_dialog.ui:335
-msgid "Primary DNS:"
-msgstr "Πρωτεύων DNS:"
-
-#: share/ltsp-manager/ip_dialog.ui:347
-msgid "Secondary DNS:"
-msgstr "Δευτερεύων DNS:"
-
-#: share/ltsp-manager/ip_dialog.ui:359
-msgid "Tertiary DNS:"
-msgstr "Τριτεύων DNS:"
-
-#: share/ltsp-manager/ip_dialog.ui:369
-msgid "Automatically connect to this network when it is available"
-msgstr "Αυτόματη ενεργοποίηση της σύνδεσης"
-
-#: share/ltsp-manager/ip_dialog.ui:375
-msgid ""
-"Activate this connection automatically. Also, disable the automatic "
-"activation of all other connections available for this adapter."
+#: src/signup_server.py:417
+msgid "Starting Signup Server"
 msgstr ""
-"Ενεργοποιεί την αυτόματη σύνδεση στην σύνδεση και απενεργοποιεί την αυτόματη "
-"σύνδεση στις υπόλοιπες συνδέσεις της διεπαφής."
 
-#: share/ltsp-manager/ltsp-manager.py:182
-#: share/ltsp-manager/ltsp-manager.ui:371
-msgid "Edit group..."
-msgstr "Επεξεργασία ομάδας..."
+#: src/signup.py:99
+msgid "The sysadmin might not have activated sign ups."
+msgstr "Πιθανόν ο διαχειριστής να μην έχει ενεργοποιήσει τις εγγραφές."
 
-#: share/ltsp-manager/ltsp-manager.py:183
-#: share/ltsp-manager/ltsp-manager.ui:382
-msgid "Delete group..."
-msgstr "Διαγραφή ομάδας..."
+#: src/signup.py:100
+msgid "Possible networking issue."
+msgstr "Πιθανόν να υπάρχει πρόβλημα δικτύου."
 
-#: share/ltsp-manager/ltsp-manager.py:187
+#: src/signup.py:101 src/ltsp-manager.py:304 src/ltsp-manager.py:327
+#: src/ip_dialog.py:43
+msgid "Error"
+msgstr "Σφάλμα"
+
+#: src/signup.py:106
+msgid "Connection error"
+msgstr "Σφάλμα σύνδεσης"
+
+#: src/signup.py:236
+msgid "Your request was successfully delivered for review."
+msgstr "Το αίτημά σας καταχωρήθηκε επιτυχώς για αναθεώρηση."
+
+#: src/signup.py:242 src/ip_dialog.py:45
+msgid "Success"
+msgstr "Επιτυχία"
+
+#: src/signup.py:244
+msgid ""
+"Your request was not delivered successfully. Ask for help from your sysadmin."
+msgstr ""
+"Αποτυχία αποστολής του αιτήματός σας. Ζητήστε βοήθεια από τον υπεύθυνο."
+
+#: src/signup.py:250
+msgid "Failure"
+msgstr "Αποτυχία"
+
+#: src/ltsp-manager.py:192
 msgid "Delete groups..."
 msgstr "Διαγραφή ομάδων..."
 
-#: share/ltsp-manager/ltsp-manager.py:209
-#: share/ltsp-manager/ltsp-manager.ui:417
-msgid "Edit user..."
-msgstr "Επεξεργασία χρήστη..."
-
-#: share/ltsp-manager/ltsp-manager.py:210
-#: share/ltsp-manager/ltsp-manager.ui:428
-msgid "Delete user..."
-msgstr "Διαγραφή χρήστη..."
-
-#: share/ltsp-manager/ltsp-manager.py:213
+#: src/ltsp-manager.py:218
 msgid "Delete users..."
 msgstr "Διαγραφή χρηστών..."
 
-#: share/ltsp-manager/ltsp-manager.py:277
+#: src/ltsp-manager.py:282
 msgid "Select the passwd file to import"
 msgstr "Επιλέξτε το αρχείο passwd προς εισαγωγή"
 
-#: share/ltsp-manager/ltsp-manager.py:298
-#: share/ltsp-manager/ltsp-manager.py:321
+#: src/ltsp-manager.py:303 src/ltsp-manager.py:326
 #, python-format
 msgid "The file \"%s\" contains no data."
 msgstr "Το αρχείο \"%s\" δεν περιέχει δεδομένα."
 
-#: share/ltsp-manager/ltsp-manager.py:307
+#: src/ltsp-manager.py:312
 msgid "Select the CSV file to import"
 msgstr "Επιλέξτε το αρχείο CSV προς εισαγωγή"
 
-#: share/ltsp-manager/ltsp-manager.py:344
+#: src/ltsp-manager.py:349
 msgid ""
 "LTSP Manager has detected that you either haven't yet run the initial LTSP "
 "setup, or that you upgraded to a new version and you need to run it again."
@@ -686,15 +944,15 @@ msgstr ""
 "Το LTSP Manager ανίχνευσε ότι είτε δεν έχει γίνει η αρχική ρύθμιση του LTSP, "
 "είτε ότι έχει γίνει αναβάθμιση σε νέα έκδοση και πρέπει να ξαναγίνει."
 
-#: share/ltsp-manager/ltsp-manager.py:345
+#: src/ltsp-manager.py:350
 msgid "Should LTSP Manager run initial-setup?"
 msgstr "Να εκτελεστεί η αρχική ρύθμιση του LTSP;"
 
-#: share/ltsp-manager/ltsp-manager.py:359
+#: src/ltsp-manager.py:364
 msgid "Are you sure you want to update the LTSP image?"
 msgstr "Θέλετε σίγουρα να προχωρήσετε στην δημοσίευση του εικονικού δίσκου;"
 
-#: share/ltsp-manager/ltsp-manager.py:360
+#: src/ltsp-manager.py:365
 msgid ""
 "Depending on the CPU speed and image size, this may need about 10 minutes. "
 "After that, (re)boot your workstations."
@@ -703,23 +961,23 @@ msgstr ""
 "αυτή η διαδικασία μπορεί να χρειαστεί γύρω στα 10 λεπτά. Στη συνέχεια "
 "(επαν)εκκινήστε τους σταθμούς εργασίας."
 
-#: share/ltsp-manager/ltsp-manager.py:368
+#: src/ltsp-manager.py:373
 msgid ""
 "Are you sure you want to revert to the previous version of the LTSP image?"
 msgstr ""
 "Θέλετε σίγουρα να προχωρήσετε στην επαναφορά του εικονικού δίσκου σε "
 "προηγούμενη έκδοση;"
 
-#: share/ltsp-manager/ltsp-manager.py:417
+#: src/ltsp-manager.py:422
 #, python-format
 msgid "Are you sure you want to delete user \"%s\"?"
 msgstr "Θέλετε σίγουρα να διαγράψετε τον χρήστη \"%s\";"
 
-#: share/ltsp-manager/ltsp-manager.py:418
+#: src/ltsp-manager.py:423
 msgid "Also delete the user's home directory."
 msgstr "Να διαγραφεί και ο αρχικός κατάλογος του παραπάνω χρήστη."
 
-#: share/ltsp-manager/ltsp-manager.py:419
+#: src/ltsp-manager.py:424
 msgid ""
 "WARNING: if you enable this option, the user's home directory with all its "
 "files will be deleted, along with the user's e-mail at /var/mail, if it "
@@ -729,16 +987,16 @@ msgstr ""
 "κατάλογος του χρήστη, καθώς και όλα τα αρχεία που αυτός περιέχει, αλλά και ο "
 "αντίστοιχος κατάλογος e-mail στο /var/mail (εάν υπάρχει)."
 
-#: share/ltsp-manager/ltsp-manager.py:421
+#: src/ltsp-manager.py:426
 #, python-format
 msgid "Are you sure you want to delete the following %d users?"
 msgstr "Θέλετε σίγουρα να διαγράψετε τους παρακάτω %d χρήστες;"
 
-#: share/ltsp-manager/ltsp-manager.py:423
+#: src/ltsp-manager.py:428
 msgid "Also delete the users' home directories."
 msgstr "Να διαγραφούν και οι αρχικοί κατάλογοι των παραπάνω χρηστών."
 
-#: share/ltsp-manager/ltsp-manager.py:424
+#: src/ltsp-manager.py:429
 msgid ""
 "WARNING: if you enable this option, the users' home directories with all "
 "their files will be deleted, along with the users' e-mails at /var/mail, if "
@@ -749,11 +1007,11 @@ msgstr ""
 "περιέχουν, αλλά και οι αντίστοιχοι κατάλογοι e-mail στο /var/mail (εάν "
 "υπάρχουν)."
 
-#: share/ltsp-manager/ltsp-manager.py:425
+#: src/ltsp-manager.py:430
 msgid "This action can't be undone."
 msgstr "Η ενέργεια αυτή είναι μη-αναστρέψιμη."
 
-#: share/ltsp-manager/ltsp-manager.py:445
+#: src/ltsp-manager.py:457
 #, python-format
 msgid ""
 "Are you sure you want to remove user %(user)s from the selected groups "
@@ -762,7 +1020,7 @@ msgstr ""
 "Θέλετε σίγουρα να αφαιρέσετε τον χρήστη %(user)s από τις επιλεγμένες ομάδες "
 "(%(groups)s);\""
 
-#: share/ltsp-manager/ltsp-manager.py:447
+#: src/ltsp-manager.py:459
 #, python-format
 msgid ""
 "Are you sure you want to remove the following %(count)d users from the "
@@ -771,17 +1029,17 @@ msgstr ""
 "Θέλετε σίγουρα να αφαιρέσετε τους παρακάτω %(count)d χρήστες από τις "
 "επιλεγμένες ομάδες (%(groups)s);"
 
-#: share/ltsp-manager/ltsp-manager.py:467
+#: src/ltsp-manager.py:486
 #, python-format
 msgid "Are you sure you want to delete group %s?"
 msgstr "Θέλετε σίγουρα να διαγράψετε την ομάδα %s;"
 
-#: share/ltsp-manager/ltsp-manager.py:469
+#: src/ltsp-manager.py:488
 #, python-format
 msgid "Are you sure you want to delete the following %d groups?"
 msgstr "Θέλετε σίγουρα να διαγράψετε τις παρακάτω %d ομάδες;"
 
-#: share/ltsp-manager/ltsp-manager.py:530
+#: src/ltsp-manager.py:553
 msgid ""
 "Usage: ltsp-manager [OPTIONS]\n"
 "\n"
@@ -807,522 +1065,358 @@ msgstr ""
 "-\n"
 "-Αναφορά σφαλμάτων στο https://bugs.launchpad.net/ltsp-manager.\"\"\""
 
-#: share/ltsp-manager/ltsp-manager.py:544
+#: src/ltsp-manager.py:567
 #, python-format
 msgid ""
 "ltsp-manager %s\n"
 "Copyright (C) 2009-2017 Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis "
 "<ftsamis@gmail.com>.\n"
-"License GPLv3+: GNU GPL version 3 or newer "
-"<http://gnu.org/licenses/gpl.html>.\n"
+"License GPLv3+: GNU GPL version 3 or newer <http://gnu.org/licenses/gpl."
+"html>.\n"
 "\n"
-"Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis "
-"<ftsamis@gmail.com>."
+"Authors: Alkis Georgopoulos <alkisg@gmail.com>, Fotis Tsamis <ftsamis@gmail."
+"com>."
 msgstr ""
 "ltsp-manager %s\n"
 "-Copyright (C) 2009-2017 Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης "
 "<ftsamis@gmail.com>.\n"
-"-Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη "
-"<http://gnu.org/licenses/gpl.html>.\n"
+"-Άδεια χρήσης GPLv3+: GNU GPL έκδοσης 3 ή νεότερη <http://gnu.org/licenses/"
+"gpl.html>.\n"
 " \n"
 "-Συγγραφή: by Άλκης Γεωργόπουλος <alkisg@gmail.com>, Φώτης Τσάμης "
 "<ftsamis@gmail.com>."
 
-#: share/ltsp-manager/ltsp-manager.ui:67
-msgid "LTSP Manager"
-msgstr "Διαχείριση ΣΕΠΕΗΥ"
-
-#: share/ltsp-manager/ltsp-manager.ui:87
-msgid "_File"
-msgstr "_Αρχείο"
-
-#: share/ltsp-manager/ltsp-manager.ui:98
-msgid "Opens a dialog which handles user signup requests"
-msgstr ""
-"Ανοίγει μία φόρμα η οποία δέχεται αιτήσεις ανοίγματος λογαριασμών από τους "
-"χρήστες"
-
-#: share/ltsp-manager/ltsp-manager.ui:99
-msgid "Allow user sign ups..."
-msgstr "Ενεργοποίηση εγγραφών χρηστών..."
-
-#: share/ltsp-manager/ltsp-manager.ui:109
-msgid "Create users per workstation..."
-msgstr "Δημιουργία χρηστών ανά υπολογιστή..."
-
-#: share/ltsp-manager/ltsp-manager.ui:126
-msgid "Import from passwd..."
-msgstr "Εισαγωγή από passwd..."
-
-#: share/ltsp-manager/ltsp-manager.ui:136
-msgid "Import from csv..."
-msgstr "Εισαγωγή από csv..."
-
-#: share/ltsp-manager/ltsp-manager.ui:146
-msgid "Export to csv..."
-msgstr "Εξαγωγή σε csv..."
-
-#: share/ltsp-manager/ltsp-manager.ui:160
-msgid "_Server"
-msgstr "_Εξυπηρετητής"
-
-#: share/ltsp-manager/ltsp-manager.ui:171
-msgid "Initial setup"
-msgstr "Αρχική ρύθμιση"
-
-#: share/ltsp-manager/ltsp-manager.ui:190
-msgid "LTSP image"
-msgstr "Εικονικός δίσκος"
-
-#: share/ltsp-manager/ltsp-manager.ui:201
+#: src/ip_dialog.py:27
+#, python-brace-format
 msgid ""
-"Publishes a clone of the server installation for the clients to boot from it"
+"The address {0} is already is use by another workstation. Please enter "
+"another one."
 msgstr ""
-"Publishes a clone of the server installation for the clients to boot from it"
+"Η διεύθυνση {0} χρησιμοποιείται ήδη από άλλον υπολογιστή. Παρακαλώ δώστε μια "
+"διαφορετική."
 
-#: share/ltsp-manager/ltsp-manager.ui:202
-msgid "Update..."
-msgstr "Δημοσίευση..."
-
-#: share/ltsp-manager/ltsp-manager.ui:212
-msgid "Reverts the LTSP image to its previous version"
-msgstr ""
-"Επαναφέρει τον εικονικό δίσκο του εξυπηρετητή στην προηγούμενη έκδοση"
-
-#: share/ltsp-manager/ltsp-manager.ui:213
-msgid "Revert..."
-msgstr "Επαναφορά..."
-
-#: share/ltsp-manager/ltsp-manager.ui:227
-msgid "Configuration files"
-msgstr "Αρχεία ρυθμίσεων"
-
-#: share/ltsp-manager/ltsp-manager.ui:237
-msgid "Edit lts.conf"
-msgstr "Επεξεργασία του lts.conf"
-
-#: share/ltsp-manager/ltsp-manager.ui:246
-msgid "Edit LTSP shared folder settings"
-msgstr "Επεξεργασία ρυθμίσεων κοινόχρηστων φακέλων"
-
-#: share/ltsp-manager/ltsp-manager.ui:255
-msgid "Edit dnsmasq settings"
-msgstr "Επεξεργασία ρυθμίσεων dnsmasq"
-
-#: share/ltsp-manager/ltsp-manager.ui:264
-msgid "Edit PXELinux settings"
-msgstr "Επεξεργασία ρυθμίσεων PXELinux"
-
-#: share/ltsp-manager/ltsp-manager.ui:282
-msgid "_View"
-msgstr "_Προβολή"
-
-#: share/ltsp-manager/ltsp-manager.ui:293
-msgid "Columns"
-msgstr "Στήλες"
-
-#: share/ltsp-manager/ltsp-manager.ui:308 share/ltsp-manager/user_form.ui:785
-msgid "Show system groups"
-msgstr "Εμφάνιση ομάδων συστήματος"
-
-#: share/ltsp-manager/ltsp-manager.ui:318
-msgid "Show private groups"
-msgstr "Εμφάνιση προσωπικών ομάδων"
-
-#: share/ltsp-manager/ltsp-manager.ui:335
-msgid "Refresh"
-msgstr "Ανανέωση"
-
-#: share/ltsp-manager/ltsp-manager.ui:349
-msgid "_Groups"
-msgstr "_Ομάδες"
-
-#: share/ltsp-manager/ltsp-manager.ui:360
-msgid "New group..."
-msgstr "Νέα ομάδα..."
-
-#: share/ltsp-manager/ltsp-manager.ui:395
-msgid "_Users"
-msgstr "_Χρήστες"
-
-#: share/ltsp-manager/ltsp-manager.ui:406
-msgid "New user..."
-msgstr "Νέος χρήστης..."
-
-#: share/ltsp-manager/ltsp-manager.ui:439
-msgid "Remove user from selected groups"
-msgstr "Αφαίρεση από τις επιλεγμένες ομάδες"
-
-#: share/ltsp-manager/ltsp-manager.ui:453
-msgid "_Help"
-msgstr "_Βοήθεια"
-
-#: share/ltsp-manager/ltsp-manager.ui:464
-msgid "Online documentation"
-msgstr "Σελίδα τεκμηρίωσης"
-
-#: share/ltsp-manager/ltsp-manager.ui:474
-msgid "Report bug"
-msgstr "Αναφορά σφάλματος"
-
-#: share/ltsp-manager/ltsp-manager.ui:484
-msgid "Ask question"
-msgstr "Υποβολή ερώτησης"
-
-#: share/ltsp-manager/ltsp-manager.ui:494
-msgid "File a helpdesk issue"
-msgstr "Υποβολή αιτήματος στο helpdesk"
-
-#: share/ltsp-manager/ltsp-manager.ui:504
-msgid "Live chat (IRC)"
-msgstr "Ζωντανή συνομιλία (IRC)"
-
-#: share/ltsp-manager/ltsp-manager.ui:514
-msgid "Discussion forum"
-msgstr "Φόρουμ συζητήσεων"
-
-#: share/ltsp-manager/ltsp-manager.ui:531
-msgid "LTSP installations map"
-msgstr "Χάρτης ΣΕΠΕΗΥ με LTSP"
-
-#: share/ltsp-manager/ltsp-manager.ui:541
-msgid "Man page of lts.conf"
-msgstr "Εγχειρίδιο του lts.conf"
-
-#: share/ltsp-manager/ltsp-manager.ui:551
-msgid "Display LTSP version information, useful for reporting bugs"
-msgstr "Σε αναφορές σφαλμάτων, συμπεριλάβετε και αυτές τις πληροφορίες"
-
-#: share/ltsp-manager/ltsp-manager.ui:552
-msgid "Local LTSP information"
-msgstr "Πληροφορίες LTSP"
-
-#: share/ltsp-manager/ltsp-manager.ui:569
-msgid "About"
-msgstr "Περί"
-
-#: share/ltsp-manager/ltsp-manager.ui:660
-msgid "Unselect all"
-msgstr "Αποεπιλογή όλων"
-
-#: share/ltsp-manager/ltsp-manager.ui:710
-msgid "UID"
-msgstr "UID"
-
-#: share/ltsp-manager/ltsp-manager.ui:742
-msgid "Primary group"
-msgstr "Όνομα κύριας ομάδας"
-
-#: share/ltsp-manager/ltsp-manager.ui:774
-msgid "Office"
-msgstr "Γραφείο"
-
-#: share/ltsp-manager/ltsp-manager.ui:790
-msgid "Office phone"
-msgstr "Τηλ. γραφείου"
-
-#: share/ltsp-manager/ltsp-manager.ui:806
-msgid "Home phone"
-msgstr "Τηλ. οικίας"
-
-#: share/ltsp-manager/ltsp-manager.ui:822
-msgid "Other"
-msgstr "Άλλο"
-
-#: share/ltsp-manager/ltsp-manager.ui:838
-msgid "Directory"
-msgstr "Κατάλογος"
-
-#: share/ltsp-manager/ltsp-manager.ui:854
-msgid "Shell"
-msgstr "Κέλυφος"
-
-#: share/ltsp-manager/ltsp-manager.ui:870
-msgid "Last password change"
-msgstr "Τελευταία αλλαγή κωδικού"
-
-#: share/ltsp-manager/ltsp-manager.ui:886
-msgid "Minimum password age"
-msgstr "Ελάχιστη διάρκεια"
-
-#: share/ltsp-manager/ltsp-manager.ui:902
-msgid "Maximum password age"
-msgstr "Μέγιστη διάρκεια"
-
-#: share/ltsp-manager/ltsp-manager.ui:918
-msgid "Warning period"
-msgstr "Προειδοποίηση"
-
-#: share/ltsp-manager/ltsp-manager.ui:934
-msgid "Inactive"
-msgstr "Ανενεργός"
-
-#: share/ltsp-manager/ltsp-manager.ui:950
-msgid "Expired"
-msgstr "Λήξη"
-
-#: share/ltsp-manager/ltsp_info.ui:9 share/ltsp-manager/ltsp_info.ui:75
-msgid "LTSP information"
-msgstr "Πληροφορίες LTSP"
-
-#: share/ltsp-manager/signup.py:87
-msgid "The sysadmin might not have activated sign ups."
-msgstr "Πιθανόν ο διαχειριστής να μην έχει ενεργοποιήσει τις εγγραφές."
-
-#: share/ltsp-manager/signup.py:88
-msgid "Possible networking issue."
-msgstr "Πιθανόν να υπάρχει πρόβλημα δικτύου."
-
-#: share/ltsp-manager/signup.py:93
-msgid "Connection error"
-msgstr "Σφάλμα σύνδεσης"
-
-#: share/ltsp-manager/signup.py:225
-msgid "Your request was successfully delivered for review."
-msgstr "Το αίτημά σας καταχωρήθηκε επιτυχώς για αναθεώρηση."
-
-#: share/ltsp-manager/signup.py:233
+#: src/ip_dialog.py:28
+#, python-brace-format
 msgid ""
-"Your request was not delivered successfully. Ask for help from your sysadmin."
+"The address {0} is already in use as the default gateway. Please enter "
+"another one."
 msgstr ""
-"Αποτυχία αποστολής του αιτήματός σας. Ζητήστε βοήθεια από τον υπεύθυνο."
+"Η διεύθυνση {0} χρησιμοποιείται ήδη σαν προεπιλεγμένη διαδρομή. Παρακαλώ "
+"δώστε μια διαφορετική."
 
-#: share/ltsp-manager/signup.py:239
-msgid "Failure"
-msgstr "Αποτυχία"
-
-#: share/ltsp-manager/signup_form.ui:26
-msgid "Request user account"
-msgstr "Αίτημα νέου χρήστη"
-
-#: share/ltsp-manager/signup_form.ui:107
-msgid "Fill the following fields in order to request a user account"
-msgstr ""
-"Συμπληρώστε παρακάτω τα στοιχεία σας για να μπορέσετε να αποκτήσετε "
-"λογαριασμό στο σύστημα."
-
-#: share/ltsp-manager/signup_form.ui:135 share/ltsp-manager/user_form.ui:187
-msgid "Username:"
-msgstr "Όνομα χρήστη:"
-
-#: share/ltsp-manager/signup_form.ui:147 share/ltsp-manager/user_form.ui:212
-msgid "Password:"
-msgstr "Κωδικός πρόσβασης:"
-
-#: share/ltsp-manager/signup_form.ui:181 share/ltsp-manager/user_form.ui:331
-msgid "Real name:"
-msgstr "Ονοματεπώνυμο:"
-
-#: share/ltsp-manager/signup_form.ui:218
-msgid "Role:"
-msgstr "Ρόλος:"
-
-#: share/ltsp-manager/signup_form.ui:240 share/ltsp-manager/user_form.ui:270
-msgid "Confirm password:"
-msgstr "Επαλήθευση κωδικού:"
-
-#: share/ltsp-manager/signup_form.ui:323
-msgid "Check the groups that you are a member of"
-msgstr "Επιλέξτε αν ανήκετε σε κάποια από τις παρακάτω ομάδες:"
-
-#: share/ltsp-manager/signup_server.py:251
-msgid "Are you sure you want to remove the following requests from the list?"
-msgstr "Θέλετε σίγουρα να διαγραφούν τα παρακάτω αιτήματα από τη λίστα;"
-
-#: share/ltsp-manager/signup_server.py:253
-msgid "Reject requests"
-msgstr "Διαγραφή αιτημάτων"
-
-#: share/ltsp-manager/signup_server.py:270
-msgid "The following user accounts will be created:"
-msgstr "Θα δημιουργηθούν οι παρακάτω χρήστες:"
-
-#: share/ltsp-manager/signup_server.py:271
-msgid "Proceed?"
-msgstr "Συνέχεια;"
-
-#: share/ltsp-manager/signup_server.py:272
-msgid "Create user accounts"
-msgstr "Δημιουργία χρηστών"
-
-#: share/ltsp-manager/signup_server.py:288
+#: src/ip_dialog.py:29
 msgid ""
-"Are you sure you want to close the sign up server? All pending requests will "
-"be lost."
+"Invalid IP address. It must be in the form x.y.z.w, where x, y, z, w are "
+"between 1 and 255."
 msgstr ""
-"Θέλετε σίγουρα να τερματίσετε την εφαρμογή αιτήσεων; Όλες οι εκκρεμείς "
-"αιτήσεις θα χαθούν."
+"Μη-έγκυρη διεύθυνση IP. Θα πρέπει να είναι της μορφής x.y.z.w όπου x, y, z, "
+"w παίρνουν τιμές μεταξύ του 1 και 254."
 
-#: share/ltsp-manager/signup_server.ui:26
-msgid "User signup requests"
-msgstr "Αιτήματα νέων χρηστών"
+#: src/ip_dialog.py:30
+msgid "Could not connect to Network Manager"
+msgstr "Αδυναμία σύνδεσης στη Διαχείριση Δικτύου."
 
-#: share/ltsp-manager/signup_server.ui:41
+#: src/ip_dialog.py:31
+msgid "No device available"
+msgstr "Δεν υπάρχει διαθέσιμη διεπαφή."
+
+#: src/ip_dialog.py:32
+msgid "No wired devices available"
+msgstr "Δεν υπάρχει διαθέσιμη ενσύρματη διεπαφή."
+
+#: src/ip_dialog.py:33
+msgid "The subnet has changed."
+msgstr "Το υποδίκτυο έχει αλλάξει."
+
+#: src/ip_dialog.py:34
+#, python-brace-format
 msgid ""
-"User signup requests show up here as soon as they send them.\n"
-"You can continuously edit, delete and apply signup requests as long as this "
-"dialog stays open."
+"The subnet has changed for device <b>{0}</b>. The dialog will suggest a new "
+"method according to the new values that were received from the router."
 msgstr ""
-"Εδώ μπορείτε να βλέπετε τις αιτήσεις των χρηστών αμέσως μόλις αυτές "
-"στέλνονται. Μόλις επεξεργαστείτε ή διαγράψετε αυτές που θέλετε πατήστε "
-"'Εφαρμογή'  για να δημιουργηθούν οι νέοι χρήστες."
+"Το υποδίκτυο έχει αλλάξει για την <b>{0}</b>. Ο διάλογος θα προτείνει μια "
+"νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router."
 
-#: share/ltsp-manager/signup_server.ui:87
-msgid "Date"
-msgstr "Ημερομηνία"
-
-#: share/ltsp-manager/signup_server.ui:98
-msgid "From"
-msgstr "Από"
-
-#: share/ltsp-manager/signup_server.ui:131
-#: share/ltsp-manager/signup_settings.ui:160
-msgid "Role"
-msgstr "Ρόλος"
-
-#: share/ltsp-manager/signup_server.ui:142
-msgid "Groups"
-msgstr "Ομάδες"
-
-#: share/ltsp-manager/signup_server.ui:171
-msgid "Edit the selected signup request"
-msgstr "Επεξεργασία του επιλεγμένου αιτήματος"
-
-#: share/ltsp-manager/signup_server.ui:172
-msgid "Edit request"
-msgstr "Αναθεώρηση αιτήματος"
-
-#: share/ltsp-manager/signup_server.ui:188
-msgid "Reject the selected request, and remove it from the list"
-msgstr "Απόρριψη και αφαίρεση του επιλεγμένου αιτήματος από τη λίστα"
-
-#: share/ltsp-manager/signup_server.ui:189
-msgid "Reject request"
-msgstr "Απόρριψη αιτήματος"
-
-#: share/ltsp-manager/signup_server.ui:240
+#: src/ip_dialog.py:35
+#, python-brace-format
 msgid ""
-"Accept all the signup requests listed, creating a user account for each one "
-"of them"
+"The subnet has changed for devices <b>{0}</b>. The dialog will suggest a new "
+"method according to the new values that were received from the router."
 msgstr ""
-"Αποδοχή όλων των αιτημάτων της λίστας και δημιουργία λογαριασμού χρήστη για "
-"κάθε ένα από αυτά"
+"Το υποδίκτυο έχει αλλάξει για τις <b>{0}</b>. Ο διάλογος θα προτείνει μια "
+"νέα μέθοδο σύμφωνα με τις νέες τιμές που λήφθηκαν από τον router."
 
-#: share/ltsp-manager/signup_settings.ui:74
-msgid "Open the dialog that receives signup requests"
-msgstr "Άνοιγμα του εξυπηρετητή αιτημάτων με τις επιλεγμένες ρυθμίσεις"
+#: src/ip_dialog.py:36
+msgid "The connections were successfully created."
+msgstr "Η δημιουργία των συνδέσεων έγινε επιτυχώς."
 
-#: share/ltsp-manager/signup_settings.ui:101
+#: src/ip_dialog.py:37
+msgid "Failure while restarting dnsmasq."
+msgstr "Η επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq απέτυχε."
+
+#: src/ip_dialog.py:38
+#, python-brace-format
+msgid "It is suggested to change your hostname to <b>{0}</b>"
+msgstr "Προτείνεται να μετονομάσετε τον υπολογιστή σας σε <b>{0}</b>\\n\\n"
+
+#: src/ip_dialog.py:39
+msgid "Successfully created network connections and restarted dnsmasq."
+msgstr ""
+"Η δημιουργία των συνδέσεων καθώς και η επαναδημιουργία του αρχείου ρυθμίσεων "
+"του dnsmasq έγινε επιτυχώς."
+
+#: src/ip_dialog.py:40
 msgid ""
-"Select the roles and groups that you want to make available for user signup "
-"requests.\n"
-"After you click [Next], a dialog that receives signup requests will open."
+"Successfully created network connections, but failed while restarting "
+"dnsmasq because the connections were not activated."
 msgstr ""
-"Εδώ μπορείτε να επιλέξετε τους ρόλους και τις ομάδες που θέλετε να διατεθούν "
-"προς επιλογή στους αιτούντες. Μόλις πατήσετε 'Συνέχεια' θα μπορέσετε να "
-"δεχτείτε αιτήσεις με βάση τις ρυθμίσεις που ορίσατε εδώ."
+"Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου "
+"dnsmasq απέτυχε καθώς οι συνδέσεις δεν ενεργοποιήθηκαν."
 
-#: share/ltsp-manager/signup_settings.ui:119
-msgid "Roles that will be available"
-msgstr "Επιλέξτε παρακάτω τους ρόλους που θα διατεθούν"
+#: src/ip_dialog.py:41
+msgid ""
+"Successfully created network connections, but failed while restarting "
+"dnsmasq."
+msgstr ""
+"Η δημιουργία των συνδέσεων έγινε επιτυχώς αλλά η επαναδημιουργία του αρχείου "
+"ρυθμίσεων του dnsmasq απέτυχε."
 
-#: share/ltsp-manager/signup_settings.ui:194
-msgid "Groups that will be available"
-msgstr "Επιλέξτε παρακάτω τις ομάδες που θα διατεθούν"
+#: src/ip_dialog.py:44
+msgid "Information"
+msgstr "Πληροφορία"
 
-#: share/ltsp-manager/signup_settings.ui:235
-msgid "Group"
-msgstr "Ομάδα"
+#: src/ip_dialog.py:186
+msgid "Unknown"
+msgstr "Άγνωστη"
 
-#: share/ltsp-manager/user_form.py:231
+#. If IP address is not defined then initialize the attributes with a string
+#: src/ip_dialog.py:250 src/ip_dialog.py:639 src/ip_dialog.py:720
+msgid "No address found"
+msgstr "Δεν βρέθηκε διεύθυνση"
+
+#: src/ip_dialog.py:838
+msgid "Are you sure you want to continue?"
+msgstr "Είστε σίγουροι ότι θέλετε να συνεχίσετε;"
+
+#: src/ip_dialog.py:843
+msgid "You're about to create the connection:"
+msgstr "Πρόκειται να δημιουργήσετε τη σύνδεση:"
+
+#: src/ip_dialog.py:845
+msgid "You're about to create the connections:"
+msgstr "Πρόκειται να δημιουργήσετε τις συνδέσεις:"
+
+#: src/ip_dialog.py:859
+msgid "You're about to update the connection:"
+msgstr "Πρόκειται να ενημερώσετε τη σύνδεση:"
+
+#: src/ip_dialog.py:861
+msgid "You're about to update the connections:"
+msgstr "Πρόκειται να ενημερώσετε τις συνδέσεις:"
+
+#: src/ip_dialog.py:872
+msgid "and to recreate the dnsmasq configuration file."
+msgstr "και να επαναδημιουργήσετε το αρχείο ρυθμίσεων του dnsmasq."
+
+#: src/ip_dialog.py:874
+msgid ""
+"<b>Warning:</b> Recreating the dnsmasq configuration file is impossible "
+"because no network cable is attached to any of the available devices."
+msgstr ""
+"<b>Προσοχή: </b> Η  επαναδημιουργία του αρχείου ρυθμίσεων του dnsmasq δεν "
+"είναι δυνατή καθώς σε καμία διεπαφή δεν είναι συνδεδεμένο το καλώδιο."
+
+#. Make the columns in the preview treeview
+#. First of all append the icon
+#: src/import_dialog.py:76
+msgid "Status"
+msgstr "Κατάσταση"
+
+#: src/import_dialog.py:142
 #, python-format
-msgid "This directory belongs to UID %(uid)d and to GID %(gid)d"
-msgstr "Αυτός ο κατάλογος ανήκει στο UID %(uid)d και στο GID %(gid)d"
+msgid ""
+"The following %s user accounts already exist on the system, with identical "
+"information."
+msgstr ""
+"Βρέθηκαν στο σύστημα οι ακόλουθοι %s χρήστες αυτής της λίστας με τα ίδια "
+"ακριβώς πεδία."
 
-#: share/ltsp-manager/user_form.ui:150
-msgid "Input the user information"
-msgstr "Εισάγετε τις πληροφορίες χρήστη"
+#: src/import_dialog.py:144
+msgid ""
+"Would you like to remove those accounts from the list, to avoid trying to "
+"create them again?"
+msgstr ""
+"Επιθυμείτε να διαγραφούν από αυτή τη λίστα οι πανομοιότυποι χρήστες και να "
+"μη γίνει εισαγωγή τους;"
 
-#: share/ltsp-manager/user_form.ui:282
-msgid "UID:"
-msgstr "UID"
+#: src/import_dialog.py:146
+msgid "Identical existing accounts were found"
+msgstr "Βρέθηκαν πανομοιότυποι χρήστες"
 
-#: share/ltsp-manager/user_form.ui:294
-msgid "Home directory:"
-msgstr "Αρχικός κατάλογος"
+#: src/import_dialog.py:385
+#, python-format
+msgid "The UID of user \"%(user)s\" was changed from %(old)s to %(new)s."
+msgstr "Αλλάχθηκε το UID του χρήστη \"%(user)s\" από %(old)s σε %(new)s."
 
-#: share/ltsp-manager/user_form.ui:319
-msgid "Shell:"
-msgstr "Κέλυφος:"
+#: src/import_dialog.py:387
+#, python-format
+msgid "The GID of user \"%(user)s\" was changed from %(old)s to %(new)s."
+msgstr "Αλλάχθηκε το GID του χρήστη \"%(user)s\" από %(old)s σε %(new)s."
 
-#: share/ltsp-manager/user_form.ui:343
-msgid "Office:"
-msgstr "Γραφείο:"
+#: src/import_dialog.py:389
+#, python-format
+msgid ""
+"The home directory of user \"%(user)s\" was changed from %(old)s to %(new)s."
+msgstr ""
+"Ο αρχικός κατάλογος του χρήστη \"%(user)s\" αλλάχθηκε από %(old)s σε %(new)s."
 
-#: share/ltsp-manager/user_form.ui:355
-msgid "Office phone:"
-msgstr "Τηλ. γραφείου:"
+#: src/import_dialog.py:391
+#, python-format
+msgid ""
+"The primary group name of user \"%(user)s\" was changed from %(old)s to "
+"%(new)s."
+msgstr ""
+"Η βασική ομάδα του χρήστη \"%(user)s\" αλλάχτηκε από %(old)s σε %(new)s."
 
-#: share/ltsp-manager/user_form.ui:367
-msgid "Home phone:"
-msgstr "Τηλ. οικίας:"
+#: src/import_dialog.py:485
+#, fuzzy
+msgid ""
+"Some issues remain that could not be resolved automatically\n"
+"\t\n"
+"\t"
+msgstr "Δεν ήταν δυνατή η αυτόματη επίλυση κάποιου προβλήματος"
 
-#: share/ltsp-manager/user_form.ui:499
-msgid "Other:"
-msgstr "Άλλο:"
+#: src/import_dialog.py:487
+msgid "No issues detected"
+msgstr ""
 
-#: share/ltsp-manager/user_form.ui:581
-msgid "User information"
-msgstr "Πληροφορίες χρήστη"
+#: src/import_dialog.py:495
+#, fuzzy
+msgid ""
+"Create the following users?\n"
+"\n"
+", "
+msgstr "Να δημιουργηθούν οι νέοι χρήστες;"
 
-#: share/ltsp-manager/user_form.ui:604
-msgid "Primary group name:"
-msgstr "Όνομα κύριας ομάδας:"
+#: src/import_dialog.py:523 src/create_users.py:117
+#, fuzzy
+msgid "Creating all users"
+msgstr "Να δημιουργηθούν οι νέοι χρήστες;"
 
-#: share/ltsp-manager/user_form.ui:616
-msgid "Primary group GID:"
-msgstr "GID κύριας ομάδας:"
+#: src/import_dialog.py:529
+#, python-brace-format
+msgid "Adding group {group}"
+msgstr ""
 
-#: share/ltsp-manager/user_form.ui:686
-msgid "User role:"
-msgstr "Ρόλος χρήστη:"
+#: src/import_dialog.py:535
+#, python-brace-format
+msgid "Adding user {user}"
+msgstr ""
 
-#: share/ltsp-manager/user_form.ui:768
-msgid "Set as primary"
-msgstr "Ορισμός ως κύριας"
+#: src/import_dialog.py:541
+#, python-brace-format
+msgid "Adding user {user} to group {group}"
+msgstr ""
 
-#: share/ltsp-manager/user_form.ui:816
-msgid "Group options"
-msgstr "Επιλογές ομάδων"
+#: src/import_dialog.py:569
+msgid "This username already exists in the system"
+msgstr "Αυτό το όνομα χρήστη υπάρχει ήδη στο σύστημα"
 
-#: share/ltsp-manager/user_form.ui:839
-msgid "Last change:"
-msgstr "Τελευταία αλλαγή:"
+#: src/import_dialog.py:571
+msgid "This is not a valid username"
+msgstr "Αυτό το όνομα χρήστη δεν είναι αποδεκτό"
 
-#: share/ltsp-manager/user_form.ui:851
-msgid "Minimum age:"
-msgstr "Τελευταία αλλαγή:"
+#: src/import_dialog.py:573
+msgid "This UID already exists in the system"
+msgstr "Αυτό το UID υπάρχει ήδη στο σύστημα"
 
-#: share/ltsp-manager/user_form.ui:863
-msgid "Maximum age:"
-msgstr "Μέγιστη διάρκεια:"
+#: src/import_dialog.py:575
+msgid "This UID already exists in this list"
+msgstr "Αυτό το UID υπάρχει ήδη σε αυτή τη λίστα"
 
-#: share/ltsp-manager/user_form.ui:875
-msgid "Warning period:"
-msgstr "Προειδοποίηση:"
+#: src/import_dialog.py:577
+msgid "This UID does not match the home directory UID"
+msgstr "Αυτό το UID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε"
 
-#: share/ltsp-manager/user_form.ui:887
-msgid "Inactive:"
-msgstr "Ανενεργός:"
+#: src/import_dialog.py:579
+msgid "This GID does not match the home directory GID"
+msgstr "\"Αυτό το GID είναι διαφορετικό από αυτό του home καταλόγου που δώσατε"
 
-#: share/ltsp-manager/user_form.ui:899
-msgid "Expired:"
-msgstr "Λήξη:"
+#: src/import_dialog.py:581
+msgid "This directory is in use by another user in the system"
+msgstr ""
+"Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη του συστήματος"
 
-#: share/ltsp-manager/user_form.ui:911
-msgid "Locked:"
-msgstr "Κλείδωμα κωδικού:"
+#: src/import_dialog.py:583
+msgid "This directory is in use by another user in the list"
+msgstr ""
+"Αυτός ο κατάλογος χρησιμοποιείται από κάποιον άλλο χρήστη σε αυτή τη λίστα"
 
-#: share/ltsp-manager/user_form.ui:1030
-msgid "Password options"
-msgstr "Επιλογές κωδικού"
+#: src/import_dialog.py:585
+msgid ""
+"This directory already exists in the system but with a different UID/GID"
+msgstr ""
+"Αυτός ο κατάλογος υπάρχει στο σύστημα αλλά με διαφορετικά UID ή/και GID από "
+"αυτά που δώσατε"
+
+#: src/import_dialog.py:587
+#, python-format
+msgid "This GID does not belong to the group %s"
+msgstr "Αυτό το GID δεν ανήκει στην ομάδα %s"
+
+#: src/import_dialog.py:589
+#, python-format
+msgid "The GID for this group is not %s"
+msgstr "Το GID αυτής της ομάδας δεν είναι %s"
+
+#: src/export_dialog.py:19
+msgid "Enter the name for the exported file"
+msgstr "Επιλέξτε όνομα αρχείου για εξαγωγή"
+
+#: src/create_users.py:132
+#, python-format
+msgid "Creating group %(current)d of %(total)d..."
+msgstr "Δημιουργία ομάδας %(current)d από %(total)d..."
+
+#: src/create_users.py:147
+#, fuzzy, python-brace-format
+msgid "Adding teachers to group {group}"
+msgstr "Εισαγωγή όλων των καθηγητών σε αυτά τα τμήματα:"
+
+#: src/create_users.py:157
+#, python-brace-format
+msgid "Adding shares for {group}"
+msgstr ""
+
+#: src/create_users.py:167
+#, python-format
+msgid "Creating user %(current)d of %(total)d..."
+msgstr "Δημιουργία χρήστη %(current)d από %(total)d..."
+
+#: src/config.py:28
+msgid "Administrator"
+msgstr "Διαχειριστής"
+
+#: src/config.py:29
+msgid "Staff"
+msgstr "Προσωπικό"
+
+#: src/config.py:30
+msgid "Student"
+msgstr "Μαθητής"
+
+#: src/config.py:31
+msgid "Teacher"
+msgstr "Καθηγητής"
+
+#~ msgid "User account creation help"
+#~ msgstr "Βοήθεια για τη δημιουργία χρηστών"
+
+#~ msgid "Please select a csv file to import"
+#~ msgstr "Επιλέξτε το αρχείο CSV προς εισαγωγή"
+
+#~ msgid "Import user accounts"
+#~ msgstr "Αναθεώρηση χρηστών"
+
+#~ msgid "Request user account"
+#~ msgstr "Αίτημα νέου χρήστη"

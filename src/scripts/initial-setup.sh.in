@@ -1,0 +1,111 @@
+#!/bin/sh
+# Contains some actions that the sysadmin should run after installation.
+# Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+# Initial-setup will automatically prompt to run again if it detects that it
+# was last ran before the following version. MANUALLY UPDATE THIS:
+PROMPT_AFTER="17.06"
+
+. @scriptsdir@/common.sh
+
+setupconf=/var/lib/ltsp-manager/initial-setup
+
+if [ "$1" = "--check" ]; then
+    test -f "$setupconf" && . "$setupconf"
+    printf "Last version=$last_version, current version=$version, rerun after version=$PROMPT_AFTER: "
+    if [ "$(printf "%s\n%s\n" "$PROMPT_AFTER" "$last_version" | sort -V | tail -n 1)" = "$PROMPT_AFTER" ]; then
+        printf "needs to be executed.\n"
+        exit 1
+    else
+        printf "doesn't need to be executed.\n"
+        exit 0
+    fi
+fi
+
+if [ "$1" != "--no-prompt" ]; then
+    printfn "`gettext "This will perform an initial setup to ensure that LTSP runs optimally."`"
+    printf "%s " "`gettext "Press [Enter] to continue or Ctrl+C to abort:"`"
+    read dummy
+fi
+
+mkdir -p /var/lib/ltsp-manager
+printf "%s" \
+"# This file is regenerated when /usr/share/ltsp-manager/initial-setup.sh runs.
+
+# Remember the last version ran, to answer the --check parameter:
+last_version=$version
+">"$setupconf"
+
+# Create "teachers" group and add the current user to epoptes,teachers groups
+test -f @sysconfdir@/default/ltsp-shared-folders && . @sysconfdir@/default/ltsp-shared-folders
+if [ -n "$TEACHERS" ]; then
+    # If the group already exists, don't do anything
+    if ! getent group "$TEACHERS" >/dev/null; then
+        addgroup --system "$TEACHERS"
+        user=$(id -un)
+        if [ "$user" = "root" ]; then
+            # Try to find the user that ran sudo or su
+            user=$(loginctl user-status | awk '{ print $1; exit 0 }')
+        fi
+        if [ -n "$user" ] && [ "$user" != "root" ]; then
+            gpasswd -a "$user" "$TEACHERS"
+            gpasswd -a "$user" epoptes
+            bold "`gettext "You will need to logout in order for the group changes to take effect!"`"
+        fi
+    fi
+fi
+
+# Create an lts.conf
+for f in /var/lib/tftpboot/ltsp/*/lts.conf; do
+    if [ ! -f "$f" ]; then
+        ltsp-config lts.conf
+        break
+    fi
+done
+
+# Install our if-up.sh script that disables flow control
+if [ -d @sysconfdir@/network/if-up.d ] && [ ! -f @sysconfdir@/network/if-up.d/ltsp-manager ]; then
+    ln -rsf @scriptsdir@/if-up.sh @sysconfdir@/network/if-up.d/ltsp-manager
+fi
+
+# Ensure that "server" is resolvable by DNS.
+if ! getent hosts server >/dev/null; then
+    search_and_replace "^127.0.0.1[[:space:]]*localhost$" "& server" \
+        @sysconfdir@/hosts || true
+fi & # Background it in case the DNS resolve takes a long time.
+
+# Divert some files that have a bad effect in LTSP installations
+mkdir -p /var/lib/ltsp-manager/diverted
+while read file temp; do
+    if [ -f "$file" ] && [ ! -f "/var/lib/ltsp-manager/diverted/${file##*/}" ]; then
+        dpkg-divert --package ltsp-manager --divert "/var/lib/ltsp-manager/diverted/${file##*/}" --rename "$file"
+    fi
+done <<EOF
+    @sysconfdir@/dnsmasq.d/network-manager  # Makes dnsmasq malfunction sometimes
+    @sysconfdir@/init.d/nbd-client  # Break ordering cycle with n-m (LP: #1487679)
+    @sysconfdir@/skel/.config/autostart/ubuntu-mate-welcome.desktop  # Welcome screen
+    @datadir@/mate/autostart/tilda.desktop  # Useless terminal that opens with F12
+EOF
+
+# Manually run update-kernels until it's moved to ltsp-client-core.postinst
+if [ ! -d /boot/pxelinux.cfg ]; then
+    @datadir@/ltsp/update-kernels
+fi
+
+# Remove the local resolver (LP: #959037), we want a real DNS server.
+if search_and_replace "^dns=dnsmasq" "" @sysconfdir@/NetworkManager/NetworkManager.conf; then
+    printfn "`gettext "Restarting network-manager to remove its spawned dnsmasq..."`" >&2
+    service network-manager stop
+    pkill -f "dnsmasq --no-resolv"
+    service network-manager start
+fi
+
+# Install the dnsmasq configuration file and restart dnsmasq.
+if [ ! -f @sysconfdir@/dnsmasq.d/ltsp-server-dnsmasq.conf ]; then
+    ltsp-config dnsmasq
+fi
+
+# Allow more simultaneous SSH connections from the local network.
+search_and_replace "^#MaxStartups 10:30:60$" "MaxStartups 20:30:60" \
+    @sysconfdir@/ssh/sshd_config true

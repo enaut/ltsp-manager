@@ -1,0 +1,62 @@
+#!/bin/sh
+# Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
+# License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
+
+. @scriptsdir@/common.sh
+
+printfn "`gettext "This will undo all the actions that initial-setup did to your system."`"
+printf "%s " "`gettext "Press [Enter] to continue or Ctrl+C to abort:"`"
+read dummy
+
+# Restore "# Commented by ltsp-manager:" lines to their original values
+restore_config() {
+    local file
+    file=$1
+
+    if grep -qs "# Commented by ltsp-manager:" "$file"; then
+        sed "s/.*# Commented by ltsp-manager:[[:space:]]*//" -i "$file"
+    fi
+}
+
+remove() {
+    local link
+
+    for link in /usr/lib/firefox/defaults/pref/ltsp-manager.js \
+        @datadir@/applications/mimeapps.list
+    do
+        if [ -h "$link" ]; then
+            rm -f "$link"
+        fi
+    done
+}
+
+purge() {
+    local examples temp file
+
+    remove
+    # Restore all the files that were diverted by ltsp-manager
+    dpkg-divert --list ltsp-manager \
+    | while read temp temp file temp; do
+        dpkg-divert --package ltsp-manager --rename --remove "$file"
+    done
+
+    examples="
+        @sysconfdir@/dnsmasq.d/ltsp-server-dnsmasq.conf
+    "
+    configs="
+        @sysconfdir@/NetworkManager/NetworkManager.conf
+        @sysconfdir@/ssh/sshd_config
+    "
+    # Don't purge the examples, move them to /tmp to give a chance for recovery.
+    temp=$(mktemp -d --tmpdir ltsp-manager-purged.XXXXXX)
+    for file in $examples; do
+        if [ -f "$file" ]; then
+            mv -b "$file" "$temp"
+        fi
+    done
+    for file in $configs; do
+        restore_config "$file"
+    done
+}
+
+purge

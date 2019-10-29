@@ -1,2 +1,8 @@
 *~
 __pycache__
+tags.*
+build
+debian/ltsp-manager*
+debian/.debhelper
+debian/files
+*.pyc
