@@ -97,7 +97,9 @@ class Gui:
         self.queue = []
         self.system.connect_event(self.on_libuser_changed)
         self.main_window.show_all()
-        #self.check_initial_setup()
+
+        self.path = os.path.dirname(os.path.realpath(__file__))
+        self.check_initial_setup()
 
 # General helper functions
 
@@ -107,7 +109,8 @@ class Gui:
         # TODO: ltsp-manager doesn't exit until the spawned FDs are closed
 
     def run_term(self, cmd):
-        subprocess.Popen(('./run-in-terminal.sh ' + cmd).split())
+        print((os.path.join(self.path, 'run-in-terminal.sh') + " " + cmd).split())
+        subprocess.Popen((os.path.join(self.path, 'scripts', 'run-in-terminal.sh') + " " + cmd).split())
 
     def run_as_sudo_user(self, cmd):
         print(('EXECUTE:\t' + '\t'.join(cmd)))

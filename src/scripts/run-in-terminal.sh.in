@@ -37,7 +37,7 @@ then
         -s|--source) title=${2##*/} ;;
         '') title=${0##*/} ;;
     esac
-    SPAWNED_TERM=true exec x-terminal-emulator -T "$title" -e sh "$0" "$@"
+    SPAWNED_TERM=true exec x-terminal-emulator -e sh "$0" "$@"
 fi
 
 set -e
