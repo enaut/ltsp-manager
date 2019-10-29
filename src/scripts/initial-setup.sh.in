@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Contains some actions that the sysadmin should run after installation.
 # Copyright (C) 2017 Alkis Georgopoulos <alkisg@gmail.com>
 # License GNU GPL version 3 or newer <http://gnu.org/licenses/gpl.html>
@@ -14,7 +14,6 @@ main() {
     cmdline "$@"
     # configure_various goes first as it backgrounds a DNS task
     configure_various
-    configure_ltsp
     configure_teachers
 }
 
