@@ -30,8 +30,8 @@ configure_file(
 )
 
 configure_file(
-  input: 'paths.py',
-  output: 'paths.py',
+  input: 'paths.ini.in',
+  output: 'paths.ini',
   configuration: conf,
   install: true,
   install_dir: pkgdatadir
