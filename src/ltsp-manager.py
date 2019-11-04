@@ -51,9 +51,6 @@ class Gui:
         for i in self.account_manager.ListGroups():
             sys.stderr.write(self.buspath_to_object(i).GetGroupName())
 
-        # Check Authorization with following parameters in d-feet:
-        # ('system-bus-name', {'name' :  GLib.Variant("s",':1.13424')}), 'io.github.ltsp-manager.accountmanager.createuser', {}, 1, ''
-
         self.sf=ltsp_shared_folders.SharedFolders(self.system)
         self.conf = config.get_config()
 

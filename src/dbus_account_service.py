@@ -48,10 +48,29 @@ class UserException(dbus.DBusException):
      _dbus_error_name = 'io.github.ltsp.manager.UserException'
 class GroupException(dbus.DBusException):
      _dbus_error_name = 'io.github.ltsp.manager.GroupException'
+class PermissionDeniedException(dbus.DBusException):
+     _dbus_error_name = 'io.github.ltsp.manager.PermissionDeniedException'
+
+
+def authorize(sender, errormessage):
+    subject = ('system-bus-name', {'name': sender})
+    action_id = "io.github.ltsp-manager.accountmanager"
+    details = {}
+    flags = 1
+    cancellation_id = ''
+    auth = polkit.CheckAuthorization(subject, action_id, details, flags, cancellation_id)
+    if not auth[0]:
+        print("Authentication not granted: ", errormessage, auth)
+        print(auth[0])
+        raise PermissionDeniedException("Authentication was not possible: {}".format(errormessage))
+    return auth
 
 class AccountManager(dbus.service.Object):
     def __init__(self, *args):
         super().__init__(*args)
+
+    # Check Authorization with following parameters in d-feet:
+    # ('system-bus-name', {'name' :  GLib.Variant("s",':1.13424')}), 'io.github.ltsp-manager.accountmanager.createuser', {}, 1, ''
 
     def _filter_(self, prefix):
         ret = []
@@ -60,8 +79,9 @@ class AccountManager(dbus.service.Object):
                 ret.append(key)
         return ret
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sa{ss}', out_signature='o')
-    def CreateUser(self, name, other):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sa{ss}', out_signature='o', sender_keyword='sender')
+    def CreateUser(self, name, other, sender):
+        authorize(sender, errormessage="the user was not created!")
         cmd = ["useradd"]
         if "home" in other:
             cmd.extend(['-m', '-d', other["home"]])
@@ -74,8 +94,9 @@ class AccountManager(dbus.service.Object):
         else:
             raise UserException(res[1])
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='ib', out_signature='b')
-    def DeleteUser(self, uid, removeFiles):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='ib', out_signature='b', sender_keyword='sender')
+    def DeleteUser(self, uid, removeFiles, sender):
+        authorize(sender, errormessage="the user was not deleted!")
         try:
             path = self.FindUserById(uid)
         except:
@@ -112,8 +133,9 @@ class AccountManager(dbus.service.Object):
             users.append(path)
         return users
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o')
-    def CreateGroup(self, groupname):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o', sender_keyword='sender')
+    def CreateGroup(self, groupname, sender):
+        authorize(sender, errormessage="the group was not created!")
         res = common.run_command(['groupadd', groupname])
         if res[0]:
             path = self.FindGroupByName(groupname)
@@ -122,8 +144,9 @@ class AccountManager(dbus.service.Object):
             raise GroupException(res[1])
 
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='b')
-    def DeleteGroup(self, gid):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='b', sender_keyword='sender')
+    def DeleteGroup(self, gid, sender):
+        authorize(sender, errormessage="the group was not deleted!")
         try:
             path = self.FindGroupById(gid)
         except:
@@ -250,8 +273,9 @@ class User(dbus.service.Object):
     def GetUsername(self):
         return str(self.name)
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='')
-    def SetUsername(self, name):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
+    def SetUsername(self, name, sender):
+        authorize(sender, errormessage="the username was not set!")
         cmd = ['usermod']
         cmd.extend(['-l', name])
         cmd.append(self.name)
@@ -267,8 +291,9 @@ class User(dbus.service.Object):
         print(self.uid)
         return self.uid
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='s')
-    def SetUID(self, newUID):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='s', sender_keyword='sender')
+    def SetUID(self, newUID, sender):
+        authorize(sender, errormessage="the UID was not set!")
         oldid = self.uid
         print(oldid, self.uid)
         cmd = ['usermod']
@@ -294,11 +319,12 @@ class User(dbus.service.Object):
         print(self.gid)
         return self.gid
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='i')
-    def SetGID(self, newGID):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='i', sender_keyword='sender')
+    def SetGID(self, newGID, sender):
+        authorize(sender, errormessage="the GID was not set!")
         cmd = ['usermod']
         cmd.extend(['-g', newGID])
-        cmd.append(username)
+        cmd.append(self.name)
         res = common.run_command(cmd)
         if res[0]:
             self.LoadUID(self.uid)
@@ -334,8 +360,9 @@ class User(dbus.service.Object):
     def GetShell(self):
         return str(self.shell)
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='b', out_signature='b')
-    def DeleteUser(self, removeFiles):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='b', out_signature='b', sender_keyword='sender')
+    def DeleteUser(self, removeFiles, sender):
+        authorize(sender, errormessage="the user was not deleted!")
         cmd = ['userdel']
         if removeFiles:
             cmd.append('-r')
@@ -401,8 +428,9 @@ class Group(dbus.service.Object):
     def GetUsers(self):
         return self.Users
 
-    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b')
-    def AddUser(self, path):
+    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b', sender_keyword='sender')
+    def AddUser(self, path, sender):
+        authorize(sender, errormessage="the user was not added!")
         user = accountManager.LoadByPath(path)
         res = common.run_command(['gpasswd', '-a', user.name, self.GroupName])
         self.LoadGID(self.GID)
@@ -412,8 +440,9 @@ class Group(dbus.service.Object):
             raise UserException("User does not exist.")
 
 
-    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b')
-    def RemoveUser(self, path):
+    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b', sender_keyword='sender')
+    def RemoveUser(self, path, sender):
+        authorize(sender, errormessage="the user was not removed!")
         if path in self.Users:
             user = accountManager.LoadByPath(path)
             res = common.run_command(['gpasswd', '-d', user.name, self.GroupName])
@@ -425,8 +454,9 @@ class Group(dbus.service.Object):
         else:
             raise UserException("User not in this group.")
 
-    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='b')
-    def DeleteGroup(self):
+    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='b', sender_keyword='sender')
+    def DeleteGroup(self, sender):
+        authorize(sender, errormessage="the group was not deleted!")
         res = common.run_command(['groupdel',  self.GroupName])
         if res[0]:
             for x in self.locations:
@@ -447,7 +477,12 @@ if __name__ == '__main__':
     system_bus = dbus.SystemBus()
 
     name = dbus.service.BusName("io.github.ltsp-manager", system_bus)
+    system_bus_name = system_bus.get_unique_name()
+    print(name, system_bus_name)
     accountManager = AccountManager(system_bus, '/AccountManager')
+    proxy = system_bus.get_object('org.freedesktop.PolicyKit1', '/org/freedesktop/PolicyKit1/Authority')
+    polkit = dbus.Interface(proxy, dbus_interface='org.freedesktop.PolicyKit1.Authority')
+    #accountManager.authorize(system_bus_name)
 
     mainloop = GLib.MainLoop()
     print("Starting Gum user manager")
