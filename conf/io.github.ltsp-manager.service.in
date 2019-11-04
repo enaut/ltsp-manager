@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=io.github.ltsp-manager
+Exec=@pkgdatadir@/dbus_account_service.py
+User=root

@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=com.example.SampleService
+Exec=/usr/bin/example-service.py
+User=root

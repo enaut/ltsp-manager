@@ -131,12 +131,12 @@ class AccountManager(dbus.service.Object):
         return objects[path].DeleteGroup()
 
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='as')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
     def ListCachedGroups(self):
         return self._filter_("/Group/")
 
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='as')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
     def ListGroups(self):
         groups = []
         for group in grp.getgrall():
@@ -173,6 +173,7 @@ class AccountManager(dbus.service.Object):
     def Version(self):
         return str(version.__version__)
 
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='o', out_signature='o')
     def LoadByPath(self, path):
         if path in objects:
             return objects[path]

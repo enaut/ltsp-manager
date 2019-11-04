@@ -19,6 +19,7 @@ import subprocess
 import sys
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
+import dbus
 from twisted.internet import gireactor
 gireactor.install()
 from twisted.internet import reactor, defer
@@ -43,6 +44,16 @@ import paths
 class Gui:
     def __init__(self):
         self.system = libuser.get_system()
+        self.dbus = dbus.SystemBus()
+        self.account_manager = self.dbus.get_object('io.github.ltsp-manager',
+                       '/AccountManager')
+        sys.stderr.write(str(self.account_manager.ListGroups()))
+        for i in self.account_manager.ListGroups():
+            sys.stderr.write(self.buspath_to_object(i).GetGroupName())
+
+        # Check Authorization with following parameters in d-feet:
+        # ('system-bus-name', {'name' :  GLib.Variant("s",':1.13424')}), 'io.github.ltsp-manager.accountmanager.createuser', {}, 1, ''
+
         self.sf=ltsp_shared_folders.SharedFolders(self.system)
         self.conf = config.get_config()
 
@@ -118,6 +129,10 @@ class Gui:
 
     def open_link(self, link):
         self.run_as_sudo_user(['xdg-open', link])
+
+    def buspath_to_object(self, path):
+        self.account_manager.LoadByPath(path)
+        return self.dbus.get_object('io.github.ltsp-manager', path)
 
     def get_selected_users(self):
         selection = self.users_tree.get_selection()
