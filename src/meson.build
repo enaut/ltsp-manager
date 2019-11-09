@@ -52,6 +52,7 @@ ltsp_manager_sources = [
   'ip_dialog.py',
   'ltsp_info.py',
   'ltsp-manager.py',
+  'ltsp19.py',
   'ltsp_shared_folders.py',
   'parsers.py',
   'signup.py',

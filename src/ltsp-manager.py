@@ -21,7 +21,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 import dbus
 from twisted.internet import gireactor
-gireactor.install()
+#gireactor.install()
 from twisted.internet import reactor, defer
 
 import about_dialog
@@ -47,9 +47,6 @@ class Gui:
         self.dbus = dbus.SystemBus()
         self.account_manager = self.dbus.get_object('io.github.ltsp-manager',
                        '/AccountManager')
-        sys.stderr.write(str(self.account_manager.ListGroups()))
-        for i in self.account_manager.ListGroups():
-            sys.stderr.write(self.buspath_to_object(i).GetGroupName())
 
         self.sf=ltsp_shared_folders.SharedFolders(self.system)
         self.conf = config.get_config()
@@ -620,4 +617,4 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
     Gui()
-    reactor.run()
+    #reactor.run()

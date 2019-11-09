@@ -9,6 +9,7 @@
     <file>ui/ip_dialog.ui</file>
     <file>ui/ltsp_info.ui</file>
     <file>ui/ltsp-manager.ui</file>
+    <file>ui/ltsp19.ui</file>
     <file>ui/signup_form.ui</file>
     <file>ui/signup_server.ui</file>
     <file>ui/signup_settings.ui</file>

@@ -229,10 +229,10 @@ class System(Set):
         self.mask = inotify.IN_MODIFY
         self.group_fp = filepath.FilePath(os.path.join(paths.sysconfdir, 'group'))
         self.shadow_fp = filepath.FilePath(os.path.join(paths.sysconfdir, 'shadow'))
-        self.notifier = inotify.INotify()
-        self.notifier.startReading()
-        self.notifier._addWatch(self.group_fp, self.mask, False, [self.on_fd_changed])
-        self.notifier._addWatch(self.shadow_fp, self.mask, False, [self.on_fd_changed])
+        #self.notifier = inotify.INotify()
+        #self.notifier.startReading()
+        #self.notifier._addWatch(self.group_fp, self.mask, False, [self.on_fd_changed])
+        #self.notifier._addWatch(self.shadow_fp, self.mask, False, [self.on_fd_changed])
 
     def add_group(self, group):
         res = common.run_command(['groupadd', '-g', str(group.gid), group.name])
