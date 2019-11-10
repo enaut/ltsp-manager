@@ -26,6 +26,7 @@ from twisted.internet import reactor, defer
 
 import about_dialog
 import common
+from gettext import gettext as _
 import config
 import create_users
 import dialogs

@@ -1,22 +1,29 @@
 
+import sys
+import os
+import locale
+from gettext import gettext as _
+
+import dbus
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
-import locale
-import sys
 from dbus.mainloop.glib import DBusGMainLoop
-DBusGMainLoop(set_as_default=True)
-import dbus
 
 import common
 import config
 import dialogs
-import import_dialog
 import version
 import paths
-import os
 
-class Gui:
+
+DBusGMainLoop(set_as_default=True)
+
+
+class Gui():
+    """The base class and window of LTSP-manager"""
+
     def __init__(self):
         self.dbus = dbus.SystemBus()
         self.account_manager = self.dbus.get_object('io.github.ltsp-manager', '/AccountManager')
@@ -46,7 +53,7 @@ class Gui:
         self.account_manager.connect_to_signal("on_users_changed", self.on_users_changed, dbus_interface="io.github.ltsp.manager.AccountManager")
         self.account_manager.connect_to_signal("on_groups_changed", self.on_groups_changed, dbus_interface="io.github.ltsp.manager.AccountManager")
 
-        self.main_window.set_default_size(-1,600)
+        self.main_window.set_default_size(-1, 600)
         self.main_window.connect("destroy", self.on_main_window_delete_event)
         self.main_window.show_all()
 
@@ -98,30 +105,26 @@ class Gui:
         """ Hide the Users that are not part of the selected groups
             Also if show_system_groups is not toggled system users are not displayed """
         user = model[rowiter][0]
+        print(model)
+        print(rowiter)
+        print(model[rowiter][0])
         selected = self.get_selected_groups()
-        # FIXME: The list comprehension here costs
         if self.show_system_groups or not user.IsSystemUser():
             if len(selected) == 0:
                 return True
-            elif user.IsPartOfGroups(selected):
+            if user.IsPartOfGroups(selected):
                 return True
         return False
 
     def set_group_visibility(self, model, rowiter, options):
         """ Hide the groups according to the show_system_groups and show_private_groups setting. """
         group = model[rowiter][0]
-        print("{:5}".format(group.GetGID()), group.IsPrivateGroup(), group.IsSystemGroup())
-        print(self.show_private_groups, self.show_system_groups)
         if self.show_private_groups and self.show_system_groups:
-            print('1', True)
             return True
-        elif not (group.IsPrivateGroup() or group.IsSystemGroup()):
-            print("2", True)
+        if not (group.IsPrivateGroup() or group.IsSystemGroup()):
             return True
-        elif (self.show_private_groups and group.IsPrivateGroup()) or (self.show_system_groups and group.IsSystemGroup()):
-            print("3", True)
+        if (self.show_private_groups and group.IsPrivateGroup()) or (self.show_system_groups and group.IsSystemGroup()):
             return True
-        print("4", False)
         return False
 
     def on_conf_show_private_groups_toggled(self, checker):
@@ -142,13 +145,13 @@ class Gui:
 
     def populate_treeviews(self):
         """Fill the users and groups treeviews from the DBUS-service"""
-        #print("adding users")
         for userpath in self.account_manager.ListUsers():
             user = self.dbus.get_object('io.github.ltsp-manager', userpath)
-            uid, name, primary_group, rname, office, wphone, hphone, other, directory, shell, lstchg, min, max, warn, inact, expire = user.GetValues()
-            self.users_model.append([user, uid, name, primary_group, rname, office, wphone, hphone, other, directory, shell, lstchg, min, max, warn, inact, expire])
+            values = list(user.GetValues())
+            print(values)
+            print([user] + values)
+            self.users_model.append([user] + values)
 
-        #print("adding groups")
         for group_path in self.account_manager.ListGroups():
             group = self.dbus.get_object('io.github.ltsp-manager', group_path)
             group_gid, group_name = group.GetValues()
@@ -186,7 +189,6 @@ class Gui:
         visible_cols = [col.get_title() for col in self.users_tree.get_columns() if col.get_visible()]
         self.conf.parser.set('GUI', 'visible_user_columns', ','.join(visible_cols))
         self.conf.save()
-
 
     def on_groups_selection_changed(self, selection):
         """ Filter the users according to the selected group
@@ -233,10 +235,11 @@ class Gui:
         """Unselect all groups"""
         self.groups_tree.get_selection().unselect_all()
 
-    def on_main_window_delete_event(self, event):
+    @staticmethod
+    def on_main_window_delete_event(event):
         """ Cleanup on close of Ltsp-Manager """
         Gtk.main_quit()
-        exit()
+        sys.exit()
 
     def get_selected_users(self):
         """ Get the users that are selected in the pane """
@@ -276,12 +279,14 @@ class Gui:
         if users_n == 1:
             message = _("Are you sure you want to delete user \"%s\"?") % users[0].GetUsername()
             homes_message = _("Also delete the user's home directory.")
-            homes_warn = _("WARNING: if you enable this option, the user's home directory with all its files will be deleted, along with the user's e-mail at /var/mail, if it exists")
+            homes_warn = _("WARNING: if you enable this option, the user's home directory with all its files will be deleted,"
+                           " along with the user's e-mail at /var/mail, if it exists")
         else:
             message = _("Are you sure you want to delete the following %d users?") % users_n
             message += "\n" + ', '.join([user.GetUsername() for user in users])
             homes_message = _("Also delete the users' home directories.")
-            homes_warn = _("WARNING: if you enable this option, the users' home directories with all their files will be deleted, along with the users' e-mails at /var/mail, if they exist")
+            homes_warn = _("WARNING: if you enable this option, the users' home directories with all their files will be deleted,"
+                           " along with the users' e-mails at /var/mail, if they exist")
         homes_warn += "\n\n" + _("This action cannot be undone.")
 
         dlg = dialogs.AskDialog(message, parent=self.main_window)
@@ -326,11 +331,10 @@ class Gui:
                 progress.set_message("Deleting group {group}".format(group=group.GetGroupName()))
                 try:
                     group.DeleteGroup()
-                except dbus.DBusException as e:
-                    progress.set_error(str(e))
+                except dbus.DBusException as error:
+                    progress.set_error(str(error))
                     break
                 progress.inc()
-
 
 
 Gui()

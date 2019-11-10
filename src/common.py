@@ -20,13 +20,14 @@ except:
 locale.textdomain('ltsp-manager')
 
 def run_command(cmd, poll=False):
-    # Runs a command and returns either True, on successful
-    # completion, or the whole stdout and stderr of the command, on error.
-    # If poll is set return only the process
-    
+    """ Runs a command and returns either True, on successful
+        completion, or the whole stdout and stderr of the command, on error.
+        If poll is set return only the process"""
+
     # Popen doesn't like integers like uid or gid in the command line.
     cmdline = [str(s) for s in cmd]
-    
+
+
     p = subprocess.Popen(cmdline, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if not poll:
         res = p.wait()
@@ -43,7 +44,7 @@ def run_command(cmd, poll=False):
             return False, err
     else:
         return p
-    
+
 def days_since_epoch():
     epoch = datetime.datetime.utcfromtimestamp(0)
     return (datetime.datetime.today() - epoch).days
