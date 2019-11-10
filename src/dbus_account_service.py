@@ -9,6 +9,7 @@
 import os
 import grp
 import pwd
+import re
 from gettext import gettext as _
 
 from gi.repository import GLib
@@ -35,6 +36,8 @@ LAST_UID = 29999
 
 FIRST_GID = 1000
 LAST_GID = 29999
+
+NAME_REGEX = "^[a-z][-a-z0-9_]*$"
 
 
 class UserException(dbus.DBusException):
@@ -230,6 +233,36 @@ class AccountManager(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def Version(self):
         return str(version.__version__)
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='b')
+    def IsGIDValidAndFree(self, gid):
+        if gid < FIRST_GID or gid > LAST_GID:
+            return False
+        return "/Group/{}".format(gid) not in objects
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='b')
+    def IsGroupNameValidAndFree(self, group_name):
+        if not re.match(NAME_REGEX, group_name):
+            return False
+        for group in self.ListGroups():
+            if objects[group].group_name == group_name:
+                return False
+        return True
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='b')
+    def IsUIDValidAndFree(self, uid):
+        if uid < FIRST_UID or uid > LAST_UID:
+            return False
+        return "/User/{}".format(uid) not in objects
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='b')
+    def IsUsernameValidAndFree(self, username):
+        if not re.match(NAME_REGEX, username):
+            return False
+        for user in self.ListUsers():
+            if objects[user].name == username:
+                return False
+        return True
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='o', out_signature='o')
     def LoadByPath(self, path):
