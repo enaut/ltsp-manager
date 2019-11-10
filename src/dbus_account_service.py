@@ -185,12 +185,14 @@ class AccountManager(dbus.service.Object):
         return [objects[u].path for u in objects if u.startswith("/User/")]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o', sender_keyword='sender')
-    def CreateGroup(self, groupname, sender):
+    def CreateGroup(self, group_name, sender):
         # TODO - not working!
         authorize(sender, errormessage="the group was not created!")
-        res = common.run_command(['groupadd', groupname])
+        res = common.run_command(['groupadd', group_name])
         if res[0]:
-            path = self.FindGroupByName(groupname)
+            path = self.FindGroupByName(group_name)
+            self.load_groups(group=group_name)
+            self.reload_groups()
             self.on_groups_changed()
             return path
         raise GroupException(res[1])
@@ -220,10 +222,12 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.signal(dbus_interface='io.github.ltsp.manager.AccountManager', signature='')
     def on_users_changed(self):
+        # print("some user(s) have changed")
         pass
 
     @dbus.service.signal(dbus_interface='io.github.ltsp.manager.AccountManager', signature='')
     def on_groups_changed(self):
+        # print("Some Group(s) have changed")
         pass
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='')
@@ -234,35 +238,36 @@ class AccountManager(dbus.service.Object):
     def Version(self):
         return str(version.__version__)
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='b')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='bb')
     def IsGIDValidAndFree(self, gid):
-        if gid < FIRST_GID or gid > LAST_GID:
-            return False
-        return "/Group/{}".format(gid) not in objects
+        res_valid = not(gid < FIRST_GID or gid > LAST_GID)
+        res_free = "/Group/{}".format(gid) not in objects
+        return res_valid, res_free
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='b')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='bb')
     def IsGroupNameValidAndFree(self, group_name):
-        if not re.match(NAME_REGEX, group_name):
-            return False
+        res_free = True
+        res_valid = not re.match(NAME_REGEX, group_name)
+        res_free = True
         for group in self.ListGroups():
             if objects[group].group_name == group_name:
-                return False
-        return True
+                res_free = False
+        return res_valid, res_free
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='b')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='bb')
     def IsUIDValidAndFree(self, uid):
-        if uid < FIRST_UID or uid > LAST_UID:
-            return False
-        return "/User/{}".format(uid) not in objects
+        res_valid = not(uid < FIRST_UID or uid > LAST_UID)
+        res_free = "/User/{}".format(uid) not in objects
+        return res_valid, res_free
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='b')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='bb')
     def IsUsernameValidAndFree(self, username):
-        if not re.match(NAME_REGEX, username):
-            return False
+        res_valid = re.match(NAME_REGEX, username)
+        res_free = True
         for user in self.ListUsers():
             if objects[user].name == username:
-                return False
-        return True
+                res_free = False
+        return res_valid, res_free
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='o', out_signature='o')
     def LoadByPath(self, path):
@@ -525,6 +530,7 @@ class Group(dbus.service.Object):
         if res[0]:
             self.group_name = new_group_name
             return 1
+        account_manager.on_groups_changed()
         raise GroupException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='u')
@@ -546,13 +552,13 @@ class Group(dbus.service.Object):
             del objects[self.path]
             self.gid = new_gid
             self.path = "/Group/{}".format(self.gid)
-            print(list(self.locations))
             self.add_to_connection(connection, self.path)
             for x in self.users:
                 objects[x].groups.remove(old_path)
                 objects[x].groups.add(self.path)
             for x in self.main_users:
                 objects[x].gid = self.gid
+            account_manager.on_groups_changed()
             return 1
         raise GroupException(res[1])
 
@@ -574,6 +580,7 @@ class Group(dbus.service.Object):
         if res[0]:
             user.groups.add(self.path)
             self.users.add(user.path)
+            account_manager.on_groups_changed()
             return True
         raise UserException("User does not exist.")
 
