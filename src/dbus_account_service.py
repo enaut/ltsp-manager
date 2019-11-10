@@ -484,16 +484,26 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='s', out_signature='')
     def SetGroupName(self, new_group_name):
+        """ Set the GID of this group and adjust the members correctly.
+            Return 1 if something has changed and 0 if not."""
+        if self.group_name == new_group_name:
+            return 0
         res = common.run_command(['groupmod', '-n', new_group_name, self.group_name])
         if res[0]:
             self.group_name = new_group_name
+            return 1
+        raise GroupException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='u')
     def GetGID(self):
         return self.gid
 
-    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='u', out_signature='')
+    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='u', out_signature='u')
     def SetGID(self, new_gid):
+        """ Set the GID of this group and adjust the members correctly.
+            Return 1 if something has changed and 0 if not."""
+        if self.gid == new_gid:
+            return 0
         res = common.run_command(['groupmod', '-g', str(new_gid), self.group_name])
         if res[0]:
             old_path = self.path
@@ -510,8 +520,8 @@ class Group(dbus.service.Object):
                 objects[x].groups.add(self.path)
             for x in self.main_users:
                 objects[x].gid = self.gid
-
-        return
+            return 1
+        raise GroupException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='ao')
     def GetUsers(self):
