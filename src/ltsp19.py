@@ -87,7 +87,6 @@ class Gui():
         for column in users_columns:
             title = column.get_title()
             checkbutton = Gtk.CheckButton(label=title)
-            print("adding: ", title)
             checkbutton.connect('toggled', self.on_mi_view_column_toggled, column)
             checkbutton.set_active(title in visible)
             checkbutton.set_visible(True)
@@ -108,9 +107,6 @@ class Gui():
         """ Hide the Users that are not part of the selected groups
             Also if show_system_groups is not toggled system users are not displayed """
         user = model[rowiter][0]
-        print(model)
-        print(rowiter)
-        print(model[rowiter][0])
         selected = self.get_selected_groups()
         if self.show_system_groups or not user.IsSystemUser():
             if len(selected) == 0:
@@ -151,8 +147,6 @@ class Gui():
         for userpath in self.account_manager.ListUsers():
             user = self.dbus.get_object('io.github.ltsp-manager', userpath)
             values = list(user.GetValues())
-            print(values)
-            print([user] + values)
             self.users_model.append([user] + values)
 
         for group_path in self.account_manager.ListGroups():
@@ -183,6 +177,8 @@ class Gui():
         for uname in selected_users:
             if uname in users_iters:
                 users_selection.select_iter(users_iters[uname])
+        self.groups_filter.refilter()
+        self.users_filter.refilter()
 
     def on_mi_view_column_toggled(self, checkmenuitem, treeviewcolumn):
         """ React to show/hide of user columns
@@ -267,10 +263,10 @@ class Gui():
         self.repopulate_treeviews()
 
     def on_add_user_clicked(self, widget):
-        pass
+        user_form.NewUserDialog(self.dbus, self.account_manager, parent=self.main_window)
 
     def on_edit_user_clicked(self, widget):
-        pass
+        user_form.EditUserDialog(self.dbus, self.account_manager, self.get_selected_users()[0], parent=self.main_window)
 
     def on_delete_user_clicked(self, widget):
         """ When the user clicks on delete user(s) a warning dialog is shown.
