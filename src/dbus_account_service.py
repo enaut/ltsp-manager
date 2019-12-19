@@ -297,12 +297,13 @@ class User(dbus.service.Object):
         self.uid = uid
         self.path = "/User/{}".format(self.uid)
         self.gid = usr.pw_gid
-        self.rname = usr.pw_gecos
         self.directory = usr.pw_dir
         self.shell = usr.pw_shell
         self.SUPPORTS_MULTIPLE_CONNECTIONS = True
         self.SUPPORTS_MULTIPLE_OBJECT_PATHS = True
-        self.office, self.wphone, self.hphone, self.other = ['']*4
+        gecos = usr.pw_gecos.split(',')
+        gecos = gecos + ['']*(5-len(gecos))
+        self.rname, self.office, self.wphone, self.hphone, self.other = gecos
         self.lstchg, self.min, self.max, self.warn, self.inact, self.expire = [0]*6
         self.groups = set()
 
@@ -397,6 +398,10 @@ class User(dbus.service.Object):
             return self.gid
         else:
             raise UserException(res[1])
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='sssss')
+    def GetGecos(self):
+        return self.rname, self.office, self.wphone, self.hphone, self.other
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetRealName(self):
