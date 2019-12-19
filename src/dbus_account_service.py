@@ -227,9 +227,11 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o')
     def FindGroupByName(self, group_name):
-        group = grp.getgrnam(group_name)
-        path = self.FindGroupById(group.gr_gid)
-        return path
+        for g_path in objects:
+            if g_path.startswith("/Group/"):
+                if objects[g_path].group_name == group_name:
+                    return g_path
+        return "/None"
 
     @dbus.service.signal(dbus_interface='io.github.ltsp.manager.AccountManager', signature='')
     def on_users_changed(self):
@@ -606,6 +608,18 @@ class Group(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='b')
     def IsSystemGroup(self):
         return self.gid < FIRST_GID or self.gid > LAST_GID
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
+    def UsersAreMember(self, users):
+        mg = self.GetUsers().union(self.GetMainUsers())
+        if not mg:
+            return False
+        for u in users:
+            if not u.startswith("/User/"):
+                u = "/User/"+u
+            if mg and (u in mg):
+                return True
+        return False
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b', sender_keyword='sender')
     def RemoveUser(self, path, sender):
