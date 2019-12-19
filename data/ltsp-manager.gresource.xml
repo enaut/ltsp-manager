@@ -14,5 +14,6 @@
     <file>ui/signup_server.ui</file>
     <file>ui/signup_settings.ui</file>
     <file>ui/user_form.ui</file>
+    <file>ui/user_form19.ui</file>
   </gresource>
 </gresources>
