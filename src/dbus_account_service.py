@@ -517,9 +517,8 @@ class Group(dbus.service.Object):
             retu += 1
         if self.gid != new_gid:
             self.SetGID(new_gid)
-            retu+2
-
-        return True
+            retu += 2
+        return retu
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='s')
     def GetGroupName(self):
