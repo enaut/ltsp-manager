@@ -141,7 +141,9 @@ class AccountManager(dbus.service.Object):
         """ Create a system user with the username provided.
             additional Arguments in other are:
                 other = {"home": "/home/username",
-                         "fullname": "Name of the User"}
+                         "fullname": "Name of the User",
+                         "uid": 1101,
+                         "gid": 1101}
                          """
         authorize(sender, errormessage="the user was not created!")
         cmd = ["useradd"]
@@ -149,6 +151,11 @@ class AccountManager(dbus.service.Object):
             cmd.extend(['-m', '-d', other["home"]])
         if "fullname" in other:
             cmd.extend(['-c', other["fullname"]])
+        if "uid" in other:
+            cmd.extend(['-u', other["uid"]])
+        if "gid" in other:
+            cmd.extend(['-g', other["gid"]])
+
         cmd.append(user_name)
         res = common.run_command(cmd)
         if res[0]:
@@ -158,6 +165,10 @@ class AccountManager(dbus.service.Object):
             self.on_users_changed()
             return self.FindUserByName(user_name)
         raise UserException(res[1])
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sss', out_signature='o', sender_keyword='sender')
+    def CreateUserDetailed(self, user_name, home, fullname, sender):
+        self.CreateUser(user_name, {'home': home, 'fullname': fullname}, sender)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='ib', out_signature='b', sender_keyword='sender')
     def DeleteUser(self, uid, remove_files, sender):
