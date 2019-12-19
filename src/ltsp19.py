@@ -4,12 +4,14 @@ import os
 import locale
 from gettext import gettext as _
 
-import dbus
 
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
+
 from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
+import dbus
 
 import common
 import config
@@ -17,8 +19,9 @@ import dialogs
 import version
 import paths
 
+import group_form
+import user_form
 
-DBusGMainLoop(set_as_default=True)
 
 
 class Gui():
@@ -309,10 +312,12 @@ class Gui():
                 users[0].DeleteUser(rm_homes)
 
     def on_add_group_clicked(self, widget):
-        pass
+        group_form.NewGroupDialog(self.dbus, self.account_manager, self.main_window)
 
     def on_edit_group_clicked(self, widget):
-        pass
+        groups = self.get_selected_groups()
+        if len(groups) == 1:
+            group_form.EditGroupDialog(groups[0], self.dbus, self.account_manager, self.main_window)
 
     def on_delete_group_clicked(self, widget):
         groups = self.get_selected_groups()
