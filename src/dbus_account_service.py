@@ -324,7 +324,6 @@ class User(dbus.service.Object):
 
         self.groups = set()
 
-
         return self
 
     def remove_groups(self):
@@ -476,8 +475,6 @@ class User(dbus.service.Object):
     def GetSpwd(self, sender):
         authorize(sender, errormessage="The Password validity could not be checked")
         return self.lstchg, self.min, self.max, self.warn, self.inact, self.expire
-
-
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
     def IsPartOfGroups(self, groups):
