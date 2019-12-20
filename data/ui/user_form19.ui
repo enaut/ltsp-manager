@@ -48,6 +48,9 @@ Author: Franz Dietrich
   <object class="GtkTreeModelFilter" id="groups_filter">
     <property name="child_model">groups_liststore</property>
   </object>
+  <object class="GtkTreeModelSort" id="groups_sort">
+    <property name="model">groups_filter</property>
+  </object>
   <object class="GtkDialog" id="dialog">
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
@@ -890,7 +893,7 @@ Author: Franz Dietrich
                           <object class="GtkTreeView" id="groups_treeview">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="model">groups_filter</property>
+                            <property name="model">groups_sort</property>
                             <property name="headers_clickable">False</property>
                             <property name="search_column">1</property>
                             <child internal-child="selection">
@@ -900,7 +903,9 @@ Author: Franz Dietrich
                               <object class="GtkTreeViewColumn" id="groups_column">
                                 <property name="title" translatable="yes">Member of groups:</property>
                                 <child>
-                                  <object class="GtkCellRendererToggle" id="cellrenderertoggle1"/>
+                                  <object class="GtkCellRendererToggle" id="cellrenderertoggle1">
+                                    <signal name="toggled" handler="on_group_toggled" swapped="no"/>
+                                  </object>
                                   <attributes>
                                     <attribute name="activatable">3</attribute>
                                     <attribute name="active">2</attribute>
@@ -997,8 +1002,5 @@ Author: Franz Dietrich
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkTreeModelSort" id="groups_sort">
-    <property name="model">groups_filter</property>
   </object>
 </interface>
