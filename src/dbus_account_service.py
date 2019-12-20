@@ -9,6 +9,7 @@
 import os
 import grp
 import pwd
+import spwd
 import re
 from gettext import gettext as _
 
@@ -317,8 +318,12 @@ class User(dbus.service.Object):
         gecos = usr.pw_gecos.split(',')
         gecos = gecos + ['']*(5-len(gecos))
         self.rname, self.office, self.wphone, self.hphone, self.other = gecos
-        self.lstchg, self.min, self.max, self.warn, self.inact, self.expire = [0]*6
+
+        shadow = spwd.getspnam(self.name)
+        _name, _enc_password, self.lstchg, self.min, self.max, self.warn, self.inact, self.expire, _flag = shadow
+
         self.groups = set()
+
 
         return self
 
@@ -467,15 +472,24 @@ class User(dbus.service.Object):
     def IsSystemUser(self):
         return not (self.uid >= FIRST_UID and self.uid <= LAST_UID)
 
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='iiiiii', sender_keyword='sender')
+    def GetSpwd(self, sender):
+        authorize(sender, errormessage="The Password validity could not be checked")
+        return self.lstchg, self.min, self.max, self.warn, self.inact, self.expire
+
+
+
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
     def IsPartOfGroups(self, groups):
         mg = self.GetGroups() + (self.GetMainGroup(),)
         if not mg:
             return False
         for g in groups:
-            if not g.startswith("/Group/"):
-                g = "/Group/"+g
-            if mg and (g in mg):
+            if "/Group/" not in g:
+                grouppath = account_manager.FindGroupByName(g)
+            else:
+                grouppath = g
+            if mg and (grouppath in mg):
                 return True
         return False
 
