@@ -609,14 +609,17 @@ class Group(dbus.service.Object):
     def IsSystemGroup(self):
         return self.gid < FIRST_GID or self.gid > LAST_GID
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
+    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='as', out_signature='b')
     def UsersAreMember(self, users):
         mg = self.GetUsers().union(self.GetMainUsers())
+        print(mg)
         if not mg:
             return False
         for u in users:
             if not u.startswith("/User/"):
-                u = "/User/"+u
+                for us in objects:
+                    if "/User/" in us and objects[us].name == u:
+                        u = us
             if mg and (u in mg):
                 return True
         return False
