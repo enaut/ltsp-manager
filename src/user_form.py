@@ -434,10 +434,12 @@ class EditUserDialog(UserForm):
         self.pgroup.set_text(self.bus.get_object('io.github.ltsp-manager', user.GetMainGroup()).GetGroupName())
         # Activate the groups in which the user belongs and mark the primary
         for row in self.groups_store:
-            if row[0].UsersAreMember(self.username.get_text()):
+            print(row[0].GetGroupName(),self.username.get_text(), row[0].UsersAreMember([self.username.get_text()]))
+            if row[0].UsersAreMember([self.username.get_text()]):
+                print(row[0], self.username.get_text())
                 row[2] = True
                 row[5] = True
-            if row[1] == user.GetMainGroup():
+            if self.account_manager.FindGroupByName(row[1]) == user.GetMainGroup():
                 self.primary_group = row
                 self.set_group_primary(row)
 
