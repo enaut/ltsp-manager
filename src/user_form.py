@@ -203,7 +203,7 @@ class UserForm():
         row = model[itr]
         activatable = row[3]
         group = row[0]
-        primary_group = not activatable or group.UsersAreMember(self.username.get_text())
+        primary_group = not activatable or group.UsersAreMember([self.username.get_text()])
         show_user_group = self.show_sys_groups or not group.IsSystemGroup()
         show_private_group = config.get_config().parser.getboolean('GUI', 'show_private_groups') or not model[itr][0].IsPrivateGroup()
         return (show_user_group and show_private_group) or primary_group
@@ -434,9 +434,7 @@ class EditUserDialog(UserForm):
         self.pgroup.set_text(self.bus.get_object('io.github.ltsp-manager', user.GetMainGroup()).GetGroupName())
         # Activate the groups in which the user belongs and mark the primary
         for row in self.groups_store:
-            print(row[0].GetGroupName(),self.username.get_text(), row[0].UsersAreMember([self.username.get_text()]))
             if row[0].UsersAreMember([self.username.get_text()]):
-                print(row[0], self.username.get_text())
                 row[2] = True
                 row[5] = True
             if self.account_manager.FindGroupByName(row[1]) == user.GetMainGroup():

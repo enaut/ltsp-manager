@@ -612,15 +612,14 @@ class Group(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='as', out_signature='b')
     def UsersAreMember(self, users):
         mg = self.GetUsers().union(self.GetMainUsers())
-        print(mg)
         if not mg:
             return False
         for u in users:
             if not u.startswith("/User/"):
-                for us in objects:
-                    if "/User/" in us and objects[us].name == u:
-                        u = us
-            if mg and (u in mg):
+                userpath = account_manager.FindUserByName(u)
+            else:
+                userpath = u
+            if mg and (userpath in mg):
                 return True
         return False
 
