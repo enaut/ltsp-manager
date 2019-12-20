@@ -15,6 +15,7 @@ import common
 import config
 import paths
 
+
 class UserForm():
     def __init__(self, bus, account_manager, parent):
         self.bus = bus
@@ -75,8 +76,9 @@ class UserForm():
         for role, _groups in self.roles.items():
             self.role_combo.append_text(role)
 
-    """ User Information """
+    # """ User Information """
     def on_username_entry_changed(self, widget):
+        """ Update the home entry after a username change """
         username = self.username.get_text()
         valid_name, free_name = self.account_manager.IsUsernameValidAndFree(username)
         if self.mode == 'edit':
@@ -98,7 +100,7 @@ class UserForm():
         self.builder.get_object('full_name_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
-    """ User Details """
+    # """ User Details """
     def on_uid_changed(self, widget):
         """ validate the UID. Check if it is either the current one, or it is in user range and free. """
         uid = widget.get_text()
@@ -201,16 +203,12 @@ class UserForm():
         row = model[itr]
         activatable = row[3]
         group = row[0]
-        print(self.username.get_text(), group.UsersAreMember(self.username.get_text()))
         primary_group = not activatable or group.UsersAreMember(self.username.get_text())
         show_user_group = self.show_sys_groups or not group.IsSystemGroup()
         show_private_group = config.get_config().parser.getboolean('GUI', 'show_private_groups') or not model[itr][0].IsPrivateGroup()
-        print(group.GetGroupName(), (show_user_group and show_private_group) or primary_group)
         return (show_user_group and show_private_group) or primary_group
 
     def on_show_sys_groups_toggled(self, widget):
-        for row in self.groups_store:
-            print(row[1])
         self.show_sys_groups = not self.show_sys_groups
         self.groups_filter.refilter()
         if self.show_sys_groups:
@@ -334,7 +332,7 @@ class UserForm():
         self.on_homedir_entry_changed(self.homedir)
         self.set_apply_sensitivity()
 
-    """ General Methods """
+    # """ General Methods """
     @staticmethod
     def get_icon(check):
         """Return the icon according to the boolean."""
@@ -410,6 +408,7 @@ class EditUserDialog(UserForm):
         self.user = user
         self.builder.connect_signals(self)
 
+        # Do not change the primary group and roles of existing users
         self.builder.get_object('primary_group_grid').set_visible(False)
         self.builder.get_object('role_box').set_visible(False)
 
