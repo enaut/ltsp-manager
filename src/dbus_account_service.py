@@ -70,6 +70,20 @@ def authorize(sender, errormessage):
         print(auth[0])
         raise PermissionDeniedException(_("Authentication was not possible: {}").format(errormessage))
     return auth
+def authorize_read(sender, errormessage):
+    """check Authorization with following parameters in d-feet:
+    ('system-bus-name', {'name' :  GLib.Variant("s",':1.13424')}), 'io.github.ltsp-manager.accountmanager.accountdataread', {}, 1, ''"""
+    subject = ('system-bus-name', {'name': sender})
+    action_id = "io.github.ltsp-manager.accountdataread"
+    details = {}
+    flags = 1
+    cancellation_id = ''
+    auth = polkit.CheckAuthorization(subject, action_id, details, flags, cancellation_id)
+    if not auth[0]:
+        print("Authentication not granted: ", errormessage, auth)
+        print(auth[0])
+        raise PermissionDeniedException(_("Authentication was not possible: {}").format(errormessage))
+    return auth
 
 
 class AccountManager(dbus.service.Object):
