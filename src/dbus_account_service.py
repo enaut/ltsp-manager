@@ -332,13 +332,16 @@ class User(dbus.service.Object):
         gecos = usr.pw_gecos.split(',')
         gecos = gecos + ['']*(5-len(gecos))
         self.rname, self.office, self.wphone, self.hphone, self.other = gecos
-
-        shadow = spwd.getspnam(self.name)
-        _name, _enc_password, self.lstchg, self.min, self.max, self.warn, self.inact, self.expire, _flag = shadow
+        self.load_spwd()
 
         self.groups = set()
 
         return self
+
+    def load_spwd(self):
+        shadow = spwd.getspnam(self.name)
+        _name, _enc_password, self.lstchg, self.min, self.max, self.warn, self.inact, self.expire, _flag = shadow
+
 
     def remove_groups(self):
         # remove from groups
@@ -487,8 +490,23 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='iiiiii', sender_keyword='sender')
     def GetSpwd(self, sender):
-        authorize(sender, errormessage="The Password validity could not be checked")
+        authorize_read(sender, errormessage="The Password validity could not be checked")
         return self.lstchg, self.min, self.max, self.warn, self.inact, self.expire
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='iiiiiis', out_signature='u', sender_keyword='sender')
+    def SetSpwd(self, lstchg, expire, inact, min, max, warn, username, sender):
+        cmd = ['chage']
+        cmd.extend(['-d', lstchg])
+        cmd.extend(['-E', expire])
+        cmd.extend(['-I', inact])
+        cmd.extend(['-m', min])
+        cmd.extend(['-M', max])
+        cmd.extend(['-W', warn])
+        cmd.append(username)
+        # Execute chage
+        p = common.run_command(cmd)
+        self.load_spwd()
+        return 0
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
     def IsPartOfGroups(self, groups):
