@@ -55,6 +55,8 @@ class Gui():
 
         self.account_manager.connect_to_signal("on_users_changed", self.on_users_changed, dbus_interface="io.github.ltsp.manager.AccountManager")
         self.account_manager.connect_to_signal("on_groups_changed", self.on_groups_changed, dbus_interface="io.github.ltsp.manager.AccountManager")
+        self.on_users_selection_changed()
+        self.on_groups_selection_changed()
 
         self.main_window.set_default_size(-1, 600)
         self.main_window.connect("destroy", self.on_main_window_delete_event)
@@ -189,14 +191,17 @@ class Gui():
         self.conf.parser.set('GUI', 'visible_user_columns', ','.join(visible_cols))
         self.conf.save()
 
-    def on_groups_selection_changed(self, selection):
+    def on_groups_selection_changed(self, selection=None):
         """ Filter the users according to the selected group
             Enable, disable and rename the group editing buttons.
             """
         self.users_filter.refilter()
         edit_group = self.builder.get_object('edit_group')
         delete_group = self.builder.get_object('delete_group')
-        rows = selection.count_selected_rows()
+        if selection:
+            rows = selection.count_selected_rows()
+        else:
+            rows = 0
         if rows == 0:
             edit_group.set_sensitive(False)
             delete_group.set_sensitive(False)
@@ -210,11 +215,14 @@ class Gui():
             delete_group.set_label(_("Delete groups"))
             delete_group.set_sensitive(True)
 
-    def on_users_selection_changed(self, selection):
+    def on_users_selection_changed(self, selection=None):
         """Enable disable and rename the User Editing buttons"""
         edit_user = self.builder.get_object('edit_user')
         delete_user = self.builder.get_object('delete_user')
-        rows = selection.count_selected_rows()
+        if selection:
+            rows = selection.count_selected_rows()
+        else:
+            rows = 0
         if rows == 0:
             edit_user.set_sensitive(False)
             delete_user.set_sensitive(False)

@@ -30,6 +30,7 @@
       <allow_active>yes</allow_active>
     </defaults>
   </action>
+  
   <action id="io.github.ltsp-manager.ltspadmin">
     <description>Manage the LTSP-Server</description>
     <message>Authentication is needed to manage the server</message>

@@ -260,6 +260,7 @@ class NewUserDialog(UserForm):
         #     self.system.lock_user(user)
         self.dialog.destroy()
 
+
 class EditUserDialog(UserForm):
     def __init__(self, bus, account_manager, user, parent=None):
         super().__init__('edit', bus, account_manager, parent=parent)
@@ -330,78 +331,79 @@ class EditUserDialog(UserForm):
 
         self.dialog.destroy()
 
+
 class ReviewUserDialog(UserForm):
     def __init__(self, bus, account_manager, user, role='', callback=None, parent=None):
         super().__init__('new', bus, account_manager, parent=parent)
-        self.callback = callback
-        self.user = user
-        self.selected_role = role
-        self.builder.connect_signals(self)
-
-        self.username.set_text(user.name)
-        if user.password not in ['!', '*', ''] or user.plainpw:
-            self.password.set_text('\n'*8)
-            self.password_repeat.set_text('\n'*8)
-        self.uid_entry.set_text(str(user.uid))
-        self.homedir.set_text(user.directory)
-        self.shells_entry.set_text(user.shell)
-        self.gc_name.set_text(user.rname)
-        self.gc_office.set_text(user.office)
-        self.gc_office_phone.set_text(user.wphone)
-        self.gc_home_phone.set_text(user.hphone)
-        self.gc_other.set_text(user.other)
-        self.last_change.set_value(user.lstchg)
-        self.minimum.set_value(user.min)
-        self.maximum.set_value(user.max)
-        self.warn.set_value(user.warn)
-        self.inactive.set_value(user.inact)
-        self.expire.set_value(user.expire)
-        self.builder.get_object('locked_account_check').set_active(user.password[0] == '!')
-
-        self.pgroup.set_text(user.primary_group)
-        self.pgid.set_text(str(user.gid))
-        # Activate the groups in which the user belongs and mark the primary
-        for row in self.groups_store:
-            for gr in user.groups:
-                if gr == row[0].name:
-                    row[2] = True
-                    row[5] = True
-            if row[1] == user.primary_group:
-                self.primary_group = row
-                self.set_group_primary(row)
-
-        if role:
-            for r in self.role_combo.get_model():
-                if r[0] == role:
-                    self.role_combo.set_active_iter(r.iter)
-                    break
-
-        self.dialog.show()
+        # self.callback = callback
+        # self.user = user
+        # self.selected_role = role
+        # self.builder.connect_signals(self)
+        #
+        # self.username.set_text(user.name)
+        # if user.password not in ['!', '*', ''] or user.plainpw:
+        #     self.password.set_text('\n'*8)
+        #     self.password_repeat.set_text('\n'*8)
+        # self.uid_entry.set_text(str(user.uid))
+        # self.homedir.set_text(user.directory)
+        # self.shells_entry.set_text(user.shell)
+        # self.gc_name.set_text(user.rname)
+        # self.gc_office.set_text(user.office)
+        # self.gc_office_phone.set_text(user.wphone)
+        # self.gc_home_phone.set_text(user.hphone)
+        # self.gc_other.set_text(user.other)
+        # self.last_change.set_value(user.lstchg)
+        # self.minimum.set_value(user.min)
+        # self.maximum.set_value(user.max)
+        # self.warn.set_value(user.warn)
+        # self.inactive.set_value(user.inact)
+        # self.expire.set_value(user.expire)
+        # self.builder.get_object('locked_account_check').set_active(user.password[0] == '!')
+        #
+        # self.pgroup.set_text(user.primary_group)
+        # self.pgid.set_text(str(user.gid))
+        # # Activate the groups in which the user belongs and mark the primary
+        # for row in self.groups_store:
+        #     for gr in user.groups:
+        #         if gr == row[0].name:
+        #             row[2] = True
+        #             row[5] = True
+        #     if row[1] == user.primary_group:
+        #         self.primary_group = row
+        #         self.set_group_primary(row)
+        #
+        # if role:
+        #     for r in self.role_combo.get_model():
+        #         if r[0] == role:
+        #             self.role_combo.set_active_iter(r.iter)
+        #             break
+        #
+        # self.dialog.show()
 
     def on_apply_clicked(self, widget):
-        self.user.name = self.username.get_text()
-        self.user.rname = self.gc_name.get_text()
-        self.user.uid = int(self.uid_entry.get_text())
-        self.user.office = self.gc_office.get_text()
-        self.user.wphone = self.gc_office_phone.get_text()
-        self.user.hphone = self.gc_home_phone.get_text()
-        self.user.other = self.gc_other.get_text()
-        self.user.directory = self.homedir.get_text()
-        self.user.shell = self.shells_entry.get_text()
-        self.user.lstchg = int(self.last_change.get_value())
-        self.user.min = int(self.minimum.get_value())
-        self.user.max = int(self.maximum.get_value())
-        self.user.warn = int(self.warn.get_value())
-        self.user.inact = int(self.inactive.get_value())
-        self.user.expire = int(self.expire.get_value())
-
-        self.user.groups = [g[1] for g in self.groups_store if g[2]]
-        self.user.gid = int(self.pgid.get_text())
-        self.user.primary_group = self.pgroup.get_text()
-
-        if self.builder.get_object('locked_account_check').get_active():
-            if self.user.password[0] != '!':
-                self.user.password = '!'+self.user.password
-        self.dialog.destroy()
-        if self.callback:
-            self.callback(self.selected_role)
+        pass
+        # self.user.rname = self.gc_name.get_text()
+        # self.user.uid = int(self.uid_entry.get_text())
+        # self.user.office = self.gc_office.get_text()
+        # self.user.wphone = self.gc_office_phone.get_text()
+        # self.user.hphone = self.gc_home_phone.get_text()
+        # self.user.other = self.gc_other.get_text()
+        # self.user.directory = self.homedir.get_text()
+        # self.user.shell = self.shells_entry.get_text()
+        # self.user.lstchg = int(self.last_change.get_value())
+        # self.user.min = int(self.minimum.get_value())
+        # self.user.max = int(self.maximum.get_value())
+        # self.user.warn = int(self.warn.get_value())
+        # self.user.inact = int(self.inactive.get_value())
+        # self.user.expire = int(self.expire.get_value())
+        #
+        # self.user.groups = [g[1] for g in self.groups_store if g[2]]
+        # self.user.gid = int(self.pgid.get_text())
+        # self.user.primary_group = self.pgroup.get_text()
+        #
+        # if self.builder.get_object('locked_account_check').get_active():
+        #     if self.user.password[0] != '!':
+        #         self.user.password = '!'+self.user.password
+        # self.dialog.destroy()
+        # if self.callback:
+        #     self.callback(self.selected_role)
