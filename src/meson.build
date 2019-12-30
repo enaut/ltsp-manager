@@ -55,6 +55,7 @@ ltsp_manager_sources = [
   'ltsp19.py',
   'ltsp_shared_folders.py',
   'parsers.py',
+  'paths.py',
   'signup.py',
   'signup_server.py',
   'user_form.py',

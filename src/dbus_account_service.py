@@ -20,11 +20,11 @@ import dbus.mainloop.glib
 
 
 import common
+from paths import ACCOUNTMANAGER_PATH, USER_PREFIX, GROUP_PREFIX
 import version
 
 objects = {  # will be populated with: dbus-path:object
 }
-
 
 FIRST_SYSTEM_UID = 0
 LAST_SYSTEM_UID = 999
@@ -70,6 +70,8 @@ def authorize(sender, errormessage):
         print(auth[0])
         raise PermissionDeniedException(_("Authentication was not possible: {}").format(errormessage))
     return auth
+
+
 def authorize_read(sender, errormessage):
     """check Authorization with following parameters in d-feet:
     ('system-bus-name', {'name' :  GLib.Variant("s",':1.13424')}), 'io.github.ltsp-manager.accountmanager.accountdataread', {}, 1, ''"""
@@ -109,9 +111,13 @@ class AccountManager(dbus.service.Object):
     def load_groups(group=None):
         """Load all the groups from system configuration"""
         ret_groups = []
-        groups = [grp.getgrnam(group)] if group else grp.getgrall()
+        try:
+            groupid = int(group)
+            groups = [grp.getgrgid(groupid)]
+        except (ValueError, TypeError):
+            groups = [grp.getgrnam(group)] if group else grp.getgrall()
         for group_sys in groups:
-            path = "/Group/{}".format(group_sys.gr_gid)
+            path = "{}/{}".format(GROUP_PREFIX, group_sys.gr_gid)
             if path not in objects:
                 group_obj = Group(system_bus, path).load(group_sys.gr_gid)
                 objects[path] = group_obj
@@ -124,7 +130,7 @@ class AccountManager(dbus.service.Object):
         ret_users = []
         users = [pwd.getpwnam(user)] if user else pwd.getpwall()
         for user_sys in users:
-            path = '/User/{}'.format(user_sys.pw_uid)
+            path = '{}/{}'.format(USER_PREFIX, user_sys.pw_uid)
             if path not in objects:
                 user_obj = User(system_bus, path).load(user_sys.pw_uid)
                 objects[path] = user_obj
@@ -195,7 +201,7 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='o')
     def FindUserById(self, uid):
-        path = '/User/{}'.format(uid)
+        path = '{}/{}'.format(USER_PREFIX, uid)
         return path
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o')
@@ -208,7 +214,7 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
     def ListUsers(self):
-        return [objects[u].path for u in objects if u.startswith("/User/")]
+        return [objects[u].path for u in objects if u.startswith(USER_PREFIX)]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o', sender_keyword='sender')
     def CreateGroup(self, group_name, sender):
@@ -233,17 +239,17 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
     def ListGroups(self):
-        return [objects[u].path for u in objects if u.startswith("/Group/")]
+        return [objects[u].path for u in objects if u.startswith(GROUP_PREFIX)]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='s')
     def FindGroupById(self, gid):
-        path = "/Group/{}".format(gid)
+        path = "{}/{}".format(GROUP_PREFIX, gid)
         return path
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o')
     def FindGroupByName(self, group_name):
         for g_path in objects:
-            if g_path.startswith("/Group/"):
+            if g_path.startswith(GROUP_PREFIX):
                 if objects[g_path].group_name == group_name:
                     return g_path
         return "/None"
@@ -269,7 +275,7 @@ class AccountManager(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='bb')
     def IsGIDValidAndFree(self, gid):
         res_valid = not(gid < FIRST_GID or gid > LAST_GID)
-        res_free = "/Group/{}".format(gid) not in objects
+        res_free = "{}/{}".format(GROUP_PREFIX, gid) not in objects
         return res_valid, res_free
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='bb')
@@ -285,7 +291,7 @@ class AccountManager(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='bb')
     def IsUIDValidAndFree(self, uid):
         res_valid = not(uid < FIRST_UID or uid > LAST_UID)
-        res_free = "/User/{}".format(uid) not in objects
+        res_free = "{}/{}".format(USER_PREFIX, uid) not in objects
         return res_valid, res_free
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='bb')
@@ -301,13 +307,13 @@ class AccountManager(dbus.service.Object):
     def LoadByPath(self, path):
         if path in objects:
             return objects[path]
-        if path.startswith("/User/"):
+        if path.startswith(USER_PREFIX):
             user_id = int(path[6:])
             npath = self.FindUserById(user_id)
             if path == npath:
                 return objects[path]
             raise UserException("Usererror")
-        if path.startswith("/Group/"):
+        if path.startswith(GROUP_PREFIX):
             group_id = int(path[7:])
             npath = self.FindGroupById(group_id)
             if path == npath:
@@ -323,15 +329,13 @@ class User(dbus.service.Object):
 
         self.name = usr.pw_name
         self.uid = uid
-        self.path = "/User/{}".format(self.uid)
+        self.path = "{}/{}".format(USER_PREFIX, self.uid)
         self.gid = usr.pw_gid
         self.directory = usr.pw_dir
         self.shell = usr.pw_shell
         self.SUPPORTS_MULTIPLE_CONNECTIONS = True
         self.SUPPORTS_MULTIPLE_OBJECT_PATHS = True
-        gecos = usr.pw_gecos.split(',')
-        gecos = gecos + ['']*(5-len(gecos))
-        self.rname, self.office, self.wphone, self.hphone, self.other = gecos
+        self.load_gecos()
         self.load_spwd()
 
         self.groups = set()
@@ -400,14 +404,14 @@ class User(dbus.service.Object):
             self.remove_groups()
             self.load(newUID)
             self.groups = set()
-            account_manager.reload_groups()
-            oldpath = '/User/{}'.format(oldid)
-            newpath = '/User/{}'.format(newUID)
+            oldpath = '{}/{}'.format(USER_PREFIX, oldid)
+            newpath = '{}/{}'.format(USER_PREFIX, newUID)
             del objects[oldpath]
             objects[newpath] = self
             self.remove_from_connection(system_bus, oldpath)
             self.add_to_connection(system_bus, newpath)
             self.uid = newUID
+            account_manager.reload_groups()
             account_manager.on_users_changed()
             return newpath
         else:
@@ -514,7 +518,7 @@ class User(dbus.service.Object):
         if not mg:
             return False
         for g in groups:
-            if "/Group/" not in g:
+            if not g.startswith(GROUP_PREFIX):
                 grouppath = account_manager.FindGroupByName(g)
             else:
                 grouppath = g
@@ -529,7 +533,7 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='o')
     def GetMainGroup(self):
-        return "/Group/{}".format(self.gid)
+        return "{}/{}".format(GROUP_PREFIX, self.gid)
 
     def get_ids_from_home(self, base='/home'):
         """Returns the owner's UID and GID of the /home/<username>
@@ -552,7 +556,7 @@ class Group(dbus.service.Object):
         group = grp.getgrgid(gid)
         self.group_name = group.gr_name
         self.gid = group.gr_gid
-        self.path = "/Group/{}".format(self.gid)
+        self.path = "{}/{}".format(GROUP_PREFIX, self.gid)
 
         self.users = set()
         self.main_users = set()
@@ -611,7 +615,7 @@ class Group(dbus.service.Object):
             self.remove_from_connection()
             del objects[self.path]
             self.gid = new_gid
-            self.path = "/Group/{}".format(self.gid)
+            self.path = "{}/{}".format(GROUP_PREFIX, self.gid)
             self.add_to_connection(connection, self.path)
             for x in self.users:
                 objects[x].groups.remove(old_path)
@@ -658,7 +662,7 @@ class Group(dbus.service.Object):
         if not mg:
             return False
         for u in users:
-            if not u.startswith("/User/"):
+            if not u.startswith(USER_PREFIX):
                 userpath = account_manager.FindUserByName(u)
             else:
                 userpath = u
@@ -706,7 +710,7 @@ if __name__ == '__main__':
     name = dbus.service.BusName("io.github.ltsp-manager", system_bus)
     system_bus_name = system_bus.get_unique_name()
     print(name, system_bus_name)
-    account_manager = AccountManager(system_bus, '/AccountManager')
+    account_manager = AccountManager(system_bus, ACCOUNTMANAGER_PATH)
     proxy = system_bus.get_object('org.freedesktop.PolicyKit1', '/org/freedesktop/PolicyKit1/Authority')
     polkit = dbus.Interface(proxy, dbus_interface='org.freedesktop.PolicyKit1.Authority')
     mainloop = GLib.MainLoop()
