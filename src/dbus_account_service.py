@@ -399,6 +399,17 @@ class User(dbus.service.Object):
         else:
             raise UserException(res[1])
 
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
+    def SetPassword(self, password, sender):
+        authorize(sender, errormessage="The password was not changed!")
+        cmd = ["passwd"]
+        cmd.append(self.name)
+        res = common.run_command(cmd, "{0}\n{0}\n".format(password).encode())
+        if res[0]:
+            account_manager.on_users_changed()
+        else:
+            raise UserException("Password could not be changed: " + res[1])
+
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='i')
     def GetUID(self):
         return self.uid
@@ -547,14 +558,14 @@ class User(dbus.service.Object):
         return self.lstchg, self.min, self.max, self.warn, self.inact, self.expire
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='iiiiii', out_signature='u', sender_keyword='sender')
-    def SetSpwd(self, lstchg, expire, inact, min, max, warn, sender):
+    def SetSpwd(self, lstchg, expire, inact, g_min, g_max, warn, sender):
         authorize(sender, errormessage="the the users password details were not updated!")
         cmd = ['chage']
         cmd.extend(['-d', lstchg])
         cmd.extend(['-E', expire])
         cmd.extend(['-I', inact])
-        cmd.extend(['-m', min])
-        cmd.extend(['-M', max])
+        cmd.extend(['-m', g_min])
+        cmd.extend(['-M', g_max])
         cmd.extend(['-W', warn])
         cmd.append(self.GetUsername())
         # Execute chage
