@@ -29,7 +29,7 @@ class Gui():
 
     def __init__(self):
         self.dbus = dbus.SystemBus()
-        self.account_manager = self.dbus.get_object('io.github.ltsp-manager', '/AccountManager')
+        self.account_manager = self.dbus.get_object('io.github.ltsp-manager', paths.ACCOUNTMANAGER_PATH)
 
         self.conf = config.get_config()
         self.path = os.path.dirname(os.path.realpath(__file__))
