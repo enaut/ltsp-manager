@@ -13,12 +13,6 @@
 ./data/ltsp-manager.desktop.in.in
 ./data/ltsp-shared-folders.desktop.in.in
 ./data/org.ltsp.ltsp-manager.policy.in.in
-./src/scripts/run-in-terminal.sh
-./src/scripts/if-up.sh
-./src/scripts/create-symlinks.sh
-./src/scripts/common.sh
-./src/scripts/before-uninstall.sh
-./src/scripts/initial-setup.sh
 ./src/user_form.py
 ./src/signup_server.py
 ./src/signup.py
