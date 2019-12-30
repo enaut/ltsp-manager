@@ -58,6 +58,7 @@ ltsp_manager_sources = [
   'paths.py',
   'signup.py',
   'signup_server.py',
+  'user_elements.py',
   'user_form.py',
   'dbus_account_service.py'
 ]

@@ -15,58 +15,66 @@ import common
 import config
 import paths
 
+from user_elements import TextLineEntry, NumberLineEntry, LabelLineEntry, ComboLineEntry, Validators, Updaters
+
 
 class UserForm():
-    def __init__(self, bus, account_manager, parent):
+    def __init__(self, mode, bus, account_manager, parent):
         self.bus = bus
         self.account_manager = account_manager
         self.user = None
-        self.mode = None
+        self.mode = mode
         self.builder = Gtk.Builder()
         self.builder.add_from_resource('/org/ltsp/ltsp-manager/ui/user_form19.ui')
 
+        # states
+        self.primary_group = None
+        self.show_sys_groups = False
+        self.active_from_role = []
         self.roles = {i: config.get_config().parser.get('roles', i).replace('$$teachers', 'teachers') for i in config.get_config().parser.options('roles')}
         self.selected_role = None
 
         self.dialog = self.builder.get_object('dialog')
         self.dialog.set_transient_for(parent)
-        self.username = self.builder.get_object('username_entry')
-        self.password = self.builder.get_object('password_entry')
-        self.password_repeat = self.builder.get_object('password_repeat_entry')
-        self.uid_entry = self.builder.get_object('uid_entry')
-        self.homedir = self.builder.get_object('homedir_entry')
+
+        # Has to be first
+        self.homedir = TextLineEntry(self, 'homedir_entry', 'homedir_valid', '', Validators.home_validator, Updaters.homedir_updater)
+        # User settings general
+        self.username = TextLineEntry(self, 'username_entry', 'username_valid', '', Validators.username_validator, Updaters.username_updater)
+        self.password = TextLineEntry(self, 'password_entry', 'password_valid', '', Validators.edit_or_something_validator)
+        self.gc_name = TextLineEntry(self, 'full_name_entry', 'full_name_valid', '', Validators.no_comma_validator)
+        # User settings details
+        self.uid_entry = NumberLineEntry(self, 'uid_entry', 'uid_valid', -1, Validators.uid_validator)
         self.shells_combo = self.builder.get_object('shell_combo')
-        self.shells_entry = self.builder.get_object('shell_combo_entry')
-        self.gc_name = self.builder.get_object('gcos_name_entry')
-        self.gc_office = self.builder.get_object('gcos_office_entry')
-        self.gc_office_phone = self.builder.get_object('gcos_office_phone_entry')
-        self.gc_home_phone = self.builder.get_object('gcos_home_phone_entry')
-        self.gc_other = self.builder.get_object('gcos_other_entry')
+        self.shells_entry = ComboLineEntry(self, 'shell_combo_entry', None, '/bin/bash', Validators.no_validator)
+        self.gc_office = TextLineEntry(self, 'office_entry', "office_valid", '', Validators.no_comma_validator)
+        self.gc_office_phone = TextLineEntry(self, 'office_phone_entry', "office_phone_valid", '', Validators.no_comma_validator)
+        self.gc_home_phone = TextLineEntry(self, 'home_phone_entry', "home_phone_valid", '', Validators.no_comma_validator)
+        self.gc_other = TextLineEntry(self, 'other_entry', "other_valid", '', Validators.no_comma_validator)
+        self.last_change = NumberLineEntry(self, 'last_change', None, 0, Validators.no_validator)
+        self.minimum = NumberLineEntry(self, 'minimum', None, 0, Validators.no_validator)
+        self.maximum = NumberLineEntry(self, 'maximum', None, -1, Validators.no_validator)
+        self.warn = NumberLineEntry(self, 'warn', None, 0, Validators.no_validator)
+        self.inactive = NumberLineEntry(self, 'inactive_spin', None, -1, Validators.no_validator)
+        self.expire = NumberLineEntry(self, 'expire', None, -1, Validators.no_validator)
+        # Group settings
+        self.primary_groupname_label = LabelLineEntry(self, 'primary_groupname', None, '<create a new group>', Validators.no_validator)
+        self.primary_group_id_label = LabelLineEntry(self, 'primary_group_id', None, '<new group id>', Validators.no_validator)
+        self.role_combo = self.builder.get_object('role_combo')
         self.groups_tree = self.builder.get_object('groups_treeview')
         self.groups_store = self.builder.get_object('groups_liststore')
         self.groups_filter = self.builder.get_object('groups_filter')
         self.groups_sort = self.builder.get_object('groups_sort')
-        self.last_change = self.builder.get_object('last_change')
-        self.minimum = self.builder.get_object('minimum')
-        self.maximum = self.builder.get_object('maximum')
-        self.warn = self.builder.get_object('warn')
-        self.inactive = self.builder.get_object('inactive_spin')
-        self.expire = self.builder.get_object('expire')
-        self.pgroup = self.builder.get_object('pgroup_entry')
-        self.pgid = self.builder.get_object('pgid_entry')
-        self.role_combo = self.builder.get_object('role_combo')
-        self.primary_group = None
-        self.show_sys_groups = False
-        self.active_from_role = []
+
+        self.user_lines = [self.username, self.password, self.homedir, self.gc_name, self.uid_entry,
+                           self.shells_entry, self.primary_group_id_label, self.primary_groupname_label]
+        self.gcos_lines = [self.gc_name, self.gc_office, self.gc_office_phone, self.gc_home_phone, self.gc_other]
+        self.spwd_lines = [self.last_change, self.expire, self.inactive, self.minimum, self.maximum, self.warn]
 
         self.groups_filter.set_visible_func(self.groups_visible_func)
         self.groups_sort.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
-        # Fill the groups treeview
-        # object, name, active, activatable, font weight, actually active, gid
-        for grouppath in self.account_manager.ListGroups():
-            group = self.bus.get_object('io.github.ltsp-manager', grouppath)
-            self.groups_store.append([group, group.GetGroupName(), False, True, 400, False, group.GetGID()])
+        self.load_groups()
 
         # Fill the shells combobox
         for shell in self.get_valid_shells():
@@ -76,88 +84,24 @@ class UserForm():
         for role, _groups in self.roles.items():
             self.role_combo.append_text(role)
 
-    # """ User Information """
-    def on_username_entry_changed(self, widget):
-        """ Update the home entry after a username change """
-        username = self.username.get_text()
-        valid_name, free_name = self.account_manager.IsUsernameValidAndFree(username)
-        if self.mode == 'edit':
-            valid = (valid_name and free_name) or username == self.user.GetUsername()
-        else:
-            valid = (valid_name and free_name)
-        self.homedir.set_text(os.path.join(config.get_config().parser.get('users', 'home_base_directory'), username))
-        icon = self.get_icon(valid)
-        self.builder.get_object('username_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
         self.set_apply_sensitivity()
 
-    def on_password_entry_changed(self, widget):
-        icon = self.get_icon(self.password.get_text() != '')
-        self.builder.get_object('password_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.set_apply_sensitivity()
+    def load_groups(self):
+        # Fill the groups treeview
+        # object, name, active, activatable, font weight, actually active, gid
+        for grouppath in self.account_manager.ListGroups():
+            group = self.bus.get_object('io.github.ltsp-manager', grouppath)
+            self.groups_store.append([group, group.GetGroupName(), False, True, 400, False, group.GetGID()])
 
-    def on_gcos_name_entry_changed(self, widget):
-        icon = self.get_icon(self.gecos_is_valid(widget.get_text()))
-        self.builder.get_object('full_name_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.set_apply_sensitivity()
+    def set_gcos(self, user):
+        """ Set all the Gcos values if something has changed """
+        if any([i.changed() for i in self.gcos_lines]):
+            user.SetGecos(*[i.get_value() for i in self.gcos_lines])
 
-    # """ User Details """
-    def on_uid_changed(self, widget):
-        """ validate the UID. Check if it is either the current one, or it is in user range and free. """
-        uid = widget.get_text()
-        uid_valid_icon = self.builder.get_object('uid_valid')
-        if not uid:
-            uid_valid_icon.set_from_stock(self.get_icon(True), Gtk.IconSize.BUTTON)
-            return
-        try:
-            uid = int(uid)
-        except ValueError:
-            uid_valid_icon.set_from_stock(self.get_icon(False), Gtk.IconSize.BUTTON)
-            self.set_apply_sensitivity()
-            return
-        # Valid if either edit mode and own uid or the uid is free and in range of non system users.
-        editvalid = (self.mode == 'edit' and uid == self.user.GetUID())
-        valid = editvalid or all(self.account_manager.IsUIDValidAndFree(uid))
-
-        icon = self.get_icon(valid)
-        uid_valid_icon.set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.on_homedir_entry_changed(self.homedir)
-        self.set_apply_sensitivity()
-
-    def on_homedir_entry_changed(self, widget):
-        """ validate the home directory permissions. """
-        # TODO better validation
-        home = widget.get_text()
-
-        valid_icon = self.builder.get_object('homedir_valid')
-        if not home:
-            valid_icon.set_tooltip_text("")
-            valid_icon.set_from_stock(self.get_icon(True), Gtk.IconSize.BUTTON)
-            return
-        try:
-            gid = int(self.pgid.get_text())
-        except ValueError:
-            gid = None
-        try:
-            uid = int(self.uid_entry.get_text())
-        except ValueError:
-            uid = None
-        valid_icon.set_tooltip_text("")
-        valid_icon.set_from_stock(self.get_icon(True), Gtk.IconSize.BUTTON)
-        if os.path.isdir(home):
-            path_uid = os.stat(home).st_uid
-            path_gid = os.stat(home).st_gid
-            if path_uid != uid or path_gid != gid:
-                if self.mode == 'new' or self.user.GetHomeDir() != home:
-                    valid_icon.set_from_stock(self.get_icon(False), Gtk.IconSize.BUTTON)
-                    tooltip_text = _("This directory belongs to UID %(uid)d and to GID %(gid)d") % {"uid": path_uid, "gid": path_gid}
-                    valid_icon.set_tooltip_text(tooltip_text)
-        else:
-            if self.mode == 'edit' and self.user.GetHomeDir() != home:
-                valid_icon.set_from_stock(self.get_icon(False), Gtk.IconSize.BUTTON)
-            else:
-                valid_icon.set_from_stock(self.get_icon(True), Gtk.IconSize.BUTTON)
-
-        self.set_apply_sensitivity()
+    def set_spwd(self, user):
+        """ Set all the Spwd values if something has changed """
+        if any([i.changed() for i in self.spwd_lines]):
+            user.SetSpwd(*[i.get_value() for i in self.spwd_lines])
 
     @staticmethod
     def get_valid_shells():
@@ -166,36 +110,10 @@ class UserForm():
             fil = open(os.path.join(paths.sysconfdir, "shells"))
             shells = [line.strip() for line in fil.readlines() if line.strip()[0] != '#']
             fil.close()
-        except:
+        except FileNotFoundError:
             shells = []
 
         return shells
-
-    def gecos_is_valid(self, field):
-        return ':' not in field and ',' not in field
-
-    def on_gcos_office_entry_changed(self, widget):
-        icon = self.get_icon(self.gecos_is_valid(widget.get_text()))
-        self.builder.get_object('office_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.set_apply_sensitivity()
-
-    def on_gcos_office_phone_entry_changed(self, widget):
-        icon = self.get_icon(self.gecos_is_valid(widget.get_text()))
-        self.builder.get_object('office_phone_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.set_apply_sensitivity()
-
-    def on_gcos_home_phone_entry_changed(self, widget):
-        icon = self.get_icon(self.gecos_is_valid(widget.get_text()))
-        self.builder.get_object('home_phone_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.set_apply_sensitivity()
-
-    def on_gcos_other_entry_changed(self, widget):
-        icon = self.get_icon(self.gecos_is_valid(widget.get_text()))
-        self.builder.get_object('other_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        self.set_apply_sensitivity()
-
-    """ Password Details """
-    # No checks or setup
 
     """ Group memberships """
 
@@ -203,7 +121,7 @@ class UserForm():
         row = model[itr]
         activatable = row[3]
         group = row[0]
-        primary_group = not activatable or group.UsersAreMember([self.username.get_text()])
+        primary_group = not activatable or group.UsersAreMember([self.username.entry.get_text()])
         show_user_group = self.show_sys_groups or not group.IsSystemGroup()
         show_private_group = config.get_config().parser.getboolean('GUI', 'show_private_groups') or not model[itr][0].IsPrivateGroup()
         return (show_user_group and show_private_group) or primary_group
@@ -257,8 +175,8 @@ class UserForm():
         self.set_group_primary(row)
 
         # Set the primary group name and gid entries
-        self.pgroup.set_text(row[0].name)
-        self.pgid.set_text(str(row[0].gid))
+        self.primary_groupname_label.entry.set_text(str(row[0].GetGroupName()))
+        self.primary_group_id_label.entry.set_text(str(row[0].GetGID()))
 
     def unset_primary(self):
         if self.primary_group:
@@ -277,61 +195,6 @@ class UserForm():
         # Remember the new primary group
         self.primary_group = row
 
-    def on_pgroup_entry_changed(self, widget):
-        pgname = self.pgroup.get_text()
-        exists = self.account_manager.FindGroupByName(pgname) != "/None"
-        icon = self.get_icon(self.account_manager.IsGroupNameValidAndFree(pgname))
-        self.builder.get_object('pgroup_valid').set_from_stock(icon, Gtk.IconSize.BUTTON)
-        if exists:
-            for row in self.groups_store:
-                if row[0].name == pgname:
-                    # Mark the group as primary in the tree
-                    self.set_group_primary(row)
-                    self.pgid.set_text(str(row[0].gid))
-                    break
-        else:
-            self.unset_primary()
-            try:
-                gid = int(self.pgid.get_text())
-            except:
-                gid = None
-
-            if gid is not None and not self.account_manager.IsGIDValidAndFree(gid):
-                self.pgid.set_text('')
-        self.set_apply_sensitivity()
-
-    def on_pgid_entry_changed(self, widget):
-        valid_icon = self.builder.get_object('pgid_valid')
-        try:
-            gid = int(self.pgid.get_text())
-        except:
-            valid_icon.set_from_stock(Gtk.STOCK_YES, Gtk.IconSize.BUTTON)
-            # if self.pgroup.get_text() in self.system.groups:
-            #    self.pgroup.set_text('')
-            self.set_apply_sensitivity()
-            return
-
-        exists = not self.account_manager.IsGIDValidAndFree(gid)
-        icon = self.get_icon(self.account_manager.IsGIDValidAndFree(gid))
-        valid_icon.set_from_stock(icon, Gtk.IconSize.BUTTON)
-        if exists:
-            for row in self.groups_store:
-                if row[0].gid == gid:
-                    # Mark the group as primary in the tree
-                    self.set_group_primary(row)
-                    self.pgroup.set_text(row[0].name)
-                    break
-        else:
-            self.unset_primary()
-            username = self.username.get_text()
-            # if self.account_manager.FindGroupByName(pgroup.get_text()):
-            #    if self.system.name_is_valid(username) and username not in self.system.groups:
-            #        self.pgroup.set_text(username)
-            #    else:
-            #        self.pgroup.set_text('')
-        self.on_homedir_entry_changed(self.homedir)
-        self.set_apply_sensitivity()
-
     # """ General Methods """
     @staticmethod
     def get_icon(check):
@@ -347,7 +210,7 @@ class UserForm():
 
         ids = ['username_valid', 'uid_valid', 'password_valid', 'full_name_valid',
                'office_valid', 'office_phone_valid', 'home_phone_valid', 'other_valid',
-               'homedir_valid', 'pgid_valid', 'pgroup_valid']
+               'homedir_valid']
         sensitive = all([icon(x) == self.get_icon(True) for x in ids])
         self.builder.get_object('apply_button').set_sensitive(sensitive)
 
@@ -357,37 +220,33 @@ class UserForm():
     def on_cancel_clicked(self, widget):
         self.dialog.destroy()
 
+
 class NewUserDialog(UserForm):
     def __init__(self, bus, account_manager, parent=None):
-        super().__init__(bus, account_manager, parent=parent)
-        self.mode = 'new'
+        super().__init__('new', bus, account_manager, parent=parent)
         self.builder.connect_signals(self)
 
         # Set some defaults
-        self.shells_entry.set_text('/bin/bash')
-        self.last_change.set_value(common.days_since_epoch())
+        self.last_change.set_initial_value(common.days_since_epoch())
         self.set_apply_sensitivity()
 
         self.dialog.show()
 
     def on_apply_clicked(self, widget):
-        print("clicked with: ", self.username.get_text())
-        user = self.account_manager.CreateUser(self.username.get_text(), '')
-        # user.name = self.username.get_text()
-        # user.rname = self.gc_name.get_text()
-        # user.uid = int(self.uid_entry.get_text())
-        # user.office = self.gc_office.get_text()
-        # user.wphone = self.gc_office_phone.get_text()
-        # user.hphone = self.gc_home_phone.get_text()
-        # user.other = self.gc_other.get_text()
-        # user.directory = self.homedir.get_text()
-        # user.shell = self.shells_entry.get_text()
-        # user.lstchg = int(self.last_change.get_value())
-        # user.min = int(self.minimum.get_value())
-        # user.max = int(self.maximum.get_value())
-        # user.warn = int(self.warn.get_value())
-        # user.inact = int(self.inactive.get_value())
-        # user.expire = int(self.expire.get_value())
+        print("clicked with: ", self.username.get_value())
+        params = {}
+        if self.homedir.changed():
+            params["home"] = self.homedir.get_value()
+        if self.gc_name.changed():
+            params["fullname"] = self.gc_name.get_value()
+        if self.uid_entry.changed():
+            params["uid"] = str(self.uid_entry.get_value())
+        if self.primary_group_id_label.changed():
+            params["gid"] = str(self.primary_group_id_label.get_value())
+        user_path = self.account_manager.CreateUser(self.username.get_value(), params)
+        user = self.bus.get_object('io.github.ltsp-manager', user_path)
+        self.set_gcos(user)
+        self.set_spwd(user)
         # user.password = self.system.encrypt(self.password.get_text())
 
         # user.groups = [g[0].name for g in self.groups_store if g[2]]
@@ -403,85 +262,84 @@ class NewUserDialog(UserForm):
 
 class EditUserDialog(UserForm):
     def __init__(self, bus, account_manager, user, parent=None):
-        super().__init__(bus, account_manager, parent=parent)
-        self.mode = 'edit'
+        super().__init__('edit', bus, account_manager, parent=parent)
         self.user = user
         self.builder.connect_signals(self)
 
         # Do not change the primary group and roles of existing users
-        self.builder.get_object('primary_group_grid').set_visible(False)
-        self.builder.get_object('role_box').set_visible(False)
+        # self.builder.get_object('primary_group_grid').set_visible(False)
+        # self.builder.get_object('role_box').set_visible(False)
 
-        self.username.set_text(user.GetUsername())
-        self.password.set_text('\n'*8)
-        self.uid_entry.set_text(str(user.GetUID()))
-        self.homedir.set_text(user.GetHomeDir())
-        self.shells_entry.set_text(user.GetShell())
+        username = user.GetUsername()
+        self.username.set_initial_value(username)
+        self.uid_entry.set_initial_value(user.GetUID())
+        self.homedir.set_initial_value(user.GetHomeDir())
+        self.shells_entry.set_initial_value(user.GetShell())
         rname, office, offphon, homphon, other = user.GetGecos()
-        self.gc_name.set_text(rname)
-        self.gc_office.set_text(office)
-        self.gc_office_phone.set_text(offphon)
-        self.gc_home_phone.set_text(homphon)
-        self.gc_other.set_text(other)
+        self.gc_name.set_initial_value(rname)
+        self.gc_office.set_initial_value(office)
+        self.gc_office_phone.set_initial_value(offphon)
+        self.gc_home_phone.set_initial_value(homphon)
+        self.gc_other.set_initial_value(other)
         lstchg, umin, umax, warn, inact, expire = user.GetSpwd()
-        print(lstchg, umin, umax, warn, inact, expire)
-        self.last_change.set_value(lstchg)
-        self.minimum.set_value(umin)
-        self.maximum.set_value(umax)
-        self.warn.set_value(warn)
-        self.inactive.set_value(inact)
-        self.expire.set_value(expire)
+        self.last_change.set_initial_value(lstchg)
+        self.minimum.set_initial_value(umin)
+        self.maximum.set_initial_value(umax)
+        self.warn.set_initial_value(warn)
+        self.inactive.set_initial_value(inact)
+        self.expire.set_initial_value(expire)
         # self.builder.get_object('locked_account_check').set_active(self.system.user_is_locked(user))
-
-        self.pgroup.set_text(self.bus.get_object('io.github.ltsp-manager', user.GetMainGroup()).GetGroupName())
+        self.main_group_path = user.GetMainGroup()
+        self.main_group = self.bus.get_object('io.github.ltsp-manager', self.main_group_path)
+        self.primary_groupname_label.set_initial_value(self.main_group.GetGroupName())
+        self.primary_group_id_label.set_initial_value(str(self.main_group.GetGID()))
         # Activate the groups in which the user belongs and mark the primary
         for row in self.groups_store:
-            if row[0].UsersAreMember([self.username.get_text()]):
+            if row[0].UsersAreMember([username]):
                 row[2] = True
                 row[5] = True
-            if self.account_manager.FindGroupByName(row[1]) == user.GetMainGroup():
+            if self.account_manager.FindGroupByName(row[1]) == self.main_group_path:
                 self.primary_group = row
                 self.set_group_primary(row)
 
         self.dialog.show()
 
     def on_apply_clicked(self, widget):
-        username = self.user.name
-        self.user.name = self.username.get_text()
-        self.user.rname = self.gc_name.get_text()
-        self.user.uid = int(self.uid_entry.get_text())
-        self.user.office = self.gc_office.get_text()
-        self.user.wphone = self.gc_office_phone.get_text()
-        self.user.hphone = self.gc_home_phone.get_text()
-        self.user.other = self.gc_other.get_text()
-        self.user.directory = self.homedir.get_text()
-        self.user.shell = self.shells_entry.get_text()
-        self.user.lstchg = int(self.last_change.get_value())
-        self.user.min = int(self.minimum.get_value())
-        self.user.max = int(self.maximum.get_value())
-        self.user.warn = int(self.warn.get_value())
-        self.user.inact = int(self.inactive.get_value())
-        self.user.expire = int(self.expire.get_value())
-        # if not '\n' in self.password.get_text():
-        #     self.user.password = self.system.encrypt(self.password.get_text())
+        # username = self.user.name
+        # self.user.name = self.username.get_value()
 
-        self.user.groups = [g[1] for g in self.groups_store if g[2]]
-        self.user.gid = int(self.pgid.get_text())
-        self.user.primary_group = self.pgroup.get_text()
+        self.set_gcos(self.user)
+        self.set_spwd(self.user)
+        """ TODO:
+                  * password
+                  * other
+                  """
+        if self.username.changed():
+            self.user.SetUsername(self.username.get_value())
+        if self.uid_entry.changed():
+            self.user.SetUID(self.uid_entry.get_value())
+        if self.homedir.changed():
+            move_files = self.builder.get_object('move_files').get_active()
+            self.user.SetHomeDir(self.homedir.get_value(), move_files)
+        if self.shells_entry.changed():
+            self.user.SetShell(self.shells_entry.get_value())
+        if self.password.changed():
+            print("TODO password setting not yet supported.")
+        if self.primary_group_id_label.changed():
+            self.user.SetGID(int(self.primary_group_id_label.get_value()))
 
         self.dialog.destroy()
 
 class ReviewUserDialog(UserForm):
     def __init__(self, bus, account_manager, user, role='', callback=None, parent=None):
-        super().__init__(bus, account_manager, parent=parent)
+        super().__init__('new', bus, account_manager, parent=parent)
         self.callback = callback
-        self.mode = 'new'
         self.user = user
         self.selected_role = role
         self.builder.connect_signals(self)
 
         self.username.set_text(user.name)
-        if user.password not in ['!','*', ''] or user.plainpw:
+        if user.password not in ['!', '*', ''] or user.plainpw:
             self.password.set_text('\n'*8)
             self.password_repeat.set_text('\n'*8)
         self.uid_entry.set_text(str(user.uid))

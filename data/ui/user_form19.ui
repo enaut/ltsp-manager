@@ -33,6 +33,13 @@ Author: Franz Dietrich
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="gid_adj">
+    <property name="lower">-1</property>
+    <property name="upper">30000</property>
+    <property name="value">-1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkListStore" id="groups_liststore">
     <columns>
       <!-- column-name Object -->
@@ -76,6 +83,13 @@ Author: Franz Dietrich
   </object>
   <object class="GtkAdjustment" id="minimum_adj">
     <property name="upper">999999999</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="uid_adj">
+    <property name="lower">-1</property>
+    <property name="upper">30000</property>
+    <property name="value">-1</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -206,7 +220,6 @@ Author: Franz Dietrich
                         <property name="can_focus">True</property>
                         <property name="hexpand">True</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_username_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -231,7 +244,7 @@ Author: Franz Dietrich
                         <property name="can_focus">True</property>
                         <property name="visibility">False</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_password_entry_changed" swapped="no"/>
+                        <property name="placeholder_text" translatable="yes">••••••••</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -273,11 +286,10 @@ Author: Franz Dietrich
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="gcos_name_entry">
+                      <object class="GtkEntry" id="full_name_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_gcos_name_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -367,30 +379,6 @@ Author: Franz Dietrich
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="homedir_entry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_homedir_entry_changed" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEntry" id="uid_entry">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_uid_changed" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkImage" id="uid_valid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -426,11 +414,10 @@ Author: Franz Dietrich
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="gcos_other_entry">
+                      <object class="GtkEntry" id="other_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_gcos_other_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -461,11 +448,10 @@ Author: Franz Dietrich
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="gcos_home_phone_entry">
+                      <object class="GtkEntry" id="home_phone_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_gcos_home_phone_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -496,11 +482,10 @@ Author: Franz Dietrich
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="gcos_office_phone_entry">
+                      <object class="GtkEntry" id="office_phone_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_gcos_office_phone_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -531,11 +516,10 @@ Author: Franz Dietrich
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="gcos_office_entry">
+                      <object class="GtkEntry" id="office_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">•</property>
-                        <signal name="changed" handler="on_gcos_office_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -551,6 +535,55 @@ Author: Franz Dietrich
                       <packing>
                         <property name="left_attach">2</property>
                         <property name="top_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="uid_entry">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="adjustment">uid_adj</property>
+                        <property name="numeric">True</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkEntry" id="homedir_entry">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="invisible_char">•</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkCheckButton" id="move_files">
+                            <property name="label" translatable="yes">Move files</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
                       </packing>
                     </child>
                     <child>
@@ -811,8 +844,12 @@ Author: Franz Dietrich
                       <object class="GtkGrid" id="primary_group_grid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="row_spacing">6</property>
-                        <property name="column_spacing">12</property>
+                        <property name="halign">center</property>
+                        <property name="margin_top">12</property>
+                        <property name="margin_bottom">12</property>
+                        <property name="hexpand">False</property>
+                        <property name="row_spacing">16</property>
+                        <property name="column_spacing">24</property>
                         <child>
                           <object class="GtkLabel" id="label22">
                             <property name="visible">True</property>
@@ -838,11 +875,11 @@ Author: Franz Dietrich
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="pgroup_entry">
+                          <object class="GtkLabel" id="primary_groupname">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="invisible_char">•</property>
-                            <signal name="changed" handler="on_pgroup_entry_changed" swapped="no"/>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">&lt;create a new group&gt;</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -850,51 +887,17 @@ Author: Franz Dietrich
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="pgid_entry">
+                          <object class="GtkLabel" id="primary_group_id">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="invisible_char">•</property>
-                            <signal name="changed" handler="on_pgid_entry_changed" swapped="no"/>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">&lt;new group id&gt;</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="top_attach">1</property>
                           </packing>
                         </child>
-                        <child>
-                          <object class="GtkImage" id="pgroup_valid">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-yes</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="top_attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkImage" id="pgid_valid">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-yes</property>
-                          </object>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="top_attach">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="role_box">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel" id="label24">
                             <property name="visible">True</property>
@@ -903,9 +906,8 @@ Author: Franz Dietrich
                             <property name="xalign">0</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">2</property>
                           </packing>
                         </child>
                         <child>
@@ -915,16 +917,15 @@ Author: Franz Dietrich
                             <signal name="changed" handler="on_role_combo_changed" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">2</property>
                           </packing>
                         </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
@@ -942,7 +943,9 @@ Author: Franz Dietrich
                             <property name="headers_clickable">False</property>
                             <property name="search_column">1</property>
                             <child internal-child="selection">
-                              <object class="GtkTreeSelection" id="treeview-selection"/>
+                              <object class="GtkTreeSelection" id="treeview-selection">
+                                <signal name="changed" handler="on_groups_selection_changed" swapped="no"/>
+                              </object>
                             </child>
                             <child>
                               <object class="GtkTreeViewColumn" id="groups_column">
@@ -985,6 +988,7 @@ Author: Franz Dietrich
                             <property name="sensitive">False</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="on_set_primary_button_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
