@@ -157,14 +157,14 @@ class AccountManager(dbus.service.Object):
         self.load_group_members(self.ListGroups())
         self.load_user_groups(self.ListUsers())
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sa{sv}', out_signature='o', sender_keyword='sender')
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sa{ss}', out_signature='o', sender_keyword='sender')
     def CreateUser(self, user_name, other, sender):
         """ Create a system user with the username provided.
             additional Arguments in other are:
                 other = {"home": "/home/username",
                          "fullname": "Name of the User",
-                         "uid": 1101,
-                         "gid": 1101}
+                         "uid": "1101",
+                         "gid": "1101" (This group has to exist)}
                          """
         authorize(sender, errormessage="the user was not created!")
         cmd = ["useradd"]
@@ -180,10 +180,14 @@ class AccountManager(dbus.service.Object):
         cmd.append(user_name)
         res = common.run_command(cmd)
         if res[0]:
-            self.load_groups(user_name)
+            if "gid" in other:
+                self.load_groups(other["gid"])
+            else:
+                self.load_groups(user_name)
             self.load_users(user_name)
             self.reload_groups()
             self.on_users_changed()
+            self.on_groups_changed()
             return self.FindUserByName(user_name)
         raise UserException(res[1])
 
@@ -342,10 +346,18 @@ class User(dbus.service.Object):
 
         return self
 
+    def load_gecos(self, usr=None):
+        """ Load the information from the gecos Field. """
+        if not usr:
+            usr = pwd.getpwuid(self.uid)
+        gecos = usr.pw_gecos.split(',')
+        gecos = gecos + ['']*(5-len(gecos))
+        self.rname, self.office, self.wphone, self.hphone, self.other = gecos
+
     def load_spwd(self):
+        """ Load the inforamtion of the shadow file """
         shadow = spwd.getspnam(self.name)
         _name, _enc_password, self.lstchg, self.min, self.max, self.warn, self.inact, self.expire, _flag = shadow
-
 
     def remove_groups(self):
         # remove from groups
@@ -441,6 +453,19 @@ class User(dbus.service.Object):
     def GetGecos(self):
         return self.rname, self.office, self.wphone, self.hphone, self.other
 
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sssss', out_signature='u', sender_keyword='sender')
+    def SetGecos(self, rname, office, wphone, hphone, other, sender):
+        authorize(sender, errormessage="the the user details were not updated!")
+        cmd = ['usermod']
+        fields = [rname, office, wphone, hphone, other]
+        cmd.extend(['--comment', ','.join(fields)])
+        cmd.append(self.GetUsername())
+        # Execute chfn
+        p = common.run_command(cmd)
+        self.load_gecos()
+        account_manager.on_users_changed()
+        return p[0]
+
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetRealName(self):
         return str(self.rname)
@@ -465,9 +490,33 @@ class User(dbus.service.Object):
     def GetHomeDir(self):
         return str(self.directory)
 
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sb', out_signature='u', sender_keyword='sender')
+    def SetHomeDir(self, new_home, move_files, sender):
+        authorize(sender, errormessage="the could not be set!")
+        cmd = ['usermod']
+        cmd.extend(['-d', new_home])
+        if move_files:
+            cmd.append('-m')
+        cmd.append(self.name)
+        res = common.run_command(cmd)
+        self.directory = new_home
+        account_manager.on_users_changed()
+        return res[0]
+
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetShell(self):
         return str(self.shell)
+
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='u', sender_keyword='sender')
+    def SetShell(self, shell, sender):
+        authorize(sender, errormessage="the could not be set!")
+        cmd = ['chsh']
+        cmd.extend(['-s', shell])
+        cmd.append(self.name)
+        res = common.run_command(cmd)
+        self.shell = shell
+        account_manager.on_users_changed()
+        return res[0]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='b', out_signature='b', sender_keyword='sender')
     def DeleteUser(self, removeFiles, sender):
@@ -497,8 +546,9 @@ class User(dbus.service.Object):
         authorize_read(sender, errormessage="The Password validity could not be checked")
         return self.lstchg, self.min, self.max, self.warn, self.inact, self.expire
 
-    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='iiiiiis', out_signature='u', sender_keyword='sender')
-    def SetSpwd(self, lstchg, expire, inact, min, max, warn, username, sender):
+    @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='iiiiii', out_signature='u', sender_keyword='sender')
+    def SetSpwd(self, lstchg, expire, inact, min, max, warn, sender):
+        authorize(sender, errormessage="the the users password details were not updated!")
         cmd = ['chage']
         cmd.extend(['-d', lstchg])
         cmd.extend(['-E', expire])
@@ -506,11 +556,12 @@ class User(dbus.service.Object):
         cmd.extend(['-m', min])
         cmd.extend(['-M', max])
         cmd.extend(['-W', warn])
-        cmd.append(username)
+        cmd.append(self.GetUsername())
         # Execute chage
         p = common.run_command(cmd)
         self.load_spwd()
-        return 0
+        account_manager.on_users_changed()
+        return p[0]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
     def IsPartOfGroups(self, groups):
