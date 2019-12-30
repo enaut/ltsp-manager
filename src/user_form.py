@@ -19,6 +19,8 @@ from user_elements import TextLineEntry, NumberLineEntry, LabelLineEntry, ComboL
 
 
 class UserForm():
+    """ The form that is responsible for creating or modifying one user. """
+
     def __init__(self, mode, bus, account_manager, parent):
         self.bus = bus
         self.account_manager = account_manager
@@ -58,8 +60,8 @@ class UserForm():
         self.inactive = NumberLineEntry(self, 'inactive_spin', None, -1, Validators.no_validator)
         self.expire = NumberLineEntry(self, 'expire', None, -1, Validators.no_validator)
         # Group settings
-        self.primary_groupname_label = LabelLineEntry(self, 'primary_groupname', None, '<create a new group>', Validators.no_validator)
-        self.primary_group_id_label = LabelLineEntry(self, 'primary_group_id', None, '<new group id>', Validators.no_validator)
+        self.primary_groupname_label = LabelLineEntry(self, 'primary_groupname', None, _('<create a new group>'), Validators.no_validator)
+        self.primary_group_id_label = LabelLineEntry(self, 'primary_group_id', None, _('<new group id>'), Validators.no_validator)
         self.role_combo = self.builder.get_object('role_combo')
         self.groups_tree = self.builder.get_object('groups_treeview')
         self.groups_store = self.builder.get_object('groups_liststore')
@@ -87,7 +89,7 @@ class UserForm():
         self.set_apply_sensitivity()
 
     def load_groups(self):
-        # Fill the groups treeview
+        """ Fill the groups treeview """
         # object, name, active, activatable, font weight, actually active, gid
         for grouppath in self.account_manager.ListGroups():
             group = self.bus.get_object('io.github.ltsp-manager', grouppath)
@@ -115,9 +117,10 @@ class UserForm():
 
         return shells
 
-    """ Group memberships """
+    # """ Group memberships """
 
-    def groups_visible_func(self, model, itr, x):
+    def groups_visible_func(self, model, itr, _x):
+        """ Set the visibility of groups in the user creation dialog. Do hide for example system groups """
         row = model[itr]
         activatable = row[3]
         group = row[0]
@@ -127,6 +130,7 @@ class UserForm():
         return (show_user_group and show_private_group) or primary_group
 
     def on_show_sys_groups_toggled(self, widget):
+        """ react to the show system groups check button """
         self.show_sys_groups = not self.show_sys_groups
         self.groups_filter.refilter()
         if self.show_sys_groups:
@@ -135,6 +139,7 @@ class UserForm():
             self.groups_sort.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
     def on_role_combo_changed(self, widget):
+        """ React to a role change TODO not working! """
         role = widget.get_active_text()
         self.selected_role = role
         for row in self.active_from_role:
@@ -149,6 +154,7 @@ class UserForm():
                     self.active_from_role.append(row)
 
     def on_group_toggled(self, widget, path):
+        """ If the checkbutton of a group row is toggled """
         path = self.groups_sort[path].path
         path = self.groups_sort.convert_path_to_child_path(path)
         path = self.groups_filter.convert_path_to_child_path(path)
@@ -161,9 +167,9 @@ class UserForm():
         self.builder.get_object('set_primary_button').set_sensitive(len(widget.get_selected_rows()[1]) == 1)
 
     def on_set_primary_button_clicked(self, widget):
-        # The pathlist will always contain 1 element, I just use
-        # get_selected_rows here instead of get_selected for extra features
-        # such as context menu actions which would work with multiple selection
+        """ The pathlist will always contain 1 element, I just use
+            get_selected_rows here instead of get_selected for extra features
+            such as context menu actions which would work with multiple selection """
         _model, pathlist = self.groups_tree.get_selection().get_selected_rows()
 
         path = self.groups_sort[pathlist[0]].path
@@ -179,6 +185,7 @@ class UserForm():
         self.primary_group_id_label.entry.set_text(str(row[0].GetGID()))
 
     def unset_primary(self):
+        """ remove the primary group flag """
         if self.primary_group:
             self.primary_group[2] = self.primary_group[5]
             self.primary_group[3] = True
@@ -186,6 +193,7 @@ class UserForm():
             self.primary_group = None
 
     def set_group_primary(self, row):
+        """ Make a group the primary group of this user """
         # Unset the previous primary group
         self.unset_primary()
         row[2] = True    # Activate this group
@@ -215,13 +223,17 @@ class UserForm():
         self.builder.get_object('apply_button').set_sensitive(sensitive)
 
     def on_dialog_delete_event(self, widget, event):
+        """ quit """
         self.dialog.destroy()
 
     def on_cancel_clicked(self, widget):
+        """ quit """
         self.dialog.destroy()
 
 
 class NewUserDialog(UserForm):
+    """ The Dialog that prompts for a new user. """
+
     def __init__(self, bus, account_manager, parent=None):
         super().__init__('new', bus, account_manager, parent=parent)
         self.builder.connect_signals(self)
@@ -233,7 +245,7 @@ class NewUserDialog(UserForm):
         self.dialog.show()
 
     def on_apply_clicked(self, widget):
-        print("clicked with: ", self.username.get_value())
+        """ Actions that happen when the user confirms his entries """
         params = {}
         if self.homedir.changed():
             params["home"] = self.homedir.get_value()
@@ -247,29 +259,17 @@ class NewUserDialog(UserForm):
         user = self.bus.get_object('io.github.ltsp-manager', user_path)
         self.set_gcos(user)
         self.set_spwd(user)
-        # user.password = self.system.encrypt(self.password.get_text())
 
-        # user.groups = [g[0].name for g in self.groups_store if g[2]]
-        # user.gid = int(self.pgid.get_text())
-        # user.primary_group = self.pgroup.get_text()
-        # if self.system.gid_is_free(user.gid):
-        #     self.system.add_group(libuser.Group(user.primary_group, user.gid, {}))
-        #
-        # self.system.add_user(user)
-        # if self.builder.get_object('locked_account_check').get_active():
-        #     self.system.lock_user(user)
         self.dialog.destroy()
 
 
 class EditUserDialog(UserForm):
+    """ The Dialog that edits a user. """
+
     def __init__(self, bus, account_manager, user, parent=None):
         super().__init__('edit', bus, account_manager, parent=parent)
         self.user = user
         self.builder.connect_signals(self)
-
-        # Do not change the primary group and roles of existing users
-        # self.builder.get_object('primary_group_grid').set_visible(False)
-        # self.builder.get_object('role_box').set_visible(False)
 
         username = user.GetUsername()
         self.username.set_initial_value(username)
@@ -306,15 +306,10 @@ class EditUserDialog(UserForm):
         self.dialog.show()
 
     def on_apply_clicked(self, widget):
-        # username = self.user.name
-        # self.user.name = self.username.get_value()
-
+        """ Actions that happen when the user confirms his entries """
         self.set_gcos(self.user)
         self.set_spwd(self.user)
-        """ TODO:
-                  * password
-                  * other
-                  """
+
         if self.username.changed():
             self.user.SetUsername(self.username.get_value())
         if self.uid_entry.changed():
@@ -325,7 +320,7 @@ class EditUserDialog(UserForm):
         if self.shells_entry.changed():
             self.user.SetShell(self.shells_entry.get_value())
         if self.password.changed():
-            print("TODO password setting not yet supported.")
+            self.user.SetPassword(self.password.get_value())
         if self.primary_group_id_label.changed():
             self.user.SetGID(int(self.primary_group_id_label.get_value()))
 
