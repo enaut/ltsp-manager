@@ -6,17 +6,21 @@
 # Some rights reserved. See COPYING, AUTHORS.
 
 import datetime
+import os
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+from gettext import gettext as _
 
 import config
 import libuser
-import ltsp_shared_folders
+# import ltsp_shared_folders
 import dialogs
-import os
+
 
 class NewUsersDialog:
+    """ Create many users in one batch. """
+
     def __init__(self, system, sf, parent):
         self.system = system
         self.parent = parent
@@ -30,14 +34,14 @@ class NewUsersDialog:
         self.dialog.set_transient_for(self.parent)
         self.user_tree = self.glade.get_object('user_treeview')
         self.user_store = self.glade.get_object('user_liststore')
-        
+
         self.roles = {i : config.get_config().parser.get('roles', i) for i in config.get_config().parser.options('roles')}
         self.groups = []
-        
+
         self.glade.get_object('computers_number_spin').set_value(12)
         for group in self.roles["student"].split(","):
             if group in self.system.groups:
-                self.groups.append(group)   
+                self.groups.append(group)
         self.glade.get_object('groups_template_entry').set_text("{c} "+" ".join(self.groups))
         self.dialog.show()
 
@@ -56,25 +60,25 @@ class NewUsersDialog:
             get_text()
 
         button_apply = self.glade.get_object('button_apply')
-        
+
         # Check the validity of characters in the classes entry#FIXME: libuser
         classes_validity_image = self.glade.get_object('classes_validity_image')
         if not (classes_str.replace(' ', '') + 'foo').isalnum():
-            classes_validity_image.set_from_stock(Gtk.STOCK_DIALOG_ERROR, 
+            classes_validity_image.set_from_stock(Gtk.STOCK_DIALOG_ERROR,
                                         Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(False)
             return
         else:
             if self.classes == []:
                 self.classes = ['']
-            classes_validity_image.set_from_stock(Gtk.STOCK_OK, 
+            classes_validity_image.set_from_stock(Gtk.STOCK_OK,
                                             Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(True)
-        
+
         # Check the validity of characters in the username entry #FIXME: libuser
         username_validity_image = self.glade.get_object(
             'username_validity_image')
-        if (not self.username_tmpl.replace('{c}', 'a').replace('{0i}', 
+        if (not self.username_tmpl.replace('{c}', 'a').replace('{0i}',
           'a').replace('{i}', 'a').replace('-', '').replace('_', '').isalnum()) or \
           (len(self.classes) == 1 and self.computers > 1 and not '{i}' in self.username_tmpl and \
           not '{0i}' in self.username_tmpl) or (self.computers == 1 and len(self.classes) > 1 and \
@@ -82,22 +86,22 @@ class NewUsersDialog:
           (not '{c}' in self.username_tmpl or (not '{0i}' in self.username_tmpl and \
           not '{i}' in self.username_tmpl))):
 
-            username_validity_image.set_from_stock(Gtk.STOCK_DIALOG_ERROR, 
+            username_validity_image.set_from_stock(Gtk.STOCK_DIALOG_ERROR,
                                         Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(False)
             return
         else:
-            username_validity_image.set_from_stock(Gtk.STOCK_OK, 
+            username_validity_image.set_from_stock(Gtk.STOCK_OK,
                                             Gtk.IconSize.SMALL_TOOLBAR)
             button_apply.set_sensitive(True)
         self.user_store.clear()
-        
+
         # Repopulate the store
         for classn in self.classes:
             for compn in range(1, self.computers+1):
                 if len(self.user_store) == 300:
                     break
-                ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
+                ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}',
                     str(compn)).replace('{0i}', '%02d' %compn)
                 self.user_store.append([ev(self.username_tmpl), ev(self.name_tmpl),
                     self.home + ev(self.username_tmpl),ev(self.password_tmpl)])
@@ -132,10 +136,10 @@ class NewUsersDialog:
                     set_gids.append(tmp_gid)
                     cmd_error = self.system.add_group(libuser.Group(classn, tmp_gid, {}))
                     progress.set_message(_("Creating group %(current)d of %(total)d...")
-                        % {"current":groups_created+1, "total":total_groups})
+                                         % {"current": groups_created + 1, "total": total_groups})
                     if cmd_error[0] and cmd_error[1] != "":
                         self.glade.get_object('error_label').set_text(cmd_error[1])
-                        self.glade.get_object('error_hbox').show() 
+                        self.glade.get_object('error_hbox').show()
                         button_close.set_sensitive(True)
                         return
                     groups_created += 1
@@ -143,7 +147,7 @@ class NewUsersDialog:
                 else:
                     tmp_gid=self.system.groups[classn].gid
                     groups_created += 1
-                
+
                 # Add teachers to group
                 if self.glade.get_object('teachers_checkbutton').get_active():
                     progress.set_message(_("Adding teachers to group {group}").format(group=classn))
@@ -152,14 +156,14 @@ class NewUsersDialog:
                         if 'teachers' in user.groups and classn not in user.groups:
                             user.groups.append(classn)
                             self.system.update_user(user.name, user)
-            
+
             # Create shared folders
             if self.glade.get_object('shared_checkbutton').get_active():
                 for classn in self.classes:
                     progress.set_message(_("Adding shares for {group}").format(group=classn))
                     dialogs.wait_gtk()
                     self.sf.add([classn])
-                
+
 
         # And finally, create the users
         cmd_error = (False, '')
@@ -169,7 +173,7 @@ class NewUsersDialog:
                 progress.set_message(_("Creating user %(current)d of %(total)d...")
                     % {"current":users_created+1, "total":total_users})
 
-                ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}', 
+                ev = lambda x: x.replace('{c}', classn.strip()).replace('{i}',
                                 str(compn)).replace('{0i}', '%02d'%compn)
                 epoch = datetime.datetime.utcfromtimestamp(0)
                 uname = ev(self.username_tmpl)
@@ -192,7 +196,7 @@ class NewUsersDialog:
                 progress.set_progress(groups_created + users_created)
 
         if cmd_error[0] and cmd_error[1] != "":
-            self.progress.set_error(cmd_error.strip())
+            progress.set_error(cmd_error.strip())
             return
 
     def on_button_cancel_clicked(self, widget=None):
