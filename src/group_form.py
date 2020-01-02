@@ -35,7 +35,7 @@ class GroupForm():
         self.users_filter.set_visible_func(self.users_visible_func)
         self.users_sort.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-    def filter_unselectable_users(self):
+    def populate_users(self):
         # Fill the users (member selection) treeview
         gid = self.group.GetGID()
         for user_path in self.account_manager.ListUsers():
@@ -109,12 +109,12 @@ class NewGroupDialog(GroupForm):
         super().__init__(bus, account_manager, parent)
         self.mode = 'new'
         self.builder.connect_signals(self)
+        self.populate_users()
 
         self.dialog.show()
 
     def on_apply_clicked(self, widget):
         name = self.groupname.get_text()
-        gid = int(self.gid_entry.get_text())
         members = [u[0] for u in self.users_store if u[1]]
         group_path = self.account_manager.CreateGroup(name)
         group = self.bus.get_object('io.github.ltsp-manager', group_path)
@@ -133,12 +133,12 @@ class EditGroupDialog(GroupForm):
         self.groupname.set_text(self.group.GetGroupName())
         self.gid_entry.set_text(str(self.group.GetGID()))
 
+        self.populate_users()
         # Activate the members of the group
         for row in self.users_store:
-            members = self.group.GetUsers() + self.group.GetMainUsers()
+            members = self.group.GetAllMembers()
             if row[0].object_path in members:
                 row[1] = True
-        self.filter_unselectable_users()
         self.on_gid_changed(self.gid_entry)
         self.on_name_entry_changed(self.groupname)
         self.dialog.show()
