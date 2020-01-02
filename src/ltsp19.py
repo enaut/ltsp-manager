@@ -21,6 +21,7 @@ import paths
 
 import group_form
 import user_form
+import create_users
 
 
 
@@ -272,6 +273,9 @@ class Gui():
 
     def on_add_user_clicked(self, widget):
         user_form.NewUserDialog(self.dbus, self.account_manager, parent=self.main_window)
+
+    def on_batch_add_users_clicked(self, widget):
+        create_users.NewUsersDialog(self.dbus, self.account_manager, parent=self.main_window)
 
     def on_edit_user_clicked(self, widget):
         user_form.EditUserDialog(self.dbus, self.account_manager, self.get_selected_users()[0], parent=self.main_window)

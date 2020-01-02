@@ -164,7 +164,8 @@ class AccountManager(dbus.service.Object):
                 other = {"home": "/home/username",
                          "fullname": "Name of the User",
                          "uid": "1101",
-                         "gid": "1101" (This group has to exist)}
+                         "gid": "1101" (This group has to exist),
+                         "password": "password"}
                          """
         authorize(sender, errormessage="the user was not created!")
         cmd = ["useradd"]
@@ -186,9 +187,12 @@ class AccountManager(dbus.service.Object):
                 self.load_groups(user_name)
             self.load_users(user_name)
             self.reload_groups()
+            path = self.FindUserByName(user_name)
+            if 'password' in other:
+                objects[path].SetPassword(other['password'], sender)
             self.on_users_changed()
             self.on_groups_changed()
-            return self.FindUserByName(user_name)
+            return path
         raise UserException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sss', out_signature='o', sender_keyword='sender')
@@ -697,6 +701,11 @@ class Group(dbus.service.Object):
     def GetMainUsers(self):
         """ Retruns the users who have this group as main group """
         return self.main_users
+
+    @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='ao')
+    def GetAllMembers(self):
+        """ Retruns the users who have this group as main group """
+        return self.main_users.union(self.users)
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b', sender_keyword='sender')
     def AddUser(self, path, sender):
