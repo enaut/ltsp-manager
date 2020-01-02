@@ -13,12 +13,31 @@ from io import StringIO, BytesIO
 
 # The field names are also defined in ltsp-manager.ui.
 # Keep them *untranslatable* to be able to import .csv files from other locales.
-FIELDS_MAP = {'Username': 'name', 'UID': 'uid', 'GID': 'gid', 'Primary group' : 'primary_group', 'Real name': 'rname', 'Office': 'office', 'Office phone': 'wphone', 'Home phone': 'hphone', 'Other': 'other', 'Directory': 'directory', 'Shell': 'shell', 'Groups': 'groups', 'Last password change': 'lstchg', 'Minimum password age': 'min', 'Maximum password age': 'max', 'Warning period': 'warn', 'Inactivity period': 'inact', 'Expiration': 'expire', 'Encrypted password': 'password', 'Password': 'plainpw', }
+FIELDS_MAP = {'Username': 'name',
+              'UID': 'uid',
+              'GID': 'gid',
+              'Primary group': 'primary_group',
+              'Real name': 'rname',
+              'Office': 'office',
+              'Office phone': 'wphone',
+              'Home phone': 'hphone',
+              'Other': 'other',
+              'Directory': 'directory',
+              'Shell': 'shell',
+              'Groups': 'groups',
+              'Last password change': 'lstchg',
+              'Minimum password age': 'min',
+              'Maximum password age': 'max',
+              'Warning period': 'warn',
+              'Inactivity period': 'inact',
+              'Expiration': 'expire',
+              'Encrypted password': 'password',
+              'Password': 'plainpw', }
 
 class CSV:
     def __init__(self):
         self.fields_map = FIELDS_MAP
-    
+
     def parse(self, fname):
         # Open the CSV as dictionary
         with open(fname) as f:
@@ -65,7 +84,7 @@ class CSV:
                             gid = None
                         if gname != '':
                             user.groups.append(gname)
-                        
+
                         # Create Group instances from memberships
                         if gname not in groups:
                             groups[gname] = libuser.Group(gname, gid)
@@ -73,9 +92,9 @@ class CSV:
 
                     if user.groups == '':
                         user.groups = None
-        
+
         return libuser.Set(users, groups)
-            
+
 
     def write(self, fname, system, users):
         f = open(fname, 'w')
@@ -92,7 +111,7 @@ class CSV:
                 gid = system.groups[gname].gid
                 final_groups[i] = ':'.join((final_groups[i], str(gid)))
             u_dict['Groups'] = ','.join(final_groups)
-            
+
             writer.writerow(u_dict)
         f.close()
 
@@ -104,10 +123,10 @@ class passwd():
     # gshadow format: Not Implemented
     def __init__(self):
         pass
-    
+
     def parse(self, pwd, spwd=None, grp=None):
         new_set = libuser.Set()
-        
+
         with open(pwd) as f:
             reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
             for row in reader:
@@ -122,7 +141,7 @@ class passwd():
                 u.directory = row[5]
                 u.shell = row[6]
                 new_set.add_user(u)
-        
+
         if spwd:
             with open(spwd) as f:
                 reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
@@ -136,7 +155,7 @@ class passwd():
                             u.__dict__[att] = int(row[i])
                         except:
                             pass
-        
+
         if grp:
             with open(grp) as f:
                 reader = csv.reader(f, delimiter=':', quoting=csv.QUOTE_NONE)
@@ -152,16 +171,16 @@ class passwd():
                     for name in members:
                         g.members[name] = new_set.users[name]
                         new_set.users[name].groups.append(g.name)
-                    
+
                     new_set.add_group(g)
                     gids_map[g.gid] = g.name
-                
+
                 for u in new_set.users.values():
                     u.primary_group = gids_map[u.gid]
                     if u.primary_group in u.groups:
                         u.groups.remove(u.primary_group)
                     #u.groups.append(u.primary_group)
-        
+
         return new_set
 
 
