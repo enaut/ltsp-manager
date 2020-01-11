@@ -19,6 +19,7 @@ except:
     gettext.install('ltsp-manager')
 locale.textdomain('ltsp-manager')
 
+
 def run_command(cmd, pw_stdin="", poll=False):
     """ Runs a command and returns either True, on successful
         completion, or the whole stdout and stderr of the command, on error.
@@ -36,20 +37,22 @@ def run_command(cmd, pw_stdin="", poll=False):
         res = p.wait()
         if res == 0:
             return True, pw_out
-        else:
-            sys.stderr.write("Error while executing command:\n"
-                             + " $ %s" % ' '.join(cmdline) + "\n")
-            sys.stderr.write(pw_out)
-            sys.stderr.write(pw_err)
-            if pw_err == '':
-                pw_err = "\n"
-            return False, pw_err
+
+        sys.stderr.write("Error while executing command:\n"
+                         + " $ %s" % ' '.join(cmdline) + "\n")
+        sys.stderr.write(pw_out)
+        sys.stderr.write(pw_err)
+        if pw_err == '':
+            pw_err = "\n"
+        return False, pw_err
     else:
         return p
+
 
 def days_since_epoch():
     epoch = datetime.datetime.utcfromtimestamp(0)
     return (datetime.datetime.today() - epoch).days
+
 
 def date():
     return datetime.date.today()

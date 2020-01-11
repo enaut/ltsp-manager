@@ -1,0 +1,12 @@
+tester:x:1001:1001::/home/tester:/bin/bash
+test1:x:1002:1002:test nutzer,raum 404,00145385,00606963,kommentar:/home/test1:/bin/bash
+test2:x:1003:1003::/home/test2:/bin/bash
+test3:x:1004:1004:tester 3,freiraum,999,444,888:/home/test3:/bin/bash
+test5:x:1007:1007:test 5,test,test,test,test:/home/test5:/bin/bash
+teste:x:1008:1008:test e,test e,test e,test e,test e:/home/teste:/bin/bash
+testr:x:1009:1009:test,my office,test,test,teset:/home/testr:/bin/bash
+dreier:x:3333:1001:dreier,,,,:/home/dreier:/bin/bash
+vierer:x:4444:1004:vierer,,,,:/home/vierer:/bin/bash
+funfer:x:5555:5555:fünfer,34,,,:/home/funfer:/bin/bash
+sahne3:x:1013:1002::/home/moved3:/usr/bin/bash
+

@@ -196,11 +196,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="import_users">
                     <property name="label" translatable="yes">Import users</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_import_users_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="position">2</property>

@@ -7,6 +7,7 @@ from gettext import gettext as _
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('WebKit2', '4.0')
 from gi.repository import Gtk, Gio
 
 from dbus.mainloop.glib import DBusGMainLoop
@@ -22,6 +23,7 @@ import paths
 import group_form
 import user_form
 import create_users
+import import_dialog
 
 
 
@@ -277,8 +279,11 @@ class Gui():
     def on_batch_add_users_clicked(self, widget):
         create_users.NewUsersDialog(self.dbus, self.account_manager, parent=self.main_window)
 
+    def on_import_users_clicked(self, widget):
+        import_dialog.ImportAssistant(self.dbus, self.account_manager, parent=self.main_window)
+
     def on_edit_user_clicked(self, widget):
-        user_form.EditUserDialog(self.dbus, self.account_manager, self.get_selected_users()[0], parent=self.main_window)
+        user_form.EditUserDialog(self.dbus, self.account_manager, parent=self.main_window)
 
     def on_delete_user_clicked(self, widget):
         """ When the user clicks on delete user(s) a warning dialog is shown.
