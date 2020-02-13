@@ -1,4 +1,6 @@
 # These paths are configured by the install script.
+
+# Paths to system directories
 python = "@PYTHON@"
 version = "@VERSION@"
 localedir = "@localedir@"
@@ -8,3 +10,15 @@ bindir = "@bindir@"
 sbindir = "@sbindir@"
 scriptsdir = "@scriptsdir@"
 sysconfdir = "@sysconfdir@"
+
+# Paths to binaries
+useradd = "@useradd@"
+userdel = "@userdel@"
+chage = "@chage@"
+usermod = "@usermod@"
+passwd = "@passwd@"
+gpasswd = "@gpasswd@"
+chsh = "@chsh@"
+groupadd = "@groupadd@"
+groupmod = "@groupmod@"
+groupdel = "@groupdel@"

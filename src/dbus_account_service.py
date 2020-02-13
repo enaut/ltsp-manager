@@ -20,7 +20,7 @@ import dbus.mainloop.glib
 
 
 import common
-from paths import ACCOUNTMANAGER_PATH, USER_PREFIX, GROUP_PREFIX
+from paths import ACCOUNTMANAGER_PATH, USER_PREFIX, GROUP_PREFIX, useradd, userdel, chage, usermod, passwd, gpasswd, chsh, groupadd, groupmod, groupdel
 import version
 
 objects = {  # will be populated with: dbus-path:object
@@ -168,7 +168,8 @@ class AccountManager(dbus.service.Object):
                          "password": "password"}
                          """
         authorize(sender, errormessage="the user was not created!")
-        cmd = ["useradd"]
+        print(useradd)
+        cmd = [useradd]
         if "home" in other:
             cmd.extend(['-m', '-d', other["home"]])
         if "fullname" in other:
@@ -228,7 +229,7 @@ class AccountManager(dbus.service.Object):
     def CreateGroup(self, group_name, sender):
         # TODO - not working!
         authorize(sender, errormessage="the group was not created!")
-        res = common.run_command(['groupadd', group_name])
+        res = common.run_command([groupadd, group_name])
         if res[0]:
             path = self.FindGroupByName(group_name)
             self.load_groups(group=group_name)
@@ -392,7 +393,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
     def SetUsername(self, user_name, sender):
         authorize(sender, errormessage="the username was not set!")
-        cmd = ['usermod']
+        cmd = [usermod]
         cmd.extend(['-l', user_name])
         cmd.append(self.name)
         res = common.run_command(cmd)
@@ -406,7 +407,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
     def SetPassword(self, password, sender):
         authorize(sender, errormessage="The password was not changed!")
-        cmd = ["passwd"]
+        cmd = [passwd]
         cmd.append(self.name)
         res = common.run_command(cmd, "{0}\n{0}\n".format(password).encode())
         if res[0]:
@@ -422,7 +423,7 @@ class User(dbus.service.Object):
     def SetUID(self, newUID, sender):
         authorize(sender, errormessage="the UID was not set!")
         oldid = self.uid
-        cmd = ['usermod']
+        cmd = [usermod]
         cmd.extend(['-u', newUID])
         cmd.append(self.name)
         res = common.run_command(cmd)
@@ -451,7 +452,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='i', sender_keyword='sender')
     def SetGID(self, newGID, sender):
         authorize(sender, errormessage="the GID was not set!")
-        cmd = ['usermod']
+        cmd = [usermod]
         cmd.extend(['-g', newGID])
         cmd.append(self.name)
         res = common.run_command(cmd)
@@ -471,7 +472,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sssss', out_signature='u', sender_keyword='sender')
     def SetGecos(self, rname, office, wphone, hphone, other, sender):
         authorize(sender, errormessage="the the user details were not updated!")
-        cmd = ['usermod']
+        cmd = [usermod]
         fields = [rname, office, wphone, hphone, other]
         cmd.extend(['--comment', ','.join(fields)])
         cmd.append(self.GetUsername())
@@ -508,7 +509,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sb', out_signature='u', sender_keyword='sender')
     def SetHomeDir(self, new_home, move_files, sender):
         authorize(sender, errormessage="the could not be set!")
-        cmd = ['usermod']
+        cmd = [usermod]
         cmd.extend(['-d', new_home])
         if move_files:
             cmd.append('-m')
@@ -525,7 +526,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='u', sender_keyword='sender')
     def SetShell(self, shell, sender):
         authorize(sender, errormessage="the could not be set!")
-        cmd = ['chsh']
+        cmd = [chsh]
         cmd.extend(['-s', shell])
         cmd.append(self.name)
         res = common.run_command(cmd)
@@ -536,10 +537,11 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='b', out_signature='b', sender_keyword='sender')
     def DeleteUser(self, removeFiles, sender):
         authorize(sender, errormessage="the user was not deleted!")
-        cmd = ['userdel']
+        cmd = [userdel]
         if removeFiles:
             cmd.append('-r')
         cmd.append(self.name)
+        print("Command", cmd, "userdel: ", userdel)
         res = common.run_command(cmd)
         if res[0]:
             self.remove_groups()
@@ -564,7 +566,7 @@ class User(dbus.service.Object):
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='iiiiii', out_signature='u', sender_keyword='sender')
     def SetSpwd(self, lstchg, expire, inact, g_min, g_max, warn, sender):
         authorize(sender, errormessage="the the users password details were not updated!")
-        cmd = ['chage']
+        cmd = [chage]
         cmd.extend(['-d', lstchg])
         cmd.extend(['-E', expire])
         cmd.extend(['-I', inact])
@@ -656,7 +658,7 @@ class Group(dbus.service.Object):
             Return 1 if something has changed and 0 if not."""
         if self.group_name == new_group_name:
             return 0
-        res = common.run_command(['groupmod', '-n', new_group_name, self.group_name])
+        res = common.run_command([groupmod, '-n', new_group_name, self.group_name])
         if res[0]:
             self.group_name = new_group_name
             return 1
@@ -673,7 +675,7 @@ class Group(dbus.service.Object):
             Return 1 if something has changed and 0 if not."""
         if self.gid == new_gid:
             return 0
-        res = common.run_command(['groupmod', '-g', str(new_gid), self.group_name])
+        res = common.run_command([groupmod, '-g', str(new_gid), self.group_name])
         if res[0]:
             old_path = self.path
             # print(list(self.locations))
@@ -711,7 +713,7 @@ class Group(dbus.service.Object):
     def AddUser(self, path, sender):
         authorize(sender, errormessage="the user was not added!")
         user = account_manager.LoadByPath(path)
-        res = common.run_command(['gpasswd', '-a', user.name, self.group_name])
+        res = common.run_command([gpasswd, '-a', user.name, self.group_name])
         if res[0]:
             user.groups.add(self.path)
             self.users.add(user.path)
@@ -746,7 +748,7 @@ class Group(dbus.service.Object):
         authorize(sender, errormessage="the user was not removed!")
         if path in self.users:
             user = account_manager.LoadByPath(path)
-            res = common.run_command(['gpasswd', '-d', user.name, self.group_name])
+            res = common.run_command([gpasswd, '-d', user.name, self.group_name])
             if res[0]:
                 self.users.discard(user.path)
                 user.groups.discard(self.path)
@@ -760,7 +762,7 @@ class Group(dbus.service.Object):
         authorize(sender, errormessage="the group was not deleted!")
         if self.main_users:
             raise GroupException("There are users that have this group as their main group - {}".format(','.join(self.main_users)))
-        res = common.run_command(['groupdel', self.group_name])
+        res = common.run_command([groupdel, self.group_name])
         if res[0]:
             # remove the group from all its users
             for user_path in self.users:
