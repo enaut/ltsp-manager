@@ -17,6 +17,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gtk, Gio, WebKit2, GLib
 import markdown2
+import dict_view
 
 # import common
 # import user_form
@@ -42,23 +43,23 @@ class ImportAssistant():
         self.notebook = self.builder.get_object('import_notebook')
         self.help_box = self.builder.get_object('help_box')
         self.import_list_store = self.builder.get_object("import_list_store")
+        self.chooser = self.builder.get_object("import_file_chooser")
+
         self.values = self.builder.get_object("values")
         self.column = None
 
+        self.format_values = []
+        self.format_strings = {}
+
+        # Make the intro WebView for a display of markdown styled help.
         self.intro_web = WebKit2.WebView()
-        # self.intro_web = self.builder.get_object('intro_web')
-        self.intro_web.load_alternate_html(markdown2.markdown(_("""# GtkTreeSelection
+        markdown_text = _("""# GtkTreeSelection
 
         ein neuer Versuch
-        """)), "/", "/")
+        """)
+        self.intro_web.load_alternate_html(markdown2.markdown(markdown_text), "/", "/")
         self.intro_web.show_all()
         self.help_box.pack_start(self.intro_web, True, True, 0)
-
-        # signals = {"on_import_forward_clicked" : self.on_import_forward_clicked,
-        #            "on_import_back_clicked" : self.on_import_back_clicked,
-        #            "on_import_apply_clicked" : self.on_import_apply_clicked,
-        #            "on_import_cancel_clicked" : self.on_import_cancel_clicked,
-        #            "on_delete_users_activate" : self.on_import_back_clicked}
 
         self.builder.connect_signals(self)
         self.dialog.set_transient_for(self.parent)
@@ -70,13 +71,13 @@ class ImportAssistant():
         cur = self.notebook.get_current_page()
 
         visibility = [(True, False, True, False, None),  # help
-                      (True, True, False, False, None),  # select file
-                      (True, True, True, False, None),   # prepare
-                      (True, True, True, False, self.load_assign_tab),   # options
-                      (True, True, False, True, None),   # preview
+                      (True, False, False, False, None),  # select file
+                      (True, False, True, False, None),   # prepare
+                      (True, False, True, False, self.load_assign_tab),   # options
+                      (True, False, False, True, self.load_import_preview),   # preview
                       (True, False, False, True, None)]  # log
         self.builder.get_object("import_cancel").set_visible(visibility[cur][0])
-        self.builder.get_object("import_back").set_sensitive(visibility[cur][1])
+        self.builder.get_object("import_back").set_visible(visibility[cur][1])
         self.builder.get_object("import_forward").set_sensitive(visibility[cur][2])
         self.builder.get_object("import_apply").set_visible(visibility[cur][3])
         if visibility[cur][4]:
@@ -102,9 +103,7 @@ class ImportAssistant():
 
     def on_import_file_chooser_file_activated(self, widget):
         """ When the user selected a file load it and when done go to the next page """
-        chooser = self.builder.get_object("import_file_chooser")
-        file = chooser.get_file()
-        print(file.query_info("*", Gio.FileQueryInfoFlags.NONE, None))
+        file = self.chooser.get_file()
         file.load_contents_async(self.cancellable, self.load_file, None)
 
     def reset_to_filechooser(self):
@@ -130,7 +129,6 @@ class ImportAssistant():
             try:
                 decoded = contents.decode(encoding)
                 document_encoding = encoding
-                print("Auto-detected encoding as {}".format(encoding))
                 break
             except UnicodeDecodeError:
                 pass
@@ -192,6 +190,8 @@ class ImportAssistant():
 
     def load_assign_tab(self):
         """ Load the tab where the user can specify which column shoud be used where. """
+
+        # Prepare the values of the dropdown menus
         self.values = Gtk.ListStore(str)
         options_preview = self.builder.get_object("options_preview")
         self.values.append(["Default"])
@@ -199,7 +199,6 @@ class ImportAssistant():
             self.values.append(["{" + column.get_title() + "}"])
 
         assign_semantic_treeview = self.builder.get_object("assign_semantic")
-        print(assign_semantic_treeview)
 
         if not self.column:
             cell = self.builder.get_object("combo_cell_render")
@@ -213,7 +212,8 @@ class ImportAssistant():
                   _("Full name"),
                   _("UID"),
                   _("Home directory"),
-                  _("Shell"), _("Office"),
+                  _("Shell"),
+                  _("Office"),
                   _("Office phone"),
                   _("Home phone"),
                   _("Other"),
@@ -225,7 +225,6 @@ class ImportAssistant():
                   _("Expired"),
                   _("Locked"),
                   _("Groups")]:
-            print("adding ", x)
             self.import_list_store.append([False, x, _("Using defaults for: {}".format(x)), "", True])
         assign_semantic_treeview.show_all()
 
@@ -242,6 +241,33 @@ class ImportAssistant():
         self.import_list_store[path][0] = not widget.get_active()
         self.builder.get_object("assign_selection").unselect_all()
 
-    # def on_assign_selection_changed(self, selection):
-    #     pass
-    #     # selection.unselect_all()
+    def on_assign_selection_changed(self, _selection):
+        """ Update the preview whenever something changed """
+        self.format_values = []
+        self.format_strings = {}
+        options_preview = self.builder.get_object("options_preview")
+        user_preview = self.builder.get_object("user_preview")
+        # Get all the column headers.
+        for x, row in enumerate(options_preview.get_model()):
+            self.format_values.append(dict())
+            for i, column in enumerate(options_preview.get_columns()):
+                self.format_values[x][column.get_title()] = row[i]
+        # Get all the
+        for row in self.import_list_store:
+            if row[0]:
+                self.format_strings[row[1]] = row[3]
+        preview = ["Preview:", "The first user:"]
+        for key, string in self.format_strings.items():
+            preview.append("{}: {}".format(key, string.format(*self.format_values[0].values(), **self.format_values[0])[:20]))
+        user_preview.set_text("\n".join(preview))
+
+    def load_import_preview(self):
+        """ Loading the preview of all users that are going to be created. """
+        import_preview = self.builder.get_object("preview_import")
+        order = self.format_strings.keys()
+        dictionaries = [self.format_strings[x] for x in order]
+        for row in self.format_values:
+            values = [row[x] for x in order]
+            dictionaries.append({o: self.format_strings[o].format(*values, **row) for o in order})
+        import_preview.pack_start(dict_view.DictView(dictionaries, order), True, True, 0)
+        import_preview.show_all()

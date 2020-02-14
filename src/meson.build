@@ -44,6 +44,7 @@ ltsp_manager_sources = [
   'common.py',
   'config.py',
   'create_users.py',
+  'dict_view.py',
   'export_dialog.py',
   'group_form.py',
   'import_dialog.py',

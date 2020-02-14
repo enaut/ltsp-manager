@@ -207,6 +207,7 @@ Author: Franz Dietrich
             <property name="create_folders">False</property>
             <property name="filter">csv_filter</property>
             <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
             <property name="search_mode">True</property>
             <signal name="file-activated" handler="on_import_file_chooser_file_activated" swapped="no"/>
           </object>
@@ -404,91 +405,132 @@ Author: Franz Dietrich
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">in</property>
+            <property name="can_focus">False</property>
             <child>
-              <object class="GtkViewport">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkViewport">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">label</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTreeView" id="assign_semantic">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="model">import_list_store</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="assign_selection"/>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">30</property>
+                            <property name="margin_right">30</property>
+                            <property name="margin_top">20</property>
+                            <property name="margin_bottom">20</property>
+                            <property name="label" translatable="yes">Please specify which part of your table you want to use for the account creation.
+
+1. You can use the dropdown menu if you simply want to select a column
+2. You can just write a constant string that will be the same for all accounts
+3. you can write an arbitrary python format string. In the format string all the columns from the table are available as they are shown in the dropdown menu.</property>
+                            <property name="use_markup">True</property>
+                            <property name="wrap">True</property>
+                            <property name="wrap_mode">word-char</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
-                          <object class="GtkTreeViewColumn">
-                            <property name="title" translatable="yes">Set</property>
-                            <child>
-                              <object class="GtkCellRendererToggle" id="assign_check_button">
-                                <signal name="toggled" handler="assign_check_button_changed" swapped="no"/>
+                          <object class="GtkTreeView" id="assign_semantic">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">import_list_store</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection" id="assign_selection">
+                                <signal name="changed" handler="on_assign_selection_changed" swapped="no"/>
                               </object>
-                              <attributes>
-                                <attribute name="activatable">4</attribute>
-                                <attribute name="active">0</attribute>
-                              </attributes>
                             </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn">
-                            <property name="title" translatable="yes">Parameter</property>
                             <child>
-                              <object class="GtkCellRendererText"/>
-                              <attributes>
-                                <attribute name="text">1</attribute>
-                              </attributes>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkTreeViewColumn" id="format_column">
-                            <property name="title" translatable="yes">Format string</property>
-                            <child>
-                              <object class="GtkCellRendererCombo" id="combo_cell_render">
-                                <property name="editable">True</property>
-                                <property name="model">values</property>
-                                <property name="text_column">0</property>
-                                <signal name="edited" handler="assign_cell_combo_edited" swapped="no"/>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Set</property>
+                                <child>
+                                  <object class="GtkCellRendererToggle" id="assign_check_button">
+                                    <property name="height">35</property>
+                                    <signal name="toggled" handler="assign_check_button_changed" swapped="no"/>
+                                  </object>
+                                  <attributes>
+                                    <attribute name="activatable">4</attribute>
+                                    <attribute name="active">0</attribute>
+                                  </attributes>
+                                </child>
                               </object>
-                              <attributes>
-                                <attribute name="text">3</attribute>
-                                <attribute name="placeholder-text">2</attribute>
-                              </attributes>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn">
+                                <property name="title" translatable="yes">Parameter</property>
+                                <child>
+                                  <object class="GtkCellRendererText"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="format_column">
+                                <property name="title" translatable="yes">Format string</property>
+                                <child>
+                                  <object class="GtkCellRendererCombo" id="combo_cell_render">
+                                    <property name="editable">True</property>
+                                    <property name="model">values</property>
+                                    <property name="text_column">0</property>
+                                    <signal name="edited" handler="assign_cell_combo_edited" swapped="no"/>
+                                  </object>
+                                  <attributes>
+                                    <attribute name="text">3</attribute>
+                                    <attribute name="placeholder-text">2</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
                             </child>
                           </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="user_preview">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">15</property>
+                <property name="margin_right">15</property>
+                <property name="label" translatable="yes">Preview for first user:
+Username: test</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -507,64 +549,16 @@ Author: Franz Dietrich
           </packing>
         </child>
         <child>
-          <object class="GtkGrid" id="import_options_box">
+          <object class="GtkBox" id="preview_import">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
+            <property name="orientation">vertical</property>
             <child>
               <placeholder/>
             </child>
           </object>
           <packing>
             <property name="position">4</property>
-          </packing>
-        </child>
-        <child type="tab">
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Select Options</property>
-          </object>
-          <packing>
-            <property name="position">4</property>
-            <property name="tab_fill">False</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkTreeView" id="import_preview">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="model">users_store</property>
-            <property name="reorderable">True</property>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection"/>
-            </child>
-          </object>
-          <packing>
-            <property name="position">5</property>
           </packing>
         </child>
         <child type="tab">
@@ -574,7 +568,7 @@ Author: Franz Dietrich
             <property name="label" translatable="yes">Preview Import</property>
           </object>
           <packing>
-            <property name="position">5</property>
+            <property name="position">4</property>
             <property name="tab_fill">False</property>
           </packing>
         </child>
@@ -588,7 +582,7 @@ Author: Franz Dietrich
             <property name="monospace">True</property>
           </object>
           <packing>
-            <property name="position">6</property>
+            <property name="position">5</property>
           </packing>
         </child>
         <child type="tab">
@@ -598,7 +592,7 @@ Author: Franz Dietrich
             <property name="label" translatable="yes">Import Log</property>
           </object>
           <packing>
-            <property name="position">6</property>
+            <property name="position">5</property>
             <property name="tab_fill">False</property>
           </packing>
         </child>
