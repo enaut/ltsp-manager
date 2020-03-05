@@ -18,7 +18,7 @@ class AskDialog(Gtk.MessageDialog):
         self.set_title(title)
         self.set_default_response(Gtk.ResponseType.NO)
         self.set_transient_for(parent)
-    
+
     def showup(self):
         response = self.run()
         self.destroy()
@@ -33,7 +33,7 @@ class InfoDialog(Gtk.MessageDialog):
                                           message_format = message)
         self.set_title(title)
         self.set_transient_for(parent)
-    
+
     def showup(self):
         response = self.run()
         self.destroy()
@@ -47,7 +47,7 @@ class WarningDialog(Gtk.MessageDialog):
                                           message_format = message)
         self.set_title(title)
         self.set_transient_for(parent)
-    
+
     def showup(self):
         response = self.run()
         self.destroy()
@@ -61,15 +61,15 @@ class ErrorDialog(Gtk.MessageDialog):
                                           message_format = message)
         self.set_title(title)
         self.set_transient_for(parent)
-    
+
     def showup(self):
         response = self.run()
         self.destroy()
         return response
-        
+
 
 class ProgressDialog():
-    def __init__(self, title, amount_of_operations, parent_widget, on_close=None):
+    def __init__(self, title, amount_of_operations, parent_widget, on_close=None, success_label = ""):
         self.parent = parent_widget
         self.total = amount_of_operations
 
@@ -83,6 +83,8 @@ class ProgressDialog():
         self.progress_dialog.set_modal(True)
         self.progress_dialog.show()
         self.progressbar = self.glade.get_object('users_progressbar')
+        if success_label:
+            self.glade.get_object('success_label').set_text(success_label)
         self.num = 1
 
         self.on_close = on_close

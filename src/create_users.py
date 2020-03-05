@@ -98,7 +98,7 @@ class NewUsersDialog:
 
                 replacee = {"group": groupn,
                             "account_number": compn}
-                print(replacee)
+
                 username = self.replacer(self.username_tmpl, replacee)
                 replacee["username"] = username
                 replacee["private_group"] = username
@@ -139,8 +139,8 @@ class NewUsersDialog:
                     #     self.builder.get_object('error_hbox').show()
                     #     button_close.set_sensitive(True)
                     #     return
-                    groups_created += 1
-                    progress.set_progress(groups_created)
+                groups_created += 1
+                progress.set_progress(groups_created)
 
                 # FIXME Add teachers to group
                 # if self.builder.get_object('teachers_checkbutton').get_active():
