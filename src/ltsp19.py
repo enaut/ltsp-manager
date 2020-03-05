@@ -315,7 +315,10 @@ class Gui():
         if response == Gtk.ResponseType.YES:
             rm_homes = rm_homes_check.get_active()
             if users_n > 1:
-                progress = dialogs.ProgressDialog("Deleting Users", users_n, self.main_window)
+                progress = dialogs.ProgressDialog("Deleting Users",
+                                                  users_n,
+                                                  self.main_window,
+                                                  success_label="Users were deleted: " + ", ".join([user.GetUsername() for user in users]))
                 for user in self.get_selected_users():
                     dialogs.wait_gtk()
                     progress.set_message("Delete user: {user}".format(user=user.GetUsername()))

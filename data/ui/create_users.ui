@@ -429,7 +429,7 @@ Example: To have the group and account number in the username you would enter "{
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">•</property>
-                    <property name="text">{group}_{account_number:2d}</property>
+                    <property name="text">{group}_{account_number:02d}</property>
                     <signal name="changed" handler="on_template_changed" swapped="no"/>
                   </object>
                   <packing>
@@ -473,7 +473,7 @@ Example: To have the group and account number in the username you would enter "{
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">•</property>
-                <property name="text" translatable="yes">User {group}_{account_number:2d}</property>
+                <property name="text" translatable="yes">User {group}_{account_number:02d}</property>
                 <signal name="changed" handler="on_template_changed" swapped="no"/>
               </object>
               <packing>
