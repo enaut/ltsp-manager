@@ -6,6 +6,13 @@
 #
 # Licensed under GNU General Public License 3.0 or later.
 # Some rights reserved. See COPYING, AUTHORS.
+
+# pylint: disable=C0103
+
+"""
+Create a dbus-service to manage users and groups on this system.
+"""
+
 import os
 import grp
 import pwd
@@ -198,10 +205,12 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sss', out_signature='o', sender_keyword='sender')
     def CreateUserDetailed(self, user_name, home, fullname, sender):
+        """ Create a user with detailed information (user_name, home, fullname) """
         self.CreateUser(user_name, {'home': home, 'fullname': fullname}, sender)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='ib', out_signature='b', sender_keyword='sender')
     def DeleteUser(self, uid, remove_files, sender):
+        """ Delete a user """
         authorize(sender, errormessage="the user was not deleted!")
         path = self.FindUserById(uid)
         if path not in objects:
@@ -209,12 +218,15 @@ class AccountManager(dbus.service.Object):
         return objects[path].DeleteUser(remove_files)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='o')
-    def FindUserById(self, uid):
+    @staticmethod
+    def FindUserById(uid):
+        """ Find a userpath by UID """
         path = '{}/{}'.format(USER_PREFIX, uid)
         return path
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o')
     def FindUserByName(self, username):
+        """ Find a userpath by a username """
         try:
             usr = pwd.getpwnam(username)
             return self.FindUserById(usr.pw_uid)
@@ -222,11 +234,14 @@ class AccountManager(dbus.service.Object):
             return ''
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
-    def ListUsers(self):
+    @staticmethod
+    def ListUsers():
+        """ Enumerate all users """
         return [objects[u].path for u in objects if u.startswith(USER_PREFIX)]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o', sender_keyword='sender')
     def CreateGroup(self, group_name, sender):
+        """ Create a group """
         # TODO - not working!
         authorize(sender, errormessage="the group was not created!")
         res = common.run_command([groupadd, group_name])
@@ -240,6 +255,7 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='b', sender_keyword='sender')
     def DeleteGroup(self, gid, sender):
+        """ Delete a group by GID """
         authorize(sender, errormessage="the group was not deleted!")
         path = self.FindGroupById(gid)
         if path not in objects:
@@ -247,16 +263,20 @@ class AccountManager(dbus.service.Object):
         return objects[path].DeleteGroup()
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
-    def ListGroups(self):
+    @staticmethod
+    def ListGroups():
+        """ Enumerate all the groups of this system """
         return [objects[u].path for u in objects if u.startswith(GROUP_PREFIX)]
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='s')
     def FindGroupById(self, gid):
+        """ Find a group by GID """
         path = "{}/{}".format(GROUP_PREFIX, gid)
         return path
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='o')
     def FindGroupByName(self, group_name):
+        """ Find a group by name """
         for g_path in objects:
             if g_path.startswith(GROUP_PREFIX):
                 if objects[g_path].group_name == group_name:
@@ -334,6 +354,7 @@ class User(dbus.service.Object):
     """ A usero object for DBUS """
 
     def load(self, uid):
+        """ load the user from disk """
         usr = pwd.getpwuid(uid)
 
         self.name = usr.pw_name
@@ -356,7 +377,7 @@ class User(dbus.service.Object):
         if not usr:
             usr = pwd.getpwuid(self.uid)
         gecos = usr.pw_gecos.split(',')
-        gecos = gecos + ['']*(5-len(gecos))
+        gecos = gecos + [''] * (5 - len(gecos))
         self.rname, self.office, self.wphone, self.hphone, self.other = gecos
 
     def load_spwd(self):
@@ -365,6 +386,8 @@ class User(dbus.service.Object):
         _name, _enc_password, self.lstchg, self.min, self.max, self.warn, self.inact, self.expire, _flag = shadow
 
     def remove_groups(self):
+        """remove this user from all groups"""
+        # TODO test
         # remove from groups
         for group in self.groups:
             objects[group].users.discard(self.path)
@@ -380,14 +403,16 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='isssssssssiiiiii')
     def GetValues(self):
+        """ Return all values with a single call """
         # uid, name, primary_group, rname, office, wphone, hphone, other, directory, shell, lstchg, min, max, warn, inact, expire
 
         return self.uid, self.name, grp.getgrgid(self.gid).gr_name, self.rname, self.office, self.wphone,\
-               self.hphone, self.other, self.directory, self.shell, self.lstchg, self.min, self.max, self.warn,\
-               self.inact, self.expire
+            self.hphone, self.other, self.directory, self.shell, self.lstchg, self.min, self.max, self.warn,\
+            self.inact, self.expire
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetUsername(self):
+        """ Get the username """
         return str(self.name)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
@@ -451,6 +476,7 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='i', sender_keyword='sender')
     def SetGID(self, newGID, sender):
+        """ Set the group ID """
         authorize(sender, errormessage="the GID was not set!")
         cmd = [usermod]
         cmd.extend(['-g', newGID])
@@ -462,15 +488,16 @@ class User(dbus.service.Object):
             objects[self.GetMainGroup()].main_users.add(self.path)
             account_manager.on_users_changed()
             return self.gid
-        else:
-            raise UserException(res[1])
+        raise UserException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='sssss')
     def GetGecos(self):
+        """ Get all the "Gecos-information" """
         return self.rname, self.office, self.wphone, self.hphone, self.other
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sssss', out_signature='u', sender_keyword='sender')
     def SetGecos(self, rname, office, wphone, hphone, other, sender):
+        """ Set all the "Gecos-infomation" """
         authorize(sender, errormessage="the the user details were not updated!")
         cmd = [usermod]
         fields = [rname, office, wphone, hphone, other]
@@ -484,30 +511,37 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetRealName(self):
+        """ Get the realname field """
         return str(self.rname)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetOffice(self):
+        """ Get the Office field """
         return str(self.office)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetWorkPhone(self):
+        """ Get the work phone field """
         return str(self.wphone)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetHomePhone(self):
+        """ Get the home phone field """
         return str(self.hphone)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetComment(self):
+        """ Get the comment field """
         return str(self.other)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetHomeDir(self):
+        """ Get the home path """
         return str(self.directory)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='sb', out_signature='u', sender_keyword='sender')
     def SetHomeDir(self, new_home, move_files, sender):
+        """ Set the home path of this user """
         authorize(sender, errormessage="the could not be set!")
         cmd = [usermod]
         cmd.extend(['-d', new_home])
@@ -521,10 +555,12 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def GetShell(self):
+        """ Get the shell of this user """
         return str(self.shell)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='u', sender_keyword='sender')
     def SetShell(self, shell, sender):
+        """ Set the shell of this user """
         authorize(sender, errormessage="the could not be set!")
         cmd = [chsh]
         cmd.extend(['-s', shell])
@@ -536,6 +572,7 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='b', out_signature='b', sender_keyword='sender')
     def DeleteUser(self, removeFiles, sender):
+        """ Delete a user raise a UserException if it fails. """
         authorize(sender, errormessage="the user was not deleted!")
         cmd = [userdel]
         if removeFiles:
@@ -551,20 +588,22 @@ class User(dbus.service.Object):
             del objects[self.path]
             account_manager.on_users_changed()
             return True
-        else:
-            raise UserException(res[1])
+        raise UserException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='b')
     def IsSystemUser(self):
+        """ Check if this user is a system user """
         return not (self.uid >= FIRST_UID and self.uid <= LAST_UID)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='iiiiii', sender_keyword='sender')
     def GetSpwd(self, sender):
+        """ Return the shadow parameters of a user """
         authorize_read(sender, errormessage="The Password validity could not be checked")
         return self.lstchg, self.min, self.max, self.warn, self.inact, self.expire
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='iiiiii', out_signature='u', sender_keyword='sender')
     def SetSpwd(self, lstchg, expire, inact, g_min, g_max, warn, sender):
+        """ Set the shadow parameters of a user """
         authorize(sender, errormessage="the the users password details were not updated!")
         cmd = [chage]
         cmd.extend(['-d', lstchg])
@@ -582,6 +621,7 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='as', out_signature='b')
     def IsPartOfGroups(self, groups):
+        """ Check if the user belongs to one of groups """
         mg = self.GetGroups() + (self.GetMainGroup(),)
         if not mg:
             return False
@@ -596,11 +636,12 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
     def GetGroups(self):
-        # Returns the users Groups. The first group is the users main group, the rest are the supplementary groups.
+        """Returns the users Groups. The first group is the users main group, the rest are the supplementary groups."""
         return tuple(self.groups)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='o')
     def GetMainGroup(self):
+        """ Get the primary group of this user """
         return "{}/{}".format(GROUP_PREFIX, self.gid)
 
     def get_ids_from_home(self, base='/home'):
@@ -615,12 +656,15 @@ class User(dbus.service.Object):
 
 
 class Group(dbus.service.Object):
+    """ Represent one group of this system """
+
     def __init__(self, *args):
         super().__init__(*args)
         self.SUPPORTS_MULTIPLE_CONNECTIONS = True
         self.SUPPORTS_MULTIPLE_OBJECT_PATHS = True
 
     def load(self, gid):
+        """ Load the group metadata from the configuration files """
         group = grp.getgrgid(gid)
         self.group_name = group.gr_name
         self.gid = group.gr_gid
@@ -632,6 +676,7 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='is')
     def GetValues(self):
+        """ Get all the metadata of this group """
         return self.gid, self.group_name
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='is', out_signature='u')
@@ -650,6 +695,7 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='s')
     def GetGroupName(self):
+        """ Returns the name of this group """
         return self.group_name
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='s', out_signature='')
@@ -667,6 +713,7 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='u')
     def GetGID(self):
+        """ Get the group ID """
         return self.gid
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='u', out_signature='u')
@@ -711,6 +758,7 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b', sender_keyword='sender')
     def AddUser(self, path, sender):
+        """ Add an existing user(path) to this group """
         authorize(sender, errormessage="the user was not added!")
         user = account_manager.LoadByPath(path)
         res = common.run_command([gpasswd, '-a', user.name, self.group_name])
@@ -723,14 +771,17 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='b')
     def IsPrivateGroup(self):
+        """ Check if this group has members that do not have this group as primary group """
         return (not self.IsSystemGroup()) and (not self.users)
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='b')
     def IsSystemGroup(self):
+        """ Check if this group is a system group """
         return self.gid < FIRST_GID or self.gid > LAST_GID
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='as', out_signature='b')
     def UsersAreMember(self, users):
+        """ Check if one of the given users is member of this group """
         mg = self.GetUsers().union(self.GetMainUsers())
         if not mg:
             return False
@@ -745,6 +796,7 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='o', out_signature='b', sender_keyword='sender')
     def RemoveUser(self, path, sender):
+        """ Remove a user from the group (does not delete the user) """
         authorize(sender, errormessage="the user was not removed!")
         if path in self.users:
             user = account_manager.LoadByPath(path)
@@ -759,6 +811,7 @@ class Group(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.Group", in_signature='', out_signature='b', sender_keyword='sender')
     def DeleteGroup(self, sender):
+        """ Delete a group """
         authorize(sender, errormessage="the group was not deleted!")
         if self.main_users:
             raise GroupException("There are users that have this group as their main group - {}".format(','.join(self.main_users)))
