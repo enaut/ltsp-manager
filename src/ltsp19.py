@@ -26,7 +26,6 @@ import create_users
 import import_dialog
 
 
-
 class Gui():
     """The base class and window of LTSP-manager"""
 
@@ -299,7 +298,7 @@ class Gui():
                            " along with the user's e-mail at /var/mail, if it exists")
         else:
             message = _("Are you sure you want to delete the following %d users?") % users_n
-            message += "\n" + ', '.join([user.GetUsername() for user in users])
+            message += "\n\n" + ', '.join([user.GetUsername() for user in users])
             homes_message = _("Also delete the users' home directories.")
             homes_warn = _("WARNING: if you enable this option, the users' home directories with all their files will be deleted,"
                            " along with the users' e-mails at /var/mail, if they exist")
@@ -318,7 +317,7 @@ class Gui():
                 progress = dialogs.ProgressDialog("Deleting Users",
                                                   users_n,
                                                   self.main_window,
-                                                  success_label="Users were deleted: " + ", ".join([user.GetUsername() for user in users]))
+                                                  success_label="Users were deleted:\n\n" + ", ".join([user.GetUsername() for user in users]))
                 for user in self.get_selected_users():
                     dialogs.wait_gtk()
                     progress.set_message("Delete user: {user}".format(user=user.GetUsername()))
