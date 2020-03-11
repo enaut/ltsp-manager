@@ -7,7 +7,7 @@
 # Licensed under GNU General Public License 3.0 or later.
 # Some rights reserved. See COPYING, AUTHORS.
 
-# pylint: disable=C0103
+# pylint: disable=C0103,too-many-arguments, no-self-use
 
 """
 Create a dbus-service to manage users and groups on this system.
@@ -218,8 +218,7 @@ class AccountManager(dbus.service.Object):
         return objects[path].DeleteUser(remove_files)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='o')
-    @staticmethod
-    def FindUserById(uid):
+    def FindUserById(self, uid):
         """ Find a userpath by UID """
         path = '{}/{}'.format(USER_PREFIX, uid)
         return path
@@ -234,8 +233,7 @@ class AccountManager(dbus.service.Object):
             return ''
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
-    @staticmethod
-    def ListUsers():
+    def ListUsers(self):
         """ Enumerate all users """
         return [objects[u].path for u in objects if u.startswith(USER_PREFIX)]
 
@@ -263,8 +261,7 @@ class AccountManager(dbus.service.Object):
         return objects[path].DeleteGroup()
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='ao')
-    @staticmethod
-    def ListGroups():
+    def ListGroups(self):
         """ Enumerate all the groups of this system """
         return [objects[u].path for u in objects if u.startswith(GROUP_PREFIX)]
 
@@ -285,33 +282,42 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.signal(dbus_interface='io.github.ltsp.manager.AccountManager', signature='')
     def on_users_changed(self):
+        """ Signal that is triggered, when a any user was changed """
         # print("some user(s) have changed")
-        pass
 
     @dbus.service.signal(dbus_interface='io.github.ltsp.manager.AccountManager', signature='')
     def on_groups_changed(self):
+        """ Signal that is triggered, when a any user was changed """
         # print("Some Group(s) have changed")
-        pass
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='')
     def Exit(self):
+        """ Exit the service (it is automatically restarted by the dbus daemon on the next access)"""
         mainloop.quit()
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='s')
     def Version(self):
+        """ Return the version information """
         return str(version.__version__)
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='bb')
     def IsGIDValidAndFree(self, gid):
+        """ Test if a group ID is:
+                * valid (between FIRST_GID and LAST_GID)
+                * not used yet
+        """
         res_valid = not(gid < FIRST_GID or gid > LAST_GID)
         res_free = "{}/{}".format(GROUP_PREFIX, gid) not in objects
         return res_valid, res_free
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='bb')
     def IsGroupNameValidAndFree(self, group_name):
+        """ Test if a groupname is:
+                * valid
+                * not used yet
+        """
         res_free = True
         res_valid = not re.match(NAME_REGEX, group_name)
-        res_free = True
         for group in self.ListGroups():
             if objects[group].group_name == group_name:
                 res_free = False
@@ -319,12 +325,20 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='u', out_signature='bb')
     def IsUIDValidAndFree(self, uid):
+        """ Test if a user ID is:
+                * valid (between FIRST_GID and LAST_GID)
+                * not used yet
+        """
         res_valid = not(uid < FIRST_UID or uid > LAST_UID)
         res_free = "{}/{}".format(USER_PREFIX, uid) not in objects
         return res_valid, res_free
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='bb')
     def IsUsernameValidAndFree(self, username):
+        """ Test if a username is:
+                * valid
+                * not used yet
+        """
         res_valid = re.match(NAME_REGEX, username)
         res_free = True
         for user in self.ListUsers():
@@ -334,6 +348,7 @@ class AccountManager(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='o', out_signature='o')
     def LoadByPath(self, path):
+        """ Get an object by its path raise a Usererror or Grouperror on fail """
         if path in objects:
             return objects[path]
         if path.startswith(USER_PREFIX):
@@ -348,6 +363,7 @@ class AccountManager(dbus.service.Object):
             if path == npath:
                 return objects[path]
             raise GroupException("Grouperror")
+        return "/error"
 
 
 class User(dbus.service.Object):
@@ -417,6 +433,7 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
     def SetUsername(self, user_name, sender):
+        """ Set the username of a user """
         authorize(sender, errormessage="the username was not set!")
         cmd = [usermod]
         cmd.extend(['-l', user_name])
@@ -426,11 +443,11 @@ class User(dbus.service.Object):
             self.name = user_name
             account_manager.on_users_changed()
             return
-        else:
-            raise UserException(res[1])
+        raise UserException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='s', out_signature='', sender_keyword='sender')
     def SetPassword(self, password, sender):
+        """ Set the password of a user """
         authorize(sender, errormessage="The password was not changed!")
         cmd = [passwd]
         cmd.append(self.name)
@@ -442,10 +459,12 @@ class User(dbus.service.Object):
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='i')
     def GetUID(self):
+        """ Get the User ID """
         return self.uid
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='s', sender_keyword='sender')
     def SetUID(self, newUID, sender):
+        """ Set the UID and reload the user """
         authorize(sender, errormessage="the UID was not set!")
         oldid = self.uid
         cmd = [usermod]
@@ -467,11 +486,11 @@ class User(dbus.service.Object):
             account_manager.reload_groups()
             account_manager.on_users_changed()
             return newpath
-        else:
-            raise UserException(res[1])
+        raise UserException(res[1])
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='', out_signature='i')
     def GetGID(self):
+        """ Get the group ID """
         return self.gid
 
     @dbus.service.method("io.github.ltsp.manager.AccountManager", in_signature='i', out_signature='i', sender_keyword='sender')
